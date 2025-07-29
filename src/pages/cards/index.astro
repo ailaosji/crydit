@@ -1,0 +1,900 @@
+---
+// src/pages/cards/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+// 获取所有U卡数据
+const allCards = await getCollection('cards');
+
+// 按评分排序
+const sortedCards = allCards.sort((a, b) => b.data.rating - a.data.rating);
+
+// 分类统计
+const cardsByType = {
+  visa: allCards.filter(card => card.data.cardType === 'visa').length,
+  mastercard: allCards.filter(card => card.data.cardType === 'mastercard').length,
+  virtual: allCards.filter(card => card.data.isVirtual).length,
+  physical: allCards.filter(card => card.data.isPhysical).length,
+};
+
+// 获取筛选参数
+const urlParams = new URL(Astro.request.url).searchParams;
+const selectedType = urlParams.get('type') || 'all';
+const selectedSort = urlParams.get('sort') || 'rating';
+
+// 筛选逻辑
+let filteredCards = sortedCards;
+if (selectedType !== 'all') {
+  if (selectedType === 'visa' || selectedType === 'mastercard') {
+    filteredCards = filteredCards.filter(card => card.data.cardType === selectedType);
+  } else if (selectedType === 'virtual') {
+    filteredCards = filteredCards.filter(card => card.data.isVirtual);
+  } else if (selectedType === 'physical') {
+    filteredCards = filteredCards.filter(card => card.data.isPhysical);
+  } else if (selectedType === 'no-annual-fee') {
+    filteredCards = filteredCards.filter(card => !card.data.annualFee);
+  }
+}
+
+// 排序逻辑
+if (selectedSort === 'name') {
+  filteredCards = filteredCards.sort((a, b) => a.data.name.localeCompare(b.data.name));
+} else if (selectedSort === 'date') {
+  filteredCards = filteredCards.sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime());
+}
+---
+
+<Layout title="U卡评测 - 专业的数字货币借记卡评测">
+  <div class="min-h-screen" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+    
+    <!-- Hero Section - Material Design 3 Style -->
+    <section class="relative overflow-hidden">
+      <!-- Surface Container with Material 3 colors -->
+      <div class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 relative">
+        <!-- Material 3 Surface Tint -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-20">
+          <div class="text-center">
+            <!-- Material 3 Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-variant/10 border border-outline-variant/20 text-on-surface-variant backdrop-blur-sm text-sm font-medium mb-6" style="background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.87);">
+              <div class="w-2 h-2 bg-tertiary rounded-full animate-pulse" style="background: #7c3aed;"></div>
+              专业评测 · 实时更新 · 深度分析
+            </div>
+            
+            <!-- Hero Title -->
+            <h1 class="text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
+              U卡评测中心
+            </h1>
+            <p class="text-xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed">
+              发现最适合您的数字货币借记卡<br>
+              <span class="text-tertiary-container font-medium">专业评测 · 客观对比 · 明智选择</span>
+            </p>
+            
+            <!-- Stats Cards - Material 3 Style -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+              <div class="bg-surface-container/10 backdrop-blur-sm rounded-3xl p-4 border border-outline-variant/20" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12);">
+                <div class="text-2xl font-bold text-white mb-1">{allCards.length}</div>
+                <div class="text-white/70 text-sm">评测卡片</div>
+              </div>
+              <div class="bg-surface-container/10 backdrop-blur-sm rounded-3xl p-4 border border-outline-variant/20" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12);">
+                <div class="text-2xl font-bold text-white mb-1">{cardsByType.visa + cardsByType.mastercard}</div>
+                <div class="text-white/70 text-sm">支持网络</div>
+              </div>
+              <div class="bg-surface-container/10 backdrop-blur-sm rounded-3xl p-4 border border-outline-variant/20" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12);">
+                <div class="text-2xl font-bold text-white mb-1">{cardsByType.virtual}</div>
+                <div class="text-white/70 text-sm">虚拟卡</div>
+              </div>
+              <div class="bg-surface-container/10 backdrop-blur-sm rounded-3xl p-4 border border-outline-variant/20" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12);">
+                <div class="text-2xl font-bold text-white mb-1">{cardsByType.physical}</div>
+                <div class="text-white/70 text-sm">实体卡</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Section - Material 3 Style -->
+    <section class="py-6 bg-surface" style="background: #fefbff;">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <!-- Material 3 Surface Container -->
+        <div class="bg-surface-container rounded-3xl p-6 shadow-sm" style="background: #f7f2fa; box-shadow: 0 1px 3px rgba(0,0,0,0.12);">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            
+            <!-- Filter Chips - Material 3 Style -->
+            <div class="flex flex-wrap gap-2">
+              <button class="filter-chip active px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-primary text-on-primary shadow-sm" data-filter="all" style="background: #6750a4; color: #ffffff;">
+                <span class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  全部卡片
+                </span>
+              </button>
+              
+              <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-surface-container-high text-on-surface-variant border border-outline hover:bg-secondary-container hover:text-on-secondary-container" data-filter="visa" style="background: #ece6f0; color: #49454f; border-color: #79747e;">
+                <span class="flex items-center gap-2">
+                  <div class="w-4 h-3 bg-blue-600 rounded-sm flex items-center justify-center">
+                    <span class="text-white text-xs font-bold">V</span>
+                  </div>
+                  Visa卡
+                </span>
+              </button>
+              
+              <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-surface-container-high text-on-surface-variant border border-outline hover:bg-secondary-container hover:text-on-secondary-container" data-filter="mastercard" style="background: #ece6f0; color: #49454f; border-color: #79747e;">
+                <span class="flex items-center gap-2">
+                  <div class="w-4 h-3 bg-red-600 rounded-sm flex items-center justify-center">
+                    <span class="text-white text-xs font-bold">M</span>
+                  </div>
+                  Mastercard
+                </span>
+              </button>
+              
+              <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-surface-container-high text-on-surface-variant border border-outline hover:bg-secondary-container hover:text-on-secondary-container" data-filter="virtual" style="background: #ece6f0; color: #49454f; border-color: #79747e;">
+                <span class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
+                  </svg>
+                  虚拟卡
+                </span>
+              </button>
+              
+              <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-surface-container-high text-on-surface-variant border border-outline hover:bg-secondary-container hover:text-on-secondary-container" data-filter="physical" style="background: #ece6f0; color: #49454f; border-color: #79747e;">
+                <span class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                  </svg>
+                  实体卡
+                </span>
+              </button>
+              
+              <button class="filter-chip px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 bg-surface-container-high text-on-surface-variant border border-outline hover:bg-secondary-container hover:text-on-secondary-container" data-filter="no-annual-fee" style="background: #ece6f0; color: #49454f; border-color: #79747e;">
+                <span class="flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                  </svg>
+                  免年费
+                </span>
+              </button>
+            </div>
+            
+            <!-- Sort Dropdown - Material 3 Style -->
+            <div class="flex items-center gap-3 min-w-fit">
+              <span class="text-sm font-medium text-on-surface-variant" style="color: #49454f;">排序:</span>
+              <select class="sort-select bg-surface-container-high text-on-surface border border-outline rounded-2xl px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200" style="background: #ece6f0; color: #1d1b20; border-color: #79747e;">
+                <option value="rating">评分排序</option>
+                <option value="name">名称排序</option>
+                <option value="date">最新发布</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Results Count -->
+          <div class="mt-4 pt-4 border-t border-outline-variant/30" style="border-color: rgba(121, 116, 126, 0.3);">
+            <span class="text-sm text-on-surface-variant" style="color: #49454f;">
+              找到 <span class="font-semibold text-primary" id="results-count" style="color: #6750a4;">{filteredCards.length}</span> 张卡片
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards Table - Material 3 Style -->
+    <section class="py-8">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        
+        {filteredCards.length > 0 ? (
+          <!-- Material 3 Data Table Container -->
+          <div class="bg-surface-container rounded-3xl shadow-lg overflow-hidden" style="background: #f7f2fa; box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);" id="cards-table">
+            <div class="overflow-x-auto">
+              <table class="min-w-full">
+                <!-- Table Header - Material 3 Style -->
+                <thead class="bg-surface-container-high" style="background: #ece6f0;">
+                  <tr>
+                    <th class="px-6 py-4 text-left text-sm font-semibold text-on-surface tracking-wide" style="color: #1d1b20;">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-primary" style="color: #6750a4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h4a1 1 0 110 2h-1v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6H3a1 1 0 110-2h4z"/>
+                        </svg>
+                        排名 & 卡片信息
+                      </div>
+                    </th>
+                    <th class="px-4 py-4 text-left text-sm font-semibold text-on-surface tracking-wide" style="color: #1d1b20;">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-primary" style="color: #6750a4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        类型 & 支持
+                      </div>
+                    </th>
+                    <th class="px-4 py-4 text-left text-sm font-semibold text-on-surface tracking-wide" style="color: #1d1b20;">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-primary" style="color: #6750a4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        用户评分
+                      </div>
+                    </th>
+                    <th class="px-4 py-4 text-left text-sm font-semibold text-on-surface tracking-wide" style="color: #1d1b20;">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-primary" style="color: #6750a4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                        </svg>
+                        费用信息
+                      </div>
+                    </th>
+                    <th class="px-4 py-4 text-center text-sm font-semibold text-on-surface tracking-wide" style="color: #1d1b20;">
+                      <div class="flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-primary" style="color: #6750a4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        操作
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                
+                <!-- Table Body -->
+                <tbody class="divide-y divide-outline-variant/20" style="border-color: rgba(121, 116, 126, 0.2);" id="cards-tbody">
+                  {filteredCards.map((card, index) => (
+                    <tr class="card-row group hover:bg-secondary-container/30 transition-all duration-200 cursor-pointer" 
+                        style="transition: background-color 0.2s ease;"
+                        data-type={card.data.cardType} 
+                        data-virtual={card.data.isVirtual} 
+                        data-physical={card.data.isPhysical} 
+                        data-annual-fee={card.data.annualFee}
+                        data-rating={card.data.rating}
+                        data-name={card.data.name}
+                        data-date={card.data.publishDate}>
+                      
+                      <!-- Card Info Column -->
+                      <td class="px-6 py-6">
+                        <div class="flex items-center gap-4">
+                          <!-- Ranking Badge - 优化后的样式 -->
+                          <div class={`rank-badge flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg transition-all duration-300 group-hover:scale-105 ${
+                            index < 3 ? 'rank-gold' :
+                            index < 5 ? 'rank-silver' :
+                            'rank-bronze'
+                          }`} style={
+                            index < 3 ? 'background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);' :
+                            index < 5 ? 'background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);' :
+                            'background: linear-gradient(135deg, #64748b 0%, #475569 50%, #334155 100%); box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);'
+                          }>
+                            <span class="text-lg font-black tracking-tight" style="font-family: 'SF Pro Display', system-ui, sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">
+                              {index + 1}
+                            </span>
+                          </div>
+                          
+                          <div class="min-w-0 flex-1">
+                            <!-- Card Name -->
+                            <div class="flex items-center gap-2 mb-1">
+                              <a href={`/cards/${card.slug}`} class="text-lg font-semibold text-on-surface hover:text-primary transition-colors duration-200 group-hover:text-primary" style="color: #1d1b20;">
+                                {card.data.name}
+                              </a>
+                              {card.data.featured && (
+                                <span class="px-2 py-1 bg-tertiary text-on-tertiary text-xs font-medium rounded-full shadow-sm" style="background: #7c3aed; color: #ffffff;">
+                                  推荐
+                                </span>
+                              )}
+                            </div>
+                            
+                            <!-- Card Description -->
+                            <p class="text-sm text-on-surface-variant mb-2 line-clamp-2 leading-relaxed" style="color: #49454f;">
+                              {card.data.shortDescription || card.data.description}
+                            </p>
+                            
+                            <!-- Supported Currencies -->
+                            <div class="flex flex-wrap gap-1">
+                              {card.data.supportedCurrencies.slice(0, 3).map((currency) => (
+                                <span class="px-2 py-1 bg-surface-container-highest text-on-surface text-xs rounded-lg font-medium" style="background: #e6e0e9; color: #1d1b20;">
+                                  {currency}
+                                </span>
+                              ))}
+                              {card.data.supportedCurrencies.length > 3 && (
+                                <span class="px-2 py-1 bg-surface-container-highest text-on-surface-variant text-xs rounded-lg" style="background: #e6e0e9; color: #49454f;">
+                                  +{card.data.supportedCurrencies.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <!-- Type & Support Column -->
+                      <td class="px-4 py-6">
+                        <div class="space-y-3">
+                          <!-- Card Network -->
+                          <div class="flex items-center gap-2">
+                            <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium shadow-sm ${
+                              card.data.cardType === 'visa' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-red-100 text-red-800 border border-red-200'
+                            }`}>
+                              <div class={`w-3 h-2 rounded-sm mr-2 flex items-center justify-center ${
+                                card.data.cardType === 'visa' ? 'bg-blue-600' : 'bg-red-600'
+                              }`}>
+                                <span class="text-white text-xs font-bold">
+                                  {card.data.cardType === 'visa' ? 'V' : 'M'}
+                                </span>
+                              </div>
+                              {card.data.cardType.toUpperCase()}
+                            </span>
+                          </div>
+                          
+                          <!-- Card Types -->
+                          <div class="flex flex-wrap gap-1">
+                            {card.data.isVirtual && (
+                              <span class="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-lg border border-green-200">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
+                                </svg>
+                                虚拟卡
+                              </span>
+                            )}
+                            {card.data.isPhysical && (
+                              <span class="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-lg border border-purple-200">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                                实体卡
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <!-- Rating Column -->
+                      <td class="px-4 py-6">
+                        <div class="flex items-center gap-2">
+                          <!-- Rating Number -->
+                          <span class="text-2xl font-bold text-primary" style="color: #6750a4;">
+                            {card.data.rating}
+                          </span>
+                          
+                          <!-- Star Rating -->
+                          <div class="flex space-x-1">
+                            {[...Array(5)].map((_, i) => (
+                              <svg class={`w-4 h-4 ${i < Math.floor(card.data.rating) ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                              </svg>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <!-- Rating Text -->
+                        <div class="mt-1 text-xs text-on-surface-variant" style="color: #49454f;">
+                          {card.data.rating >= 4.5 ? '优秀' : 
+                           card.data.rating >= 4.0 ? '良好' : 
+                           card.data.rating >= 3.5 ? '一般' : '需改进'}
+                        </div>
+                      </td>
+                      
+                      <!-- Fees Column -->
+                      <td class="px-4 py-6">
+                        <div class="space-y-2">
+                          <!-- Deposit Fee -->
+                          <div class="flex justify-between items-center">
+                            <span class="text-xs text-on-surface-variant" style="color: #49454f;">充值:</span>
+                            <span class="text-sm font-medium text-on-surface" style="color: #1d1b20;">
+                              {card.data.depositFee}
+                            </span>
+                          </div>
+                          
+                          <!-- Transaction Fee -->
+                          <div class="flex justify-between items-center">
+                            <span class="text-xs text-on-surface-variant" style="color: #49454f;">交易:</span>
+                            <span class="text-sm font-medium text-on-surface" style="color: #1d1b20;">
+                              {card.data.transactionFee}
+                            </span>
+                          </div>
+                          
+                          <!-- Annual Fee -->
+                          <div class="flex justify-between items-center">
+                            <span class="text-xs text-on-surface-variant" style="color: #49454f;">年费:</span>
+                            <span class={`text-sm font-medium ${card.data.annualFee ? 'text-error' : 'text-green-600'}`} style={card.data.annualFee ? 'color: #ba1a1a;' : 'color: #16a34a;'}>
+                              {card.data.annualFee ? '收取' : '免费'}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <!-- Actions Column -->
+                      <td class="px-4 py-6">
+                        <div class="flex flex-col gap-2">
+                          <!-- View Details Button - Material 3 Outlined -->
+                          <a 
+                            href={`/cards/${card.slug}`}
+                            class="px-4 py-2 bg-transparent text-primary border border-outline rounded-2xl text-sm font-medium hover:bg-primary-container hover:text-on-primary-container transition-all duration-200 text-center group"
+                            style="color: #6750a4; border-color: #79747e;"
+                          >
+                            <span class="flex items-center justify-center gap-2">
+                              <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                              </svg>
+                              查看详情
+                            </span>
+                          </a>
+                          
+                          <!-- Apply Button - Material 3 Filled -->
+                          <a 
+                            href={card.data.affiliateLink}
+                            target="_blank"
+                            class="px-4 py-2 bg-primary text-on-primary rounded-2xl text-sm font-medium hover:bg-primary-dark hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 text-center group"
+                            style="background: #6750a4; color: #ffffff;"
+                          >
+                            <span class="flex items-center justify-center gap-2">
+                              <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                              </svg>
+                              立即申请
+                            </span>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : (
+          
+          <!-- No Results - Material 3 Style -->
+          <div class="bg-surface-container rounded-3xl p-16 text-center shadow-lg" style="background: #f7f2fa;" id="no-results">
+            <div class="w-24 h-24 bg-surface-container-high rounded-full flex items-center justify-center mx-auto mb-6" style="background: #ece6f0;">
+              <svg class="w-12 h-12 text-on-surface-variant" style="color: #49454f;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-on-surface mb-3" style="color: #1d1b20;">没有找到匹配的卡片</h3>
+            <p class="text-on-surface-variant mb-6" style="color: #49454f;">请尝试调整筛选条件或查看全部卡片</p>
+            <button 
+              class="px-6 py-3 bg-primary text-on-primary rounded-2xl hover:bg-primary-dark transition-all duration-200 font-medium shadow-md hover:shadow-lg" 
+              style="background: #6750a4; color: #ffffff;"
+              onclick="resetFilters()"
+            >
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                重置筛选
+              </span>
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- Recommended Reading - Material 3 Style -->
+    <section class="py-16 bg-surface" style="background: #fefbff;">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-on-surface mb-4" style="color: #1d1b20;">推荐阅读</h2>
+          <p class="text-xl text-on-surface-variant" style="color: #49454f;">了解更多关于数字货币U卡的知识</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- Beginner Guide Card -->
+          <div class="bg-surface-container rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" style="background: #f7f2fa;">
+            <div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: #6750a4;">
+              <svg class="w-6 h-6 text-on-primary" style="color: #ffffff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-on-surface mb-3" style="color: #1d1b20;">新手指南</h3>
+            <p class="text-on-surface-variant mb-4 leading-relaxed" style="color: #49454f;">从零开始了解数字货币U卡，包括申请流程、使用方法等基础知识。</p>
+            <a href="/guides/beginner" class="inline-flex items-center text-primary hover:text-primary-dark font-medium transition-colors group" style="color: #6750a4;">
+              阅读指南
+              <svg class="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- Fee Comparison Card -->
+          <div class="bg-surface-container rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" style="background: #f7f2fa;">
+            <div class="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: #625b71;">
+              <svg class="w-6 h-6 text-on-secondary" style="color: #e8def8;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-on-surface mb-3" style="color: #1d1b20;">费用对比</h3>
+            <p class="text-on-surface-variant mb-4 leading-relaxed" style="color: #49454f;">详细对比各家U卡的费用结构，帮你选择最经济实惠的方案。</p>
+            <a href="/articles/fee-comparison" class="inline-flex items-center text-secondary hover:text-secondary-dark font-medium transition-colors group" style="color: #625b71;">
+              查看对比
+              <svg class="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+          
+          <!-- Security Guide Card -->
+          <div class="bg-surface-container rounded-3xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 group hover:-translate-y-1" style="background: #f7f2fa;">
+            <div class="w-12 h-12 bg-tertiary rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: #7c3aed;">
+              <svg class="w-6 h-6 text-on-tertiary" style="color: #ffffff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-on-surface mb-3" style="color: #1d1b20;">安全指南</h3>
+            <p class="text-on-surface-variant mb-4 leading-relaxed" style="color: #49454f;">学习如何安全使用数字货币U卡，保护你的资产安全。</p>
+            <a href="/guides/security" class="inline-flex items-center text-tertiary hover:text-tertiary-dark font-medium transition-colors group" style="color: #7c3aed;">
+              了解安全
+              <svg class="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    /* Material Design 3 Custom Styles */
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 优化后的排名徽章样式 */
+    .rank-badge {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      font-family: 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    }
+
+    .rank-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+      pointer-events: none;
+    }
+
+    .rank-badge span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 金牌特殊效果 */
+    .rank-gold {
+      animation: goldShimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes goldShimmer {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+      }
+      50% { 
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(251, 191, 36, 0.6);
+      }
+    }
+
+    /* 银牌特殊效果 */
+    .rank-silver {
+      animation: silverPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes silverPulse {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+      }
+      50% { 
+        transform: scale(1.01);
+        box-shadow: 0 5px 14px rgba(124, 58, 237, 0.5);
+      }
+    }
+
+    /* 铜牌效果 */
+    .rank-bronze {
+      transition: all 0.3s ease;
+    }
+
+    .rank-bronze:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(100, 116, 139, 0.4);
+    }
+
+    /* Material 3 State Layers */
+    .card-row:hover {
+      background: rgba(103, 80, 164, 0.08) !important;
+    }
+
+    .filter-chip {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .filter-chip.active {
+      background: #6750a4 !important;
+      color: #ffffff !important;
+      box-shadow: 0 1px 3px rgba(103, 80, 164, 0.3);
+    }
+
+    .filter-chip:not(.active):hover {
+      background: rgba(103, 80, 164, 0.08) !important;
+      color: #6750a4 !important;
+    }
+
+    /* Material 3 Elevation Shadows */
+    .shadow-lg {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+
+    .hover\:shadow-xl:hover {
+      box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Material 3 Focus States */
+    .sort-select:focus {
+      outline: none;
+      ring: 2px;
+      ring-color: #6750a4;
+      border-color: #6750a4;
+    }
+
+    /* Material 3 Ripple Effect Simulation */
+    .filter-chip:active,
+    .card-row:active {
+      transform: scale(0.98);
+    }
+
+    /* Material 3 Typography */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .rank-badge {
+        width: 3rem;
+        height: 3rem;
+        font-size: 0.875rem;
+      }
+      
+      .rank-badge span {
+        font-size: 1rem;
+      }
+      
+      th, td {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .rank-badge {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      
+      .rank-badge span {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterChips = document.querySelectorAll('.filter-chip');
+      const sortSelect = document.querySelector('.sort-select');
+      const cardsTable = document.getElementById('cards-table');
+      const cardsTbody = document.getElementById('cards-tbody');
+      const resultsCount = document.getElementById('results-count');
+      const noResults = document.getElementById('no-results');
+      const cardRows = document.querySelectorAll('.card-row');
+
+      let currentFilter = 'all';
+      let currentSort = 'rating';
+
+      // Filter functionality with Material 3 states
+      filterChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          // Update chip states with Material 3 styling
+          filterChips.forEach(c => {
+            c.classList.remove('active');
+            c.style.background = '#ece6f0';
+            c.style.color = '#49454f';
+            c.style.borderColor = '#79747e';
+          });
+          
+          this.classList.add('active');
+          this.style.background = '#6750a4';
+          this.style.color = '#ffffff';
+          this.style.boxShadow = '0 1px 3px rgba(103, 80, 164, 0.3)';
+
+          currentFilter = this.dataset.filter;
+          applyFilters();
+        });
+
+        // Material 3 hover effects
+        chip.addEventListener('mouseenter', function() {
+          if (!this.classList.contains('active')) {
+            this.style.background = 'rgba(103, 80, 164, 0.08)';
+            this.style.color = '#6750a4';
+          }
+        });
+
+        chip.addEventListener('mouseleave', function() {
+          if (!this.classList.contains('active')) {
+            this.style.background = '#ece6f0';
+            this.style.color = '#49454f';
+          }
+        });
+      });
+
+      // Sort functionality
+      sortSelect.addEventListener('change', function() {
+        currentSort = this.value;
+        applyFilters();
+      });
+
+      // Apply filters and sorting with Material 3 animations
+      function applyFilters() {
+        let visibleRows = Array.from(cardRows);
+
+        // Filter logic
+        if (currentFilter !== 'all') {
+          visibleRows = visibleRows.filter(row => {
+            if (currentFilter === 'visa' || currentFilter === 'mastercard') {
+              return row.dataset.type === currentFilter;
+            } else if (currentFilter === 'virtual') {
+              return row.dataset.virtual === 'true';
+            } else if (currentFilter === 'physical') {
+              return row.dataset.physical === 'true';
+            } else if (currentFilter === 'no-annual-fee') {
+              return row.dataset.annualFee === 'false';
+            }
+            return true;
+          });
+        }
+
+        // Sort logic
+        if (currentSort === 'rating') {
+          visibleRows.sort((a, b) => parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
+        } else if (currentSort === 'name') {
+          visibleRows.sort((a, b) => a.dataset.name.localeCompare(b.dataset.name));
+        } else if (currentSort === 'date') {
+          visibleRows.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
+        }
+
+        // Hide all rows with fade animation
+        cardRows.forEach(row => {
+          row.style.opacity = '0';
+          row.style.transform = 'translateY(10px)';
+          setTimeout(() => {
+            row.style.display = 'none';
+          }, 150);
+        });
+
+        // Show filtered rows with Material 3 animation
+        setTimeout(() => {
+          if (visibleRows.length > 0) {
+            visibleRows.forEach((row, index) => {
+              row.style.display = 'table-row';
+              
+              // Update ranking with enhanced styling - 移除#号
+              const rankBadge = row.querySelector('.rank-badge span');
+              if (rankBadge) {
+                rankBadge.textContent = `${index + 1}`;  // 只显示数字，无#号
+                
+                // Update rank styling based on position
+                const badge = row.querySelector('.rank-badge');
+                if (index < 3) {
+                  badge.className = 'rank-badge flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg transition-all duration-300 group-hover:scale-105 rank-gold';
+                  badge.style.background = 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)';
+                  badge.style.boxShadow = '0 4px 12px rgba(251, 191, 36, 0.4)';
+                } else if (index < 5) {
+                  badge.className = 'rank-badge flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg transition-all duration-300 group-hover:scale-105 rank-silver';
+                  badge.style.background = 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%)';
+                  badge.style.boxShadow = '0 4px 12px rgba(124, 58, 237, 0.4)';
+                } else {
+                  badge.className = 'rank-badge flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg transition-all duration-300 group-hover:scale-105 rank-bronze';
+                  badge.style.background = 'linear-gradient(135deg, #64748b 0%, #475569 50%, #334155 100%)';
+                  badge.style.boxShadow = '0 4px 12px rgba(100, 116, 139, 0.3)';
+                }
+              }
+              
+              // Animate in
+              setTimeout(() => {
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+              }, index * 50);
+            });
+            
+            noResults.style.display = 'none';
+            cardsTable.style.display = 'block';
+          } else {
+            noResults.style.display = 'block';
+            cardsTable.style.display = 'none';
+          }
+          
+          // Update results count with animation
+          resultsCount.style.transform = 'scale(1.1)';
+          resultsCount.textContent = visibleRows.length;
+          setTimeout(() => {
+            resultsCount.style.transform = 'scale(1)';
+          }, 200);
+        }, 200);
+      }
+
+      // Reset filters function
+      window.resetFilters = function() {
+        currentFilter = 'all';
+        currentSort = 'rating';
+        
+        // Reset filter chips
+        filterChips.forEach(chip => {
+          chip.classList.remove('active');
+          chip.style.background = '#ece6f0';
+          chip.style.color = '#49454f';
+        });
+        filterChips[0].classList.add('active');
+        filterChips[0].style.background = '#6750a4';
+        filterChips[0].style.color = '#ffffff';
+        
+        // Reset sort select
+        sortSelect.value = 'rating';
+        
+        applyFilters();
+      };
+
+      // Material 3 row interaction effects
+      cardRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+          this.style.background = 'rgba(103, 80, 164, 0.08)';
+          this.style.transform = 'translateX(4px)';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+          this.style.background = '';
+          this.style.transform = 'translateX(0)';
+        });
+
+        // Material 3 touch/click feedback
+        row.addEventListener('mousedown', function() {
+          this.style.transform = 'translateX(4px) scale(0.99)';
+        });
+
+        row.addEventListener('mouseup', function() {
+          this.style.transform = 'translateX(4px)';
+        });
+      });
+
+      // Material 3 intersection observer for animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      // Observe table rows for scroll animations
+      cardRows.forEach(row => {
+        row.style.opacity = '0';
+        row.style.transform = 'translateY(20px)';
+        row.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(row);
+      });
+    });
+  </script>
+</Layout>

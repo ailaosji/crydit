@@ -1,0 +1,116 @@
+/* src/styles/global.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 自定义样式 */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 链接悬停效果 */
+a {
+  transition: color 0.2s ease-in-out;
+}
+
+/* 表格样式优化 */
+table {
+  border-collapse: collapse;
+}
+
+/* 响应式表格滚动 */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 卡片悬停效果 */
+.card-hover {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* 添加到 global.css 文件中的修复样式 */
+
+/* 确保表格容器使用flexbox布局以支持order属性 */
+#exchangeTableBody {
+  display: flex;
+  flex-direction: column;
+}
+
+#topThreeContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+/* 确保exchange-row在flex容器中正确显示 */
+.exchange-row {
+  display: table-row;
+  width: 100%;
+}
+
+.exchange-card {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* 修复可能的样式冲突 */
+.exchange-row[style*="display: none"] {
+  display: none !important;
+}
+
+.exchange-card[style*="display: none"] {
+  display: none !important;
+}
+
+/* 确保加载状态下的布局稳定 */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 响应式修复 */
+@media (max-width: 768px) {
+  #topThreeContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .exchange-card {
+    min-width: auto;
+  }
+}
+
+/* 确保表格在移动端正确显示 */
+@media (max-width: 640px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  table {
+    min-width: 700px;
+  }
+}

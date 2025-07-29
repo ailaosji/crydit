@@ -1,0 +1,682 @@
+---
+// src/pages/exchanges/index.astro
+import Layout from '../../layouts/Layout.astro';
+
+// 交易所数据
+const exchangesData = [
+  {
+    slug: 'binance',
+    data: {
+      name: 'Binance',
+      description: '全球最大的数字货币交易平台',
+      ranking: 1,
+      tradingVolume: '$28.5B',
+      userRating: 4.8,
+      exchangeType: '现货/期货',
+      supportedRegions: ['全球', '亚洲', '欧洲'],
+      foundedYear: '2017',
+      website: 'binance.com',
+      affiliateLink: 'https://www.binance.com'
+    }
+  },
+  {
+    slug: 'okx',
+    data: {
+      name: 'OKX',
+      description: '领先的全球数字资产交易平台',
+      ranking: 2,
+      tradingVolume: '$18.2B',
+      userRating: 4.6,
+      exchangeType: '现货/期货',
+      supportedRegions: ['全球', '亚洲'],
+      foundedYear: '2017',
+      website: 'okx.com',
+      affiliateLink: 'https://www.okx.com'
+    }
+  },
+  {
+    slug: 'coinbase',
+    data: {
+      name: 'Coinbase',
+      description: '美国最大的合规数字货币交易所',
+      ranking: 3,
+      tradingVolume: '$15.8B',
+      userRating: 4.5,
+      exchangeType: '现货',
+      supportedRegions: ['美国', '欧洲'],
+      foundedYear: '2012',
+      website: 'coinbase.com',
+      affiliateLink: 'https://www.coinbase.com'
+    }
+  },
+  {
+    slug: 'bybit',
+    data: {
+      name: 'Bybit',
+      description: '专业的数字货币衍生品交易平台',
+      ranking: 4,
+      tradingVolume: '$12.3B',
+      userRating: 4.4,
+      exchangeType: '期货/现货',
+      supportedRegions: ['全球', '亚洲'],
+      foundedYear: '2018',
+      website: 'bybit.com',
+      affiliateLink: 'https://www.bybit.com'
+    }
+  },
+  {
+    slug: 'kraken',
+    data: {
+      name: 'Kraken',
+      description: '欧洲领先的数字货币交易平台',
+      ranking: 5,
+      tradingVolume: '$8.9B',
+      userRating: 4.3,
+      exchangeType: '现货/期货',
+      supportedRegions: ['欧洲', '美国'],
+      foundedYear: '2011',
+      website: 'kraken.com',
+      affiliateLink: 'https://www.kraken.com'
+    }
+  },
+  {
+    slug: 'huobi',
+    data: {
+      name: 'HTX (Huobi)',
+      description: '全球知名数字资产交易服务商',
+      ranking: 6,
+      tradingVolume: '$7.6B',
+      userRating: 4.2,
+      exchangeType: '现货/期货',
+      supportedRegions: ['全球', '亚洲'],
+      foundedYear: '2013',
+      website: 'htx.com',
+      affiliateLink: 'https://www.htx.com'
+    }
+  }
+];
+
+// 排序交易所数据
+const sortedExchanges = exchangesData.sort((a, b) => a.data.ranking - b.data.ranking);
+const topThree = sortedExchanges.slice(0, 3);
+
+// 计算统计数据
+const totalExchanges = exchangesData.length;
+const totalVolume = exchangesData.reduce((sum, ex) => sum + parseFloat(ex.data.tradingVolume.replace(/[^0-9.]/g, '')), 0);
+const avgRating = (exchangesData.reduce((sum, ex) => sum + ex.data.userRating, 0) / exchangesData.length).toFixed(1);
+const uniqueRegions = [...new Set(exchangesData.flatMap(ex => ex.data.supportedRegions))].length;
+
+// 获取所有类型用于筛选
+const exchangeTypes = [...new Set(exchangesData.map(ex => ex.data.exchangeType))];
+const allRegions = [...new Set(exchangesData.flatMap(ex => ex.data.supportedRegions))];
+---
+
+<Layout title="交易所排行榜 - 专业数字货币交易所评测排名">
+  <div class="min-h-screen bg-gray-50">
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-green-600 to-blue-700 text-white py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-5xl font-bold mb-6 text-white">数字货币交易所排行榜</h1>
+          <p class="text-xl mb-8 max-w-3xl mx-auto text-white/90">
+            基于交易量、用户评价、安全性等多维度评估的权威交易所排名
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-white">{totalExchanges}</div>
+              <div class="text-sm text-white/80">评测交易所</div>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-white">{totalVolume.toFixed(0)}B</div>
+              <div class="text-sm text-white/80">总交易量</div>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-white">{avgRating}</div>
+              <div class="text-sm text-white/80">平均评分</div>
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center">
+              <div class="text-2xl font-bold text-white">{uniqueRegions}</div>
+              <div class="text-sm text-white/80">覆盖地区</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 筛选和搜索 -->
+    <section class="py-8 bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <!-- 搜索框 -->
+          <div class="relative flex-1 max-w-md">
+            <input 
+              type="text" 
+              id="searchInput"
+              placeholder="搜索交易所名称..." 
+              class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            >
+            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          
+          <!-- 筛选器 -->
+          <div class="flex flex-wrap gap-4">
+            <select id="typeFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+              <option value="">所有类型</option>
+              {exchangeTypes.map(type => (
+                <option value={type}>{type}</option>
+              ))}
+            </select>
+            
+            <select id="ratingFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+              <option value="">所有评分</option>
+              <option value="4.5">4.5星以上</option>
+              <option value="4">4星以上</option>
+              <option value="3">3星以上</option>
+            </select>
+            
+            <select id="regionFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+              <option value="">所有地区</option>
+              {allRegions.map(region => (
+                <option value={region}>{region}</option>
+              ))}
+            </select>
+            
+            <select id="sortBy" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+              <option value="ranking">按排名排序</option>
+              <option value="volume">按交易量排序</option>
+              <option value="rating">按评分排序</option>
+              <option value="name">按名称排序</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 无结果提示 -->
+    <div id="noResultsMessage" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="bg-white rounded-xl p-12 text-center shadow-lg">
+        <div class="text-gray-400 mb-4">
+          <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.175-5.5-2.986M15 17h.01M9 17h.01"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-700 mb-2">没有找到匹配的交易所</h3>
+        <p class="text-gray-500">请尝试调整搜索条件或筛选器</p>
+      </div>
+    </div>
+
+    <!-- 排行榜主体 -->
+    <section class="py-12" id="exchangesContainer">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 前三名特殊展示 -->
+        <div class="grid md:grid-cols-3 gap-6 mb-12 flex-container" id="topThreeContainer">
+          {topThree.map((exchange, index) => {
+            const gradientClass = index === 0 ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' :
+                                 index === 1 ? 'bg-gradient-to-br from-gray-400 to-gray-600' :
+                                 'bg-gradient-to-br from-orange-400 to-orange-600';
+            
+            return (
+              <div class={`exchange-card relative overflow-hidden rounded-2xl p-6 text-white ${gradientClass}`}
+                   data-name={exchange.data.name.toLowerCase()}
+                   data-type={exchange.data.exchangeType}
+                   data-rating={exchange.data.userRating}
+                   data-volume={parseFloat(exchange.data.tradingVolume.replace(/[^0-9.]/g, '')) || 0}
+                   data-ranking={exchange.data.ranking}
+                   data-regions={JSON.stringify(exchange.data.supportedRegions)}>
+                <div class="absolute top-4 right-4">
+                  <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                    <span class="text-2xl font-bold">#{exchange.data.ranking}</span>
+                  </div>
+                </div>
+                
+                <div class="mb-4">
+                  <div class="flex items-center mb-4">
+                    <div class="flex-shrink-0 w-12 h-12 mr-4">
+                      <img 
+                        src={`https://www.google.com/s2/favicons?domain=${exchange.data.website}&sz=64`}
+                        alt={`${exchange.data.name} favicon`}
+                        class="w-12 h-12 rounded-lg object-cover bg-white/20 p-1"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                      />
+                      <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center" style="display: none;">
+                        <span class="text-white font-bold text-sm">{exchange.data.name.slice(0, 2).toUpperCase()}</span>
+                      </div>
+                    </div>
+                    <h3 class="text-2xl font-bold">
+                      <a href={`/exchanges/${exchange.slug}`} class="hover:text-white/80 transition-colors">
+                        {exchange.data.name}
+                      </a>
+                    </h3>
+                  </div>
+                  <p class="text-white/80 mb-4">{exchange.data.description}</p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                  <div>
+                    <div class="text-sm text-white/70">24h交易量</div>
+                    <div class="text-xl font-bold">{exchange.data.tradingVolume}</div>
+                  </div>
+                  <div>
+                    <div class="text-sm text-white/70">用户评分</div>
+                    <div class="flex items-center">
+                      <span class="text-xl font-bold mr-1">{exchange.data.userRating}</span>
+                      <div class="flex text-white/80">
+                        {[...Array(5)].map((_, i) => (
+                          <svg class={`w-4 h-4 ${i < Math.floor(exchange.data.userRating) ? 'text-white' : 'text-white/40'}`} fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex space-x-3">
+                  <a 
+                    href={`/exchanges/${exchange.slug}`}
+                    class="flex-1 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-center hover:bg-white/30 transition-colors"
+                  >
+                    查看详情
+                  </a>
+                  <a 
+                    href={exchange.data.affiliateLink}
+                    target="_blank"
+                    class="flex-1 bg-white text-gray-900 px-4 py-2 rounded-lg text-center hover:bg-gray-100 transition-colors font-semibold"
+                  >
+                    立即注册
+                  </a>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <!-- 完整排行榜 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden" id="exchangeTable">
+          <div class="overflow-x-auto table-container">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    排名
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    交易所
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    类型
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    24h交易量
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    用户评分
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    支持地区
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    成立时间
+                  </th>
+                  <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    操作
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 table-body" id="exchangeTableBody">
+                {sortedExchanges.map((exchange, tableIndex) => (
+                  <tr class="exchange-row hover:bg-gray-50 transition-colors"
+                      data-name={exchange.data.name.toLowerCase()}
+                      data-type={exchange.data.exchangeType}
+                      data-rating={exchange.data.userRating}
+                      data-volume={parseFloat(exchange.data.tradingVolume.replace(/[^0-9.]/g, '')) || 0}
+                      data-ranking={exchange.data.ranking}
+                      data-regions={JSON.stringify(exchange.data.supportedRegions)}
+                      style={`order: ${tableIndex}`}>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+                        exchange.data.ranking <= 3 ? 'bg-yellow-500' : 
+                        exchange.data.ranking <= 10 ? 'bg-green-500' : 
+                        exchange.data.ranking <= 20 ? 'bg-blue-500' : 'bg-gray-500'
+                      }`}>
+                        {exchange.data.ranking}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 w-12 h-12 mr-4">
+                          <img 
+                            src={`https://www.google.com/s2/favicons?domain=${exchange.data.website}&sz=64`}
+                            alt={`${exchange.data.name} favicon`}
+                            class="w-12 h-12 rounded-lg object-cover"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                          />
+                          <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center" style="display: none;">
+                            <span class="text-white font-bold text-sm">{exchange.data.name.slice(0, 2).toUpperCase()}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <a href={`/exchanges/${exchange.slug}`} class="text-lg font-semibold text-green-600 hover:text-green-800">
+                            {exchange.data.name}
+                          </a>
+                          <p class="text-sm text-gray-500 max-w-xs truncate">{exchange.data.description}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
+                        {exchange.data.exchangeType}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-lg font-bold text-green-600">
+                        {exchange.data.tradingVolume}
+                      </div>
+                      <div class="text-sm text-gray-500">USD</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <span class="text-lg font-bold text-yellow-500 mr-2">{exchange.data.userRating}</span>
+                        <div class="flex text-yellow-400">
+                          {[...Array(5)].map((_, i) => (
+                            <svg class={`w-4 h-4 ${i < Math.floor(exchange.data.userRating) ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                          ))}
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex flex-wrap gap-1 max-w-32">
+                        {exchange.data.supportedRegions.slice(0, 2).map(region => (
+                          <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                            {region}
+                          </span>
+                        ))}
+                        {exchange.data.supportedRegions.length > 2 && (
+                          <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                            +{exchange.data.supportedRegions.length - 2}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {exchange.data.foundedYear}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex space-x-2">
+                        <a 
+                          href={`/exchanges/${exchange.slug}`}
+                          class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-200 transition-colors"
+                        >
+                          详细评测
+                        </a>
+                        <a 
+                          href={exchange.data.affiliateLink}
+                          target="_blank"
+                          class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors"
+                        >
+                          立即注册
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 交易所安全提示 -->
+    <section class="py-16 bg-yellow-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-xl p-8 shadow-lg">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-gray-900 mb-2">交易安全提示</h3>
+              <div class="text-gray-600 space-y-2">
+                <p>• 选择交易所时，请优先考虑监管合规、资金安全和用户口碑</p>
+                <p>• 建议分散资金存储，不要将所有资产放在单一交易所</p>
+                <p>• 开启二次验证(2FA)，使用强密码保护账户安全</p>
+                <p>• 定期关注交易所公告，了解平台动态和政策变化</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 排名方法说明 -->
+    <section class="py-16 bg-white">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">排名评估标准</h2>
+          <p class="text-xl text-gray-600">我们的排名基于多个维度的综合评估</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">交易量</h3>
+            <p class="text-gray-600">24小时真实交易量</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">安全性</h3>
+            <p class="text-gray-600">资金安全保障措施</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">用户评价</h3>
+            <p class="text-gray-600">真实用户反馈评分</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">合规性</h3>
+            <p class="text-gray-600">监管许可和合规状况</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // 搜索和筛选功能
+    function initializeFilters() {
+      const searchInput = document.getElementById('searchInput');
+      const typeFilter = document.getElementById('typeFilter');
+      const ratingFilter = document.getElementById('ratingFilter');
+      const regionFilter = document.getElementById('regionFilter');
+      const sortBy = document.getElementById('sortBy');
+      
+      // 检查元素是否存在
+      if (!searchInput || !typeFilter || !ratingFilter || !regionFilter || !sortBy) {
+        console.warn('过滤器元素未找到，延迟重试...');
+        setTimeout(initializeFilters, 200);
+        return;
+      }
+
+      console.log('过滤器初始化开始...');
+
+      function filterAndSort() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedType = typeFilter.value;
+        const selectedRating = parseFloat(ratingFilter.value) || 0;
+        const selectedRegion = regionFilter.value;
+        
+        const exchangeRows = document.querySelectorAll('.exchange-row');
+        const exchangeCards = document.querySelectorAll('.exchange-card');
+        
+        // 创建可见元素数组，但不改变DOM结构
+        let visibleRowsData = [];
+        let visibleCardsData = [];
+        
+        // 处理表格行
+        exchangeRows.forEach(row => {
+          const name = row.dataset.name || '';
+          const type = row.dataset.type || '';
+          const rating = parseFloat(row.dataset.rating) || 0;
+          const regions = JSON.parse(row.dataset.regions || '[]');
+          
+          const matchesSearch = name.includes(searchTerm);
+          const matchesType = !selectedType || type === selectedType;
+          const matchesRating = rating >= selectedRating;
+          const matchesRegion = !selectedRegion || regions.includes(selectedRegion);
+          
+          const isVisible = matchesSearch && matchesType && matchesRating && matchesRegion;
+          
+          if (isVisible) {
+            visibleRowsData.push({
+              element: row,
+              name: name,
+              type: type,
+              rating: rating,
+              volume: parseFloat(row.dataset.volume) || 0,
+              ranking: parseInt(row.dataset.ranking) || 0
+            });
+          }
+          
+          // 直接控制显示/隐藏，不改变DOM结构
+          row.style.display = isVisible ? 'table-row' : 'none';
+        });
+        
+        // 处理卡片
+        exchangeCards.forEach(card => {
+          const name = card.dataset.name || '';
+          const type = card.dataset.type || '';
+          const rating = parseFloat(card.dataset.rating) || 0;
+          const regions = JSON.parse(card.dataset.regions || '[]');
+          
+          const matchesSearch = name.includes(searchTerm);
+          const matchesType = !selectedType || type === selectedType;
+          const matchesRating = rating >= selectedRating;
+          const matchesRegion = !selectedRegion || regions.includes(selectedRegion);
+          
+          const isVisible = matchesSearch && matchesType && matchesRating && matchesRegion;
+          
+          if (isVisible) {
+            visibleCardsData.push({
+              element: card,
+              name: name,
+              type: type,
+              rating: rating,
+              volume: parseFloat(card.dataset.volume) || 0,
+              ranking: parseInt(card.dataset.ranking) || 0
+            });
+          }
+          
+          // 直接控制显示/隐藏
+          card.style.display = isVisible ? 'block' : 'none';
+        });
+        
+        // 排序逻辑
+        const sortValue = sortBy.value;
+        const sortFunction = getSortFunction(sortValue);
+        
+        if (sortFunction) {
+          visibleRowsData.sort(sortFunction);
+          visibleCardsData.sort(sortFunction);
+          
+          // 应用排序到DOM - 使用order样式而不是移动元素
+          visibleRowsData.forEach((item, index) => {
+            item.element.style.order = index;
+          });
+          
+          visibleCardsData.forEach((item, index) => {
+            item.element.style.order = index;
+          });
+        }
+        
+        // 显示/隐藏无结果提示
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const exchangesContainer = document.getElementById('exchangesContainer');
+        
+        if (visibleRowsData.length === 0 && visibleCardsData.length === 0) {
+          if (noResultsMessage) noResultsMessage.classList.remove('hidden');
+          if (exchangesContainer) exchangesContainer.style.display = 'none';
+        } else {
+          if (noResultsMessage) noResultsMessage.classList.add('hidden');
+          if (exchangesContainer) exchangesContainer.style.display = 'block';
+        }
+      }
+      
+      function getSortFunction(sortValue) {
+        switch(sortValue) {
+          case 'ranking':
+            return (a, b) => a.ranking - b.ranking;
+          case 'volume':
+            return (a, b) => b.volume - a.volume;
+          case 'rating':
+            return (a, b) => b.rating - a.rating;
+          case 'name':
+            return (a, b) => a.name.localeCompare(b.name);
+          default:
+            return null;
+        }
+      }
+      
+      // 事件监听器 - 添加错误处理
+      try {
+        searchInput.addEventListener('input', filterAndSort);
+        typeFilter.addEventListener('change', filterAndSort);
+        ratingFilter.addEventListener('change', filterAndSort);
+        regionFilter.addEventListener('change', filterAndSort);
+        sortBy.addEventListener('change', filterAndSort);
+        
+        console.log('过滤器初始化成功');
+      } catch (error) {
+        console.error('过滤器初始化失败:', error);
+      }
+    }
+
+    // 改进的初始化方法
+    function initApp() {
+      // 检查页面是否已经加载完成
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeFilters);
+      } else {
+        // 如果页面已经加载完成，直接初始化
+        initializeFilters();
+      }
+    }
+
+    // 多种初始化方式确保兼容性
+    if (typeof window !== 'undefined') {
+      // 立即尝试初始化
+      initApp();
+      
+      // 作为备份，在window load事件后也尝试初始化
+      window.addEventListener('load', () => {
+        setTimeout(initializeFilters, 100);
+      });
+    }
+  </script>
+</Layout>
