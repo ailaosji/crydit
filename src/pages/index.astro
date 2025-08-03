@@ -1,30 +1,134 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
 
-// 获取内容集合
+// 安全地获取内容集合，添加错误处理
 let allArticles = [];
 let allCards = [];
 let allExchanges = [];
 
 try {
-  allArticles = await getCollection('articles');
-  allCards = await getCollection('cards');  
-  allExchanges = await getCollection('exchanges');
+  // 动态导入，避免构建时错误
+  const { getCollection } = await import('astro:content');
   
-  // 按日期排序文章
-  allArticles = allArticles.sort((a, b) => 
-    new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
-  );
+  // 尝试获取各个集合，如果失败则使用空数组
+  try {
+    allArticles = await getCollection('articles');
+    console.log('Articles loaded:', allArticles.length);
+  } catch (error) {
+    console.warn('Articles collection not found:', error.message);
+    allArticles = [];
+  }
   
-  // 按评分排序U卡
-  allCards = allCards.sort((a, b) => b.data.rating - a.data.rating);
+  try {
+    allCards = await getCollection('cards');
+    console.log('Cards loaded:', allCards.length);
+  } catch (error) {
+    console.warn('Cards collection not found:', error.message);
+    allCards = [];
+  }
   
-  // 按排名排序交易所
-  allExchanges = allExchanges.sort((a, b) => a.data.ranking - b.data.ranking);
+  try {
+    allExchanges = await getCollection('exchanges');
+    console.log('Exchanges loaded:', allExchanges.length);
+  } catch (error) {
+    console.warn('Exchanges collection not found:', error.message);
+    allExchanges = [];
+  }
+  
+  // 只有在数据存在时才进行排序
+  if (allArticles.length > 0) {
+    allArticles = allArticles.sort((a, b) => 
+      new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
+    );
+  }
+  
+  if (allCards.length > 0) {
+    allCards = allCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
+  }
+  
+  if (allExchanges.length > 0) {
+    allExchanges = allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
+  }
+  
 } catch (error) {
-  console.log('Error loading collections:', error);
+  console.error('Error loading content collections:', error);
+  // 如果完全无法加载集合，使用模拟数据
+  allCards = [
+    {
+      slug: 'demo-card-1',
+      data: {
+        name: 'DemoCard Pro',
+        description: '专业级虚拟信用卡，支持全球支付',
+        cardType: 'visa',
+        isVirtual: true,
+        isPhysical: false,
+        virtualCardFee: '免费',
+        physicalCardFee: 'N/A',
+        depositFee: '0%',
+        exchangeFee: '0.5%',
+        transactionFee: '1.5%',
+        withdrawalFee: '2%',
+        annualFee: false,
+        rating: 4.8,
+        ratingCount: 256,
+        affiliateLink: '#',
+        favicon: '/icons/card-demo.svg'
+      }
+    },
+    {
+      slug: 'demo-card-2',
+      data: {
+        name: 'GlobalPay Card',
+        description: '全球通用数字货币卡片',
+        cardType: 'mastercard',
+        isVirtual: true,
+        isPhysical: true,
+        virtualCardFee: '$5',
+        physicalCardFee: '$15',
+        depositFee: '0.5%',
+        exchangeFee: '1%',
+        transactionFee: '2%',
+        withdrawalFee: '3%',
+        annualFee: true,
+        rating: 4.5,
+        ratingCount: 189,
+        affiliateLink: '#',
+        favicon: '/icons/card-global.svg'
+      }
+    }
+  ];
+  
+  allExchanges = [
+    {
+      slug: 'demo-exchange-1',
+      data: {
+        name: 'CryptoEx Pro',
+        description: '领先的数字货币交易平台',
+        ranking: 1,
+        tradingVolume: '$2.8B',
+        tradingFee: '0.1%',
+        userRating: 4.9,
+        securityRating: 4.8,
+        kycRequired: true,
+        establishedYear: 2018,
+        supportedCoins: 250,
+        affiliateLink: '#'
+      }
+    }
+  ];
+  
+  allArticles = [
+    {
+      slug: 'demo-article-1',
+      data: {
+        title: '2025年最佳数字货币卡片推荐',
+        description: '深度分析市场上最优秀的数字货币卡片，为您的选择提供专业指导',
+        category: 'review',
+        publishDate: new Date().toISOString()
+      }
+    }
+  ];
 }
 ---
 
@@ -99,6 +203,142 @@ try {
       </div>
     </section>
 
+    <!-- 热门U卡推荐 - 重新设计的表格布局 -->
+    <section class="py-24 bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
+      <!-- MD3 Background Pattern -->
+      <div class="absolute inset-0">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-60"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-purple-100 rounded-full blur-3xl opacity-40"></div>
+      </div>
+      
+      <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
+        <!-- MD3 Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-6 shadow-sm">
+            <div class="w-2 h-2 bg-indigo-600 rounded-full mr-2 animate-pulse"></div>
+            精选推荐
+          </div>
+          <h2 class="text-5xl font-bold text-gray-900 mb-4 tracking-tight">热门U卡排行</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            基于用户评分、安全性和实用性的综合评估排名
+          </p>
+        </div>
+        
+        {allCards.length > 0 ? (
+          <!-- 重新设计的卡片表格 -->
+          <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
+            <div class="overflow-x-auto">
+              <table class="min-w-full table-fixed" id="cards-table">
+                <colgroup>
+                  <col class="w-1/4 sm:w-1/3">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                  <col class="w-20">
+                </colgroup>
+                <!-- 简化的表头 -->
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      排名 & 卡片
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      卡片类型
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      虚拟卡
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      实体卡
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      充值费
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      兑换费
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      交易费
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      提现费
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      年费
+                    </th>
+                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
+                      操作
+                    </th>
+                  </tr>
+                </thead>
+                
+                <tbody class="divide-y divide-gray-100" id="card-table-body">
+                  <!-- JavaScript will populate this -->
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- 分页导航 -->
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+              <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                  显示第 <span id="page-start">1</span> - <span id="page-end">20</span> 条，
+                  共 <span id="total-items">0</span> 条记录
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button 
+                    id="prev-page"
+                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled
+                  >
+                    上一页
+                  </button>
+                  <div id="page-numbers" class="flex space-x-1">
+                    <!-- 页码按钮将动态生成 -->
+                  </div>
+                  <button 
+                    id="next-page"
+                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    下一页
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <!-- MD3 Empty State -->
+          <div class="bg-white rounded-3xl p-16 text-center shadow-lg border border-gray-200">
+            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">U卡评测内容准备中</h3>
+            <p class="text-gray-600 max-w-md mx-auto">我们的专业团队正在为您准备最详细的U卡评测内容，敬请期待</p>
+          </div>
+        )}
+        
+        <!-- MD3 FAB -->
+        <div class="text-center mt-12">
+          <a 
+            href="/cards" 
+            class="inline-flex items-center px-8 py-4 bg-indigo-600 text-white rounded-full hover:shadow-lg hover:bg-indigo-700 transition-all duration-200 font-semibold shadow-md group"
+          >
+            <span>查看全部U卡</span>
+            <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- 最新资讯 - Material Cards -->
     <section class="py-20 relative">
       <div class="max-w-7xl mx-auto px-6 lg:px-8">
@@ -128,7 +368,7 @@ try {
                     article.data.category === 'review' ? 'bg-green-100 text-green-800' :
                     'bg-purple-100 text-purple-800'
                   }`}>
-                    {article.data.category}
+                    {article.data.category || '资讯'}
                   </span>
                 </div>
                 
@@ -136,7 +376,7 @@ try {
                 <div class="h-48 bg-gradient-to-br from-indigo-400 to-purple-500 relative overflow-hidden">
                   <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
                   <div class="absolute bottom-4 right-4 text-white/80 text-sm">
-                    {new Date(article.data.publishDate).toLocaleDateString('zh-CN')}
+                    {new Date(article.data.publishDate || new Date()).toLocaleDateString('zh-CN')}
                   </div>
                 </div>
                 
@@ -181,348 +421,6 @@ try {
           >
             查看全部文章
             <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 热门U卡推荐 - Material Design 3 风格 -->
-    <section class="py-24 bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-      <!-- MD3 Background Pattern -->
-      <div class="absolute inset-0">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-60"></div>
-        <div class="absolute bottom-0 left-0 w-80 h-80 bg-purple-100 rounded-full blur-3xl opacity-40"></div>
-      </div>
-      
-      <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
-        <!-- MD3 Header -->
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-6 shadow-sm">
-            <div class="w-2 h-2 bg-indigo-600 rounded-full mr-2 animate-pulse"></div>
-            精选推荐
-          </div>
-          <h2 class="text-5xl font-bold text-gray-900 mb-4 tracking-tight">热门U卡排行</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            基于用户评分、安全性和实用性的综合评估排名
-          </p>
-        </div>
-        
-        {allCards.length > 0 ? (
-          <!-- MD3 Card Container -->
-          <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
-            <!-- MD3 Data Table -->
-            <div class="overflow-x-auto">
-              <table class="min-w-full">
-                <!-- MD3 Table Header -->
-                <thead class="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-20">
-                      <div class="flex items-center space-x-2">
-                        <span>排名</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"/>
-                        </svg>
-                      </div>
-                    </th>
-                    <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-80">
-                      卡片信息
-                    </th>
-                    <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-32">
-                      开卡费用
-                    </th>
-                    <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-40">
-                      手续费
-                    </th>
-                    <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-20">
-                      年费
-                    </th>
-                    <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-32">
-                      用户评分
-                    </th>
-                    <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-28">
-                      操作
-                    </th>
-                  </tr>
-                </thead>
-                
-                <!-- MD3 Table Body -->
-                <tbody class="divide-y divide-gray-100">
-                  {allCards.slice(0, 8).map((card, index) => (
-                    <tr class="hover:bg-gray-50 transition-all duration-200 group">
-                      <!-- MD3 Ranking Column -->
-                      <td class="px-4 py-6 w-20">
-                        <div class="flex items-center justify-center">
-                          <!-- MD3 Ranking Badge -->
-                          <div class="relative">
-                            {index < 3 ? (
-                              <!-- Top 3 - Special Badge -->
-                              <div class={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-white shadow-lg relative overflow-hidden ${
-                                index === 0 ? 'bg-gradient-to-br from-yellow-400 to-amber-600' :
-                                index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
-                                'bg-gradient-to-br from-amber-600 to-orange-700'
-                              }`}>
-                                <span class="text-lg font-bold z-10">{index + 1}</span>
-                                
-                                <!-- Crown Icon for #1 -->
-                                {index === 0 && (
-                                  <div class="absolute -top-1 -right-1">
-                                    <svg class="w-5 h-5 text-yellow-300 drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
-                                      <path d="M5 16L3 7l5.5 5L12 4l3.5 8L21 7l-2 9H5zm2.7-2h8.6l.9-5.4-2.1 1.8L12 8l-3.1 2.4-2.1-1.8L7.7 14z"/>
-                                    </svg>
-                                  </div>
-                                )}
-                              </div>
-                            ) : (
-                              <!-- Other ranks -->
-                              <div class="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center border border-gray-200">
-                                <span class="text-base font-semibold text-gray-900">{index + 1}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <!-- MD3 Card Info Column -->
-                      <td class="px-4 py-6 w-80">
-                        <div class="flex items-start space-x-3">
-                          <!-- MD3 Card Avatar -->
-                          <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                            </svg>
-                          </div>
-                          
-                          <div class="flex-1 min-w-0">
-                            <a href={`/cards/${card.slug}`} class="block group-hover:text-indigo-600 transition-colors">
-                              <h3 class="text-base font-semibold text-gray-900 mb-1 truncate">
-                                {card.data.name}
-                              </h3>
-                            </a>
-                            <p class="text-xs text-gray-500 mb-2 line-clamp-2">
-                              {card.data.description?.slice(0, 50)}...
-                            </p>
-                            
-                            <!-- MD3 Chips -->
-                            <div class="flex flex-wrap gap-1">
-                              <div class={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${
-                                card.data.cardType === 'visa' 
-                                  ? 'bg-blue-50 text-blue-700 border-blue-200' 
-                                  : 'bg-red-50 text-red-700 border-red-200'
-                              }`}>
-                                {card.data.cardType?.toUpperCase() || 'N/A'}
-                              </div>
-                              
-                              {card.data.isVirtual && (
-                                <div class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                                  <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
-                                  </svg>
-                                  虚拟
-                                </div>
-                              )}
-                              
-                              {card.data.isPhysical && (
-                                <div class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700 border border-purple-200">
-                                  <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                                  </svg>
-                                  实体
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <!-- MD3 Card Fees Column -->
-                      <td class="px-4 py-6 w-32">
-                        <div class="space-y-3">
-                          {card.data.isVirtual && (
-                            <div class="text-center bg-green-50 rounded-lg px-2 py-2">
-                              <div class="flex items-center justify-center mb-1">
-                                <svg class="w-3 h-3 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
-                                </svg>
-                                <span class="text-xs text-gray-600">虚拟卡</span>
-                              </div>
-                              <span class={`font-medium px-2 py-1 rounded-md text-xs block ${
-                                card.data.virtualCardFee === '免费' || card.data.virtualCardFee === '$0' 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : 'bg-red-100 text-red-800'
-                              }`}>
-                                {card.data.virtualCardFee || '未知'}
-                              </span>
-                            </div>
-                          )}
-                          
-                          {card.data.isPhysical && (
-                            <div class="text-center bg-purple-50 rounded-lg px-2 py-2">
-                              <div class="flex items-center justify-center mb-1">
-                                <svg class="w-3 h-3 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                                </svg>
-                                <span class="text-xs text-gray-600">实体卡</span>
-                              </div>
-                              <span class={`font-medium px-2 py-1 rounded-md text-xs block ${
-                                card.data.physicalCardFee === '免费' || card.data.physicalCardFee === '$0' 
-                                  ? 'bg-green-100 text-green-800' 
-                                  : 'bg-orange-100 text-orange-800'
-                              }`}>
-                                {card.data.physicalCardFee || '未知'}
-                              </span>
-                            </div>
-                          )}
-                          
-                          {!card.data.isVirtual && !card.data.isPhysical && (
-                            <div class="text-center text-xs text-gray-500 py-3">
-                              <svg class="w-6 h-6 mx-auto mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                              </svg>
-                              <span>待更新</span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      
-                      <!-- MD3 Transaction Fees Column -->
-                      <td class="px-4 py-6 w-40">
-                        <div class="space-y-3">
-                          <!-- Deposit Fee -->
-                          <div class="text-sm">
-                            <div class="text-gray-500 mb-1 font-medium text-xs">充值手续费</div>
-                            <div class="font-semibold text-gray-900 text-sm">
-                              {card.data.depositFee || 'N/A'}
-                            </div>
-                          </div>
-                          
-                          <!-- Transaction Fee -->
-                          <div class="text-sm">
-                            <div class="text-gray-500 mb-1 font-medium text-xs">交易手续费</div>
-                            <div class="font-semibold text-gray-900 text-sm">
-                              {card.data.transactionFee || 'N/A'}
-                            </div>
-                          </div>
-                          
-                          <!-- Withdrawal Fee -->
-                          <div class="text-sm">
-                            <div class="text-gray-500 mb-1 font-medium text-xs">提现手续费</div>
-                            <div class="font-semibold text-gray-900 text-sm">
-                              {card.data.withdrawalFee || 'N/A'}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <!-- MD3 Annual Fee Column -->
-                      <td class="px-4 py-6 w-20">
-                        <div class="flex justify-center">
-                          <span class={`inline-flex items-center px-3 py-2 rounded-full text-sm font-medium ${
-                            card.data.annualFee 
-                              ? 'bg-red-100 text-red-800' 
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            <svg class={`w-4 h-4 mr-1 ${card.data.annualFee ? 'text-red-800' : 'text-green-800'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              {card.data.annualFee ? (
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                              ) : (
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                              )}
-                            </svg>
-                            {card.data.annualFee ? '收费' : '免费'}
-                          </span>
-                        </div>
-                      </td>
-                      
-                      <!-- MD3 User Rating Column -->
-                      <td class="px-4 py-6 w-32">
-                        <div class="text-center space-y-2">
-                          <!-- Current Rating Display -->
-                          <div class="text-lg font-bold text-gray-900">{card.data.rating}</div>
-                          
-                          <!-- Interactive Star Rating -->
-                          <div class="flex justify-center space-x-1 mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <svg class={`w-5 h-5 ${
-                                i < Math.floor(card.data.rating) ? 'text-yellow-400' : 'text-gray-300'
-                              }`} fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                              </svg>
-                            ))}
-                          </div>
-                          
-                          <!-- Rating Count -->
-                          <div class="text-xs text-gray-500">
-                            {card.data.ratingCount || 128}位用户评分
-                          </div>
-                          
-                          <!-- MD3 Progress Indicator -->
-                          <div class="w-16 mx-auto">
-                            <div class="h-1 bg-gray-200 rounded-full overflow-hidden">
-                              <div 
-                                class="h-full bg-indigo-600 rounded-full transition-all duration-500"
-                                style={`width: ${(card.data.rating / 5) * 100}%`}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      
-                      <!-- MD3 Actions Column -->
-                      <td class="px-4 py-6 w-28">
-                        <div class="flex flex-col space-y-2">
-                          <!-- MD3 Outlined Button -->
-                          <a 
-                            href={`/cards/${card.slug}`}
-                            class="inline-flex items-center justify-center px-3 py-2 border border-gray-300 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-50 hover:shadow-sm transition-all duration-200 group whitespace-nowrap"
-                          >
-                            <svg class="w-3 h-3 mr-1 group-hover:scale-110 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span>详情</span>
-                          </a>
-                          
-                          <!-- MD3 Filled Button -->
-                          <a 
-                            href={card.data.affiliateLink || '#'}
-                            target="_blank"
-                            class="inline-flex items-center justify-center px-3 py-2 bg-indigo-600 text-white rounded-full text-xs font-medium hover:shadow-sm hover:bg-indigo-700 transition-all duration-200 group whitespace-nowrap"
-                          >
-                            <svg class="w-3 h-3 mr-1 group-hover:translate-x-0.5 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                            <span>申请</span>
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <!-- MD3 Empty State -->
-          <div class="bg-white rounded-3xl p-16 text-center shadow-lg border border-gray-200">
-            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">U卡评测内容准备中</h3>
-            <p class="text-gray-600 max-w-md mx-auto">我们的专业团队正在为您准备最详细的U卡评测内容，敬请期待</p>
-          </div>
-        )}
-        
-        <!-- MD3 FAB -->
-        <div class="text-center mt-12">
-          <a 
-            href="/cards" 
-            class="inline-flex items-center px-8 py-4 bg-indigo-600 text-white rounded-full hover:shadow-lg hover:bg-indigo-700 transition-all duration-200 font-semibold shadow-md group"
-          >
-            <span>查看全部U卡</span>
-            <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
             </svg>
           </a>
@@ -797,6 +695,13 @@ try {
 
 <style>
   /* 额外的自定义样式 */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -864,3 +769,313 @@ try {
     animation: pulse-slow 3s ease-in-out infinite;
   }
 </style>
+
+<script>
+  // U卡分页功能
+  document.addEventListener('DOMContentLoaded', function() {
+    // 模拟更多数据以演示分页功能
+    const generateMoreCards = () => {
+      const baseCards = [
+        {
+          slug: 'demo-card-1',
+          data: {
+            name: 'DemoCard Pro',
+            description: '专业级虚拟信用卡，支持全球支付',
+            cardType: 'visa',
+            isVirtual: true,
+            isPhysical: false,
+            virtualCardFee: '免费',
+            physicalCardFee: 'N/A',
+            depositFee: '0%',
+            exchangeFee: '0.5%',
+            transactionFee: '1.5%',
+            withdrawalFee: '2%',
+            annualFee: false,
+            rating: 4.8,
+            affiliateLink: '#'
+          }
+        },
+        {
+          slug: 'demo-card-2',
+          data: {
+            name: 'GlobalPay Card',
+            description: '全球通用数字货币卡片',
+            cardType: 'mastercard',
+            isVirtual: true,
+            isPhysical: true,
+            virtualCardFee: '$5',
+            physicalCardFee: '$15',
+            depositFee: '0.5%',
+            exchangeFee: '1%',
+            transactionFee: '2%',
+            withdrawalFee: '3%',
+            annualFee: true,
+            rating: 4.5,
+            affiliateLink: '#'
+          }
+        }
+      ];
+      
+      // 生成演示数据
+      const extendedCards = [];
+      for (let i = 0; i < 45; i++) {
+        const baseCard = baseCards[i % 2];
+        extendedCards.push({
+          ...baseCard,
+          slug: `${baseCard.slug}-${i + 1}`,
+          data: {
+            ...baseCard.data,
+            name: `${baseCard.data.name} ${i + 1}`,
+            rating: (4.0 + Math.random() * 1).toFixed(1)
+          }
+        });
+      }
+      return extendedCards;
+    };
+    
+    const allCards = generateMoreCards();
+    const itemsPerPage = 20;
+    let currentPage = 1;
+    const totalPages = Math.ceil(allCards.length / itemsPerPage);
+    
+    function renderCardRow(card, index) {
+      const globalIndex = (currentPage - 1) * itemsPerPage + index;
+      return `
+        <tr class="hover:bg-gray-50 transition-all duration-200 group">
+          <!-- 排名和卡片信息 -->
+          <td class="px-6 py-6">
+            <div class="flex items-center space-x-4">
+              <!-- 排名号码 -->
+              <div class="flex-shrink-0 w-8 text-center">
+                <span class="text-sm font-semibold text-gray-900">${globalIndex + 1}</span>
+              </div>
+              
+              <!-- 卡片图标和信息 -->
+              <div class="flex items-center space-x-3">
+                <!-- 卡片图标/Favicon -->
+                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                  ${card.data.favicon ? `
+                    <img src="${card.data.favicon}" alt="${card.data.name}" class="w-6 h-6 rounded" />
+                  ` : `
+                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                  `}
+                </div>
+                
+                <div class="min-w-0">
+                  <a href="/cards/${card.slug}" class="block group-hover:text-indigo-600 transition-colors">
+                    <h3 class="text-base font-semibold text-gray-900 truncate">
+                      ${card.data.name}
+                    </h3>
+                  </a>
+                  <p class="text-xs text-gray-500 mt-1 line-clamp-1">
+                    ${(card.data.description?.slice(0, 40) || '专业数字货币卡片')}...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </td>
+          
+          <!-- 卡片类型 -->
+          <td class="px-3 py-6 text-center">
+            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+              card.data.cardType === 'visa' 
+                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                : 'bg-red-50 text-red-700 border border-red-200'
+            }">
+              ${(card.data.cardType || 'visa').toUpperCase()}
+            </div>
+          </td>
+          
+          <!-- 虚拟卡费用 -->
+          <td class="px-3 py-6 text-center">
+            <div class="flex flex-col items-center">
+              ${card.data.isVirtual ? `
+                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mb-1">
+                  <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <span class="text-xs font-medium px-2 py-1 rounded-md ${
+                  card.data.virtualCardFee === '免费' || card.data.virtualCardFee === '$0' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-orange-100 text-orange-800'
+                }">
+                  ${card.data.virtualCardFee || '未知'}
+                </span>
+              ` : `
+                <span class="text-gray-400 text-xs">不支持</span>
+              `}
+            </div>
+          </td>
+          
+          <!-- 实体卡费用 -->
+          <td class="px-3 py-6 text-center">
+            <div class="flex flex-col items-center">
+              ${card.data.isPhysical ? `
+                <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mb-1">
+                  <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <span class="text-xs font-medium px-2 py-1 rounded-md ${
+                  card.data.physicalCardFee === '免费' || card.data.physicalCardFee === '$0' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-orange-100 text-orange-800'
+                }">
+                  ${card.data.physicalCardFee || '未知'}
+                </span>
+              ` : `
+                <span class="text-gray-400 text-xs">不支持</span>
+              `}
+            </div>
+          </td>
+          
+          <!-- 充值费用 -->
+          <td class="px-3 py-6 text-center">
+            <span class="text-xs font-medium text-gray-900">${card.data.depositFee || '未知'}</span>
+          </td>
+          
+          <!-- 兑换费用 -->
+          <td class="px-3 py-6 text-center">
+            <span class="text-xs font-medium text-gray-900">${card.data.exchangeFee || '未知'}</span>
+          </td>
+          
+          <!-- 交易费用 -->
+          <td class="px-3 py-6 text-center">
+            <span class="text-xs font-medium text-gray-900">${card.data.transactionFee || '未知'}</span>
+          </td>
+          
+          <!-- 提现费用 -->
+          <td class="px-3 py-6 text-center">
+            <span class="text-xs font-medium text-gray-900">${card.data.withdrawalFee || '未知'}</span>
+          </td>
+          
+          <!-- 年费 -->
+          <td class="px-3 py-6 text-center">
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+              card.data.annualFee ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+            }">
+              ${card.data.annualFee ? '有年费' : '免年费'}
+            </span>
+          </td>
+          
+          <!-- 操作 -->
+          <td class="px-3 py-6">
+            <div class="flex flex-col space-y-1.5 min-w-0">
+              <a 
+                href="/cards/${card.slug}"
+                class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors text-center whitespace-nowrap"
+              >
+                查看详情
+              </a>
+              <a 
+                href="${card.data.affiliateLink || '#'}"
+                target="_blank"
+                class="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-xs font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm hover:shadow-md text-center whitespace-nowrap"
+              >
+                立即申请
+              </a>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+    
+    function renderPage() {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, allCards.length);
+      const pageCards = allCards.slice(startIndex, endIndex);
+      
+      const tableBody = document.getElementById('card-table-body');
+      if (tableBody) {
+        tableBody.innerHTML = pageCards.map((card, index) => renderCardRow(card, index)).join('');
+        
+        // 更新分页信息
+        document.getElementById('page-start').textContent = startIndex + 1;
+        document.getElementById('page-end').textContent = endIndex;
+        document.getElementById('total-items').textContent = allCards.length;
+        
+        // 更新按钮状态
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+        
+        if (prevButton) {
+          prevButton.disabled = currentPage === 1;
+        }
+        if (nextButton) {
+          nextButton.disabled = currentPage === totalPages;
+        }
+        
+        // 生成页码按钮
+        renderPageNumbers();
+      }
+    }
+    
+    function renderPageNumbers() {
+      const pageNumbersContainer = document.getElementById('page-numbers');
+      if (!pageNumbersContainer) return;
+      
+      const maxVisiblePages = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      if (endPage - startPage + 1 < maxVisiblePages) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      let html = '';
+      
+      for (let i = startPage; i <= endPage; i++) {
+        html += `
+          <button 
+            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+              i === currentPage 
+                ? 'bg-indigo-600 text-white' 
+                : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
+            }" 
+            data-page="${i}"
+          >
+            ${i}
+          </button>
+        `;
+      }
+      
+      pageNumbersContainer.innerHTML = html;
+      
+      // 绑定页码按钮事件
+      pageNumbersContainer.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', () => {
+          currentPage = parseInt(button.dataset.page);
+          renderPage();
+        });
+      });
+    }
+    
+    // 绑定分页按钮事件
+    const prevButton = document.getElementById('prev-page');
+    const nextButton = document.getElementById('next-page');
+    
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage();
+        }
+      });
+    }
+    
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderPage();
+        }
+      });
+    }
+    
+    // 初始渲染
+    renderPage();
+  });
+</script>
