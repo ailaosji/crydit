@@ -1,6 +1,6 @@
 ---
-// src/pages/articles.astro
-import Layout from '../layouts/Layout.astro';
+// src/pages/news/articles.astro
+import Layout from '../../layouts/Layout.astro';
 
 // 安全地获取内容集合
 let allArticles = [];
@@ -503,3 +503,5 @@ const featuredArticles = allArticles.filter(article => article.data.featured);
     searchInput.addEventListener('input', filterAndSort);
     categoryFilter.addEventListener('change', filterAndSort);
     sortFilter.addEventListener('change', filterAndSort);
+  });
+</script>
