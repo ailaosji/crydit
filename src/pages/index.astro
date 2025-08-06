@@ -53,326 +53,275 @@ try {
   
 } catch (error) {
   console.error('Error loading content collections:', error);
-  // 如果完全无法加载集合，使用模拟数据
-  allCards = [
-    {
-      slug: 'demo-card-1',
-      data: {
-        name: 'DemoCard Pro',
-        description: '专业级虚拟信用卡，支持全球支付',
-        cardType: 'visa',
-        isVirtual: true,
-        isPhysical: false,
-        virtualCardFee: '免费',
-        physicalCardFee: 'N/A',
-        depositFee: '0%',
-        exchangeFee: '0.5%',
-        transactionFee: '1.5%',
-        withdrawalFee: '2%',
-        annualFee: false,
-        rating: 4.8,
-        ratingCount: 256,
-        affiliateLink: '#',
-        favicon: '/icons/card-demo.svg'
-      }
-    },
-    {
-      slug: 'demo-card-2',
-      data: {
-        name: 'GlobalPay Card',
-        description: '全球通用数字货币卡片',
-        cardType: 'mastercard',
-        isVirtual: true,
-        isPhysical: true,
-        virtualCardFee: '$5',
-        physicalCardFee: '$15',
-        depositFee: '0.5%',
-        exchangeFee: '1%',
-        transactionFee: '2%',
-        withdrawalFee: '3%',
-        annualFee: true,
-        rating: 4.5,
-        ratingCount: 189,
-        affiliateLink: '#',
-        favicon: '/icons/card-global.svg'
-      }
-    }
-  ];
-  
-  allExchanges = [
-    {
-      slug: 'demo-exchange-1',
-      data: {
-        name: 'CryptoEx Pro',
-        description: '领先的数字货币交易平台',
-        ranking: 1,
-        tradingVolume: '$2.8B',
-        tradingFee: '0.1%',
-        userRating: 4.9,
-        securityRating: 4.8,
-        kycRequired: true,
-        establishedYear: 2018,
-        supportedCoins: 250,
-        affiliateLink: '#'
-      }
-    }
-  ];
-  
-  allArticles = [
-    {
-      slug: 'demo-article-1',
-      data: {
-        title: '2025年最佳数字货币卡片推荐',
-        description: '深度分析市场上最优秀的数字货币卡片，为您的选择提供专业指导',
-        category: 'review',
-        publishDate: new Date().toISOString()
-      }
-    }
-  ];
 }
+
+// 获取最新文章和热门文章
+const latestArticle = allArticles[0];
+const popularArticles = allArticles.slice(1, 6);
+const featuredCards = allCards.slice(0, 20);
 ---
 
-<Layout title="U卡评测 - 专业的数字货币U卡评测社区">
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-    <!-- Hero Section - Modern Material Design -->
-    <section class="relative overflow-hidden">
-      <!-- Background Pattern -->
-      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-700">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_70%)]"></div>
+<Layout title="数字货币U卡评测与推荐 - 2025年最新加密货币借记卡指南">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-100">
+    
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden py-20 px-6 lg:px-8 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600">
+      <div class="absolute inset-0">
         <div class="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
         <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-300/20 rounded-full blur-3xl translate-x-48 translate-y-48"></div>
       </div>
       
-      <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-24 lg:py-32">
+      <div class="relative max-w-7xl mx-auto">
         <div class="text-center">
-          <!-- Badge -->
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white/90 text-sm font-medium mb-8">
-            <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-            专业评测 · 实时更新 · 安全可靠
-          </div>
-          
-          <h1 class="text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
-            专业的数字货币
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">
-              U卡评测
-            </span>
-            社区
+          <h1 class="text-5xl lg:text-7xl font-bold text-white mb-8">
+            数字货币U卡
           </h1>
           
-          <p class="text-xl lg:text-2xl text-white/80 mb-12 max-w-4xl mx-auto leading-relaxed">
-            深度评测 · 实时排行 · 专业分析<br>
-            为您的数字资产选择提供最权威的参考
+          <p class="text-xl lg:text-2xl text-white/80 mb-12 max-w-3xl mx-auto">
+            专业的加密货币借记卡评测平台，为您提供最全面的U卡申请指南、费用对比和使用体验分享
           </p>
-          
-          <!-- CTA Buttons -->
-          <div class="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-            <a href="/cards" class="group relative inline-flex items-center px-8 py-4 rounded-2xl bg-white text-indigo-600 font-semibold shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300">
-              <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-              查看U卡评测
-            </a>
-            <a href="/exchanges" class="group relative inline-flex items-center px-8 py-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold hover:bg-white/20 transform hover:-translate-y-1 transition-all duration-300">
-              <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-              </svg>
-              交易所排行
-            </a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 资讯推荐区域 -->
+    <section class="py-12 px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-3 gap-8">
+          <!-- 左侧大图展示最新文章 -->
+          <div class="lg:col-span-2">
+            {latestArticle && (
+              <article class="group relative h-full min-h-[500px] rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500">
+                <!-- 背景图片/渐变 -->
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600">
+                  <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+                </div>
+                
+                <!-- 内容 -->
+                <div class="relative h-full flex flex-col justify-end p-8 lg:p-12">
+                  <!-- 分类标签 -->
+                  <div class="mb-4">
+                    <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-medium">
+                      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                      最新发布
+                    </span>
+                  </div>
+                  
+                  <!-- 标题 -->
+                  <h3 class="text-3xl lg:text-4xl font-bold text-white mb-4 group-hover:text-yellow-300 transition-colors">
+                    <a href={`/articles/${latestArticle.slug}`} class="hover:underline">
+                      {latestArticle.data.title}
+                    </a>
+                  </h3>
+                  
+                  <!-- 描述 -->
+                  <p class="text-white/90 text-lg mb-6 line-clamp-3">
+                    {latestArticle.data.description}
+                  </p>
+                  
+                  <!-- 元信息 -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4 text-white/80 text-sm">
+                      <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        {latestArticle.data.author || '编辑部'}
+                      </span>
+                      <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        {new Date(latestArticle.data.publishDate || new Date()).toLocaleDateString('zh-CN')}
+                      </span>
+                    </div>
+                    
+                    <a href={`/articles/${latestArticle.slug}`} 
+                       class="inline-flex items-center px-5 py-2.5 bg-white/20 backdrop-blur-md hover:bg-white/30 text-white font-medium rounded-full transition-all group-hover:scale-105">
+                      阅读全文
+                      <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            )}
           </div>
-          
-          <!-- Stats Cards -->
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div class="text-3xl font-bold text-white mb-1">{allCards.length}+</div>
-              <div class="text-white/70 text-sm">评测U卡</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div class="text-3xl font-bold text-white mb-1">{allExchanges.length}+</div>
-              <div class="text-white/70 text-sm">合作交易所</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div class="text-3xl font-bold text-white mb-1">{allArticles.length}+</div>
-              <div class="text-white/70 text-sm">专业文章</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div class="text-3xl font-bold text-white mb-1">50K+</div>
-              <div class="text-white/70 text-sm">用户信赖</div>
+
+          <!-- 右侧阅读排行榜 -->
+          <div class="lg:col-span-1">
+            <div class="bg-white rounded-3xl shadow-xl p-6 h-full">
+              <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-gray-900">阅读排行</h3>
+                <span class="px-3 py-1 bg-red-100 text-red-600 text-xs font-medium rounded-full">
+                  本周热门
+                </span>
+              </div>
+              
+              <div class="space-y-4">
+                {popularArticles.map((article, index) => (
+                  <div class="group flex items-start space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                    <!-- 排名数字 -->
+                    <div class={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm
+                      ${index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
+                        index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white' :
+                        index === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white' :
+                        'bg-gray-100 text-gray-600'}`}>
+                      {index + 1}
+                    </div>
+                    
+                    <!-- 文章信息 -->
+                    <div class="flex-1 min-w-0">
+                      <h4 class="text-sm font-medium text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                        <a href={`/articles/${article.slug}`}>
+                          {article.data.title}
+                        </a>
+                      </h4>
+                      <div class="flex items-center space-x-3 mt-1 text-xs text-gray-500">
+                        <span class="flex items-center">
+                          <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                          </svg>
+                          {Math.floor(Math.random() * 5000 + 1000)} 阅读
+                        </span>
+                        <span class={`px-2 py-0.5 rounded-full text-xs
+                          ${article.data.category === 'news' ? 'bg-red-50 text-red-600' :
+                            article.data.category === 'guide' ? 'bg-blue-50 text-blue-600' :
+                            article.data.category === 'review' ? 'bg-green-50 text-green-600' :
+                            'bg-purple-50 text-purple-600'}`}>
+                          {article.data.category === 'review' ? '评测' :
+                           article.data.category === 'guide' ? '指南' :
+                           article.data.category === 'news' ? '新闻' : '分析'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div class="mt-6 pt-6 border-t border-gray-100">
+                <a href="/articles" 
+                   class="flex items-center justify-center w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all">
+                  查看更多资讯
+                  <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 热门U卡推荐 - 重新设计的表格布局 -->
-    <section class="py-24 bg-gradient-to-br from-slate-50 to-slate-100 relative overflow-hidden">
-      <!-- MD3 Background Pattern -->
-      <div class="absolute inset-0">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-60"></div>
-        <div class="absolute bottom-0 left-0 w-80 h-80 bg-purple-100 rounded-full blur-3xl opacity-40"></div>
-      </div>
-      
-      <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
-        <!-- MD3 Header -->
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-6 shadow-sm">
-            <div class="w-2 h-2 bg-indigo-600 rounded-full mr-2 animate-pulse"></div>
-            精选推荐
-          </div>
-          <h2 class="text-5xl font-bold text-gray-900 mb-4 tracking-tight">热门U卡排行</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            基于用户评分、安全性和实用性的综合评估排名
+    <!-- 推荐U卡部分 -->
+    <section class="py-16 px-6 lg:px-8 bg-white">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">推荐U卡</h2>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            精选市场上最优质的数字货币借记卡，助您轻松实现加密资产的日常消费
           </p>
         </div>
-        
-        {allCards.length > 0 ? (
-          <!-- 重新设计的卡片表格 -->
-          <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
-            <div class="overflow-x-auto">
-              <table class="min-w-full table-fixed" id="cards-table">
-                <colgroup>
-                  <col class="w-1/4 sm:w-1/3">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                  <col class="w-20">
-                </colgroup>
-                <!-- 简化的表头 -->
-                <thead class="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th class="px-6 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      排名 & 卡片
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      卡片类型
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      虚拟卡
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      实体卡
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      充值费
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      兑换费
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      交易费
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      提现费
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      年费
-                    </th>
-                    <th class="px-3 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider">
-                      操作
-                    </th>
-                  </tr>
-                </thead>
-                
-                <tbody class="divide-y divide-gray-100" id="card-table-body">
-                  <!-- JavaScript will populate this -->
-                </tbody>
-              </table>
-            </div>
-            
-            <!-- 分页导航 -->
-            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-              <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-700">
-                  显示第 <span id="page-start">1</span> - <span id="page-end">20</span> 条，
-                  共 <span id="total-items">0</span> 条记录
+
+        <!-- 卡片表格 -->
+        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
+          <table class="w-full table-auto" id="cards-table">
+            <!-- 表头 -->
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-[20%]">
+                  排名 & 卡片
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[8%]">
+                  类型
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[6%]">
+                  虚拟卡
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[6%]">
+                  实体卡
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[8%]">
+                  充值费
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[8%]">
+                  兑换费
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[8%]">
+                  交易费
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[8%]">
+                  提现费
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[6%]">
+                  年费
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[6%]">
+                  评论
+                </th>
+                <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
+                  操作
+                </th>
+              </tr>
+            </thead>
+            <tbody id="card-table-body" class="bg-white divide-y divide-gray-200">
+              <!-- 表格内容将通过JavaScript动态生成 -->
+            </tbody>
+          </table>
+          
+          <!-- 分页控件 -->
+          <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-gray-700">
+                显示 <span id="page-start" class="font-medium">1</span> 到 
+                <span id="page-end" class="font-medium">10</span> 条，
+                共 <span id="total-items" class="font-medium">{featuredCards.length}</span> 条记录
+              </div>
+              <div class="flex items-center space-x-2">
+                <button id="prev-page" class="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  上一页
+                </button>
+                <div id="page-numbers" class="flex space-x-1">
+                  <!-- 页码将通过JavaScript动态生成 -->
                 </div>
-                <div class="flex items-center space-x-2">
-                  <button 
-                    id="prev-page"
-                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled
-                  >
-                    上一页
-                  </button>
-                  <div id="page-numbers" class="flex space-x-1">
-                    <!-- 页码按钮将动态生成 -->
-                  </div>
-                  <button 
-                    id="next-page"
-                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    下一页
-                  </button>
-                </div>
+                <button id="next-page" class="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                  下一页
+                </button>
               </div>
             </div>
           </div>
-        ) : (
-          <!-- MD3 Empty State -->
-          <div class="bg-white rounded-3xl p-16 text-center shadow-lg border border-gray-200">
-            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">U卡评测内容准备中</h3>
-            <p class="text-gray-600 max-w-md mx-auto">我们的专业团队正在为您准备最详细的U卡评测内容，敬请期待</p>
-          </div>
-        )}
-        
-        <!-- MD3 FAB -->
-        <div class="text-center mt-12">
-          <a 
-            href="/cards" 
-            class="inline-flex items-center px-8 py-4 bg-indigo-600 text-white rounded-full hover:shadow-lg hover:bg-indigo-700 transition-all duration-200 font-semibold shadow-md group"
-          >
-            <span>查看全部U卡</span>
-            <svg class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </div>
+
+        <!-- 查看更多按钮 -->
+        <div class="mt-8 text-center">
+          <a href="/cards" 
+             class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:-translate-y-1 shadow-lg">
+            查看全部U卡评测
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
             </svg>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- 最新资讯 - Material Cards -->
-    <section class="py-20 relative">
-      <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-4">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            实时更新
+    <!-- 最新文章 -->
+    {allArticles.length > 0 && (
+      <section class="py-16 px-6 lg:px-8 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">最新文章</h2>
+            <p class="text-xl text-gray-600">深度解读数字货币行业动态</p>
           </div>
-          <h2 class="text-5xl font-bold text-gray-900 mb-6">最新资讯</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            掌握数字货币U卡的最新动态和深度分析，让您的决策更加明智
-          </p>
-        </div>
-        
-        {allArticles.length > 0 ? (
+          
           <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {allArticles.slice(0, 6).map((article, index) => (
-              <article class="group relative bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 overflow-hidden">
-                <!-- Card Header -->
-                <div class="absolute top-4 left-4 z-10">
-                  <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                    article.data.category === 'news' ? 'bg-red-100 text-red-800' :
-                    article.data.category === 'guide' ? 'bg-blue-100 text-blue-800' :
-                    article.data.category === 'review' ? 'bg-green-100 text-green-800' :
-                    'bg-purple-100 text-purple-800'
-                  }`}>
-                    {article.data.category || '资讯'}
-                  </span>
-                </div>
-                
-                <!-- Image Placeholder -->
+            {allArticles.slice(0, 6).map((article) => (
+              <article class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
                 <div class="h-48 bg-gradient-to-br from-indigo-400 to-purple-500 relative overflow-hidden">
                   <div class="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors"></div>
                   <div class="absolute bottom-4 right-4 text-white/80 text-sm">
@@ -402,680 +351,427 @@ try {
               </article>
             ))}
           </div>
-        ) : (
-          <div class="bg-white rounded-3xl p-16 text-center shadow-lg">
-            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">更多精彩内容即将发布</h3>
-            <p class="text-gray-600">我们正在为您准备最新最全的内容，敬请期待！</p>
-          </div>
-        )}
-        
-        <div class="text-center mt-12">
-          <a 
-            href="/articles" 
-            class="inline-flex items-center px-8 py-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-          >
-            查看全部文章
-            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 交易所排行榜 - Premium Design -->
-    <section class="py-20 bg-gradient-to-br from-slate-50 to-gray-100 relative overflow-hidden">
-      <!-- Background Pattern -->
-      <div class="absolute inset-0 opacity-40">
-        <div class="absolute top-0 left-0 w-72 h-72 bg-green-200 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full blur-3xl"></div>
-      </div>
-      
-      <div class="max-w-7xl mx-auto px-6 lg:px-8 relative">
-        <div class="text-center mb-16">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-green-100 text-green-700 text-sm font-medium mb-4">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            权威排名
-          </div>
-          <h2 class="text-5xl font-bold text-gray-900 mb-6">交易所排行榜</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-            基于安全性、交易量、用户体验等多维度评估，为您推荐最优质的交易平台
-          </p>
-        </div>
-        
-        {allExchanges.length > 0 ? (
-          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-            <div class="overflow-x-auto">
-              <table class="min-w-full">
-                <thead class="bg-gradient-to-r from-green-50 to-blue-50">
-                  <tr>
-                    <th class="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
-                      排名 & 交易所
-                    </th>
-                    <th class="px-6 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
-                      交易数据
-                    </th>
-                    <th class="px-6 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
-                      用户评分
-                    </th>
-                    <th class="px-6 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
-                      安全等级
-                    </th>
-                    <th class="px-6 py-6 text-center text-sm font-bold text-gray-700 uppercase tracking-wider">
-                      操作
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                  {allExchanges.slice(0, 10).map((exchange) => (
-                    <tr class="hover:bg-gradient-to-r hover:from-green-50 hover:to-blue-50 transition-all duration-300 group">
-                      <td class="px-8 py-6">
-                        <div class="flex items-center">
-                          <div class={`flex-shrink-0 w-12 h-12 rounded-2xl flex items-center justify-center mr-4 font-bold text-white shadow-lg transform group-hover:scale-110 transition-transform ${
-                            exchange.data.ranking <= 3 ? 'bg-gradient-to-br from-yellow-400 to-orange-500' :
-                            exchange.data.ranking <= 10 ? 'bg-gradient-to-br from-green-500 to-blue-600' :
-                            'bg-gradient-to-br from-gray-400 to-gray-500'
-                          }`}>
-                            {exchange.data.ranking}
-                          </div>
-                          <div>
-                            <a href={`/exchanges/${exchange.slug}`} class="text-lg font-bold text-gray-900 hover:text-green-600 transition-colors">
-                              {exchange.data.name}
-                            </a>
-                            <p class="text-sm text-gray-500 mt-1">{exchange.data.description}</p>
-                            <div class="flex items-center mt-2 text-xs text-gray-400">
-                              <span class="mr-3">成立: {exchange.data.establishedYear}</span>
-                              <span>支持: {exchange.data.supportedCoins}+ 币种</span>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-6">
-                        <div class="space-y-2">
-                          <div class="flex items-center">
-                            <span class="text-lg font-bold text-green-600 mr-2">
-                              {exchange.data.tradingVolume || 'N/A'}
-                            </span>
-                            <span class="text-xs text-gray-500">24h交易量</span>
-                          </div>
-                          <div class="text-sm text-gray-600">
-                            交易费: <span class="font-medium text-gray-900">{exchange.data.tradingFee || 'N/A'}</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-6">
-                        <div class="flex items-center">
-                          <span class="text-2xl font-bold text-amber-500 mr-2">{exchange.data.userRating || 'N/A'}</span>
-                          <div class="flex space-x-1">
-                            {[...Array(5)].map((_, i) => (
-                              <svg class={`w-5 h-5 ${i < Math.floor(exchange.data.userRating || 0) ? 'text-amber-400' : 'text-gray-200'}`} fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                              </svg>
-                            ))}
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-6">
-                        <div class="flex items-center">
-                          <div class={`w-3 h-3 rounded-full mr-2 ${
-                            (exchange.data.securityRating || 0) >= 4.5 ? 'bg-green-500' :
-                            (exchange.data.securityRating || 0) >= 3.5 ? 'bg-yellow-500' :
-                            'bg-red-500'
-                          }`}></div>
-                          <span class="text-sm font-medium text-gray-900">
-                            {exchange.data.securityRating || 'N/A'}/5.0
-                          </span>
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">
-                          {exchange.data.kycRequired ? '需要KYC' : '免KYC'}
-                        </div>
-                      </td>
-                      <td class="px-6 py-6">
-                        <div class="flex flex-col space-y-2">
-                          <a 
-                            href={`/exchanges/${exchange.slug}`}
-                            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium hover:bg-gray-200 transition-colors text-center"
-                          >
-                            查看详情
-                          </a>
-                          <a 
-                            href={exchange.data.affiliateLink || '#'}
-                            target="_blank"
-                            class="px-4 py-2 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-green-700 hover:to-blue-700 transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl text-center"
-                          >
-                            立即注册
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : (
-          <div class="bg-white rounded-3xl p-16 text-center shadow-lg">
-            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-              </svg>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">交易所排行数据正在更新中</h3>
-            <p class="text-gray-600">我们正在收集和分析最新的交易所数据...</p>
-          </div>
-        )}
-        
-        <div class="text-center mt-12">
-          <a 
-            href="/exchanges" 
-            class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-2xl hover:from-green-700 hover:to-blue-700 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-          >
-            查看完整排行
-            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Newsletter & Community Section -->
-    <section class="py-20 bg-white relative overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-purple-50"></div>
-      <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative">
-        <div class="mb-12">
-          <div class="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-700 text-sm font-medium mb-6">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-            加入社区
-          </div>
           
-          <h2 class="text-5xl font-bold text-gray-900 mb-6">
-            开始您的数字货币之旅
-          </h2>
-          <p class="text-xl text-gray-600 mb-12 leading-relaxed">
-            订阅我们的资讯，第一时间获取最新的U卡评测、交易所动态和行业分析<br>
-            让专业的内容为您的投资决策保驾护航
-          </p>
+          <div class="text-center mt-12">
+            <a href="/articles" class="inline-flex items-center px-8 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors">
+              查看所有文章
+              <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+              </svg>
+            </a>
+          </div>
         </div>
-
-        <!-- Newsletter Signup -->
-        <div class="bg-white rounded-3xl shadow-2xl p-8 mb-12 border border-gray-100">
-          <h3 class="text-2xl font-bold text-gray-900 mb-6">订阅每周资讯</h3>
-          <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-            <input 
-              type="email" 
-              placeholder="请输入您的邮箱地址" 
-              class="flex-1 px-6 py-4 rounded-2xl border border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-gray-900 placeholder-gray-500"
-            />
-            <button 
-              type="submit"
-              class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl hover:from-indigo-700 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl whitespace-nowrap"
-            >
-              立即订阅
-            </button>
-          </form>
-          <p class="text-sm text-gray-500 mt-4">
-            我们承诺保护您的隐私，不会向第三方分享您的信息
-          </p>
-        </div>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row justify-center gap-6">
-          <a 
-            href="/about" 
-            class="group inline-flex items-center px-8 py-4 bg-white border-2 border-indigo-200 text-indigo-600 rounded-2xl hover:bg-indigo-50 hover:border-indigo-300 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-          >
-            <svg class="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            了解我们
-          </a>
-          <a 
-            href="/contact" 
-            class="group inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl hover:from-indigo-700 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
-          >
-            <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-            </svg>
-            联系我们
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer CTA Section -->
-    <section class="py-16 bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 relative overflow-hidden">
-      <!-- Background Pattern -->
-      <div class="absolute inset-0">
-        <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-80 h-80 bg-indigo-400/10 rounded-full blur-3xl"></div>
-      </div>
-      
-      <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative">
-        <h2 class="text-4xl font-bold text-white mb-6">
-          让数据为您的投资决策护航
-        </h2>
-        <p class="text-xl text-white/80 mb-8 leading-relaxed">
-          专业评测 · 实时更新 · 客观分析 · 安全可靠
-        </p>
-        
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-          <a 
-            href="/cards" 
-            class="inline-flex items-center px-8 py-4 bg-white text-gray-900 rounded-2xl hover:bg-gray-100 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-xl hover:shadow-2xl"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-            </svg>
-            开始评测U卡
-          </a>
-          <a 
-            href="/exchanges" 
-            class="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-2xl hover:bg-white/20 transform hover:-translate-y-1 transition-all duration-300 font-semibold"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-            </svg>
-            探索交易所
-          </a>
-        </div>
-      </div>
-    </section>
+      </section>
+    )}
   </div>
-</Layout>
 
-<style>
-  /* 额外的自定义样式 */
-  .line-clamp-1 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  /* 平滑滚动 */
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  /* 自定义渐变动画 */
-  @keyframes gradient-x {
-    0%, 100% {
-      background-size: 200% 200%;
-      background-position: left center;
-    }
-    50% {
-      background-size: 200% 200%;
-      background-position: right center;
-    }
-  }
-  
-  .animate-gradient-x {
-    animation: gradient-x 15s ease infinite;
-  }
-  
-  /* 悬浮效果增强 */
-  .hover-lift {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
-  
-  /* 响应式表格 */
-  @media (max-width: 768px) {
-    .table-responsive {
-      font-size: 0.875rem;
-    }
-    
-    .table-responsive th,
-    .table-responsive td {
-      padding: 0.75rem 0.5rem;
-    }
-  }
-  
-  /* 加载动画 */
-  @keyframes pulse-slow {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse-slow 3s ease-in-out infinite;
-  }
-</style>
-
-<script>
-  // U卡分页功能
-  document.addEventListener('DOMContentLoaded', function() {
-    // 模拟更多数据以演示分页功能
-    const generateMoreCards = () => {
-      const baseCards = [
-        {
-          slug: 'demo-card-1',
-          data: {
-            name: 'DemoCard Pro',
-            description: '专业级虚拟信用卡，支持全球支付',
-            cardType: 'visa',
-            isVirtual: true,
-            isPhysical: false,
-            virtualCardFee: '免费',
-            physicalCardFee: 'N/A',
-            depositFee: '0%',
-            exchangeFee: '0.5%',
-            transactionFee: '1.5%',
-            withdrawalFee: '2%',
-            annualFee: false,
-            rating: 4.8,
-            affiliateLink: '#'
-          }
-        },
-        {
-          slug: 'demo-card-2',
-          data: {
-            name: 'GlobalPay Card',
-            description: '全球通用数字货币卡片',
-            cardType: 'mastercard',
-            isVirtual: true,
-            isPhysical: true,
-            virtualCardFee: '$5',
-            physicalCardFee: '$15',
-            depositFee: '0.5%',
-            exchangeFee: '1%',
-            transactionFee: '2%',
-            withdrawalFee: '3%',
-            annualFee: true,
-            rating: 4.5,
-            affiliateLink: '#'
-          }
-        }
-      ];
-      
-      // 生成演示数据
-      const extendedCards = [];
-      for (let i = 0; i < 45; i++) {
-        const baseCard = baseCards[i % 2];
-        extendedCards.push({
-          ...baseCard,
-          slug: `${baseCard.slug}-${i + 1}`,
-          data: {
-            ...baseCard.data,
-            name: `${baseCard.data.name} ${i + 1}`,
-            rating: (4.0 + Math.random() * 1).toFixed(1)
-          }
-        });
-      }
-      return extendedCards;
-    };
-    
-    const allCards = generateMoreCards();
-    const itemsPerPage = 20;
+  <script define:vars={{ featuredCards }}>
+    // 配置
+    const itemsPerPage = 10;
     let currentPage = 1;
+    const allCards = featuredCards;
     const totalPages = Math.ceil(allCards.length / itemsPerPage);
-    
-    function renderCardRow(card, index) {
-      const globalIndex = (currentPage - 1) * itemsPerPage + index;
-      return `
-        <tr class="hover:bg-gray-50 transition-all duration-200 group">
-          <!-- 排名和卡片信息 -->
-          <td class="px-6 py-6">
-            <div class="flex items-center space-x-4">
-              <!-- 排名号码 -->
-              <div class="flex-shrink-0 w-8 text-center">
-                <span class="text-sm font-semibold text-gray-900">${globalIndex + 1}</span>
-              </div>
-              
-              <!-- 卡片图标和信息 -->
-              <div class="flex items-center space-x-3">
-                <!-- 卡片图标/Favicon -->
-                <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                  ${card.data.favicon ? `
-                    <img src="${card.data.favicon}" alt="${card.data.name}" class="w-6 h-6 rounded" />
-                  ` : `
-                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                    </svg>
-                  `}
-                </div>
-                
-                <div class="min-w-0">
-                  <a href="/cards/${card.slug}" class="block group-hover:text-indigo-600 transition-colors">
-                    <h3 class="text-base font-semibold text-gray-900 truncate">
-                      ${card.data.name}
-                    </h3>
-                  </a>
-                  <p class="text-xs text-gray-500 mt-1 line-clamp-1">
-                    ${(card.data.description?.slice(0, 40) || '专业数字货币卡片')}...
-                  </p>
-                </div>
-              </div>
-            </div>
-          </td>
-          
-          <!-- 卡片类型 -->
-          <td class="px-3 py-6 text-center">
-            <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-              card.data.cardType === 'visa' 
-                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                : 'bg-red-50 text-red-700 border border-red-200'
-            }">
-              ${(card.data.cardType || 'visa').toUpperCase()}
-            </div>
-          </td>
-          
-          <!-- 虚拟卡费用 -->
-          <td class="px-3 py-6 text-center">
-            <div class="flex flex-col items-center">
-              ${card.data.isVirtual ? `
-                <div class="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mb-1">
-                  <svg class="w-3 h-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <span class="text-xs font-medium px-2 py-1 rounded-md ${
-                  card.data.virtualCardFee === '免费' || card.data.virtualCardFee === '$0' 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-orange-100 text-orange-800'
-                }">
-                  ${card.data.virtualCardFee || '未知'}
-                </span>
-              ` : `
-                <span class="text-gray-400 text-xs">不支持</span>
-              `}
-            </div>
-          </td>
-          
-          <!-- 实体卡费用 -->
-          <td class="px-3 py-6 text-center">
-            <div class="flex flex-col items-center">
-              ${card.data.isPhysical ? `
-                <div class="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center mb-1">
-                  <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                </div>
-                <span class="text-xs font-medium px-2 py-1 rounded-md ${
-                  card.data.physicalCardFee === '免费' || card.data.physicalCardFee === '$0' 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-orange-100 text-orange-800'
-                }">
-                  ${card.data.physicalCardFee || '未知'}
-                </span>
-              ` : `
-                <span class="text-gray-400 text-xs">不支持</span>
-              `}
-            </div>
-          </td>
-          
-          <!-- 充值费用 -->
-          <td class="px-3 py-6 text-center">
-            <span class="text-xs font-medium text-gray-900">${card.data.depositFee || '未知'}</span>
-          </td>
-          
-          <!-- 兑换费用 -->
-          <td class="px-3 py-6 text-center">
-            <span class="text-xs font-medium text-gray-900">${card.data.exchangeFee || '未知'}</span>
-          </td>
-          
-          <!-- 交易费用 -->
-          <td class="px-3 py-6 text-center">
-            <span class="text-xs font-medium text-gray-900">${card.data.transactionFee || '未知'}</span>
-          </td>
-          
-          <!-- 提现费用 -->
-          <td class="px-3 py-6 text-center">
-            <span class="text-xs font-medium text-gray-900">${card.data.withdrawalFee || '未知'}</span>
-          </td>
-          
-          <!-- 年费 -->
-          <td class="px-3 py-6 text-center">
-            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-              card.data.annualFee ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-            }">
-              ${card.data.annualFee ? '有年费' : '免年费'}
-            </span>
-          </td>
-          
-          <!-- 操作 -->
-          <td class="px-3 py-6">
-            <div class="flex flex-col space-y-1.5 min-w-0">
-              <a 
-                href="/cards/${card.slug}"
-                class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium hover:bg-gray-200 transition-colors text-center whitespace-nowrap"
-              >
-                查看详情
-              </a>
-              <a 
-                href="${card.data.affiliateLink || '#'}"
-                target="_blank"
-                class="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-xs font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-sm hover:shadow-md text-center whitespace-nowrap"
-              >
-                立即申请
-              </a>
-            </div>
-          </td>
-        </tr>
-      `;
+
+    // 随机生成评论数（模拟数据）
+    function getCommentCount(cardSlug) {
+      let hash = 0;
+      for (let i = 0; i < cardSlug.length; i++) {
+        hash = ((hash << 5) - hash) + cardSlug.charCodeAt(i);
+        hash = hash & hash;
+      }
+      return Math.abs(hash % 50) + 5;
     }
-    
-    function renderPage() {
+
+    // 获取卡片类型样式
+    function getCardTypeDisplay(cardType) {
+      const types = {
+        'visa': 'bg-blue-100 text-blue-800',
+        'mastercard': 'bg-orange-100 text-orange-800',
+        'unionpay': 'bg-red-100 text-red-800'
+      };
+      const className = types[cardType] || 'bg-gray-100 text-gray-800';
+      const text = cardType ? cardType.toUpperCase() : '其他';
+      return '<span class="px-2 py-1 text-xs font-medium rounded-full ' + className + '">' + text + '</span>';
+    }
+
+    // 生成勾选或叉号图标
+    function getCheckIcon(isActive) {
+      if (isActive) {
+        return '<span class="text-green-600 text-lg">✓</span>';
+      } else {
+        return '<span class="text-gray-400 text-lg">✗</span>';
+      }
+    }
+
+    // 生成勾选或叉号图标
+    function getCheckIcon(isActive) {
+      if (isActive) {
+        return '<span class="text-green-600 text-lg">✓</span>';
+      } else {
+        return '<span class="text-gray-400 text-lg">✗</span>';
+      }
+    }
+
+    // 渲染表格行
+    function renderTableRow(card, index) {
+      const rank = index + 1;
+      const commentCount = getCommentCount(card.slug);
+      
+      let row = '<tr class="hover:bg-gray-50 transition-colors">';
+      
+      // 第一列：排名和卡片信息
+      row += '<td class="px-4 py-4">';
+      row += '<div class="flex items-center">';
+      row += '<div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">';
+      row += rank;
+      row += '</div>';
+      row += '<div class="ml-3">';
+      row += '<a href="/cards/' + card.slug + '" class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors cursor-pointer block">';
+      row += card.data.name;
+      row += '</a>';
+      row += '<div class="text-xs text-gray-500 line-clamp-2 mt-1">' + (card.data.shortDescription || card.data.description || '') + '</div>';
+      row += '</div>';
+      row += '</div>';
+      row += '</td>';
+      
+      // 卡片类型
+      row += '<td class="px-2 py-4 text-center">';
+      row += getCardTypeDisplay(card.data.cardType);
+      row += '</td>';
+      
+      // 虚拟卡
+      row += '<td class="px-2 py-4 text-center">';
+      row += getCheckIcon(card.data.isVirtual);
+      row += '</td>';
+      
+      // 实体卡
+      row += '<td class="px-2 py-4 text-center">';
+      row += getCheckIcon(card.data.isPhysical);
+      row += '</td>';
+      
+      // 充值费
+      row += '<td class="px-2 py-4 text-center">';
+      row += '<span class="text-xs text-gray-900">' + (card.data.depositFee || '免费') + '</span>';
+      row += '</td>';
+      
+      // 兑换费
+      row += '<td class="px-2 py-4 text-center">';
+      row += '<span class="text-xs text-gray-900">' + (card.data.exchangeFee || '0.5%') + '</span>';
+      row += '</td>';
+      
+      // 交易费
+      row += '<td class="px-2 py-4 text-center">';
+      row += '<span class="text-xs text-gray-900">' + (card.data.transactionFee || '1.5%') + '</span>';
+      row += '</td>';
+      
+      // 提现费
+      row += '<td class="px-2 py-4 text-center">';
+      row += '<span class="text-xs text-gray-900">' + (card.data.withdrawalFee || '2%') + '</span>';
+      row += '</td>';
+      
+      // 年费
+      row += '<td class="px-2 py-4 text-center">';
+      if (card.data.annualFee === false) {
+        row += '<span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800">免费</span>';
+      } else {
+        row += '<span class="px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-800">收费</span>';
+      }
+      row += '</td>';
+      
+      // 评论数
+      row += '<td class="px-2 py-4 text-center">';
+      row += '<a href="/cards/' + card.slug + '#comments" class="inline-flex items-center justify-center hover:text-indigo-600 transition-colors cursor-pointer">';
+      row += '<svg class="w-3 h-3 text-gray-400 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">';
+      row += '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>';
+      row += '</svg>';
+      row += '<span class="text-xs font-medium text-gray-700">' + commentCount + '</span>';
+      row += '</a>';
+      row += '</td>';
+      
+      // 操作按钮
+      row += '<td class="px-2 py-4 text-center">';
+      row += '<a href="/cards/' + card.slug + '" class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-medium rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105 shadow-sm">';
+      row += '立即申请';
+      row += '</a>';
+      row += '</td>';
+      
+      row += '</tr>';
+      return row;
+    }
+
+    // 渲染表格
+    function renderTable() {
       const startIndex = (currentPage - 1) * itemsPerPage;
       const endIndex = Math.min(startIndex + itemsPerPage, allCards.length);
       const pageCards = allCards.slice(startIndex, endIndex);
       
       const tableBody = document.getElementById('card-table-body');
       if (tableBody) {
-        tableBody.innerHTML = pageCards.map((card, index) => renderCardRow(card, index)).join('');
-        
-        // 更新分页信息
-        document.getElementById('page-start').textContent = startIndex + 1;
-        document.getElementById('page-end').textContent = endIndex;
-        document.getElementById('total-items').textContent = allCards.length;
-        
-        // 更新按钮状态
-        const prevButton = document.getElementById('prev-page');
-        const nextButton = document.getElementById('next-page');
-        
-        if (prevButton) {
-          prevButton.disabled = currentPage === 1;
+        let tableHtml = '';
+        for (let i = 0; i < pageCards.length; i++) {
+          tableHtml += renderTableRow(pageCards[i], startIndex + i);
         }
-        if (nextButton) {
-          nextButton.disabled = currentPage === totalPages;
-        }
-        
-        // 生成页码按钮
-        renderPageNumbers();
+        tableBody.innerHTML = tableHtml;
       }
+      
+      // 更新分页信息
+      const pageStartEl = document.getElementById('page-start');
+      const pageEndEl = document.getElementById('page-end');
+      const totalItemsEl = document.getElementById('total-items');
+      
+      if (pageStartEl) pageStartEl.textContent = startIndex + 1;
+      if (pageEndEl) pageEndEl.textContent = endIndex;
+      if (totalItemsEl) totalItemsEl.textContent = allCards.length;
+      
+      // 更新分页按钮状态
+      const prevBtn = document.getElementById('prev-page');
+      const nextBtn = document.getElementById('next-page');
+      
+      if (prevBtn) prevBtn.disabled = currentPage === 1;
+      if (nextBtn) nextBtn.disabled = currentPage === totalPages;
+      
+      // 渲染页码
+      renderPageNumbers();
     }
-    
+
+    // 渲染页码
     function renderPageNumbers() {
       const pageNumbersContainer = document.getElementById('page-numbers');
       if (!pageNumbersContainer) return;
       
+      let html = '';
       const maxVisiblePages = 5;
       let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
       let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
       
-      if (endPage - startPage + 1 < maxVisiblePages) {
+      if (endPage - startPage < maxVisiblePages - 1) {
         startPage = Math.max(1, endPage - maxVisiblePages + 1);
       }
       
-      let html = '';
-      
       for (let i = startPage; i <= endPage; i++) {
-        html += `
-          <button 
-            class="px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-              i === currentPage 
-                ? 'bg-indigo-600 text-white' 
-                : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
-            }" 
-            data-page="${i}"
-          >
-            ${i}
-          </button>
-        `;
+        const activeClass = i === currentPage ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50';
+        html += '<button class="px-3 py-1 text-sm font-medium ' + activeClass + ' border border-gray-300 rounded-md transition-colors" data-page="' + i + '">';
+        html += i;
+        html += '</button>';
       }
       
       pageNumbersContainer.innerHTML = html;
       
-      // 绑定页码按钮事件
-      pageNumbersContainer.querySelectorAll('button').forEach(button => {
-        button.addEventListener('click', () => {
-          currentPage = parseInt(button.dataset.page);
-          renderPage();
+      // 添加页码点击事件
+      const pageButtons = pageNumbersContainer.querySelectorAll('button');
+      for (let i = 0; i < pageButtons.length; i++) {
+        pageButtons[i].addEventListener('click', function() {
+          currentPage = parseInt(this.dataset.page);
+          renderTable();
         });
-      });
+      }
+    }
+
+    // 初始化事件监听器
+    document.addEventListener('DOMContentLoaded', function() {
+      renderTable();
+      
+      // 上一页按钮
+      const prevBtn = document.getElementById('prev-page');
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          if (currentPage > 1) {
+            currentPage--;
+            renderTable();
+          }
+        });
+      }
+      
+      // 下一页按钮
+      const nextBtn = document.getElementById('next-page');
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderTable();
+          }
+        });
+      }
+    });
+  </script>
+
+  <style>
+    /* 表格样式优化 */
+    #cards-table {
+      table-layout: fixed;
+      width: 100%;
     }
     
-    // 绑定分页按钮事件
-    const prevButton = document.getElementById('prev-page');
-    const nextButton = document.getElementById('next-page');
-    
-    if (prevButton) {
-      prevButton.addEventListener('click', () => {
-        if (currentPage > 1) {
-          currentPage--;
-          renderPage();
-        }
-      });
+    #cards-table th {
+      font-size: 0.75rem;
+      padding: 1rem 0.5rem;
     }
     
-    if (nextButton) {
-      nextButton.addEventListener('click', () => {
-        if (currentPage < totalPages) {
-          currentPage++;
-          renderPage();
-        }
-      });
+    #cards-table td {
+      font-size: 0.875rem;
+      padding: 1rem 0.5rem;
+    }
+
+    /* 列宽定义 */
+    #cards-table th:nth-child(1),
+    #cards-table td:nth-child(1) {
+      width: 20%;
     }
     
-    // 初始渲染
-    renderPage();
-  });
-</script>
+    #cards-table th:nth-child(2),
+    #cards-table td:nth-child(2) {
+      width: 8%;
+    }
+    
+    #cards-table th:nth-child(3),
+    #cards-table td:nth-child(3),
+    #cards-table th:nth-child(4),
+    #cards-table td:nth-child(4) {
+      width: 6%;
+    }
+    
+    #cards-table th:nth-child(5),
+    #cards-table td:nth-child(5),
+    #cards-table th:nth-child(6),
+    #cards-table td:nth-child(6),
+    #cards-table th:nth-child(7),
+    #cards-table td:nth-child(7),
+    #cards-table th:nth-child(8),
+    #cards-table td:nth-child(8) {
+      width: 8%;
+    }
+    
+    #cards-table th:nth-child(9),
+    #cards-table td:nth-child(9),
+    #cards-table th:nth-child(10),
+    #cards-table td:nth-child(10) {
+      width: 6%;
+    }
+    
+    #cards-table th:nth-child(11),
+    #cards-table td:nth-child(11) {
+      width: 10%;
+    }
+    
+    /* 限制文本行数 */
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .text-gradient {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* 响应式调整 */
+    @media (max-width: 1200px) {
+      #cards-table {
+        font-size: 0.75rem;
+      }
+      
+      #cards-table th,
+      #cards-table td {
+        padding: 0.75rem 0.25rem;
+      }
+      
+      #cards-table th {
+        font-size: 0.625rem;
+      }
+      
+      #cards-table td {
+        font-size: 0.75rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      #cards-table {
+        font-size: 0.625rem;
+      }
+      
+      #cards-table th,
+      #cards-table td {
+        padding: 0.5rem 0.125rem;
+      }
+      
+      .line-clamp-2 {
+        -webkit-line-clamp: 1;
+      }
+      
+      /* 移动端隐藏某些列 */
+      #cards-table th:nth-child(6),
+      #cards-table td:nth-child(6),
+      #cards-table th:nth-child(7),
+      #cards-table td:nth-child(7) {
+        display: none;
+      }
+      
+      /* 重新分配列宽 */
+      #cards-table th:nth-child(1),
+      #cards-table td:nth-child(1) {
+        width: 25%;
+      }
+      
+      #cards-table th:nth-child(2),
+      #cards-table td:nth-child(2) {
+        width: 10%;
+      }
+      
+      #cards-table th:nth-child(5),
+      #cards-table td:nth-child(5),
+      #cards-table th:nth-child(8),
+      #cards-table td:nth-child(8) {
+        width: 12%;
+      }
+      
+      #cards-table th:nth-child(11),
+      #cards-table td:nth-child(11) {
+        width: 15%;
+      }
+    }
+
+    /* 链接样式 */
+    a {
+      cursor: pointer;
+    }
+
+    /* 悬停效果 */
+    tbody tr:hover {
+      background-color: rgba(249, 250, 251, 1);
+    }
+
+    /* 动画效果 */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+  </style>
+</Layout>
