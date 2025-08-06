@@ -1,0 +1,95 @@
+---
+// src/components/Giscus.astro
+import { getGiscusConfig, getGiscusAttributes } from '../config/giscus';
+
+interface Props {
+  type?: 'cards' | 'blog' | 'general';
+  className?: string;
+  title?: string;
+  description?: string;
+}
+
+const { 
+  type = 'general', 
+  className = '',
+  title = '用户讨论',
+  description = '分享你的使用体验，参与社区讨论'
+} = Astro.props;
+
+const giscusConfig = getGiscusConfig(type);
+const giscusAttributes = getGiscusAttributes(giscusConfig);
+---
+
+<section class={`bg-white rounded-3xl shadow-xl overflow-hidden ${className}`}>
+  <!-- 头部区域 -->
+  <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-8 py-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-white">{title}</h2>
+        <p class="text-indigo-100">{description}</p>
+      </div>
+      <div class="flex items-center">
+        <svg class="w-8 h-8 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  
+  <div class="p-8">
+    <!-- 讨论提示 -->
+    <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-2xl">
+      <div class="flex items-start">
+        <svg class="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+          <h4 class="font-medium text-blue-900 mb-1">参与讨论</h4>
+          <p class="text-sm text-blue-700">
+            使用GitHub账号登录即可参与讨论。你的反馈对其他用户很有价值！
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Giscus评论容器 -->
+    <div id="giscus-container" class="min-h-[400px]">
+      <!-- 加载中提示 -->
+      <div class="flex items-center justify-center py-12 text-gray-500">
+        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        正在加载评论...
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Giscus配置脚本 -->
+<script is:inline define:vars={{giscusAttributes}}>
+  // 等待DOM加载完成
+  document.addEventListener('DOMContentLoaded', function() {
+    // 创建script元素
+    const script = document.createElement('script');
+    
+    // 设置所有Giscus属性
+    Object.keys(giscusAttributes).forEach(key => {
+      if (key === 'async') {
+        script.async = giscusAttributes[key];
+      } else {
+        script.setAttribute(key, giscusAttributes[key]);
+      }
+    });
+
+    // 添加到容器中
+    const container = document.getElementById('giscus-container');
+    if (container) {
+      // 清除加载提示
+      container.innerHTML = '';
+      container.appendChild(script);
+    } else {
+      console.error('Giscus container not found');
+    }
+  });
+</script>

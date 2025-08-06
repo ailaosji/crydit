@@ -1,0 +1,473 @@
+---
+// src/pages/contact.astro
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="联系我们 - U卡评测专业团队">
+  <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 py-20">
+      <div class="absolute inset-0">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-x-48 -translate-y-48"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-300/20 rounded-full blur-3xl translate-x-48 translate-y-48"></div>
+      </div>
+      
+      <div class="relative max-w-7xl mx-auto px-6 lg:px-8 text-center">
+        <div class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white/90 text-sm font-medium mb-8">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          专业服务
+        </div>
+        
+        <h1 class="text-5xl lg:text-6xl font-bold text-white mb-6">
+          联系我们的
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-400">
+            专业团队
+          </span>
+        </h1>
+        
+        <p class="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+          有任何问题或需要专业建议？我们的专家团队随时为您提供帮助
+        </p>
+      </div>
+    </section>
+
+    <!-- 联系方式卡片 -->
+    <section class="py-16 -mt-20 relative z-10">
+      <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4 mb-16">
+          <!-- 邮箱联系 -->
+          <div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300 group">
+            <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">邮箱咨询</h3>
+            <p class="text-gray-600 text-sm mb-4">专业问题咨询</p>
+            <a href="mailto:contact@ucardreview.com" class="text-blue-600 hover:text-blue-800 font-medium">
+              contact@ucardreview.com
+            </a>
+          </div>
+
+          <!-- 在线客服 -->
+          <div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300 group">
+            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">在线客服</h3>
+            <p class="text-gray-600 text-sm mb-4">实时在线解答</p>
+            <button class="text-green-600 hover:text-green-800 font-medium" onclick="openChat()">
+              立即咨询
+            </button>
+          </div>
+
+          <!-- 社交媒体 -->
+          <div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300 group">
+            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">社交媒体</h3>
+            <p class="text-gray-600 text-sm mb-4">关注我们获取资讯</p>
+            <div class="flex justify-center space-x-3">
+              <a href="#" class="text-purple-600 hover:text-purple-800">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                </svg>
+              </a>
+              <a href="#" class="text-purple-600 hover:text-purple-800">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- 合作洽谈 -->
+          <div class="bg-white rounded-3xl shadow-lg p-8 text-center hover:shadow-2xl transition-all duration-300 group">
+            <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">商务合作</h3>
+            <p class="text-gray-600 text-sm mb-4">品牌合作机会</p>
+            <a href="mailto:business@ucardreview.com" class="text-orange-600 hover:text-orange-800 font-medium">
+              business@ucardreview.com
+            </a>
+          </div>
+        </div>
+
+        <!-- 主要联系表单 -->
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+            <div class="grid lg:grid-cols-2">
+              <!-- 左侧：表单 -->
+              <div class="p-8 lg:p-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">发送消息</h2>
+                <p class="text-gray-600 mb-8">
+                  请详细描述您的问题或需求，我们会在24小时内回复您
+                </p>
+                
+                <form class="space-y-6" id="contact-form">
+                  <div class="grid gap-6 md:grid-cols-2">
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                        姓名 *
+                      </label>
+                      <input 
+                        type="text" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                        placeholder="请输入您的姓名"
+                      />
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">
+                        邮箱 *
+                      </label>
+                      <input 
+                        type="email" 
+                        required
+                        class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
+                        placeholder="请输入您的邮箱"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      咨询类型
+                    </label>
+                    <select class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all">
+                      <option>请选择咨询类型</option>
+                      <option>U卡推荐咨询</option>
+                      <option>技术支持</option>
+                      <option>商务合作</option>
+                      <option>媒体采访</option>
+                      <option>其他问题</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      详细描述 *
+                    </label>
+                    <textarea 
+                      rows="6" 
+                      required
+                      class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all resize-none"
+                      placeholder="请详细描述您的问题或需求..."
+                    ></textarea>
+                  </div>
+                  
+                  <div class="flex items-start space-x-3">
+                    <input 
+                      type="checkbox" 
+                      id="privacy-agree"
+                      class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label for="privacy-agree" class="text-sm text-gray-600">
+                      我已阅读并同意 <a href="/privacy" class="text-blue-600 hover:text-blue-800">隐私政策</a> 和 <a href="/terms" class="text-blue-600 hover:text-blue-800">服务条款</a>
+                    </label>
+                  </div>
+                  
+                  <button 
+                    type="submit"
+                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-1 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl"
+                  >
+                    发送消息
+                  </button>
+                </form>
+              </div>
+              
+              <!-- 右侧：信息 -->
+              <div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-8 lg:p-12 flex items-center">
+                <div>
+                  <h3 class="text-2xl font-bold text-gray-900 mb-6">我们的优势</h3>
+                  
+                  <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                      <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-gray-900 mb-1">快速响应</h4>
+                        <p class="text-sm text-gray-600">24小时内回复，工作日内6小时快速响应</p>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                      <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-gray-900 mb-1">专业建议</h4>
+                        <p class="text-sm text-gray-600">专业团队提供个性化的U卡推荐和建议</p>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                      <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-gray-900 mb-1">隐私保护</h4>
+                        <p class="text-sm text-gray-600">严格保护用户隐私，不会泄露任何个人信息</p>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                      <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                        <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 class="font-semibold text-gray-900 mb-1">持续支持</h4>
+                        <p class="text-sm text-gray-600">提供长期的跟踪服务和后续支持</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="mt-8 p-4 bg-white/50 rounded-xl">
+                    <div class="text-center">
+                      <div class="text-2xl font-bold text-blue-600 mb-1">98%</div>
+                      <div class="text-sm text-gray-600">客户满意度</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ 部分 -->
+    <section class="py-16 bg-gradient-to-r from-gray-50 to-blue-50">
+      <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl font-bold text-gray-900 mb-4">常见问题</h2>
+          <p class="text-xl text-gray-600">
+            快速找到您问题的答案
+          </p>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <button class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors faq-button">
+              <span class="font-semibold text-gray-900">如何选择适合我的U卡？</span>
+              <svg class="w-5 h-5 text-gray-400 transform transition-transform faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="px-6 pb-4 text-gray-600 hidden faq-content">
+              我们会根据您的具体需求（如使用场景、费用预算、地理位置等）为您推荐最适合的U卡产品。您可以通过联系表单详细描述您的需求，我们的专家会为您提供个性化建议。
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <button class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors faq-button">
+              <span class="font-semibold text-gray-900">评测数据多久更新一次？</span>
+              <svg class="w-5 h-5 text-gray-400 transform transition-transform faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="px-6 pb-4 text-gray-600 hidden faq-content">
+              我们的评测数据每周更新一次，重要的市场变化会实时更新。费用信息、安全评级等关键数据会持续监控，确保为用户提供最新最准确的信息。
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <button class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors faq-button">
+              <span class="font-semibold text-gray-900">咨询服务是否收费？</span>
+              <svg class="w-5 h-5 text-gray-400 transform transition-transform faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="px-6 pb-4 text-gray-600 hidden faq-content">
+              基础的咨询服务完全免费。我们提供免费的U卡推荐、基本问题解答等服务。如需深度的个性化分析或一对一专家咨询，可能会涉及少量费用，具体情况我们会提前告知。
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <button class="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors faq-button">
+              <span class="font-semibold text-gray-900">如何保证评测的客观性？</span>
+              <svg class="w-5 h-5 text-gray-400 transform transition-transform faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div class="px-6 pb-4 text-gray-600 hidden faq-content">
+              我们采用标准化的评测体系，基于公开透明的评分标准。所有评测均由独立的专业团队完成，不受任何第三方影响。我们的收入来源透明，主要通过合规的联盟营销获得，但这不会影响我们的评测结果。
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-gradient-to-r from-blue-900 to-indigo-900">
+      <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+        <h2 class="text-4xl font-bold text-white mb-6">
+          准备开始您的咨询？
+        </h2>
+        <p class="text-xl text-white/80 mb-8">
+          我们的专业团队随时为您提供帮助，让您的数字货币之旅更加安全便捷
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+          <a 
+            href="#contact-form" 
+            class="inline-flex items-center px-8 py-4 bg-white text-gray-900 rounded-2xl hover:bg-gray-100 transition-all font-semibold shadow-xl"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            立即咨询
+          </a>
+          <a 
+            href="/articles" 
+            class="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-2xl hover:bg-white/20 transition-all font-semibold"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            查看资讯
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  // FAQ 折叠功能
+  document.addEventListener('DOMContentLoaded', function() {
+    const faqButtons = document.querySelectorAll('.faq-button');
+    
+    faqButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const content = this.nextElementSibling;
+        const icon = this.querySelector('.faq-icon');
+        
+        // 切换内容显示
+        content.classList.toggle('hidden');
+        
+        // 旋转箭头图标
+        icon.classList.toggle('rotate-180');
+        
+        // 关闭其他FAQ
+        faqButtons.forEach(otherButton => {
+          if (otherButton !== this) {
+            const otherContent = otherButton.nextElementSibling;
+            const otherIcon = otherButton.querySelector('.faq-icon');
+            otherContent.classList.add('hidden');
+            otherIcon.classList.remove('rotate-180');
+          }
+        });
+      });
+    });
+    
+    // 表单提交处理
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // 简单的表单验证
+        const privacyCheckbox = document.getElementById('privacy-agree');
+        if (!privacyCheckbox.checked) {
+          alert('请阅读并同意隐私政策和服务条款');
+          return;
+        }
+        
+        // 显示提交成功消息
+        alert('消息发送成功！我们会在24小时内回复您。');
+        
+        // 这里可以添加实际的表单提交逻辑
+        // 例如通过fetch API发送到后端
+      });
+    }
+    
+    // 在线客服功能
+    window.openChat = function() {
+      alert('在线客服功能开发中，请通过邮箱联系我们：contact@ucardreview.com');
+    };
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  /* 自定义样式 */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* FAQ 动画效果 */
+  .faq-content {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .faq-icon {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+  
+  /* 表单样式增强 */
+  input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* 悬浮效果 */
+  .group:hover .group-hover\\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  /* 响应式优化 */
+  @media (max-width: 768px) {
+    .grid.md\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+    
+    .grid.lg\\:grid-cols-2 {
+      grid-template-columns: 1fr;
+    }
+    
+    .grid.lg\\:grid-cols-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .grid.lg\\:grid-cols-4 {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+// Giscus 评论组件
+import { giscusConfig } from '../config/giscus.config.js';
+
+export interface Props {
+  title?: string; // 评论区标题
+  showInstructions?: boolean; // 是否显示使用说明
+  className?: string; // 自定义样式类
+}
+
+const { 
+  title = '用户讨论', 
+  showInstructions = true,
+  className = ''
+} = Astro.props;
+---
+
+<section id="comments" class={`bg-white rounded-3xl shadow-xl p-8 ${className}`}>
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-3xl font-bold text-gray-900">{title}</h2>
+    <div class="flex items-center text-sm text-gray-500">
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+      </svg>
+      由 GitHub Discussions 支持
+    </div>
+  </div>
+  
+  {showInstructions && (
+    <div class="bg-blue-50 rounded-xl p-6 mb-8 border border-blue-200">
+      <div class="flex items-start">
+        <svg class="w-6 h-6 text-blue-600 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+          <h3 class="text-lg font-semibold text-blue-900 mb-2">参与讨论</h3>
+          <p class="text-blue-800 text-sm mb-3">
+            欢迎分享您的真实体验，帮助其他用户做出更好的选择。
+          </p>
+          <ul class="text-blue-700 text-sm space-y-1">
+            <li>• 需要 GitHub 账号才能评论</li>
+            <li>• 请保持文明友善的讨论环境</li>
+            <li>• 分享真实体验，避免恶意评价</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- Giscus Container -->
+  <div class="giscus"></div>
+</section>
+
+<!-- Giscus Script -->
+<script 
+  src="https://giscus.app/client.js"
+  data-repo={giscusConfig.repo}
+  data-repo-id={giscusConfig.repoId}
+  data-category={giscusConfig.category}
+  data-category-id={giscusConfig.categoryId}
+  data-mapping={giscusConfig.mapping}
+  data-strict={giscusConfig.strict}
+  data-reactions-enabled={giscusConfig.reactionsEnabled}
+  data-emit-metadata={giscusConfig.emitMetadata}
+  data-input-position={giscusConfig.inputPosition}
+  data-theme={giscusConfig.theme}
+  data-lang={giscusConfig.lang}
+  data-loading={giscusConfig.loading}
+  crossorigin="anonymous"
+  async>
+</script>
+
+<style>
+  /* 可以在这里添加组件特定的样式 */
+  .giscus {
+    margin-top: 2rem;
+  }
+  
+  /* 加载动画 */
+  .giscus:empty::before {
+    content: "加载评论中...";
+    display: block;
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+  }
+</style>
