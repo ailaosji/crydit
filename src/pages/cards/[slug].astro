@@ -2,29 +2,80 @@
 // src/pages/cards/[slug].astro
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { Image } from 'astro:assets';
 import GiscusComments from '../../components/GiscusComments.astro';
 
+// 确保这个函数被正确导出
 export async function getStaticPaths() {
-  const cards = await getCollection('cards');
-  return cards.map((card) => ({
-    params: { slug: card.slug },
-    props: card,
-  }));
+  try {
+    const cards = await getCollection('cards');
+    return cards.map((card) => ({
+      params: { slug: card.slug },
+      props: card,
+    }));
+  } catch (error) {
+    console.error('Error in getStaticPaths:', error);
+    return [];
+  }
 }
 
 type Props = CollectionEntry<'cards'>;
 
 const card = Astro.props;
-const { title, name, description, cardType, isVirtual, isPhysical, pros, cons, features, limits, rewards, issuer, supportedRegions, supportedCurrencies, virtualCardPrice, physicalCardPrice, depositFee, transactionFee, withdrawalFee, atmFee, annualFee, affiliateLink } = card.data;
+
+// 检查 card 是否存在
+if (!card) {
+  throw new Error('Card not found');
+}
+
+const { 
+  title, 
+  name, 
+  description, 
+  cardType, 
+  isVirtual, 
+  isPhysical, 
+  pros, 
+  cons, 
+  features, 
+  limits, 
+  rewards, 
+  issuer, 
+  supportedRegions, 
+  supportedCurrencies, 
+  virtualCardPrice, 
+  physicalCardPrice, 
+  depositFee, 
+  transactionFee, 
+  withdrawalFee, 
+  atmFee, 
+  annualFee, 
+  affiliateLink 
+} = card.data;
 
 // 获取相关U卡
 let relatedCards = [];
 if (card.data.relatedCards) {
-  const allCards = await getCollection('cards');
-  relatedCards = allCards.filter(c => 
-    card.data.relatedCards?.includes(c.slug) && c.slug !== card.slug
-  ).slice(0, 3);
+  try {
+    const allCards = await getCollection('cards');
+    relatedCards = allCards.filter(c => 
+      card.data.relatedCards?.includes(c.slug) && c.slug !== card.slug
+    ).slice(0, 3);
+  } catch (error) {
+    console.warn('Error loading related cards:', error.message);
+  }
+}
+
+// 获取相关文章（U卡教程等）
+let relatedArticles = [];
+if (card.data.relatedArticles) {
+  try {
+    const allArticles = await getCollection('articles');
+    relatedArticles = allArticles.filter(a => 
+      card.data.relatedArticles?.includes(a.slug)
+    ).slice(0, 4);
+  } catch (error) {
+    console.warn('Articles collection not found:', error.message);
+  }
 }
 
 // 渲染Markdown内容
@@ -87,94 +138,95 @@ const structuredData = {
               <div class="text-white">
                 <div class="flex flex-wrap items-center gap-3 mb-6">
                   <span class={`px-4 py-2 rounded-full text-sm font-semibold ${
-                    cardType === 'visa' ? 'bg-blue-500' : 'bg-red-500'
-                  } text-white shadow-lg`}>
+                    cardType === 'visa' ? 'bg-blue-500 text-white' :
+                    cardType === 'mastercard' ? 'bg-red-500 text-white' :
+                    'bg-gray-500 text-white'
+                  }`}>
                     {cardType?.toUpperCase()}
                   </span>
                   {isVirtual && (
                     <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
-                      🔮 虚拟卡
+                      虚拟卡
                     </span>
                   )}
                   {isPhysical && (
                     <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
-                      💳 实体卡
+                      实体卡
                     </span>
                   )}
                 </div>
                 
-                <h1 class="text-4xl lg:text-5xl font-bold mb-4 leading-tight">{name}</h1>
-                <p class="text-lg lg:text-xl text-white/90 mb-6 leading-relaxed">{description}</p>
+                <h1 class="text-4xl lg:text-5xl font-bold mb-4">{name}</h1>
+                <p class="text-xl text-white/90 leading-relaxed mb-8">{description}</p>
                 
-                <!-- Quick Stats -->
-                <div class="grid grid-cols-2 gap-4 pt-6 border-t border-white/20">
-                  <div>
-                    <p class="text-white/70 text-sm mb-1">发卡机构</p>
-                    <p class="text-white font-semibold">{issuer}</p>
-                  </div>
-                  <div>
-                    <p class="text-white/70 text-sm mb-1">支持地区</p>
-                    <p class="text-white font-semibold">
-                      {supportedRegions?.slice(0, 3).join(', ')}{supportedRegions?.length > 3 ? '...' : ''}
-                    </p>
-                  </div>
-                </div>
+                <!-- CTA Button -->
+                {affiliateLink && (
+                  <a 
+                    href={affiliateLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
+                  >
+                    立即申请
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </a>
+                )}
               </div>
               
               <!-- Right: Card Visual -->
               <div class="relative">
-                <!-- Card Container -->
-                <div class="relative mx-auto max-w-sm transform hover:scale-105 transition-transform duration-300">
-                  <!-- Card Shadow -->
-                  <div class="absolute inset-0 bg-black/20 rounded-2xl blur-xl transform translate-y-4"></div>
+                <!-- 推荐标签 -->
+                <div class="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-10">
+                  推荐
+                </div>
+                
+                <!-- 信用卡设计 -->
+                <div class="relative w-96 h-60 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-all duration-300 hover:scale-105">
+                  <!-- 卡片背景渐变 -->
+                  <div class="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 rounded-2xl"></div>
                   
-                  <!-- Card Design -->
-                  <div class="relative bg-gradient-to-br from-gray-900 to-gray-700 rounded-2xl p-6 aspect-[1.586/1] flex flex-col justify-between shadow-2xl">
-                    <!-- Card Chip -->
+                  <!-- 装饰性圆形背景 -->
+                  <div class="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full"></div>
+                  <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-pink-400/10 to-transparent rounded-full"></div>
+                  
+                  <!-- 卡片内容 -->
+                  <div class="relative z-10 p-8 h-full flex flex-col justify-between text-white">
+                    <!-- 顶部：芯片和VISA标志 -->
                     <div class="flex justify-between items-start">
-                      <div class="w-12 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-md"></div>
-                      <div class="text-right">
-                        {cardType === 'visa' ? (
-                          <span class="text-white text-2xl font-bold italic">VISA</span>
-                        ) : (
-                          <span class="text-white text-2xl font-bold">Mastercard</span>
-                        )}
+                      <!-- 芯片 -->
+                      <div class="w-12 h-9 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-md shadow-inner"></div>
+                      <!-- VISA标志 -->
+                      <div class="text-2xl font-bold text-white/90 tracking-wider">
+                        {cardType === 'visa' ? 'VISA' : 
+                         cardType === 'mastercard' ? 'MasterCard' : 
+                         cardType?.toUpperCase()}
                       </div>
                     </div>
                     
-                    <!-- Card Number -->
-                    <div class="space-y-2">
-                      <div class="flex space-x-3 text-white/80 text-lg font-mono">
-                        <span>••••</span>
-                        <span>••••</span>
-                        <span>••••</span>
-                        <span>••••</span>
+                    <!-- 中部：卡号 -->
+                    <div class="space-y-6">
+                      <div class="font-mono text-2xl tracking-wider">
+                        •••• •••• •••• ••••
                       </div>
                     </div>
                     
-                    <!-- Card Bottom -->
+                    <!-- 底部：持卡人和有效期 -->
                     <div class="flex justify-between items-end">
                       <div>
-                        <p class="text-white/60 text-xs uppercase mb-1">Card Holder</p>
-                        <p class="text-white font-medium">{name}</p>
+                        <div class="text-xs text-gray-400 mb-1">CARD HOLDER</div>
+                        <div class="font-semibold text-lg">{name.length > 12 ? name.substring(0, 12) + '...' : name}</div>
                       </div>
-                      <div class="text-right">
-                        <p class="text-white/60 text-xs uppercase mb-1">Valid Thru</p>
-                        <p class="text-white font-medium">••/••</p>
+                      <div>
+                        <div class="text-xs text-gray-400 mb-1">VALID THRU</div>
+                        <div class="font-mono text-lg">••/••</div>
                       </div>
-                    </div>
-                    
-                    <!-- Card Pattern -->
-                    <div class="absolute inset-0 rounded-2xl opacity-10">
-                      <div class="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -translate-y-20 translate-x-20"></div>
-                      <div class="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full translate-y-16 -translate-x-16"></div>
                     </div>
                   </div>
                   
-                  <!-- Floating Elements -->
-                  <div class="absolute -top-4 -right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-                    推荐
-                  </div>
+                  <!-- 光泽效果 -->
+                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl transform -skew-x-12 -translate-x-full animate-pulse"></div>
                 </div>
               </div>
             </div>
@@ -182,234 +234,234 @@ const structuredData = {
         </div>
       </div>
 
-      <!-- Main Content Grid -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-8">
           
-          <!-- 重新设计的手续费部分 -->
-          <section class="bg-white rounded-3xl shadow-xl p-8 mb-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">手续费信息</h2>
+          <!-- 支持的加密货币 -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>
+            {supportedCurrencies && supportedCurrencies.length > 0 ? (
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {supportedCurrencies.map((currency) => (
+                  <div class="flex items-center p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+                    <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                      {currency.substring(0, 2)}
+                    </div>
+                    <span class="font-medium text-gray-800">{currency}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p class="text-gray-600">支持多种主流加密货币</p>
+            )}
+          </section>
+
+          <!-- 优化后的手续费信息模块 -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
             
-            <!-- 卡片类型对比 -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              
-              <!-- 实体卡 -->
-              {isPhysical && (
-                <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl p-8 relative overflow-hidden">
-                  <!-- 装饰性元素 -->
-                  <div class="absolute top-0 right-0 w-32 h-32 bg-blue-200 rounded-full -translate-y-16 translate-x-16 opacity-20"></div>
-                  
-                  <!-- 卡片头部 -->
-                  <div class="flex items-center mb-8">
-                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800">实体卡</h3>
-                  </div>
-                  
-                  <!-- 费用信息网格 -->
-                  <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">开卡费用</p>
-                      <p class="text-2xl font-bold text-blue-600">
-                        {physicalCardPrice ? `${physicalCardPrice}` : "免费"}
-                      </p>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">充值手续费</p>
-                      <p class="text-2xl font-bold text-gray-800">
-                        {depositFee || "免费"}
-                      </p>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">交易手续费</p>
-                      <p class="text-2xl font-bold text-gray-800">
-                        {transactionFee || "0.9%"}
-                      </p>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">提现手续费</p>
-                      <p class="text-xl font-bold text-gray-800">
-                        {withdrawalFee || (
-                          <div>
-                            <div class="text-sm text-green-600 font-medium mb-1">每月前5次免费，之后</div>
-                            <div>€0.90/次</div>
-                          </div>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- 其他信息 -->
-                  <div class="space-y-4 text-gray-700">
-                    <div class="flex justify-between items-center">
-                      <span class="font-medium">配送时间</span>
-                      <span class="text-gray-600">7-15个工作日</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="font-medium">ATM取现费</span>
-                      <span class="text-gray-600">{atmFee || "€0.90/次"}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <!-- 虚拟卡 -->
-              {isVirtual && (
-                <div class="bg-gradient-to-br from-purple-50 to-pink-100 rounded-3xl p-8 relative overflow-hidden">
-                  <!-- 装饰性元素 -->
-                  <div class="absolute top-0 right-0 w-32 h-32 bg-purple-200 rounded-full -translate-y-16 translate-x-16 opacity-20"></div>
-                  
-                  <!-- 卡片头部 -->
-                  <div class="flex items-center mb-8">
-                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                      </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800">虚拟卡</h3>
-                  </div>
-                  
-                  <!-- 费用信息网格 -->
-                  <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">开卡费用</p>
-                      <p class="text-2xl font-bold text-purple-600">
-                        {virtualCardPrice ? `${virtualCardPrice}` : "免费"}
-                      </p>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">充值手续费</p>
-                      <p class="text-2xl font-bold text-gray-800">
-                        {depositFee || "免费"}
-                      </p>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">交易手续费</p>
-                      <p class="text-2xl font-bold text-gray-800">
-                        {transactionFee || "0.9%"}
-                      </p>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <p class="text-gray-600 text-sm mb-2 font-medium">提现手续费</p>
-                      <p class="text-xl font-bold text-gray-800">
-                        {withdrawalFee || (
-                          <div>
-                            <div class="text-sm text-green-600 font-medium mb-1">每月前5次免费，之后</div>
-                            <div>€0.90/次</div>
-                          </div>
-                        )}
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- 其他信息 -->
-                  <div class="space-y-4 text-gray-700">
-                    <div class="flex justify-between items-center">
-                      <span class="font-medium">即时激活</span>
-                      <span class="text-green-600 font-medium flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            <!-- 卡片费用 -->
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+                卡片费用
+              </h3>
+              <div class="grid md:grid-cols-2 gap-4">
+                {isVirtual && (
+                  <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">虚拟卡费用</p>
+                        <p class="text-2xl font-bold text-gray-900">
+                          {virtualCardPrice === 0 ? '免费' : `$${virtualCardPrice}`}
+                        </p>
+                      </div>
+                      <div class="p-2 bg-white rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
-                        支持
-                      </span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                      <span class="font-medium">使用场景</span>
-                      <span class="text-gray-600">在线支付</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+                {isPhysical && (
+                  <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">实体卡费用</p>
+                        <p class="text-2xl font-bold text-gray-900">
+                          {physicalCardPrice === 0 ? '免费' : `$${physicalCardPrice}`}
+                        </p>
+                        {atmFee && (
+                          <p class="text-xs text-gray-500 mt-2">
+                            ATM取现: {atmFee}
+                          </p>
+                        )}
+                      </div>
+                      <div class="p-2 bg-white rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-            
-            <!-- 支持的货币展示 -->
-            {supportedCurrencies && supportedCurrencies.length > 0 && (
-              <div class="mt-8 p-8 bg-gradient-to-r from-gray-50 to-blue-50 rounded-3xl">
-                <div class="flex items-center mb-6">
-                  <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mr-4">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                    </svg>
-                  </div>
-                  <h4 class="text-xl font-semibold text-gray-800">支持货币</h4>
+
+            <!-- 交易费用 -->
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                交易费用
+              </h3>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                  <span class="text-gray-700 font-medium">充值费用</span>
+                  <span class="font-bold text-gray-900">{depositFee || '免费'}</span>
                 </div>
-                <div class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-4">
-                  {supportedCurrencies.map((currency) => (
-                    <div class="bg-white rounded-xl px-4 py-3 text-center shadow-sm hover:shadow-md transition-shadow">
-                      <span class="text-sm font-bold text-gray-700">{currency}</span>
-                    </div>
-                  ))}
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                  <span class="text-gray-700 font-medium">交易手续费</span>
+                  <span class="font-bold text-gray-900">{transactionFee || '0.9%'}</span>
+                </div>
+                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                  <span class="text-gray-700 font-medium">提现费用</span>
+                  <span class="font-bold text-gray-900">{withdrawalFee || '€0.90/次'}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 年费信息 -->
+            {annualFee !== undefined && (
+              <div class="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-gray-700 font-medium">年费</span>
+                  </div>
+                  <span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>
+                    {annualFee ? '收费' : '免费'}
+                  </span>
                 </div>
               </div>
             )}
-
-            <!-- 重要提示 -->
-            <div class="mt-8 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-3xl p-8">
-              <div class="flex items-start">
-                <div class="w-8 h-8 bg-amber-500 rounded-xl flex items-center justify-center mr-4 mt-1 flex-shrink-0">
-                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                  </svg>
-                </div>
-                <div>
-                  <h5 class="text-lg font-semibold text-amber-800 mb-3">费用说明</h5>
-                  <p class="text-amber-700 leading-relaxed">
-                    具体费用可能因地区、充值方式和使用情况而有所不同。建议在申请前详细了解最新的费用标准。汇率转换费用通常按照实时汇率计算。
-                  </p>
-                </div>
-              </div>
-            </div>
           </section>
+
+          <!-- Limits -->
+          {limits && (
+            <section class="bg-white rounded-3xl shadow-xl p-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
+              <div class="grid md:grid-cols-2 gap-6">
+                {limits.dailySpending && (
+                  <div class="p-5 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">每日消费限额</p>
+                        <p class="text-2xl font-bold text-indigo-600">{limits.dailySpending}</p>
+                      </div>
+                      <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {limits.monthlySpending && (
+                  <div class="p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">每月消费限额</p>
+                        <p class="text-2xl font-bold text-purple-600">{limits.monthlySpending}</p>
+                      </div>
+                      <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {(limits.singleTransaction || limits.perTransactionLimit) && (
+                  <div class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">单笔交易限额</p>
+                        <p class="text-2xl font-bold text-green-600">{limits.singleTransaction || limits.perTransactionLimit}</p>
+                      </div>
+                      <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {limits.monthlyAtmWithdrawal && (
+                  <div class="p-5 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl border border-orange-100">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">ATM每月取现</p>
+                        <p class="text-2xl font-bold text-orange-600">{limits.monthlyAtmWithdrawal}</p>
+                      </div>
+                      <svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
 
           <!-- Pros and Cons -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2>
             <div class="grid md:grid-cols-2 gap-8">
-              
               <!-- Pros -->
-              <div>
-                <h3 class="text-xl font-bold text-green-600 mb-4 flex items-center">
-                  <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                  优点
-                </h3>
-                <ul class="space-y-3">
-                  {pros?.map((pro) => (
-                    <li class="flex items-start">
-                      <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                      </svg>
-                      <span class="text-gray-700">{pro}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+              {pros && pros.length > 0 && (
+                <div>
+                  <h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    优点
+                  </h3>
+                  <ul class="space-y-3">
+                    {pros.map((pro) => (
+                      <li class="flex items-start">
+                        <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-gray-700">{pro}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              
               <!-- Cons -->
-              <div>
-                <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center">
-                  <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                  缺点
-                </h3>
-                <ul class="space-y-3">
-                  {cons?.map((con) => (
-                    <li class="flex items-start">
-                      <svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                      </svg>
-                      <span class="text-gray-700">{con}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {cons && cons.length > 0 && (
+                <div>
+                  <h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    缺点
+                  </h3>
+                  <ul class="space-y-3">
+                    {cons.map((con) => (
+                      <li class="flex items-start">
+                        <svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-gray-700">{con}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </section>
 
@@ -425,6 +477,51 @@ const structuredData = {
                     </svg>
                     <span class="text-gray-800 font-medium">{feature}</span>
                   </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- 新增：相关文章推荐模块 -->
+          {relatedArticles && relatedArticles.length > 0 && (
+            <section class="bg-white rounded-3xl shadow-xl p-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                <svg class="w-8 h-8 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                使用教程与相关指南
+              </h2>
+              
+              <div class="grid md:grid-cols-2 gap-6">
+                {relatedArticles.map((article) => (
+                  <a 
+                    href={`/articles/${article.slug}`}
+                    class="group block bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-100 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                  >
+                    <div class="flex items-start space-x-4">
+                      <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                          {article.data.title}
+                        </h3>
+                        <p class="text-sm text-gray-600 line-clamp-2">
+                          {article.data.description}
+                        </p>
+                        <div class="mt-3 flex items-center text-indigo-600 text-sm font-medium">
+                          阅读更多
+                          <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
                 ))}
               </div>
             </section>
@@ -449,248 +546,80 @@ const structuredData = {
               <div class="flex justify-between items-center py-2 border-b border-gray-100">
                 <span class="text-gray-600">卡片类型</span>
                 <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                  cardType === 'visa' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
+                  cardType === 'visa' ? 'bg-blue-100 text-blue-800' :
+                  cardType === 'mastercard' ? 'bg-red-100 text-red-800' :
+                  'bg-gray-100 text-gray-800'
                 }`}>
                   {cardType?.toUpperCase()}
                 </span>
               </div>
               
-              {virtualCardPrice && (
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">支持地区</span>
+                <span class="font-medium text-gray-900">
+                  {supportedRegions && supportedRegions.length > 0 ? 
+                    supportedRegions.slice(0, 2).join(', ') : 
+                    '全球'}
+                </span>
+              </div>
+              
+              {rewards && rewards.cashback && (
                 <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span class="text-gray-600">虚拟卡费用</span>
-                  <span class="font-medium text-gray-900">{virtualCardPrice}</span>
+                  <span class="text-gray-600">返现比例</span>
+                  <span class="font-medium text-green-600">{rewards.cashback}</span>
                 </div>
               )}
               
-              {physicalCardPrice && (
-                <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span class="text-gray-600">实体卡费用</span>
-                  <span class="font-medium text-gray-900">{physicalCardPrice}</span>
-                </div>
-              )}
+              <div class="flex justify-between items-center py-2">
+                <span class="text-gray-600">年费</span>
+                <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>
+                  {annualFee ? '收费' : '免费'}
+                </span>
+              </div>
             </div>
-
-            <!-- CTA Button -->
+            
+            <!-- Apply Button -->
             {affiliateLink && (
               <a 
                 href={affiliateLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="mt-8 w-full block text-center bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105"
+                class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105"
               >
                 立即申请
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
               </a>
             )}
           </div>
-        </div>
-      </div>
 
-      <!-- Content Section -->
-      {Content && (
-        <section class="mt-12 bg-white rounded-3xl shadow-xl p-8">
-          <div class="prose prose-lg max-w-none">
-            <Content />
-          </div>
-        </section>
-      )}
-
-      <!-- Related Cards -->
-      {relatedCards.length > 0 && (
-        <section class="mt-12">
-          <div class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">相关推荐</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedCards.map((relatedCard) => (
-                <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div class="relative h-48 bg-gradient-to-br from-indigo-500 to-purple-600">
-                    <div class="absolute top-4 left-4">
-                      <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                        relatedCard.data.cardType === 'visa' ? 
-                        'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                        {relatedCard.data.cardType?.toUpperCase()}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div class="p-6">
-                    <h3 class="text-xl font-bold mb-2 hover:text-indigo-600 transition-colors">
-                      <a href={`/cards/${relatedCard.slug}`}>
-                        {relatedCard.data.name}
-                      </a>
-                    </h3>
-                    
-                    <p class="text-gray-600 text-sm mb-4">{relatedCard.data.description}</p>
-                    
+          <!-- Related Cards -->
+          {relatedCards && relatedCards.length > 0 && (
+            <div class="bg-white rounded-3xl shadow-xl p-8">
+              <h3 class="text-2xl font-bold text-gray-900 mb-6">相关U卡推荐</h3>
+              <div class="space-y-4">
+                {relatedCards.map((relatedCard) => (
+                  <a 
+                    href={`/cards/${relatedCard.slug}`}
+                    class="block p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition-colors"
+                  >
                     <div class="flex items-center justify-between">
-                      <div class="flex items-center space-x-2">
-                        {relatedCard.data.isVirtual && (
-                          <span class="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full">虚拟卡</span>
-                        )}
-                        {relatedCard.data.isPhysical && (
-                          <span class="px-2 py-1 bg-indigo-100 text-indigo-600 text-xs rounded-full">实体卡</span>
-                        )}
+                      <div>
+                        <h4 class="font-semibold text-gray-900">{relatedCard.data.name}</h4>
+                        <p class="text-sm text-gray-600 mt-1">{relatedCard.data.cardType?.toUpperCase()}</p>
                       </div>
-                      
-                      <a 
-                        href={`/cards/${relatedCard.slug}`}
-                        class="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
-                      >
-                        查看详情 →
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <!-- Usage Limits Section -->
-      {limits && limits.length > 0 && (
-        <section class="mt-12">
-          <div class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">使用限制</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {limits.map((limit) => (
-                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-                  <div class="flex items-start">
-                    <svg class="w-6 h-6 text-yellow-600 mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-                    </svg>
-                    <div>
-                      <p class="text-yellow-800 font-medium">{limit}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <!-- Rewards Section -->
-      {rewards && rewards.length > 0 && (
-        <section class="mt-12">
-          <div class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">奖励计划</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rewards.map((reward) => (
-                <div class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
-                  <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mr-4">
-                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
-                    <h3 class="text-lg font-semibold text-green-800">奖励</h3>
-                  </div>
-                  <p class="text-green-700">{reward}</p>
-                </div>
-              ))}
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
-
+          )}
+        </div>
+      </div>
     </div>
   </div>
 </Layout>
-
-<style>
-  /* 自定义样式 */
-  .prose {
-    max-width: none;
-  }
-  
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4 {
-    color: #1f2937;
-  }
-  
-  .prose p {
-    color: #4b5563;
-    line-height: 1.8;
-  }
-  
-  .prose a {
-    color: #4f46e5;
-    text-decoration: none;
-  }
-  
-  .prose a:hover {
-    text-decoration: underline;
-  }
-  
-  .prose ul {
-    list-style-type: disc;
-    padding-left: 1.5rem;
-  }
-  
-  .prose ol {
-    list-style-type: decimal;
-    padding-left: 1.5rem;
-  }
-  
-  .prose li {
-    margin: 0.5rem 0;
-  }
-  
-  .prose blockquote {
-    border-left: 4px solid #e5e7eb;
-    padding-left: 1rem;
-    font-style: italic;
-    color: #6b7280;
-    margin: 1.5rem 0;
-  }
-  
-  .prose code {
-    background-color: #f3f4f6;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    color: #1f2937;
-  }
-  
-  .prose pre {
-    background-color: #1f2937;
-    color: #f9fafb;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    overflow-x: auto;
-    font-size: 0.875rem;
-    line-height: 1.7;
-  }
-  
-  .prose pre code {
-    background: none;
-    color: inherit;
-    padding: 0;
-  }
-  
-  .prose table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0;
-  }
-  
-  .prose th,
-  .prose td {
-    padding: 0.75rem;
-    border: 1px solid #e5e7eb;
-    text-align: left;
-  }
-  
-  .prose th {
-    background-color: #f9fafb;
-    font-weight: 600;
-  }
-  
-  .prose img {
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-</style>
