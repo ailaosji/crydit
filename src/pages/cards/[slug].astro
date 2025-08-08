@@ -58,67 +58,31 @@ const {
   affiliateLink 
 } = card.data;
 
-// 获取相关U卡（系统推荐算法）
-const allCards = await getCollection('cards');
-const relatedCards = allCards
-  .map(otherCard => {
-    if (otherCard.slug === card.slug) {
-      return { card: otherCard, score: -1 };
-    }
-
-    let score = 0;
-    // 1. 卡类型匹配
-    if (otherCard.data.cardType === card.data.cardType) {
-      score += 3;
-    }
-    // 2. 标签匹配
-    const commonTags = (card.data.tags || []).filter(tag => (otherCard.data.tags || []).includes(tag));
-    score += commonTags.length * 2;
-    // 3. 支持的货币匹配
-    const commonCurrencies = (card.data.supportedCurrencies || []).filter(currency => (otherCard.data.supportedCurrencies || []).includes(currency));
-    score += commonCurrencies.length * 1;
-    // 4. 发行商惩罚
-    if (otherCard.data.issuer === card.data.issuer) {
-      score -= 100;
-    }
-
-    return { card: otherCard, score };
-  })
-  .filter(item => item.score > 0)
-  .sort((a, b) => b.score - a.score)
-  .map(item => item.card)
-  .slice(0, 3);
+// 获取相关U卡
+let relatedCards = [];
+if (card.data.relatedCards) {
+  try {
+    const allCards = await getCollection('cards');
+    relatedCards = allCards.filter(c =>
+      card.data.relatedCards?.includes(c.slug) && c.slug !== card.slug
+    ).slice(0, 3);
+  } catch (error) {
+    console.warn('Error loading related cards:', error);
+  }
+}
 
 // 获取相关文章（U卡教程等）
-const allArticles = await getCollection('articles');
-const relatedArticles = allArticles
-  .map(article => {
-    let score = 0;
-    const articleTitle = article.data.title.toLowerCase();
-    const cardName = card.data.name.toLowerCase();
-    const cardIssuer = card.data.issuer.toLowerCase();
-
-    // 1. 直接关联
-    if ((article.data.relatedCards || []).includes(card.slug)) {
-      score += 10;
-    }
-    // 2. 卡名或发行商在标题中
-    if (articleTitle.includes(cardName)) {
-      score += 5;
-    }
-    if (articleTitle.includes(cardIssuer)) {
-      score += 3;
-    }
-    // 3. 共同标签
-    const commonTags = (card.data.tags || []).filter(tag => (article.data.tags || []).includes(tag));
-    score += commonTags.length * 2;
-
-    return { article, score };
-  })
-  .filter(item => item.score > 0)
-  .sort((a, b) => b.score - a.score)
-  .map(item => item.article)
-  .slice(0, 4);
+let relatedArticles = [];
+if (card.data.relatedArticles) {
+  try {
+    const allArticles = await getCollection('articles');
+    relatedArticles = allArticles.filter(a =>
+      card.data.relatedArticles?.includes(a.slug)
+    ).slice(0, 4);
+  } catch (error) {
+    console.warn('Articles collection not found:', error);
+  }
+}
 
 // 渲染Markdown内容
 const { Content } = await card.render();
