@@ -1,0 +1,167 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import GiscusComments from '../../components/GiscusComments.astro';
+
+export async function getStaticPaths() {
+  const exchanges = await getCollection('exchanges');
+  return exchanges.map((exchange) => ({
+    params: { slug: exchange.slug },
+    props: { exchange },
+  }));
+}
+
+interface Props {
+  exchange: CollectionEntry<'exchanges'>;
+}
+
+const { exchange } = Astro.props;
+const { Content } = await exchange.render();
+
+const {
+  name,
+  title,
+  description,
+  logo,
+  ranking,
+  tradingVolume,
+  supportedCoins,
+  userRating,
+  securityRating,
+  affiliateLink,
+  pros,
+  cons,
+  services,
+  feeStructure
+} = exchange.data;
+---
+
+<Layout title={title}>
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30">
+    <!-- Header -->
+    <header class="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white py-20 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          {logo && <img src={logo} alt={`${name} Logo`} class="w-24 h-24 rounded-full shadow-2xl border-4 border-white/20"/>}
+          <div class="text-center md:text-left">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">{name}</h1>
+            <p class="text-xl text-white/80 max-w-3xl">{description}</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid lg:grid-cols-3 gap-12">
+        <!-- Left Column: Details -->
+        <div class="lg:col-span-2 space-y-12">
+          <!-- Main Content from Markdown -->
+          <div class="bg-white rounded-2xl shadow-lg p-8">
+            <div class="prose prose-lg max-w-none">
+              <Content />
+            </div>
+          </div>
+
+          <!-- Pros and Cons -->
+          <div class="grid md:grid-cols-2 gap-8">
+            {pros && pros.length > 0 && (
+              <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-green-600 mb-4 flex items-center">
+                  <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  优点
+                </h3>
+                <ul class="space-y-2">
+                  {pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span class="text-gray-700">{pro}</span></li>)}
+                </ul>
+              </div>
+            )}
+            {cons && cons.length > 0 && (
+              <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center">
+                  <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  缺点
+                </h3>
+                <ul class="space-y-2">
+                  {cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg><span class="text-gray-700">{con}</span></li>)}
+                </ul>
+              </div>
+            )}
+          </div>
+
+          <!-- Comments -->
+          <GiscusComments title={`${name} 交易所评论`} />
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <aside class="lg:col-span-1 space-y-8">
+          <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+            <h3 class="text-xl font-bold text-gray-900 mb-6">核心数据</h3>
+            <div class="space-y-4">
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">全球排名</span>
+                <span class="font-bold text-lg text-indigo-600">#{ranking}</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">24h交易量</span>
+                <span class="font-medium text-gray-900">{tradingVolume}</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">支持币种</span>
+                <span class="font-medium text-gray-900">{supportedCoins}+</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span class="text-gray-600">用户评分</span>
+                <div class="flex items-center">
+                  <span class="text-yellow-500">{'⭐'.repeat(Math.round(userRating))}</span>
+                  <span class="ml-2 font-medium">{userRating}/5</span>
+                </div>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-gray-600">安全评分</span>
+                <div class="flex items-center">
+                  <span class="text-yellow-500">{'⭐'.repeat(Math.round(securityRating))}</span>
+                  <span class="ml-2 font-medium">{securityRating}/5</span>
+                </div>
+              </div>
+            </div>
+            <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="mt-8 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg">
+              访问官网
+              <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </a>
+          </div>
+
+          {services && (
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-6">支持服务</h3>
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                {Object.entries(services).map(([key, value]) => (
+                  <div class={`flex items-center ${value ? 'text-gray-800' : 'text-gray-400'}`}>
+                    {value ? <svg class="w-4 h-4 mr-2 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> : <svg class="w-4 h-4 mr-2 text-red-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>}
+                    <span>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {feeStructure && (
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-6">费率结构</h3>
+              <div class="space-y-3 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Maker Fee</span>
+                  <span class="font-medium text-gray-900">{feeStructure.makerFee}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Taker Fee</span>
+                  <span class="font-medium text-gray-900">{feeStructure.takerFee}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </aside>
+      </div>
+    </main>
+  </div>
+</Layout>

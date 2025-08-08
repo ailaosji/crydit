@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ExchangeTable from '../../components/ExchangeTable';
+
+const allExchanges = await getCollection('exchanges');
+allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
+---
+
+<Layout title="加密货币交易所排名 - 2024年最新评测">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-600 to-indigo-700 py-20 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">加密货币交易所排行榜</h1>
+        <p class="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto">
+          我们为您评测了全球顶级的加密货币交易所，帮助您找到最安全、最可靠的交易平台。
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-lg rounded-2xl p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">交易所完整列表</h2>
+          <ExchangeTable exchanges={allExchanges} showAll={true} client:load />
+        </div>
+      </div>
+    </main>
+  </div>
+</Layout>

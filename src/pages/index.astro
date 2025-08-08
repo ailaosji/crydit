@@ -400,7 +400,7 @@ const exchangesData = allExchanges.length > 0 ? allExchanges : [
             <thead class="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-[20%]">
-                  排名 & 卡片
+                  # & U卡
                 </th>
                 <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[8%]">
                   类型
@@ -475,53 +475,27 @@ const exchangesData = allExchanges.length > 0 ? allExchanges : [
             </p>
           </div>
           
-          <!-- 前三名特殊展示 -->
+          <!-- 新版交易所展示 -->
           <div class="grid md:grid-cols-3 gap-6 mb-12">
-            {exchangesData.slice(0, 3).map((exchange, index) => {
-              const gradientClass = index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500' :
-                                   index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-400' :
-                                   'bg-gradient-to-br from-orange-400 to-orange-600';
-              
-              return (
-                <div class={`relative overflow-hidden rounded-2xl p-6 text-white ${gradientClass} shadow-xl hover:shadow-2xl transition-all transform hover:scale-105`}>
-                  <!-- 排名徽章 -->
-                  <div class="absolute top-4 right-4">
-                    <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <span class="text-2xl font-bold">{exchange.data.ranking}</span>
-                    </div>
-                  </div>
-                  
-                  <div class="mb-6">
-                    <h3 class="text-2xl font-bold mb-2">{exchange.data.name}</h3>
-                    <p class="text-white/90 text-sm">{exchange.data.description}</p>
-                  </div>
-                  
-                  <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                      <span class="text-white/80">24h交易量</span>
-                      <span class="font-bold">{exchange.data.tradingVolume}</span>
-                    </div>
-                  </div>
-                  
-                  <div class="flex space-x-3 mt-6">
-                    <a 
-                      href={`/exchanges/${exchange.slug}`}
-                      class="flex-1 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-center hover:bg-white/30 transition-colors"
-                    >
-                      查看详情
-                    </a>
-                    <a 
-                      href={exchange.data.affiliateLink}
-                      target="_blank"
-                      rel="noopener"
-                      class="flex-1 bg-white text-gray-900 px-4 py-2 rounded-lg text-center hover:bg-gray-100 transition-colors font-semibold"
-                    >
-                      立即注册
-                    </a>
-                  </div>
+            {exchangesData.slice(0, 3).map((exchange) => (
+              <a href={`/exchanges/${exchange.slug}`} class="group block bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                <div class="flex items-center mb-4">
+                  {exchange.data.logo && (
+                    <img src={exchange.data.logo} alt={`${exchange.data.name} logo`} class="w-12 h-12 mr-4 rounded-full"/>
+                  )}
+                  <h3 class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">{exchange.data.name}</h3>
                 </div>
-              )
-            })}
+                <p class="text-gray-600 text-sm line-clamp-3">
+                  {exchange.data.description}
+                </p>
+                <div class="mt-4 text-indigo-600 text-sm font-medium flex items-center group-hover:underline">
+                  查看详情
+                  <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                  </svg>
+                </div>
+              </a>
+            ))}
           </div>
           
           <div class="text-center">

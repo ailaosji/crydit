@@ -24,7 +24,7 @@ supportedCurrencies:
 
 # 费用信息
 virtualCardPrice: 0  # 虚拟卡免费
-physicalCardPrice: $79.00 
+physicalCardPrice: 79.00
 depositFee: "免费"
 transactionFee: "1.5%"
 withdrawalFee: "€1.50/次"

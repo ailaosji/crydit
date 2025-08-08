@@ -31,14 +31,14 @@ const currentPath = Astro.url.pathname
           首页
         </a>
         <a 
-          href="/news" 
+          href="/articles"
           class={`font-medium transition-colors ${
-            currentPath.startsWith('/news') 
+            currentPath.startsWith('/articles')
               ? 'text-blue-600' 
               : 'text-gray-700 hover:text-blue-600'
           }`}
         >
-          资讯
+          最新文章
         </a>
         <a 
           href="/cards" 
@@ -113,14 +113,14 @@ const currentPath = Astro.url.pathname
           首页
         </a>
         <a 
-          href="/news" 
+          href="/articles"
           class={`block px-3 py-2 rounded-md text-base font-medium ${
-            currentPath.startsWith('/news') 
+            currentPath.startsWith('/articles')
               ? 'text-blue-600 bg-blue-50' 
               : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
           }`}
         >
-          资讯
+          最新文章
         </a>
         <a 
           href="/cards" 
