@@ -31,49 +31,51 @@ const cardsCollection = defineCollection({
     name: z.string(),
     title: z.string(),
     description: z.string(),
-    shortDescription: z.string().optional(), // 用于卡片预览
+    shortDescription: z.string().optional(),
     cardType: z.enum(['visa', 'mastercard']),
     isVirtual: z.boolean(),
     isPhysical: z.boolean(),
     virtualCardPrice: z.number().optional(),
-    physicalCardPrice: z.number().optional(),
+    physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string(),
     transactionFee: z.string(),
     withdrawalFee: z.string().optional(),
-    atmFee: z.string().optional(),
+    atmFee: z.string().nullable().optional(),
     annualFee: z.boolean(),
     supportedCurrencies: z.array(z.string()),
-    rating: z.number().min(1).max(5),
-    affiliateLink: z.string(),
-    publishDate: z.date(),
+    rating: z.number().min(1).max(5).optional(),
+    affiliateLink: z.string().optional(),
+    publishDate: z.coerce.date().optional(),
     updateDate: z.date().optional(),
     featured: z.boolean().default(false),
     pros: z.array(z.string()),
     cons: z.array(z.string()),
     image: z.string().optional(),
-    gallery: z.array(z.string()).optional(), // 多张图片
-    
+    gallery: z.array(z.string()).optional(),
+
     // 详细信息
-    issuer: z.string(), // 发卡机构
-    supportedRegions: z.array(z.string()), // 支持地区
+    issuer: z.string(),
+    supportedRegions: z.array(z.string()),
     kycRequired: z.boolean().default(true),
     minimumAge: z.number().default(18),
-    
+
     // 限额信息
     limits: z.object({
       dailySpending: z.string().optional(),
       monthlySpending: z.string().optional(),
       atmWithdrawal: z.string().optional(),
-      monthlyAtmWithdrawal: z.string().optional(),
+      monthlyAtmWithdrawal: z.string().nullable().optional(),
+      singleTransaction: z.string().optional(),
     }).optional(),
-    
+
     // 特色功能
     features: z.array(z.string()).optional(),
     rewards: z.object({
-      cashback: z.string().optional(),
+      cashback: z.string().nullable().optional(),
       loyaltyProgram: z.string().optional(),
+      points: z.union([z.boolean(), z.string()]).optional(),
     }).optional(),
-    
+
     // SEO和关联
     seo: z.object({
       keywords: z.array(z.string()).optional(),
@@ -81,12 +83,13 @@ const cardsCollection = defineCollection({
     }).optional(),
     relatedCards: z.array(z.string()).optional(),
     relatedArticles: z.array(z.string()).optional(),
-    
-    // 状态
+
+    // 状态控制
     status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
-    lastReviewed: z.date().optional(), // 最后审核日期
+    lastReviewed: z.date().optional(),
   }),
 });
+
 
 // 交易所集合配置
 const exchangesCollection = defineCollection({

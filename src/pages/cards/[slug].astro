@@ -1,5 +1,4 @@
 ---
-// src/pages/cards/[slug].astro
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import GiscusComments from '../../components/GiscusComments.astro';
@@ -8,9 +7,11 @@ import GiscusComments from '../../components/GiscusComments.astro';
 export async function getStaticPaths() {
   try {
     const cards = await getCollection('cards');
+    console.log('Cards found:', cards.length); // 调试信息
+    
     return cards.map((card) => ({
       params: { slug: card.slug },
-      props: card,
+      props: { card },
     }));
   } catch (error) {
     console.error('Error in getStaticPaths:', error);
@@ -18,9 +19,13 @@ export async function getStaticPaths() {
   }
 }
 
-type Props = CollectionEntry<'cards'>;
+// 类型定义
+interface Props {
+  card: CollectionEntry<'cards'>;
+}
 
-const card = Astro.props;
+// 获取传递的 props
+const { card } = Astro.props as Props;
 
 // 检查 card 是否存在
 if (!card) {
@@ -42,6 +47,7 @@ const {
   issuer, 
   supportedRegions, 
   supportedCurrencies, 
+  supportedPaymentMethods, // 新增：支持的支付方式
   virtualCardPrice, 
   physicalCardPrice, 
   depositFee, 
@@ -61,7 +67,7 @@ if (card.data.relatedCards) {
       card.data.relatedCards?.includes(c.slug) && c.slug !== card.slug
     ).slice(0, 3);
   } catch (error) {
-    console.warn('Error loading related cards:', error.message);
+    console.warn('Error loading related cards:', error);
   }
 }
 
@@ -74,7 +80,7 @@ if (card.data.relatedArticles) {
       card.data.relatedArticles?.includes(a.slug)
     ).slice(0, 4);
   } catch (error) {
-    console.warn('Articles collection not found:', error.message);
+    console.warn('Articles collection not found:', error);
   }
 }
 
@@ -216,7 +222,7 @@ const structuredData = {
                     <div class="flex justify-between items-end">
                       <div>
                         <div class="text-xs text-gray-400 mb-1">CARD HOLDER</div>
-                        <div class="font-semibold text-lg">{name.length > 12 ? name.substring(0, 12) + '...' : name}</div>
+                        <div class="font-semibold text-lg">{name && name.length > 12 ? name.substring(0, 12) + '...' : name}</div>
                       </div>
                       <div>
                         <div class="text-xs text-gray-400 mb-1">VALID THRU</div>
@@ -238,6 +244,13 @@ const structuredData = {
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-8">
           
+          <!-- Markdown Content -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <div class="prose prose-lg max-w-none">
+              <Content />
+            </div>
+          </section>
+          
           <!-- 支持的加密货币 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>
@@ -256,6 +269,84 @@ const structuredData = {
               <p class="text-gray-600">支持多种主流加密货币</p>
             )}
           </section>
+
+          <!-- 新增：支持的支付方式模块 -->
+          {supportedPaymentMethods && supportedPaymentMethods.length > 0 && (
+            <section class="bg-white rounded-3xl shadow-xl p-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                <svg class="w-8 h-8 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                </svg>
+                支持的支付方式
+              </h2>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {supportedPaymentMethods.map((method) => {
+                  // 根据支付方式显示不同的图标和颜色
+                  const getPaymentMethodIcon = (method: string) => {
+                    const methodLower = method.toLowerCase();
+                    if (methodLower.includes('alipay')) {
+                      return {
+                        color: 'from-blue-500 to-cyan-500',
+                        bgColor: 'from-blue-50 to-cyan-50',
+                        borderColor: 'border-blue-200',
+                        icon: '支'
+                      };
+                    } else if (methodLower.includes('apple') || methodLower.includes('applepay')) {
+                      return {
+                        color: 'from-gray-700 to-black',
+                        bgColor: 'from-gray-50 to-gray-100',
+                        borderColor: 'border-gray-200',
+                        icon: ''
+                      };
+                    } else if (methodLower.includes('google') || methodLower.includes('googlepay')) {
+                      return {
+                        color: 'from-red-500 to-yellow-500',
+                        bgColor: 'from-red-50 to-yellow-50',
+                        borderColor: 'border-red-200',
+                        icon: 'G'
+                      };
+                    } else if (methodLower.includes('wechat') || methodLower.includes('微信')) {
+                      return {
+                        color: 'from-green-500 to-green-600',
+                        bgColor: 'from-green-50 to-green-100',
+                        borderColor: 'border-green-200',
+                        icon: '微'
+                      };
+                    } else if (methodLower.includes('paypal')) {
+                      return {
+                        color: 'from-blue-600 to-blue-700',
+                        bgColor: 'from-blue-50 to-blue-100',
+                        borderColor: 'border-blue-200',
+                        icon: 'P'
+                      };
+                    } else {
+                      return {
+                        color: 'from-purple-500 to-indigo-500',
+                        bgColor: 'from-purple-50 to-indigo-50',
+                        borderColor: 'border-purple-200',
+                        icon: method.substring(0, 1).toUpperCase()
+                      };
+                    }
+                  };
+
+                  const methodStyle = getPaymentMethodIcon(method);
+                  
+                  return (
+                    <div class={`flex flex-col items-center p-4 bg-gradient-to-br ${methodStyle.bgColor} rounded-xl border ${methodStyle.borderColor} hover:scale-105 transition-transform`}>
+                      <div class={`w-12 h-12 bg-gradient-to-br ${methodStyle.color} rounded-full flex items-center justify-center text-white font-bold mb-3 shadow-lg`}>
+                        {methodStyle.icon || (
+                          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          </svg>
+                        )}
+                      </div>
+                      <span class="font-medium text-gray-800 text-center text-sm">{method}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
 
           <!-- 优化后的手续费信息模块 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
@@ -287,28 +378,32 @@ const structuredData = {
                     </div>
                   </div>
                 )}
-                {isPhysical && (
-                  <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
-                    <div class="flex justify-between items-start">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">实体卡费用</p>
-                        <p class="text-2xl font-bold text-gray-900">
-                          {physicalCardPrice === 0 ? '免费' : `$${physicalCardPrice}`}
+                {/* 修复实体卡费用显示逻辑 */}
+                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="text-sm text-gray-600 mb-1">实体卡费用</p>
+                      <p class="text-2xl font-bold text-gray-900">
+                        {!isPhysical 
+                          ? '暂未提供实体卡' 
+                          : physicalCardPrice === 0 || physicalCardPrice === null || physicalCardPrice === undefined
+                          ? '免费' 
+                          : `$${physicalCardPrice}`
+                        }
+                      </p>
+                      {isPhysical && atmFee && (
+                        <p class="text-xs text-gray-500 mt-2">
+                          ATM取现: {atmFee}
                         </p>
-                        {atmFee && (
-                          <p class="text-xs text-gray-500 mt-2">
-                            ATM取现: {atmFee}
-                          </p>
-                        )}
-                      </div>
-                      <div class="p-2 bg-white rounded-lg">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                        </svg>
-                      </div>
+                      )}
+                    </div>
+                    <div class="p-2 bg-white rounded-lg">
+                      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                      </svg>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 
@@ -354,11 +449,11 @@ const structuredData = {
             )}
           </section>
 
-          <!-- Limits -->
+          <!-- 修改后的Limits模块 - 增加ATM取款限额 -->
           {limits && (
             <section class="bg-white rounded-3xl shadow-xl p-8">
               <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
-              <div class="grid md:grid-cols-2 gap-6">
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {limits.dailySpending && (
                   <div class="p-5 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100">
                     <div class="flex items-start justify-between">
@@ -385,12 +480,14 @@ const structuredData = {
                     </div>
                   </div>
                 )}
-                {(limits.singleTransaction || limits.perTransactionLimit) && (
+                {(limits.singleTransaction || limits.perTransactionLimit || limits.transactionLimit || limits.singleTransactionLimit) && (
                   <div class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100">
                     <div class="flex items-start justify-between">
                       <div>
                         <p class="text-sm text-gray-600 mb-1">单笔交易限额</p>
-                        <p class="text-2xl font-bold text-green-600">{limits.singleTransaction || limits.perTransactionLimit}</p>
+                        <p class="text-2xl font-bold text-green-600">
+                          {limits.singleTransaction || limits.perTransactionLimit || limits.transactionLimit || limits.singleTransactionLimit}
+                        </p>
                       </div>
                       <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -407,6 +504,34 @@ const structuredData = {
                       </div>
                       <svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {/* 新增：ATM每日取现限额 */}
+                {limits.dailyAtmWithdrawal && (
+                  <div class="p-5 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl border border-yellow-100">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">ATM每日取现</p>
+                        <p class="text-2xl font-bold text-yellow-600">{limits.dailyAtmWithdrawal}</p>
+                      </div>
+                      <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z"/>
+                      </svg>
+                    </div>
+                  </div>
+                )}
+                {/* ATM取现总限额 */}
+                {limits.atmWithdrawalLimit && (
+                  <div class="p-5 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl border border-teal-100">
+                    <div class="flex items-start justify-between">
+                      <div>
+                        <p class="text-sm text-gray-600 mb-1">ATM取现总限额</p>
+                        <p class="text-2xl font-bold text-teal-600">{limits.atmWithdrawalLimit}</p>
+                      </div>
+                      <svg class="w-8 h-8 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                     </div>
                   </div>

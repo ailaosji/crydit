@@ -4,7 +4,7 @@ name: "Dupay Card"
 description: "支持多种加密货币充值的全球虚拟信用卡，无月费，支持全球在线支付"
 cardType: "visa"
 isVirtual: true
-isPhysical: false
+isPhysical: true
 issuer: "Dupay"
 
 # 支持的地区
@@ -24,7 +24,7 @@ supportedCurrencies:
 
 # 费用信息
 virtualCardPrice: 0  # 虚拟卡免费
-physicalCardPrice: null  # 无实体卡
+physicalCardPrice: $79.00 
 depositFee: "免费"
 transactionFee: "1.5%"
 withdrawalFee: "€1.50/次"
