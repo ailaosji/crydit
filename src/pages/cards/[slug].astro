@@ -58,18 +58,36 @@ const {
   affiliateLink 
 } = card.data;
 
-// 获取相关U卡
-let relatedCards = [];
-if (card.data.relatedCards) {
-  try {
-    const allCards = await getCollection('cards');
-    relatedCards = allCards.filter(c => 
-      card.data.relatedCards?.includes(c.slug) && c.slug !== card.slug
-    ).slice(0, 3);
-  } catch (error) {
-    console.warn('Error loading related cards:', error);
-  }
-}
+// 获取相关U卡（系统推荐算法）
+const allCards = await getCollection('cards');
+const relatedCards = allCards
+  .map(otherCard => {
+    if (otherCard.slug === card.slug) {
+      return { card: otherCard, score: -1 };
+    }
+
+    let score = 0;
+    // 1. 卡类型匹配
+    if (otherCard.data.cardType === card.data.cardType) {
+      score += 3;
+    }
+    // 2. 标签匹配
+    const commonTags = (card.data.tags || []).filter(tag => (otherCard.data.tags || []).includes(tag));
+    score += commonTags.length * 2;
+    // 3. 支持的货币匹配
+    const commonCurrencies = (card.data.supportedCurrencies || []).filter(currency => (otherCard.data.supportedCurrencies || []).includes(currency));
+    score += commonCurrencies.length * 1;
+    // 4. 发行商惩罚
+    if (otherCard.data.issuer === card.data.issuer) {
+      score -= 100;
+    }
+
+    return { card: otherCard, score };
+  })
+  .filter(item => item.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .map(item => item.card)
+  .slice(0, 3);
 
 // 获取相关文章（U卡教程等）
 let relatedArticles = [];

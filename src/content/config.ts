@@ -7,8 +7,8 @@ const articlesCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    publishDate: z.date(),
-    updateDate: z.date().optional(),
+    publishDate: z.coerce.date(),
+    updateDate: z.coerce.date().optional(),
     category: z.enum(['news', 'guide', 'review', 'analysis', 'tutorial']),
     tags: z.array(z.string()).optional(),
     image: z.string().optional(),
@@ -46,7 +46,7 @@ const cardsCollection = defineCollection({
     rating: z.number().min(1).max(5).optional(),
     affiliateLink: z.string().optional(),
     publishDate: z.coerce.date().optional(),
-    updateDate: z.date().optional(),
+    updateDate: z.coerce.date().optional(),
     featured: z.boolean().default(false),
     pros: z.array(z.string()),
     cons: z.array(z.string()),
@@ -86,7 +86,7 @@ const cardsCollection = defineCollection({
 
     // 状态控制
     status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
-    lastReviewed: z.date().optional(),
+    lastReviewed: z.coerce.date().optional(),
   }),
 });
 
@@ -188,9 +188,9 @@ const exchangesCollection = defineCollection({
     
     // 状态和时间
     status: z.enum(['active', 'maintenance', 'restricted']).default('active'),
-    publishDate: z.date(),
-    updateDate: z.date().optional(),
-    lastReviewed: z.date().optional(),
+    publishDate: z.coerce.date(),
+    updateDate: z.coerce.date().optional(),
+    lastReviewed: z.coerce.date().optional(),
   }),
 });
 
@@ -202,8 +202,8 @@ const guidesCollection = defineCollection({
     description: z.string(),
     difficulty: z.enum(['beginner', 'intermediate', 'advanced']),
     readingTime: z.number(), // 预计阅读时间
-    publishDate: z.date(),
-    updateDate: z.date().optional(),
+    publishDate: z.coerce.date(),
+    updateDate: z.coerce.date().optional(),
     category: z.enum(['getting-started', 'security', 'trading', 'defi', 'tax']),
     tags: z.array(z.string()).optional(),
     image: z.string().optional(),
@@ -242,7 +242,7 @@ const authorsCollection = defineCollection({
     linkedin: z.string().optional(),
     website: z.string().url().optional(),
     expertise: z.array(z.string()).optional(),
-    joinDate: z.date(),
+    joinDate: z.coerce.date(),
     articlesCount: z.number().default(0),
   }),
 });
@@ -253,8 +253,8 @@ const pagesCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    publishDate: z.date(),
-    updateDate: z.date().optional(),
+    publishDate: z.coerce.date(),
+    updateDate: z.coerce.date().optional(),
     template: z.enum(['default', 'landing', 'comparison']).default('default'),
     
     // SEO
@@ -285,7 +285,7 @@ const faqCollection = defineCollection({
     tags: z.array(z.string()).optional(),
     relatedCards: z.array(z.string()).optional(),
     relatedExchanges: z.array(z.string()).optional(),
-    lastUpdated: z.date(),
+    lastUpdated: z.coerce.date(),
   }),
 });
 
@@ -297,8 +297,8 @@ const announcementsCollection = defineCollection({
     content: z.string(),
     type: z.enum(['info', 'warning', 'success', 'error']),
     priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
-    publishDate: z.date(),
-    expiryDate: z.date().optional(),
+    publishDate: z.coerce.date(),
+    expiryDate: z.coerce.date().optional(),
     targetAudience: z.array(z.string()).optional(), // 目标受众
     showOnPages: z.array(z.string()).optional(), // 显示在哪些页面
     dismissible: z.boolean().default(true),
@@ -321,7 +321,7 @@ const reviewsCollection = defineCollection({
     cons: z.array(z.string()).optional(),
     verified: z.boolean().default(false),
     helpful: z.number().default(0),
-    publishDate: z.date(),
+    publishDate: z.coerce.date(),
     status: z.enum(['pending', 'approved', 'rejected']).default('pending'),
     
     // 用户体验评分
@@ -343,8 +343,8 @@ const partnersCollection = defineCollection({
     logo: z.string(),
     website: z.string().url(),
     partnershipType: z.enum(['affiliate', 'sponsor', 'technology', 'content']),
-    startDate: z.date(),
-    endDate: z.date().optional(),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date().optional(),
     active: z.boolean().default(true),
     displayPriority: z.number().default(0),
     benefits: z.array(z.string()).optional(),
@@ -400,7 +400,7 @@ const configCollection = defineCollection({
       vatNumber: z.string().optional(),
     }).optional(),
     
-    lastUpdated: z.date(),
+    lastUpdated: z.coerce.date(),
   }),
 });
 
