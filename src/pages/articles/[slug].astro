@@ -1,0 +1,757 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import GiscusComments from '../../components/GiscusComments.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { Content } = await article.render();
+
+// 获取文章数据
+const {
+  title,
+  description,
+  publishDate,
+  updateDate,
+  coverImage,
+  category,
+  tags,
+  author,
+  readingTime
+} = article.data;
+
+// 获取相关文章
+const allArticles = await getCollection('articles');
+const relatedArticles = allArticles
+  .filter(a => a.slug !== article.slug)
+  .filter(a => {
+    // 基于分类或标签的相关性
+    const sameCategory = a.data.category === category;
+    const commonTags = tags?.some(tag => a.data.tags?.includes(tag));
+    return sameCategory || commonTags;
+  })
+  .slice(0, 3);
+
+// 获取更多同分类文章
+const categoryArticles = allArticles
+  .filter(a => a.slug !== article.slug && a.data.category === category)
+  .slice(0, 5);
+
+// 分类配置
+const categoryConfig = {
+  review: { label: '深度评测', color: 'green', icon: '🔍', bgColor: 'from-green-500 to-emerald-600' },
+  guide: { label: '使用指南', color: 'blue', icon: '📚', bgColor: 'from-blue-500 to-indigo-600' },
+  news: { label: '行业资讯', color: 'red', icon: '📰', bgColor: 'from-red-500 to-pink-600' },
+  analysis: { label: '市场分析', color: 'purple', icon: '📊', bgColor: 'from-purple-500 to-indigo-600' }
+};
+
+const currentCategory = categoryConfig[category] || categoryConfig.analysis;
+---
+
+<Layout title={`${title} - U卡评测网`}>
+  <article class="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30">
+    <!-- Hero Section with Article Header -->
+    <header class="relative overflow-hidden">
+      <!-- 背景渐变 -->
+      <div class={`absolute inset-0 bg-gradient-to-br ${currentCategory.bgColor} opacity-90`}></div>
+      
+      <!-- 装饰性图案 -->
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+      
+      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <!-- 面包屑导航 -->
+        <nav class="flex items-center space-x-2 text-white/80 text-sm mb-8">
+          <a href="/" class="hover:text-white transition-colors">首页</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+          <a href="/articles" class="hover:text-white transition-colors">最新文章</a>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+          <span class="text-white">{currentCategory.label}</span>
+        </nav>
+
+        <!-- 文章标题区域 -->
+        <div class="space-y-6">
+          <!-- 分类标签 -->
+          <div class="flex items-center space-x-3">
+            <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-medium">
+              <span class="mr-2 text-lg">{currentCategory.icon}</span>
+              {currentCategory.label}
+            </span>
+            {tags && tags.slice(0, 2).map(tag => (
+              <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-white/90 text-xs">
+                #{tag}
+              </span>
+            ))}
+          </div>
+
+          <!-- 标题 -->
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            {title}
+          </h1>
+
+          <!-- 描述 -->
+          <p class="text-xl text-white/90 leading-relaxed max-w-4xl">
+            {description}
+          </p>
+
+          <!-- 元信息 -->
+          <div class="flex flex-wrap items-center gap-6 text-white/80 text-sm">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+              <span>{author || 'U卡评测团队'}</span>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <time datetime={publishDate.toISOString()}>
+                {new Date(publishDate).toLocaleDateString('zh-CN', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </time>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>{readingTime || '5'} 分钟阅读</span>
+            </div>
+            {updateDate && (
+              <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                <span>更新于 {new Date(updateDate).toLocaleDateString('zh-CN')}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid lg:grid-cols-3 gap-12">
+        <!-- Article Content -->
+        <div class="lg:col-span-2 space-y-12">
+          <!-- 文章正文 -->
+          <div class="bg-white rounded-3xl shadow-xl p-8 lg:p-12">
+            <div id="article-main-content" class="article-content-wrapper">
+              <Content />
+            </div>
+          </div>
+          
+          <style>
+            /* 使用更强的选择器和 !important 确保样式生效 */
+            #article-main-content {
+              font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', 'Source Han Serif SC', Georgia, 'Times New Roman', serif !important;
+              color: #37474f !important;
+              line-height: 1.95 !important;
+              font-size: 18px !important;
+              -webkit-font-smoothing: antialiased !important;
+              -moz-osx-font-smoothing: grayscale !important;
+              max-width: none !important;
+            }
+            
+            /* 重置所有 prose 样式 */
+            #article-main-content * {
+              all: revert;
+            }
+            
+            /* Material Design 风格的标题 - 使用ID选择器提高优先级 */
+            #article-main-content h1 {
+              font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Roboto', sans-serif !important;
+              font-size: 2.5rem !important;
+              font-weight: 300 !important;
+              line-height: 1.35 !important;
+              color: #263238 !important;
+              margin-top: 3rem !important;
+              margin-bottom: 1.5rem !important;
+              letter-spacing: -0.02em !important;
+              display: block !important;
+            }
+            
+            #article-main-content h2 {
+              font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Roboto', sans-serif !important;
+              font-size: 2rem !important;
+              font-weight: 400 !important;
+              line-height: 1.35 !important;
+              color: #37474f !important;
+              margin-top: 3rem !important;
+              margin-bottom: 1.25rem !important;
+              padding-bottom: 0.75rem !important;
+              border-bottom: 2px solid #e0e0e0 !important;
+              display: block !important;
+              letter-spacing: -0.01em !important;
+            }
+            
+            #article-main-content h3 {
+              font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Roboto', sans-serif !important;
+              font-size: 1.5rem !important;
+              font-weight: 500 !important;
+              line-height: 1.35 !important;
+              color: #455a64 !important;
+              margin-top: 2.5rem !important;
+              margin-bottom: 1rem !important;
+              display: block !important;
+            }
+            
+            #article-main-content h4 {
+              font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Roboto', sans-serif !important;
+              font-size: 1.25rem !important;
+              font-weight: 500 !important;
+              line-height: 1.35 !important;
+              color: #546e7a !important;
+              margin-top: 2rem !important;
+              margin-bottom: 0.875rem !important;
+              text-transform: uppercase !important;
+              letter-spacing: 0.05em !important;
+              display: block !important;
+            }
+            
+            #article-main-content h5 {
+              font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Roboto', sans-serif !important;
+              font-size: 1.125rem !important;
+              font-weight: 600 !important;
+              line-height: 1.35 !important;
+              color: #607d8b !important;
+              margin-top: 1.75rem !important;
+              margin-bottom: 0.75rem !important;
+              display: block !important;
+            }
+            
+            #article-main-content h6 {
+              font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Roboto', sans-serif !important;
+              font-size: 1rem !important;
+              font-weight: 600 !important;
+              line-height: 1.35 !important;
+              color: #78909c !important;
+              margin-top: 1.5rem !important;
+              margin-bottom: 0.625rem !important;
+              text-transform: uppercase !important;
+              letter-spacing: 0.08em !important;
+              display: block !important;
+            }
+            
+            /* 为标题添加Material Design的悬停效果 */
+            #article-main-content h2:hover,
+            #article-main-content h3:hover {
+              color: #4f46e5 !important;
+              transition: color 0.3s ease !important;
+              cursor: pointer !important;
+            }
+            
+            /* 段落样式 */
+            #article-main-content p {
+              margin-top: 0 !important;
+              margin-bottom: 1.75rem !important;
+              text-align: justify !important;
+              word-break: break-word !important;
+              letter-spacing: 0.025em !important;
+              color: #455a64 !important;
+              line-height: 1.95 !important;
+              font-size: 18px !important;
+            }
+            
+            /* 第一段特殊样式 */
+            #article-main-content > p:first-of-type {
+              font-size: 1.25rem !important;
+              line-height: 1.8 !important;
+              color: #546e7a !important;
+              font-weight: 400 !important;
+              margin-bottom: 2rem !important;
+            }
+            
+            /* 链接样式 - Material Design风格 */
+            #article-main-content a {
+              color: #5c6bc0 !important;
+              text-decoration: none !important;
+              font-weight: 500 !important;
+              position: relative !important;
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+              display: inline-block !important;
+            }
+            
+            #article-main-content a::after {
+              content: '' !important;
+              position: absolute !important;
+              width: 100% !important;
+              height: 2px !important;
+              bottom: -2px !important;
+              left: 0 !important;
+              background-color: #5c6bc0 !important;
+              transform: scaleX(0) !important;
+              transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+              transform-origin: bottom right !important;
+            }
+            
+            #article-main-content a:hover {
+              color: #3f51b5 !important;
+            }
+            
+            #article-main-content a:hover::after {
+              transform: scaleX(1) !important;
+              transform-origin: bottom left !important;
+            }
+            
+            /* 列表样式 */
+            #article-main-content ul,
+            #article-main-content ol {
+              margin-top: 0 !important;
+              margin-bottom: 2rem !important;
+              padding-left: 2rem !important;
+              color: #546e7a !important;
+            }
+            
+            #article-main-content li {
+              margin-bottom: 0.75rem !important;
+              line-height: 1.8 !important;
+              position: relative !important;
+              padding-left: 0.5rem !important;
+              color: #546e7a !important;
+            }
+            
+            #article-main-content ul > li {
+              list-style: none !important;
+            }
+            
+            #article-main-content ul > li::before {
+              content: "•" !important;
+              color: #5c6bc0 !important;
+              font-weight: bold !important;
+              font-size: 1.5em !important;
+              position: absolute !important;
+              left: -1.25rem !important;
+              top: -0.25rem !important;
+            }
+            
+            #article-main-content ol {
+              counter-reset: li-counter !important;
+              list-style: none !important;
+            }
+            
+            #article-main-content ol > li {
+              counter-increment: li-counter !important;
+            }
+            
+            #article-main-content ol > li::before {
+              content: counter(li-counter) !important;
+              color: white !important;
+              background: #5c6bc0 !important;
+              font-weight: 600 !important;
+              font-size: 0.875rem !important;
+              position: absolute !important;
+              left: -2rem !important;
+              top: 0.125rem !important;
+              width: 1.5rem !important;
+              height: 1.5rem !important;
+              border-radius: 50% !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+            }
+            
+            /* Material Design 卡片风格的引用块 */
+            #article-main-content blockquote {
+              margin: 2.5rem 0 !important;
+              padding: 1.5rem 2rem !important;
+              background: #ffffff !important;
+              border-left: 4px solid #5c6bc0 !important;
+              border-radius: 4px !important;
+              position: relative !important;
+              color: #546e7a !important;
+              font-style: normal !important;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05) !important;
+              transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            }
+            
+            #article-main-content blockquote:hover {
+              box-shadow: 0 4px 8px rgba(0,0,0,0.15), 0 8px 16px rgba(0,0,0,0.1) !important;
+            }
+            
+            #article-main-content blockquote p {
+              margin-bottom: 0 !important;
+              font-size: 1.125rem !important;
+              line-height: 1.75 !important;
+            }
+            
+            /* 代码样式 - Material Design */
+            #article-main-content code {
+              font-family: 'Roboto Mono', 'JetBrains Mono', 'Fira Code', monospace !important;
+              font-size: 0.875em !important;
+              padding: 0.2em 0.4em !important;
+              background: #f5f5f5 !important;
+              color: #d32f2f !important;
+              border-radius: 4px !important;
+              font-weight: 500 !important;
+              white-space: nowrap !important;
+            }
+            
+            #article-main-content pre {
+              margin: 2rem 0 !important;
+              border-radius: 8px !important;
+              overflow: hidden !important;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08) !important;
+              background: #263238 !important;
+            }
+            
+            #article-main-content pre code {
+              display: block !important;
+              background: #263238 !important;
+              color: #aed581 !important;
+              padding: 1.5rem !important;
+              overflow-x: auto !important;
+              line-height: 1.6 !important;
+              font-size: 0.875rem !important;
+              white-space: pre !important;
+            }
+            
+            /* 图片样式 - Material Design风格 */
+            #article-main-content img {
+              max-width: 100% !important;
+              height: auto !important;
+              border-radius: 8px !important;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.1) !important;
+              margin: 2.5rem auto !important;
+              display: block !important;
+            }
+            
+            /* 表格样式 - Material Design */
+            #article-main-content table {
+              width: 100% !important;
+              margin: 2rem 0 !important;
+              border-collapse: separate !important;
+              border-spacing: 0 !important;
+              background: white !important;
+              border-radius: 8px !important;
+              overflow: hidden !important;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+            }
+            
+            #article-main-content thead {
+              background: #5c6bc0 !important;
+              color: white !important;
+            }
+            
+            #article-main-content th {
+              padding: 16px !important;
+              text-align: left !important;
+              font-weight: 500 !important;
+              font-size: 0.875rem !important;
+              text-transform: uppercase !important;
+              letter-spacing: 0.05em !important;
+              color: white !important;
+            }
+            
+            #article-main-content td {
+              padding: 16px !important;
+              border-top: 1px solid #e0e0e0 !important;
+              color: #546e7a !important;
+            }
+            
+            #article-main-content tbody tr:hover {
+              background-color: #f5f5f5 !important;
+            }
+            
+            /* 水平线样式 */
+            #article-main-content hr {
+              margin: 3rem auto !important;
+              width: 80px !important;
+              border: none !important;
+              height: 2px !important;
+              background: linear-gradient(90deg, transparent, #e0e0e0, transparent) !important;
+              border-radius: 2px !important;
+            }
+            
+            /* 强调文本 */
+            #article-main-content strong,
+            #article-main-content b {
+              font-weight: 600 !important;
+              color: #263238 !important;
+            }
+            
+            #article-main-content em,
+            #article-main-content i {
+              font-style: italic !important;
+              color: #607d8b !important;
+            }
+            
+            /* 响应式优化 */
+            @media (max-width: 768px) {
+              #article-main-content {
+                font-size: 16px !important;
+                line-height: 1.8 !important;
+              }
+              
+              #article-main-content h1 {
+                font-size: 2rem !important;
+              }
+              
+              #article-main-content h2 {
+                font-size: 1.75rem !important;
+              }
+              
+              #article-main-content h3 {
+                font-size: 1.375rem !important;
+              }
+              
+              #article-main-content h4 {
+                font-size: 1.125rem !important;
+              }
+              
+              #article-main-content p {
+                font-size: 16px !important;
+              }
+              
+              #article-main-content > p:first-of-type {
+                font-size: 1.125rem !important;
+              }
+            }
+          </style>
+
+          <!-- 评论区 -->
+          <GiscusComments title="文章评论" showInstructions={true} />
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="space-y-8">
+          <!-- 相关文章推荐 -->
+          {relatedArticles.length > 0 && (
+            <div class="bg-white rounded-3xl shadow-xl p-6 sticky top-24">
+              <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                </svg>
+                推荐阅读
+              </h3>
+              
+              <div class="space-y-4">
+                {relatedArticles.map((relatedArticle) => (
+                  <a href={`/articles/${relatedArticle.slug}`} class="group block">
+                    <article class="p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-indigo-50/30 hover:from-indigo-50 hover:to-purple-50 transition-all duration-300">
+                      <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold group-hover:scale-110 transition-transform">
+                          {categoryConfig[relatedArticle.data.category]?.icon || '📄'}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                          <h4 class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                            {relatedArticle.data.title}
+                          </h4>
+                          <p class="text-xs text-gray-500 mt-1">
+                            {new Date(relatedArticle.data.publishDate).toLocaleDateString('zh-CN')}
+                          </p>
+                        </div>
+                      </div>
+                    </article>
+                  </a>
+                ))}
+              </div>
+
+              <!-- 相关标签 -->
+              {tags && tags.length > 0 && (
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                  <h4 class="text-sm font-bold text-gray-900 mb-4 flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    相关标签
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    {tags.map(tag => (
+                      <a 
+                        href={`/tags/${tag}`} 
+                        class="inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 text-xs font-medium hover:from-indigo-100 hover:to-purple-100 transition-all duration-300 hover:scale-105"
+                      >
+                        #{tag}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <!-- 分类文章列表 -->
+          {categoryArticles.length > 0 && (
+            <div class="bg-white rounded-3xl shadow-xl p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                <span class="text-2xl mr-2">{currentCategory.icon}</span>
+                更多{currentCategory.label}
+              </h3>
+              
+              <div class="space-y-3">
+                {categoryArticles.map((catArticle, index) => (
+                  <a href={`/articles/${catArticle.slug}`} class="group flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                    <span class={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
+                      ${index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
+                        index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white' :
+                        index === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white' :
+                        'bg-gray-100 text-gray-600'}`}>
+                      {index + 1}
+                    </span>
+                    <span class="flex-1 text-sm text-gray-700 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                      {catArticle.data.title}
+                    </span>
+                  </a>
+                ))}
+              </div>
+
+              <a href={`/categories/${category}`} class="mt-6 block text-center py-3 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-600 rounded-xl hover:from-indigo-100 hover:to-purple-100 transition-all duration-300 text-sm font-medium">
+                查看全部{currentCategory.label}
+              </a>
+            </div>
+          )}
+
+          <!-- 目录导航 (TOC) -->
+          <div class="bg-white rounded-3xl shadow-xl p-6 hidden lg:block" id="toc-container">
+            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+              </svg>
+              文章目录
+            </h3>
+            <nav class="space-y-2 max-h-96 overflow-y-auto" id="toc-nav">
+              <!-- 目录将通过JavaScript动态生成 -->
+            </nav>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- 相关推荐底部区域 -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">继续探索</h2>
+          <p class="text-gray-600">发现更多精彩内容，深入了解U卡世界</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <!-- 最新文章 -->
+          <div class="bg-white rounded-3xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              最新发布
+            </h3>
+            <a href="/articles" class="block text-center py-4 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-600 rounded-xl hover:from-indigo-100 hover:to-purple-100 transition-all duration-300">
+              查看所有文章 →
+            </a>
+          </div>
+
+          <!-- U卡推荐 -->
+          <div class="bg-white rounded-3xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+              </svg>
+              热门U卡
+            </h3>
+            <a href="/cards" class="block text-center py-4 bg-gradient-to-r from-green-50 to-emerald-50 text-green-600 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300">
+              探索U卡排行 →
+            </a>
+          </div>
+
+          <!-- 交易所 -->
+          <div class="bg-white rounded-3xl shadow-lg p-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              交易所评测
+            </h3>
+            <a href="/exchanges" class="block text-center py-4 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300">
+              查看交易所排名 →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+
+  <!-- 生成目录的JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tocNav = document.getElementById('toc-nav');
+      const tocContainer = document.getElementById('toc-container');
+      
+      if (!tocNav || !tocContainer) return;
+      
+      // 获取文章内容中的所有标题
+      const headings = document.querySelectorAll('.prose h2, .prose h3');
+      
+      if (headings.length === 0) {
+        tocContainer.style.display = 'none';
+        return;
+      }
+      
+      // 生成目录
+      headings.forEach((heading, index) => {
+        // 为标题添加ID
+        if (!heading.id) {
+          heading.id = `heading-${index}`;
+        }
+        
+        // 创建目录项
+        const link = document.createElement('a');
+        link.href = `#${heading.id}`;
+        link.className = heading.tagName === 'H2' 
+          ? 'block py-2 px-3 text-sm text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors font-medium'
+          : 'block py-1.5 px-3 pl-6 text-xs text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors';
+        link.textContent = heading.textContent;
+        
+        // 平滑滚动
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          
+          // 更新激活状态
+          tocNav.querySelectorAll('a').forEach(a => a.classList.remove('bg-indigo-50', 'text-indigo-600'));
+          link.classList.add('bg-indigo-50', 'text-indigo-600');
+        });
+        
+        tocNav.appendChild(link);
+      });
+      
+      // 滚动监听，高亮当前章节
+      const observerOptions = {
+        rootMargin: '-20% 0px -70% 0px'
+      };
+      
+      const observerCallback = (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            const activeLink = tocNav.querySelector(`a[href="#${id}"]`);
+            if (activeLink) {
+              tocNav.querySelectorAll('a').forEach(a => a.classList.remove('bg-indigo-50', 'text-indigo-600'));
+              activeLink.classList.add('bg-indigo-50', 'text-indigo-600');
+            }
+          }
+        });
+      };
+      
+      const observer = new IntersectionObserver(observerCallback, observerOptions);
+      headings.forEach(heading => observer.observe(heading));
+    });
+  </script>
+</Layout>

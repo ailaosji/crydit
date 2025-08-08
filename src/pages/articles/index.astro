@@ -5,25 +5,185 @@ import ArticleList from '../../components/ArticleList.tsx';
 
 const allArticles = await getCollection('articles');
 allArticles.sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime());
+
+// 获取文章分类统计
+const categories = {
+  review: { count: 0, label: '深度评测', color: 'green', icon: '🔍' },
+  guide: { count: 0, label: '使用指南', color: 'blue', icon: '📚' },
+  news: { count: 0, label: '行业资讯', color: 'red', icon: '📰' },
+  analysis: { count: 0, label: '市场分析', color: 'purple', icon: '📊' }
+};
+
+allArticles.forEach(article => {
+  if (categories[article.data.category]) {
+    categories[article.data.category].count++;
+  }
+});
+
+// 获取热门文章（可以根据实际的浏览量或评论数）
+const featuredArticles = allArticles.slice(0, 3);
 ---
 
-<Layout title="U卡评测文章 - 最新指南与深度分析">
-  <div class="min-h-screen bg-gray-50">
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-br from-purple-600 to-indigo-700 py-20 text-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">U卡文章中心</h1>
-        <p class="text-lg md:text-xl text-purple-100 max-w-3xl mx-auto">
-          阅读我们的深度评测、使用指南和市场分析，做出更明智的决策。
-        </p>
+<Layout title="最新文章 - U卡深度评测与使用指南">
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30">
+    <!-- Hero Section with Modern Design -->
+    <section class="relative overflow-hidden">
+      <!-- 背景装饰 -->
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 opacity-90"></div>
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.08"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-10"></div>
+      
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div class="text-center">
+          <div class="inline-flex items-center justify-center p-3 bg-white/20 backdrop-blur-md rounded-2xl mb-6">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          
+          <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">
+            最新文章
+          </h1>
+          <p class="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            深入了解加密货币卡片世界，获取专业评测、实用指南和市场洞察，助您做出明智决策
+          </p>
+        </div>
+
+        <!-- 分类统计卡片 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+          {Object.entries(categories).map(([key, cat]) => (
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-2xl">{cat.icon}</span>
+                <span class="text-2xl font-bold text-white">{cat.count}</span>
+              </div>
+              <p class="text-sm text-white/80">{cat.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="py-12">
-      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ArticleList articles={allArticles} showAll={true} client:load />
+    <!-- Featured Articles Section -->
+    {featuredArticles.length > 0 && (
+      <section class="py-16 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">精选推荐</h2>
+            <div class="flex items-center text-indigo-600">
+              <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
+              <span class="text-sm font-medium">编辑精选</span>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-6">
+            {featuredArticles.map((article, index) => (
+              <article class="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+                {/* 渐变背景 */}
+                <div class={`absolute inset-0 bg-gradient-to-br ${
+                  index === 0 ? 'from-indigo-500 to-purple-600' :
+                  index === 1 ? 'from-purple-500 to-pink-600' :
+                  'from-pink-500 to-orange-600'
+                } opacity-5 group-hover:opacity-10 transition-opacity`}></div>
+                
+                <div class="relative p-6">
+                  {/* 分类标签 */}
+                  <div class="flex items-center justify-between mb-4">
+                    <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                      ${article.data.category === 'review' ? 'bg-green-100 text-green-800' :
+                        article.data.category === 'guide' ? 'bg-blue-100 text-blue-800' :
+                        article.data.category === 'news' ? 'bg-red-100 text-red-800' :
+                        'bg-purple-100 text-purple-800'}`}>
+                      {categories[article.data.category]?.icon} {categories[article.data.category]?.label}
+                    </span>
+                    {index === 0 && (
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        最新
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                    <a href={`/articles/${article.slug}`}>
+                      {article.data.title}
+                    </a>
+                  </h3>
+
+                  <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {article.data.description}
+                  </p>
+
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3 text-xs text-gray-500">
+                      <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        {new Date(article.data.publishDate).toLocaleDateString('zh-CN')}
+                      </span>
+                      <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        {article.data.readingTime || '5'} 分钟
+                      </span>
+                    </div>
+                    
+                    <a href={`/articles/${article.slug}`} class="text-indigo-600 hover:text-indigo-700 transition-colors">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Main Articles List -->
+    <main class="py-12 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-5xl mx-auto">
+        <div class="bg-white rounded-3xl shadow-xl p-8">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-bold text-gray-900">全部文章</h2>
+            <div class="flex items-center space-x-2 text-sm text-gray-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+              </svg>
+              <span>共 {allArticles.length} 篇文章</span>
+            </div>
+          </div>
+          
+          <!-- 文章列表组件 -->
+          <ArticleList articles={allArticles} showAll={true} client:load />
+        </div>
       </div>
     </main>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 text-center shadow-2xl">
+          <h3 class="text-3xl font-bold text-white mb-4">订阅最新资讯</h3>
+          <p class="text-white/90 mb-8 max-w-2xl mx-auto">
+            获取最新的U卡评测、市场分析和独家优惠信息，不错过任何重要更新
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <input 
+              type="email" 
+              placeholder="输入您的邮箱地址" 
+              class="flex-1 px-6 py-3 rounded-full text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/30"
+            />
+            <button class="px-8 py-3 bg-white text-indigo-600 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+              立即订阅
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </Layout>
