@@ -90,17 +90,35 @@ const relatedCards = allCards
   .slice(0, 3);
 
 // 获取相关文章（U卡教程等）
-let relatedArticles = [];
-if (card.data.relatedArticles) {
-  try {
-    const allArticles = await getCollection('articles');
-    relatedArticles = allArticles.filter(a => 
-      card.data.relatedArticles?.includes(a.slug)
-    ).slice(0, 4);
-  } catch (error) {
-    console.warn('Articles collection not found:', error);
-  }
-}
+const allArticles = await getCollection('articles');
+const relatedArticles = allArticles
+  .map(article => {
+    let score = 0;
+    const articleTitle = article.data.title.toLowerCase();
+    const cardName = card.data.name.toLowerCase();
+    const cardIssuer = card.data.issuer.toLowerCase();
+
+    // 1. 直接关联
+    if ((article.data.relatedCards || []).includes(card.slug)) {
+      score += 10;
+    }
+    // 2. 卡名或发行商在标题中
+    if (articleTitle.includes(cardName)) {
+      score += 5;
+    }
+    if (articleTitle.includes(cardIssuer)) {
+      score += 3;
+    }
+    // 3. 共同标签
+    const commonTags = (card.data.tags || []).filter(tag => (article.data.tags || []).includes(tag));
+    score += commonTags.length * 2;
+
+    return { article, score };
+  })
+  .filter(item => item.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .map(item => item.article)
+  .slice(0, 4);
 
 // 渲染Markdown内容
 const { Content } = await card.render();
