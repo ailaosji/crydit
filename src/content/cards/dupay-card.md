@@ -22,6 +22,15 @@ supportedCurrencies:
   - "USDC"
   - "TRX"
 
+# 🆕 新增：支持的支付方式
+supportedPaymentMethods:
+  - "加密货币充值"
+  - "USDT充值"
+  - "BTC充值"
+  - "ETH充值"
+  - "银行转账"
+  - "在线支付"
+
 # 费用信息
 virtualCardPrice: 0  # 虚拟卡免费
 physicalCardPrice: 79.00
