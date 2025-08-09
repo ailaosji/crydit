@@ -13,6 +13,11 @@ supportedCurrencies:
   - "USDC"
   - "BTC"
   - "ETH"
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
+  - "Alipay"
+  - "WeChat Pay"
 virtualCardPrice: 10
 physicalCardPrice: null
 depositFee: "1%"
@@ -23,6 +28,8 @@ annualFee: false
 limits:
   dailySpending: "$5,000"
   monthlySpending: "$50,000"
+  dailyAtmWithdrawal: "$500"
+  monthlyAtmWithdrawal: "$5,000"
 rewards:
   cashback: "消费返还KEY代币"
 pros:
@@ -48,7 +55,7 @@ tags:
   - "安全"
   - "隐私"
 publishDate: "2024-03-10"
-updateDate: "2024-03-10"
+updateDate: "2025-08-08"
 rating: 4.7
 kycRequired: true
 ---

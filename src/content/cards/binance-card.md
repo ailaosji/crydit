@@ -1,92 +1,82 @@
 ---
 # 基本信息
-title: "币安卡 - 全球领先的加密货币借记卡"
-name: "币安卡"
-description: "币安推出的Visa借记卡，支持多种加密货币直接消费，BNB持仓可享费率优惠"
-cardType: "visa"
-isVirtual: true
-isPhysical: true
-issuer: "Binance"
+title: "币安Mastercard - 加密货币出金新选择"
+name: "币安Mastercard"
+description: "币安为欧洲用户推出的全新Mastercard出金服务，可将加密货币转换为法币并直接提取至您的Mastercard，简化您的资金管理。"
+cardType: "mastercard"
+isVirtual: false
+isPhysical: false
+issuer: "Binance / Mastercard"
 
 # 支持地区
 supportedRegions:
-  - "欧洲经济区"
-  - "英国"
+  - "欧洲"
 
 # 支持的加密货币
 supportedCurrencies:
-  - "Bitcoin (BTC)"
-  - "Ethereum (ETH)"
-  - "Binance Coin (BNB)"
-  - "Binance USD (BUSD)"
-  - "Swipe (SXP)"
-  - "Euro (EUR)"
+  - "多种加密货币"
+  - "欧元 (EUR)"
 
 # 支持的支付方式（未知则省略）
 supportedPaymentMethods: []
 
 # 费用信息
-virtualCardPrice: 0
-physicalCardPrice: 15
-depositFee: "免费"
-transactionFee: "0.9%"
-withdrawalFee: "每月前5次免费，之后€0.90/次"
-atmFee: "€0.90/次"
-annualFee: false
+physicalCardPrice: null
+depositFee: "请参考币安官方说明"
+transactionFee: "请参考币安官方说明"
+withdrawalFee: "请参考币安官方说明"
+atmFee: "不适用"
+annualFee: true
 
 # 消费限额
 limits:
-  dailySpending: "€2,900"
-  monthlySpending: "€8,700"
-  monthlyAtmWithdrawal: "€870"
-  dailyAtmWithdrawal: "€290"
+  dailySpending: "请参考币安官方说明"
+  monthlySpending: "请参考币安官方说明"
+  dailyAtmWithdrawal: "不适用"
+  monthlyAtmWithdrawal: "不适用"
 
 # 奖励和返现
 rewards:
-  cashback: "最高8%加密货币返现"
+  cashback: "不适用"
 
 # 优点
 pros:
-  - "支持多种主流加密货币"
-  - "全球ATM取现"
-  - "实时汇率转换"
-  - "BNB持仓享受费率优惠"
-  - "与币安生态深度整合"
+  - "近乎实时的加密货币提现"
+  - "简化了加密货币到法币的出金流程"
+  - "利用Mastercard网络，覆盖面广"
+  - "币安官方支持，安全性高"
 
 # 缺点
 cons:
-  - "部分地区不支持"
-  - "KYC认证要求较高"
-  - "取现有每日限额"
+  - "目前仅限欧洲用户"
+  - "需要拥有符合条件的Mastercard"
+  - "具体费用和限额未公开披露"
+  - "不是传统的消费卡，而是出金服务"
 
 # 特色功能
 features:
-  - "BNB持仓优惠"
-  - "实时汇率转换"
-  - "全球ATM取现"
-  - "移动端管理"
-  - "多币种支持"
+  - "加密货币卖出至卡"
+  - "法币余额提现至卡"
+  - "Mastercard Move技术支持"
 
 # 相关文章
 relatedArticles:
-  - "binance-card-tutorial"
-  - "bnb-holding-strategy"
+  - "binance-card-vs-crypto-com"
 
 # 联盟链接
-affiliateLink: "https://accounts.binance.com/register?ref=YOUR_REF_CODE"
+affiliateLink: "https://www.binance.com/"
 
 # SEO相关
 tags:
-  - "币安卡"
-  - "Binance卡"
-  - "加密货币借记卡"
-  - "U卡"
-  - "虚拟卡"
-  - "实体卡"
+  - "币安"
+  - "Mastercard"
+  - "加密货币提现"
+  - "出金"
+  - "欧洲"
 
-category: "加密货币卡"
+category: "加密货币服务"
 publishDate: "2024-01-15"
-updateDate: "2024-01-15"
+updateDate: "2025-08-08"
 
 # 其他可选配置
 rating: 4.5
