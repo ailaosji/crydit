@@ -15,7 +15,7 @@ withdrawalFee: "按币种收取网络费用"
 kycRequired: true
 country: "Malta"
 headquarters: "马耳他"
-affiliateLink: "https://accounts.binance.com/register?ref=YOUR_REF_CODE"
+affiliateLink: "https://accounts.binance.com/register"
 image: "/images/exchanges/binance.jpg"
 logo: "/images/exchanges/binance-logo.svg"
 featured: true
