@@ -13,6 +13,7 @@ supportedRegions:
   - "欧洲"
   - "美国"
   - "亚洲"
+applicationDocuments: []
 
 # 支持的加密货币
 supportedCurrencies:

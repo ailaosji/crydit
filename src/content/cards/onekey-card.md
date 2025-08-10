@@ -8,6 +8,7 @@ isPhysical: false
 issuer: "OneKey"
 supportedRegions:
   - "全球大部分地区"
+applicationDocuments: ["护照", "身份证"]
 supportedCurrencies:
   - "USDT"
   - "USDC"

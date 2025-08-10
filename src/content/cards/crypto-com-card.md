@@ -11,6 +11,7 @@ supportedRegions:
   - "加拿大"
   - "欧洲"
   - "亚太地区"
+applicationDocuments: []
 supportedCurrencies:
   - "BTC"
   - "ETH"

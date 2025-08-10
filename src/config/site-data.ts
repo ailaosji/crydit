@@ -2,20 +2,20 @@
 
 // Centralized data for cryptocurrencies
 export const CURRENCY_DATA = {
-  usdt: { name: 'Tether', symbol: 'USDT', bgGradient: 'from-green-500 to-green-600', textColor: 'text-green-700', bgLight: 'bg-green-50', borderColor: 'border-green-200', icon: '₮' },
-  btc: { name: 'Bitcoin', symbol: 'BTC', bgGradient: 'from-orange-500 to-yellow-500', textColor: 'text-orange-700', bgLight: 'bg-orange-50', borderColor: 'border-orange-200', icon: '₿' },
-  eth: { name: 'Ethereum', symbol: 'ETH', bgGradient: 'from-blue-500 to-indigo-600', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: 'Ξ' },
-  usdc: { name: 'USD Coin', symbol: 'USDC', bgGradient: 'from-blue-600 to-blue-700', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '$' },
-  trx: { name: 'TRON', symbol: 'TRX', bgGradient: 'from-red-500 to-red-600', textColor: 'text-red-700', bgLight: 'bg-red-50', borderColor: 'border-red-200', icon: 'T' },
+  usdt: { name: 'Tether', symbol: 'USDT', bgGradient: 'from-green-500 to-green-600', textColor: 'text-green-700', bgLight: 'bg-green-50', borderColor: 'border-green-200', icon: '/icons/currencies/usdt.webp' },
+  btc: { name: 'Bitcoin', symbol: 'BTC', bgGradient: 'from-orange-500 to-yellow-500', textColor: 'text-orange-700', bgLight: 'bg-orange-50', borderColor: 'border-orange-200', icon: '/icons/currencies/btc.webp' },
+  eth: { name: 'Ethereum', symbol: 'ETH', bgGradient: 'from-blue-500 to-indigo-600', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '/icons/currencies/eth.webp' },
+  usdc: { name: 'USD Coin', symbol: 'USDC', bgGradient: 'from-blue-600 to-blue-700', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '/icons/currencies/usdc.webp' },
+  trx: { name: 'TRON', symbol: 'TRX', bgGradient: 'from-red-500 to-red-600', textColor: 'text-red-700', bgLight: 'bg-red-50', borderColor: 'border-red-200', icon: '/icons/currencies/trx.webp' },
   // Add more currencies here
 };
 
 // Centralized data for payment methods
 export const PAYMENT_METHOD_DATA = {
-  applepay: { name: 'Apple Pay', bgGradient: 'from-gray-800 to-black', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800', icon: '🍎' },
-  googlepay: { name: 'Google Pay', bgGradient: 'from-blue-500 via-green-500 to-yellow-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: 'G' },
-  alipay: { name: 'Alipay', bgGradient: 'from-blue-500 to-cyan-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '💰' },
-  wechatpay: { name: 'WeChat Pay', bgGradient: 'from-green-500 to-green-600', bgLight: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700', icon: '💬' },
+  applepay: { name: 'Apple Pay', bgGradient: 'from-gray-800 to-black', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800', icon: '/icons/methods/applepay.svg' },
+  googlepay: { name: 'Google Pay', bgGradient: 'from-blue-500 via-green-500 to-yellow-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/googlepay.svg' },
+  alipay: { name: 'Alipay', bgGradient: 'from-blue-500 to-cyan-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/alipay.svg' },
+  wechatpay: { name: 'WeChat Pay', bgGradient: 'from-green-500 to-green-600', bgLight: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700', icon: '/icons/methods/wechatpay.svg' },
   // Add more payment methods here
 };
 
@@ -64,8 +64,7 @@ export function getCurrencyInfo(currency: string) {
  * @param method The name of the payment method (e.g., 'Apple Pay', 'alipay').
  */
 export function getPaymentMethodInfo(method: string) {
-  const key = method.toLowerCase();
-
+  const key = method.toLowerCase().replace(/\s/g, '');
   if (key.includes('apple')) return PAYMENT_METHOD_DATA.applepay;
   if (key.includes('google')) return PAYMENT_METHOD_DATA.googlepay;
   if (key.includes('alipay') || key.includes('支付宝')) return PAYMENT_METHOD_DATA.alipay;

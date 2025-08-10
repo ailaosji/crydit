@@ -58,6 +58,7 @@ const cardsCollection = defineCollection({
     // 详细信息
     issuer: z.string(),
     supportedRegions: z.array(z.string()),
+    applicationDocuments: z.array(z.string()).optional(),
     kycRequired: z.boolean().default(true),
     minimumAge: z.number().default(18),
 

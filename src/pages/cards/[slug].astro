@@ -45,7 +45,8 @@ const {
   limits, 
   rewards, 
   issuer, 
-  supportedRegions, 
+  supportedRegions,
+  applicationDocuments,
   supportedCurrencies, 
   supportedPaymentMethods,
   virtualCardPrice, 
@@ -310,7 +311,7 @@ const structuredData = {
           <div class="flex flex-col items-center hover:scale-110 transition-all duration-300 group cursor-pointer p-2">
             <!-- 加密货币图标 - 调整大小和添加名称 -->
             <div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}>
-              {currencyInfo.icon}
+              <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" />
             </div>
             <!-- 添加货币名称标签 -->
             <span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100 transition-opacity duration-300`}>
@@ -354,7 +355,7 @@ const structuredData = {
                       
                       <!-- 图标容器 -->
                       <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-1 transition-all duration-300 text-xl`}>
-                        {info.icon}
+                        <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
                         <!-- 图标反光效果 -->
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
@@ -387,7 +388,7 @@ const structuredData = {
                   <!-- Apple Pay -->
                   <div class="flex flex-col items-center p-4 bg-gray-50 rounded-2xl border-2 border-gray-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      🍎
+                      <img src="/icons/methods/applepay.svg" alt="Apple Pay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-gray-800 mb-1 text-sm">Apple Pay</span>
                     <div class="flex items-center space-x-1">
@@ -399,7 +400,7 @@ const structuredData = {
                   <!-- Google Pay -->
                   <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg text-white font-bold">
-                      G
+                      <img src="/icons/methods/googlepay.svg" alt="Google Pay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-blue-700 mb-1 text-sm">Google Pay</span>
                     <div class="flex items-center space-x-1">
@@ -411,7 +412,7 @@ const structuredData = {
                   <!-- Alipay -->
                   <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      💰
+                      <img src="/icons/methods/alipay.svg" alt="Alipay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-blue-700 mb-1 text-sm">Alipay</span>
                     <div class="flex items-center space-x-1">
@@ -423,7 +424,7 @@ const structuredData = {
                   <!-- WeChat Pay -->
                   <div class="flex flex-col items-center p-4 bg-green-50 rounded-2xl border-2 border-green-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      💬
+                      <img src="/icons/methods/wechatpay.svg" alt="WeChat Pay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-green-700 mb-1 text-sm">WeChat Pay</span>
                     <div class="flex items-center space-x-1">
@@ -765,11 +766,11 @@ const structuredData = {
               </div>
               
               <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                <span class="text-gray-600">支持地区</span>
+                <span class="text-gray-600">申请证件</span>
                 <span class="font-medium text-gray-900">
-                  {supportedRegions && supportedRegions.length > 0 ? 
-                    supportedRegions.slice(0, 2).join(', ') : 
-                    '全球'}
+                  {applicationDocuments && applicationDocuments.length > 0 ?
+                    applicationDocuments.join(' / ') :
+                    'N/A'}
                 </span>
               </div>
               

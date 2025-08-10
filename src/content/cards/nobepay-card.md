@@ -8,6 +8,7 @@ isPhysical: false
 issuer: "NobePay"
 supportedRegions:
   - "全球"
+applicationDocuments: []
 supportedCurrencies:
   - "USDT"
 supportedPaymentMethods: []
