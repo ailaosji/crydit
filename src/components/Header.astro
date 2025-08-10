@@ -14,7 +14,7 @@ const currentPath = Astro.url.pathname
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
             </svg>
           </div>
-          <span class="text-xl font-bold text-gray-900">U卡评测</span>
+          <span class="text-xl font-bold text-gray-900">U卡推荐</span>
         </a>
       </div>
 
@@ -31,14 +31,14 @@ const currentPath = Astro.url.pathname
           首页
         </a>
         <a 
-          href="/news" 
+          href="/articles"
           class={`font-medium transition-colors ${
-            currentPath.startsWith('/news') 
+            currentPath.startsWith('/articles')
               ? 'text-blue-600' 
               : 'text-gray-700 hover:text-blue-600'
           }`}
         >
-          资讯
+          最新攻略
         </a>
         <a 
           href="/cards" 
@@ -113,14 +113,14 @@ const currentPath = Astro.url.pathname
           首页
         </a>
         <a 
-          href="/news" 
+          href="/articles"
           class={`block px-3 py-2 rounded-md text-base font-medium ${
-            currentPath.startsWith('/news') 
+            currentPath.startsWith('/articles')
               ? 'text-blue-600 bg-blue-50' 
               : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
           }`}
         >
-          资讯
+          最新攻略
         </a>
         <a 
           href="/cards" 
