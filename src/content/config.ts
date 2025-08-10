@@ -46,6 +46,7 @@ const cardsCollection = defineCollection({
     supportedPaymentMethods: z.array(z.string()).optional(),
     rating: z.number().min(1).max(5).optional(),
     affiliateLink: z.string().optional(),
+    invitationCode: z.string().optional(),
     publishDate: z.coerce.date().optional(),
     updateDate: z.coerce.date().optional(),
     featured: z.boolean().default(false),

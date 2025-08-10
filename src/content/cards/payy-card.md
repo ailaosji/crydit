@@ -40,6 +40,7 @@ features:
   - "全球Visa网络"
 relatedArticles: []
 affiliateLink: "https://payy.link/invite/8UFBN7"
+invitationCode: '8UFBN7'
 tags:
   - "Payy"
   - "U卡"
