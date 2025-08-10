@@ -18,6 +18,9 @@ supportedCurrencies:
   - "USDT"
   - "EUR"
   - "GBP"
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
 virtualCardPrice: 0
 physicalCardPrice: 0
 depositFee: "免费"
