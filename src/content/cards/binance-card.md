@@ -11,6 +11,7 @@ issuer: "Binance / Mastercard"
 # 支持地区
 supportedRegions:
   - "欧洲"
+applicationDocuments: []
 
 # 支持的加密货币
 supportedCurrencies:

@@ -8,8 +8,10 @@ isPhysical: false
 issuer: "NobePay"
 supportedRegions:
   - "全球"
+applicationDocuments: []
 supportedCurrencies:
   - "USDT"
+supportedPaymentMethods: []
 virtualCardPrice: 1
 physicalCardPrice: null
 depositFee: "3%"
@@ -36,7 +38,7 @@ features:
   - "账单和报告"
 relatedArticles:
   - "virtual-card-for-ads"
-affiliateLink: "https://www.nobepay.com/auth/register?code=YOUR_CODE"
+affiliateLink: "https://www.nobepay.com/auth/register"
 tags:
   - "NobePay"
   - "虚拟卡"

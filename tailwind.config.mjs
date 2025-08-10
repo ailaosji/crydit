@@ -20,7 +20,7 @@ export default {
   },
   plugins: [
     // 如果需要，可以添加Tailwind插件
-    // require('@tailwindcss/typography'),
+    require('@tailwindcss/typography'),
     // require('@tailwindcss/forms'),
   ],
 }

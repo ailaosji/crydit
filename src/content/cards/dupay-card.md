@@ -13,6 +13,7 @@ supportedRegions:
   - "欧洲"
   - "美国"
   - "亚洲"
+applicationDocuments: []
 
 # 支持的加密货币
 supportedCurrencies:
@@ -24,12 +25,8 @@ supportedCurrencies:
 
 # 🆕 新增：支持的支付方式
 supportedPaymentMethods:
-  - "加密货币充值"
-  - "USDT充值"
-  - "BTC充值"
-  - "ETH充值"
-  - "银行转账"
-  - "在线支付"
+  - "Alipay"
+  - "WeChat Pay"
 
 # 费用信息
 virtualCardPrice: 0  # 虚拟卡免费
@@ -58,7 +55,7 @@ pros:
 
 # 缺点
 cons:
-  - "仅支持虚拟卡，无实体卡"
+  - "实体卡申请和邮寄需要额外费用和时间"
   - "部分商户可能不接受虚拟卡"
   - "客服响应可能较慢"
 

@@ -51,7 +51,7 @@ const finalImage = ogImage || image || "/og-image.jpg";
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={new URL(finalImage, currentURL.origin).href} />
-  <meta property="og:site_name" content="U卡评测" />
+  <meta property="og:site_name" content="Ucards" />
   <meta property="og:locale" content="zh_CN" />
   
   <!-- Twitter -->
@@ -152,7 +152,7 @@ const finalImage = ogImage || image || "/og-image.jpg";
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "U卡评测",
+      "name": "Ucards",
       "url": "https://yourdomain.com",
       "description": "专业的数字货币U卡评测社区，提供最新的U卡评测、交易所排行和行业资讯",
       "potentialAction": {
@@ -210,15 +210,15 @@ const finalImage = ogImage || image || "/og-image.jpg";
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
               </svg>
             </div>
-            <span class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">U卡评测</span>
+            <span class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">Ucards</span>
           </a>
         </div>
         
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-8">
           <a href="/" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">首页</a>
-          <a href="/articles" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">最新资讯</a>
-          <a href="/cards" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">U卡评测</a>
+          <a href="/articles" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">最新攻略</a>
+          <a href="/cards" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">U卡推荐</a>
           <a href="/exchanges" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">交易所排行</a>
           <a href="/about" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">关于我们</a>
           <a href="/contact" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium">联系我们</a>
@@ -239,8 +239,8 @@ const finalImage = ogImage || image || "/og-image.jpg";
     <div class="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-lg" id="mobile-menu" style="display: none;">
       <div class="px-6 py-4 space-y-3">
         <a href="/" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">首页</a>
-        <a href="/articles" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">最新资讯</a>
-        <a href="/cards" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">U卡评测</a>
+        <a href="/articles" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">最新攻略</a>
+        <a href="/cards" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">U卡推荐</a>
         <a href="/exchanges" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">交易所排行</a>
         <a href="/about" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">关于我们</a>
         <a href="/contact" class="block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium text-center mt-4">联系我们</a>
@@ -265,7 +265,7 @@ const finalImage = ogImage || image || "/og-image.jpg";
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
               </svg>
             </div>
-            <span class="text-2xl font-bold">U卡评测</span>
+            <span class="text-2xl font-bold">Ucards</span>
           </div>
           <p class="text-gray-300 mb-6 leading-relaxed max-w-md">
             专业的数字货币U卡评测社区，为您提供最新、最全面的U卡评测和交易所排行，助您做出明智的投资选择。
@@ -295,7 +295,7 @@ const finalImage = ogImage || image || "/og-image.jpg";
         <div>
           <h3 class="text-lg font-semibold mb-6">快速链接</h3>
           <ul class="space-y-4">
-            <li><a href="/cards" class="text-gray-300 hover:text-white transition-colors">U卡评测</a></li>
+            <li><a href="/cards" class="text-gray-300 hover:text-white transition-colors">U卡推荐</a></li>
             <li><a href="/exchanges" class="text-gray-300 hover:text-white transition-colors">交易所排行</a></li>
             <li><a href="/articles" class="text-gray-300 hover:text-white transition-colors">最新资讯</a></li>
             <li><a href="/guides" class="text-gray-300 hover:text-white transition-colors">新手指南</a></li>
@@ -320,7 +320,7 @@ const finalImage = ogImage || image || "/og-image.jpg";
       <div class="border-t border-gray-800 mt-12 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-400 text-sm">
-            © {new Date().getFullYear()} U卡评测. 保留所有权利.
+            © {new Date().getFullYear()} Ucards. 保留所有权利.
           </p>
           <div class="flex items-center space-x-6 mt-4 md:mt-0">
             <span class="text-gray-400 text-sm">友情链接:</span>

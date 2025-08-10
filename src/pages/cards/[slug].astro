@@ -45,7 +45,8 @@ const {
   limits, 
   rewards, 
   issuer, 
-  supportedRegions, 
+  supportedRegions,
+  applicationDocuments,
   supportedCurrencies, 
   supportedPaymentMethods,
   virtualCardPrice, 
@@ -55,7 +56,8 @@ const {
   withdrawalFee, 
   atmFee, 
   annualFee, 
-  affiliateLink 
+  affiliateLink,
+  invitationCode
 } = card.data;
 
 // 获取相关U卡（系统推荐算法）
@@ -123,124 +125,7 @@ const relatedArticles = allArticles
 // 渲染Markdown内容
 const { Content } = await card.render();
 
-// Helper function for currency info
-function getCurrencyInfo(currency: string) {
-  const currencyUpper = currency.toUpperCase();
-  switch (currencyUpper) {
-    case 'USDT':
-      return {
-        name: 'Tether',
-        symbol: 'USDT',
-        bgGradient: 'from-green-500 to-green-600',
-        textColor: 'text-green-700',
-        bgLight: 'bg-green-50',
-        borderColor: 'border-green-200',
-        icon: '₮'
-      };
-    case 'BTC':
-      return {
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        bgGradient: 'from-orange-500 to-yellow-500',
-        textColor: 'text-orange-700',
-        bgLight: 'bg-orange-50',
-        borderColor: 'border-orange-200',
-        icon: '₿'
-      };
-    case 'ETH':
-      return {
-        name: 'Ethereum',
-        symbol: 'ETH',
-        bgGradient: 'from-blue-500 to-indigo-600',
-        textColor: 'text-blue-700',
-        bgLight: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        icon: 'Ξ'
-      };
-    case 'USDC':
-      return {
-        name: 'USD Coin',
-        symbol: 'USDC',
-        bgGradient: 'from-blue-600 to-blue-700',
-        textColor: 'text-blue-700',
-        bgLight: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        icon: '$'
-      };
-    case 'TRX':
-      return {
-        name: 'TRON',
-        symbol: 'TRX',
-        bgGradient: 'from-red-500 to-red-600',
-        textColor: 'text-red-700',
-        bgLight: 'bg-red-50',
-        borderColor: 'border-red-200',
-        icon: 'T'
-      };
-    default:
-      return {
-        name: currency.charAt(0).toUpperCase() + currency.slice(1).toLowerCase(),
-        symbol: currency.toUpperCase(),
-        bgGradient: 'from-purple-500 to-indigo-600',
-        textColor: 'text-purple-700',
-        bgLight: 'bg-purple-50',
-        borderColor: 'border-purple-200',
-        icon: currency.substring(0, 2).toUpperCase()
-      };
-  }
-}
-
-// Helper function for payment method info
-function getPaymentMethodInfo(method: string) {
-  const methodLower = method.toLowerCase();
-  
-  if (methodLower.includes('apple') || methodLower.includes('applepay')) {
-    return {
-      name: 'Apple Pay',
-      bgGradient: 'from-gray-800 to-black',
-      bgLight: 'bg-gray-50',
-      borderColor: 'border-gray-200',
-      textColor: 'text-gray-800',
-      icon: '🍎'
-    };
-  } else if (methodLower.includes('google') || methodLower.includes('googlepay')) {
-    return {
-      name: 'Google Pay',
-      bgGradient: 'from-blue-500 via-green-500 to-yellow-500',
-      bgLight: 'bg-blue-50',
-      borderColor: 'border-blue-200',
-      textColor: 'text-blue-700',
-      icon: 'G'
-    };
-  } else if (methodLower.includes('alipay') || methodLower.includes('支付宝')) {
-    return {
-      name: 'Alipay',
-      bgGradient: 'from-blue-500 to-cyan-500',
-      bgLight: 'bg-blue-50',
-      borderColor: 'border-blue-200',
-      textColor: 'text-blue-700',
-      icon: '💰'
-    };
-  } else if (methodLower.includes('wechat') || methodLower.includes('微信') || methodLower.includes('wechatpay')) {
-    return {
-      name: 'WeChat Pay',
-      bgGradient: 'from-green-500 to-green-600',
-      bgLight: 'bg-green-50',
-      borderColor: 'border-green-200',
-      textColor: 'text-green-700',
-      icon: '💬'
-    };
-  } else {
-    return {
-      name: method,
-      bgGradient: 'from-indigo-500 to-purple-600',
-      bgLight: 'bg-indigo-50',
-      borderColor: 'border-indigo-200',
-      textColor: 'text-indigo-700',
-      icon: '💳'
-    };
-  }
-}
+import { getCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
 
 // 生成结构化数据
 const structuredData = {
@@ -406,41 +291,46 @@ const structuredData = {
             </div>
           </section>
           
-          <!-- 支持的加密货币模块 -->
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-              <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                </svg>
-              </div>
-              支持的加密货币
-            </h2>
-            {supportedCurrencies && supportedCurrencies.length > 0 ? (
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 px-2">
-                {supportedCurrencies.map((currency) => {
-                  const currencyInfo = getCurrencyInfo(currency);
-                  
-                  return (
-                    <div class="flex justify-center items-center hover:scale-110 transition-all duration-300 group cursor-pointer">
-                      <!-- 加密货币图标 - 只保留圆形icon -->
-                      <div class={`w-16 h-16 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-2xl font-bold`}>
-                        {currencyInfo.icon}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div class="text-center py-16">
-                <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6 shadow-lg">
-                  ₿
-                </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">支持多种主流加密货币</h3>
-                <p class="text-gray-600">包括比特币、以太坊、USDT等热门数字资产</p>
-              </div>
-            )}
-          </section>
+          <!-- 支持的加密货币模块 - 优化版本 -->
+<section class="bg-white rounded-3xl shadow-xl p-8">
+  <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3">
+      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+      </svg>
+    </div>
+    支持的加密货币
+  </h2>
+  {supportedCurrencies && supportedCurrencies.length > 0 ? (
+    <!-- 优化后的布局：左对齐，与其他模块保持一致 -->
+    <div class="flex flex-wrap items-center gap-3">
+      {supportedCurrencies.map((currency) => {
+        const currencyInfo = getCurrencyInfo(currency);
+
+        return (
+          <div class="flex flex-col items-center hover:scale-110 transition-all duration-300 group cursor-pointer p-2">
+            <!-- 加密货币图标 - 调整大小和添加名称 -->
+            <div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}>
+              <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" />
+            </div>
+            <!-- 添加货币名称标签 -->
+            <span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100 transition-opacity duration-300`}>
+              {currencyInfo.symbol}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  ) : (
+    <div class="text-center py-16">
+      <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6 shadow-lg">
+        ₿
+      </div>
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">支持多种主流加密货币</h3>
+      <p class="text-gray-600">包括比特币、以太坊、USDT等热门数字资产</p>
+    </div>
+  )}
+</section>
 
           <!-- 支持的支付方式模块 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
@@ -465,7 +355,7 @@ const structuredData = {
                       
                       <!-- 图标容器 -->
                       <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-1 transition-all duration-300 text-xl`}>
-                        {info.icon}
+                        <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
                         <!-- 图标反光效果 -->
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
@@ -498,7 +388,7 @@ const structuredData = {
                   <!-- Apple Pay -->
                   <div class="flex flex-col items-center p-4 bg-gray-50 rounded-2xl border-2 border-gray-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      🍎
+                      <img src="/icons/methods/applepay.svg" alt="Apple Pay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-gray-800 mb-1 text-sm">Apple Pay</span>
                     <div class="flex items-center space-x-1">
@@ -510,7 +400,7 @@ const structuredData = {
                   <!-- Google Pay -->
                   <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg text-white font-bold">
-                      G
+                      <img src="/icons/methods/googlepay.svg" alt="Google Pay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-blue-700 mb-1 text-sm">Google Pay</span>
                     <div class="flex items-center space-x-1">
@@ -522,7 +412,7 @@ const structuredData = {
                   <!-- Alipay -->
                   <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      💰
+                      <img src="/icons/methods/alipay.svg" alt="Alipay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-blue-700 mb-1 text-sm">Alipay</span>
                     <div class="flex items-center space-x-1">
@@ -534,7 +424,7 @@ const structuredData = {
                   <!-- WeChat Pay -->
                   <div class="flex flex-col items-center p-4 bg-green-50 rounded-2xl border-2 border-green-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      💬
+                      <img src="/icons/methods/wechatpay.svg" alt="WeChat Pay icon" class="w-7 h-7" />
                     </div>
                     <span class="font-bold text-green-700 mb-1 text-sm">WeChat Pay</span>
                     <div class="flex items-center space-x-1">
@@ -876,11 +766,11 @@ const structuredData = {
               </div>
               
               <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                <span class="text-gray-600">支持地区</span>
+                <span class="text-gray-600">申请证件</span>
                 <span class="font-medium text-gray-900">
-                  {supportedRegions && supportedRegions.length > 0 ? 
-                    supportedRegions.slice(0, 2).join(', ') : 
-                    '全球'}
+                  {applicationDocuments && applicationDocuments.length > 0 ?
+                    applicationDocuments.join(' / ') :
+                    'N/A'}
                 </span>
               </div>
               
@@ -913,6 +803,28 @@ const structuredData = {
                 </svg>
               </a>
             )}
+
+            <!-- Invitation Code Section -->
+            {invitationCode && (
+              <div class="mt-6 pt-6 border-t border-gray-100">
+                <label for="invite-code" class="block text-sm font-medium text-gray-700 mb-2">邀请码</label>
+                <div class="relative">
+                  <input
+                    id="invite-code"
+                    type="text"
+                    readonly
+                    value={invitationCode}
+                    class="w-full pl-4 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button
+                    id="copy-button"
+                    class="absolute inset-y-0 right-0 flex items-center px-4 bg-gray-200 text-gray-700 font-semibold text-sm rounded-r-xl hover:bg-gray-300 transition-colors"
+                  >
+                    复制
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <!-- Related Cards -->
@@ -944,3 +856,33 @@ const structuredData = {
     </div>
   </div>
 </Layout>
+
+<script>
+  const copyButton = document.getElementById('copy-button');
+  const inviteCodeInput = document.getElementById('invite-code');
+
+  if (copyButton && inviteCodeInput) {
+    copyButton.addEventListener('click', () => {
+      const codeToCopy = inviteCodeInput.value;
+
+      navigator.clipboard.writeText(codeToCopy).then(() => {
+        // Success feedback
+        copyButton.textContent = '已复制!';
+        copyButton.classList.add('bg-green-500', 'text-white');
+        setTimeout(() => {
+          copyButton.textContent = '复制';
+          copyButton.classList.remove('bg-green-500', 'text-white');
+        }, 2000); // Reset text after 2 seconds
+      }).catch(err => {
+        // Error feedback
+        console.error('Failed to copy: ', err);
+        copyButton.textContent = '失败';
+        copyButton.classList.add('bg-red-500', 'text-white');
+         setTimeout(() => {
+          copyButton.textContent = '复制';
+          copyButton.classList.remove('bg-red-500', 'text-white');
+        }, 2000);
+      });
+    });
+  }
+</script>

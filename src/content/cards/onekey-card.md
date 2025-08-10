@@ -8,6 +8,7 @@ isPhysical: false
 issuer: "OneKey"
 supportedRegions:
   - "全球大部分地区"
+applicationDocuments: ["护照", "身份证"]
 supportedCurrencies:
   - "USDT"
   - "USDC"
@@ -47,7 +48,7 @@ features:
   - "隐私保护"
 relatedArticles:
   - "onekey-wallet-guide"
-affiliateLink: "https://onekey.so/card?ref=YOUR_REF"
+affiliateLink: "https://onekey.so/card"
 tags:
   - "OneKey"
   - "硬件钱包"
