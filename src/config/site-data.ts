@@ -3,10 +3,10 @@
 // Centralized data for cryptocurrencies
 export const CURRENCY_DATA = {
   usdt: { name: 'Tether', symbol: 'USDT', bgGradient: 'from-green-500 to-green-600', textColor: 'text-green-700', bgLight: 'bg-green-50', borderColor: 'border-green-200', icon: '/icons/currencies/usdt.webp' },
-  btc: { name: 'Bitcoin', symbol: 'BTC', bgGradient: 'from-orange-500 to-yellow-500', textColor: 'text-orange-700', bgLight: 'bg-orange-50', borderColor: 'border-orange-200', icon: '/icons/currencies/btc.svg' },
-  eth: { name: 'Ethereum', symbol: 'ETH', bgGradient: 'from-blue-500 to-indigo-600', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '/icons/currencies/eth.svg' },
-  usdc: { name: 'USD Coin', symbol: 'USDC', bgGradient: 'from-blue-600 to-blue-700', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '/icons/currencies/usdc.svg' },
-  trx: { name: 'TRON', symbol: 'TRX', bgGradient: 'from-red-500 to-red-600', textColor: 'text-red-700', bgLight: 'bg-red-50', borderColor: 'border-red-200', icon: '/icons/currencies/trx.svg' },
+  btc: { name: 'Bitcoin', symbol: 'BTC', bgGradient: 'from-orange-500 to-yellow-500', textColor: 'text-orange-700', bgLight: 'bg-orange-50', borderColor: 'border-orange-200', icon: '/icons/currencies/btc.webp' },
+  eth: { name: 'Ethereum', symbol: 'ETH', bgGradient: 'from-blue-500 to-indigo-600', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '/icons/currencies/eth.webp' },
+  usdc: { name: 'USD Coin', symbol: 'USDC', bgGradient: 'from-blue-600 to-blue-700', textColor: 'text-blue-700', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', icon: '/icons/currencies/usdc.webp' },
+  trx: { name: 'TRON', symbol: 'TRX', bgGradient: 'from-red-500 to-red-600', textColor: 'text-red-700', bgLight: 'bg-red-50', borderColor: 'border-red-200', icon: '/icons/currencies/trx.webp' },
   // Add more currencies here
 };
 
@@ -26,7 +26,7 @@ const defaultCurrency = {
   textColor: 'text-purple-700',
   bgLight: 'bg-purple-50',
   borderColor: 'border-purple-200',
-  icon: '/icons/currencies/default.svg'
+  icon: '🪙'
 };
 
 const defaultPaymentMethod = {
@@ -35,7 +35,7 @@ const defaultPaymentMethod = {
   bgLight: 'bg-indigo-50',
   borderColor: 'border-indigo-200',
   textColor: 'text-indigo-700',
-  icon: '/icons/methods/default.svg'
+  icon: '💳'
 };
 
 /**
@@ -55,6 +55,7 @@ export function getCurrencyInfo(currency: string) {
     ...defaultCurrency,
     name: currency.charAt(0).toUpperCase() + currency.slice(1).toLowerCase(),
     symbol: currency.toUpperCase(),
+    icon: currency.substring(0, 2).toUpperCase()
   };
 }
 
@@ -64,7 +65,6 @@ export function getCurrencyInfo(currency: string) {
  */
 export function getPaymentMethodInfo(method: string) {
   const key = method.toLowerCase().replace(/\s/g, '');
-
   if (key.includes('apple')) return PAYMENT_METHOD_DATA.applepay;
   if (key.includes('google')) return PAYMENT_METHOD_DATA.googlepay;
   if (key.includes('alipay') || key.includes('支付宝')) return PAYMENT_METHOD_DATA.alipay;
