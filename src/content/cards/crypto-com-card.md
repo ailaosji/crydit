@@ -18,6 +18,9 @@ supportedCurrencies:
   - "USDT"
   - "EUR"
   - "GBP"
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
 virtualCardPrice: 0
 physicalCardPrice: 0
 depositFee: "免费"
@@ -47,7 +50,7 @@ features:
   - "金属卡"
 relatedArticles:
   - "crypto-com-staking-guide"
-affiliateLink: "https://crypto.com/app/YOUR_REF_CODE"
+affiliateLink: "https://crypto.com/app/"
 tags:
   - "Crypto.com"
   - "CRO"
