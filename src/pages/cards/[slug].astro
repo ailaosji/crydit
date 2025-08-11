@@ -291,248 +291,70 @@ const structuredData = {
             </div>
           </section>
           
-          <!-- Enhanced Fee Details Module with Tiers Support -->
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-              <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
-              </div>
-              费用详情
-            </h2>
-
-            {card.data.tiers && card.data.tiers.length > 0 ? (
-              <>
+          {card.data.tiers && card.data.tiers.length > 0 ? (
+            <div class="space-y-8">
+              {/* Tier-specific rendering */}
+              <section class="bg-white rounded-3xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+                  <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
+                  </div>
+                  费用详情
+                </h2>
                 <div class="mb-8">
-                  <h3 class="text-2xl font-semibold text-gray-800 mb-6">{name} 等级对比</h3>
-                  <div class="grid gap-6 lg:grid-cols-2">
-                    {card.data.tiers.map(tier => {
-                      const themeClasses = {
-                        dark: {
-                          border: 'border-gray-800',
-                          bg: 'bg-gradient-to-br from-gray-900 to-black',
-                          badgeBg: 'bg-gray-800',
-                          badgeText: 'text-white',
-                          priceText: 'text-yellow-400',
-                          feeTitleText: 'text-gray-200',
-                          feeLabelText: 'text-gray-400',
-                          feeValueText: 'text-green-400',
-                          feeHighlightText: 'text-yellow-400',
-                          rewardsBg: 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/50',
-                          rewardsBorder: 'border-yellow-600',
-                          rewardsTitleText: 'text-yellow-300',
-                          rewardsFeatureText: 'text-yellow-200',
-                          buttonBg: 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800',
-                          buttonText: 'text-white',
-                        },
-                        green: {
-                          border: 'border-green-200',
-                          bg: 'bg-gradient-to-br from-green-50 to-emerald-50',
-                          badgeBg: 'bg-green-500',
-                          badgeText: 'text-white',
-                          priceText: 'text-green-600',
-                          feeTitleText: 'text-gray-800',
-                          feeLabelText: 'text-gray-600',
-                          feeValueText: 'text-green-600',
-                          feeHighlightText: 'text-gray-900',
-                          rewardsBg: 'bg-white/80',
-                          rewardsBorder: 'border-gray-200',
-                          rewardsTitleText: 'text-gray-800',
-                          rewardsFeatureText: 'text-gray-700',
-                          buttonBg: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
-                          buttonText: 'text-white',
-                        }
-                      };
-                      const currentTheme = themeClasses[tier.theme] || themeClasses.green;
-
-                      return (
-                        <div class={`relative rounded-2xl p-6 border-2 ${currentTheme.border} ${currentTheme.bg} transition-all duration-300 hover:shadow-2xl hover:scale-105`}>
-                          <div class="absolute -top-3 left-6">
-                            <span class={`px-4 py-2 rounded-full text-sm font-bold shadow-lg ${currentTheme.badgeBg} ${currentTheme.badgeText}`}>{tier.name}</span>
-                          </div>
-                          <div class="flex justify-between items-start mb-6 mt-4">
-                            <div class="flex space-x-3">
-                              <div class="flex flex-col items-center">
-                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-700">
-                                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">{name} 等级对比</h3>
+                    <div class="grid gap-6 lg:grid-cols-2">
+                      {card.data.tiers.map(tier => {
+                        const themeClasses = {
+                          dark: { border: 'border-gray-800', bg: 'bg-gradient-to-br from-gray-900 to-black', badgeBg: 'bg-gray-800', badgeText: 'text-white', priceText: 'text-yellow-400', feeTitleText: 'text-gray-200', feeLabelText: 'text-gray-400', feeValueText: 'text-green-400', feeHighlightText: 'text-yellow-400', rewardsBg: 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/50', rewardsBorder: 'border-yellow-600', rewardsTitleText: 'text-yellow-300', rewardsFeatureText: 'text-yellow-200', buttonBg: 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800', buttonText: 'text-white' },
+                          green: { border: 'border-green-200', bg: 'bg-gradient-to-br from-green-50 to-emerald-50', badgeBg: 'bg-green-500', badgeText: 'text-white', priceText: 'text-green-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700', buttonText: 'text-white' }
+                        };
+                        const currentTheme = themeClasses[tier.theme] || themeClasses.green;
+                        return (
+                          <div class={`relative rounded-2xl p-6 border-2 ${currentTheme.border} ${currentTheme.bg} transition-all duration-300 hover:shadow-2xl hover:scale-105`}>
+                            <div class="absolute -top-3 left-6"><span class={`px-4 py-2 rounded-full text-sm font-bold shadow-lg ${currentTheme.badgeBg} ${currentTheme.badgeText}`}>{tier.name}</span></div>
+                            <div class="flex justify-between items-start mb-6 mt-4">
+                              <div class="flex space-x-3">
+                                <div class="flex flex-col items-center">
+                                  <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-700"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg></div>
+                                  <span class={`text-xs font-medium mt-2 ${currentTheme.feeLabelText}`}>{tier.cardMaterial}</span>
                                 </div>
-                                <span class={`text-xs font-medium mt-2 ${currentTheme.feeLabelText}`}>{tier.cardMaterial}</span>
+                              </div>
+                              <div class="text-right">
+                                <div class={`text-3xl font-bold ${currentTheme.priceText}`}>{tier.price}</div>
+                                <div class={`text-sm ${currentTheme.feeLabelText} font-medium`}>{tier.priceUnit}</div>
                               </div>
                             </div>
-                            <div class="text-right">
-                              <div class={`text-3xl font-bold ${currentTheme.priceText}`}>{tier.price}</div>
-                              <div class={`text-sm ${currentTheme.feeLabelText} font-medium`}>{tier.priceUnit}</div>
+                            <div class="space-y-4">
+                              {tier.fees && <div class={`bg-gray-800/80 rounded-xl p-4 backdrop-blur-sm`}><h4 class={`font-semibold ${currentTheme.feeTitleText} mb-3 flex items-center`}><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg> 费用详情</h4><div class="grid grid-cols-2 gap-3 text-sm">{Object.entries(tier.fees).map(([key, value]) => <div class="flex justify-between"><span class={currentTheme.feeLabelText}>{key}:</span><span class={`font-medium ${value.toLowerCase() === '免费' ? currentTheme.feeValueText : currentTheme.feeHighlightText}`}>{value}</span></div>)}</div></div>}
+                              {tier.rewards && <div class={`${currentTheme.rewardsBg} rounded-xl p-4 border ${currentTheme.rewardsBorder}`}><h4 class={`font-semibold ${currentTheme.rewardsTitleText} mb-2 flex items-center`}><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 0v1m-2 0a2 2 0 00-2 2v8a2 2 0 002 2 2 2 0 002-2V8a2 2 0 00-2-2z"></path></svg> {tier.rewards.title}</h4><div class="text-sm space-y-1">{tier.rewards.features.map(feature => <div class={`flex justify-between ${currentTheme.rewardsFeatureText}`}><span>{feature}</span></div>)}</div></div>}
                             </div>
+                            <div class="mt-6"><a href={tier.affiliateLink || affiliateLink} target="_blank" rel="noopener noreferrer" class={`w-full inline-flex items-center justify-center px-6 py-3 font-medium rounded-xl transition-all transform hover:scale-105 ${currentTheme.buttonBg} ${currentTheme.buttonText}`}> 申请 {tier.name} <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></a></div>
                           </div>
-                          <div class="space-y-4">
-                            {tier.fees && (
-                              <div class={`bg-gray-800/80 rounded-xl p-4 backdrop-blur-sm`}>
-                                <h4 class={`font-semibold ${currentTheme.feeTitleText} mb-3 flex items-center`}>
-                                  <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
-                                  费用详情
-                                </h4>
-                                <div class="grid grid-cols-2 gap-3 text-sm">
-                                  {Object.entries(tier.fees).map(([key, value]) => (
-                                    <div class="flex justify-between">
-                                      <span class={currentTheme.feeLabelText}>{key}:</span>
-                                      <span class={`font-medium ${value.toLowerCase() === '免费' ? currentTheme.feeValueText : currentTheme.feeHighlightText}`}>{value}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {tier.rewards && (
-                              <div class={`${currentTheme.rewardsBg} rounded-xl p-4 border ${currentTheme.rewardsBorder}`}>
-                                <h4 class={`font-semibold ${currentTheme.rewardsTitleText} mb-2 flex items-center`}>
-                                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 0v1m-2 0a2 2 0 00-2 2v8a2 2 0 002 2 2 2 0 002-2V8a2 2 0 00-2-2z"></path></svg>
-                                  {tier.rewards.title}
-                                </h4>
-                                <div class="text-sm space-y-1">
-                                  {tier.rewards.features.map(feature => (
-                                    <div class={`flex justify-between ${currentTheme.rewardsFeatureText}`}>
-                                      <span>{feature}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                          <div class="mt-6">
-                            <a href={tier.affiliateLink || affiliateLink} target="_blank" rel="noopener noreferrer" class={`w-full inline-flex items-center justify-center px-6 py-3 font-medium rounded-xl transition-all transform hover:scale-105 ${currentTheme.buttonBg} ${currentTheme.buttonText}`}>
-                              申请 {tier.name}
-                              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                            </a>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
                 </div>
-
-                {card.data.importantReminders && card.data.importantReminders.length > 0 && (
-                  <div class="mb-8 p-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border-2 border-amber-200">
-                    <div class="flex items-start space-x-4">
-                      <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                      </div>
-                      <div class="flex-1">
-                        <h3 class="text-xl font-bold text-amber-800 mb-2">重要费用提醒</h3>
-                        <ul class="space-y-2 text-amber-700">
-                          {card.data.importantReminders.map(reminder => (
-                            <li class="flex items-start">
-                              <span class="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                              <span set:html={reminder}></span>
-                            </li>
-                          ))}
-                        </ul>
-                        <p class="text-sm text-amber-600 mt-3 font-medium">*费用信息基于官方文档，具体以申请时为准</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {/* Fallback for non-tiered cards */}
-                <div class="space-y-8">
-                  {/* Fee Details Section */}
-                  <section class="bg-white rounded-3xl shadow-xl p-8">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-                    <div class="space-y-6">
-                      <div class="grid md:grid-cols-2 gap-4">
-                        {isVirtual && (
-                          <div class="bg-blue-50 rounded-xl p-4 border border-blue-100"><p class="text-sm text-gray-600">虚拟卡费用</p><p class="text-xl font-bold text-gray-900">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</p></div>
-                        )}
-                        <div class="bg-purple-50 rounded-xl p-4 border border-purple-100"><p class="text-sm text-gray-600">实体卡费用</p><p class="text-xl font-bold text-gray-900">{!isPhysical ? 'N/A' : physicalCardPrice === 0 ? '免费' : `${physicalCardPrice}`}</p></div>
-                      </div>
-                      <div class="space-y-3">
-                        <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">充值费用</span><span class="font-medium">{depositFee || 'N/A'}</span></div>
-                        <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">交易手续费</span><span class="font-medium">{transactionFee || 'N/A'}</span></div>
-                        <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">ATM取现费</span><span class="font-medium">{atmFee || 'N/A'}</span></div>
-                      </div>
-                      {annualFee !== undefined && <div class="p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex justify-between items-center"><span class="text-gray-700">年费</span><span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span></div>}
-                    </div>
-                  </section>
-                  {/* Limits Section */}
-                  {limits && (
-                    <section class="bg-white rounded-3xl shadow-xl p-8">
-                      <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
-                      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {Object.entries(limits).map(([key, value]) => {
-                          const limitLabels = {
-                            dailySpending: '每日消费',
-                            monthlySpending: '每月消费',
-                            singleTransaction: '单笔交易',
-                            dailyAtmWithdrawal: '每日ATM取款',
-                            monthlyAtmWithdrawal: '每月ATM取款',
-                            lifetimeLimit: '终身限额',
-                          };
-                          return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null;
-                        })}
-                      </div>
-                    </section>
-                  )}
-                </div>
-              </>
-            )}
-          </section>
-
-          {/* Common Sections - moved outside the conditional to render for all cards */}
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>
-            {supportedCurrencies && supportedCurrencies.length > 0 ? (
-              <div class="flex flex-wrap items-center gap-3">
-                {supportedCurrencies.map(currency => {
-                  const currencyInfo = getCurrencyInfo(currency);
-                  return (
-                    <div class="flex flex-col items-center p-2 group cursor-pointer">
-                      <div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}>
-                        <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" />
-                      </div>
-                      <span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : <p>暂无数据</p>}
-          </section>
-
-
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
-            {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {supportedPaymentMethods.map(method => {
-                  const info = getPaymentMethodInfo(method);
-                  return (
-                    <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}>
-                      <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}>
-                        <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
-                      </div>
-                      <span class={`font-bold ${info.textColor} text-center`}>{info.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : <p>暂无数据</p>}
-          </section>
-
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-              {pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}
-              {cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}
+                {card.data.importantReminders && card.data.importantReminders.length > 0 && <div class="mb-8 p-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border-2 border-amber-200"><div class="flex items-start space-x-4"><div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1"><h3 class="text-xl font-bold text-amber-800 mb-2">重要费用提醒</h3><ul class="space-y-2 text-amber-700">{card.data.importantReminders.map(reminder => <li class="flex items-start"><span class="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span set:html={reminder}></span></li>)}</ul><p class="text-sm text-amber-600 mt-3 font-medium">*费用信息基于官方文档，具体以申请时为准</p></div></div></div>}
+              </section>
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>{supportedPaymentMethods && supportedPaymentMethods.length > 0 ? <div class="grid grid-cols-2 md:grid-cols-4 gap-6">{supportedPaymentMethods.map(method => { const info = getPaymentMethodInfo(method); return <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}><div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}><img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" /></div><span class={`font-bold ${info.textColor} text-center`}>{info.name}</span></div>; })}</div> : <p>暂无数据</p>}</section>
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
+              {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>
-          </section>
-
-          {features && features.length > 0 && (
-            <section class="bg-white rounded-3xl shadow-xl p-8">
-              <h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2>
-              <div class="grid md:grid-cols-2 gap-4">
-                {features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}
-              </div>
-            </section>
+          ) : (
+            <div class="space-y-8">
+              {/* Legacy Fallback Rendering */}
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2><div class="space-y-6"><div class="grid md:grid-cols-2 gap-4">{isVirtual && <div class="bg-blue-50 rounded-xl p-4 border border-blue-100"><p class="text-sm text-gray-600">虚拟卡费用</p><p class="text-xl font-bold text-gray-900">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</p></div>}<div class="bg-purple-50 rounded-xl p-4 border border-purple-100"><p class="text-sm text-gray-600">实体卡费用</p><p class="text-xl font-bold text-gray-900">{!isPhysical ? 'N/A' : physicalCardPrice === 0 ? '免费' : `${physicalCardPrice}`}</p></div></div><div class="space-y-3"><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">充值费用</span><span class="font-medium">{depositFee || 'N/A'}</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">交易手续费</span><span class="font-medium">{transactionFee || 'N/A'}</span></div><div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">ATM取现费</span><span class="font-medium">{atmFee || 'N/A'}</span></div></div>{annualFee !== undefined && <div class="p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex justify-between items-center"><span class="text-gray-700">年费</span><span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span></div>}</div></section>
+              {limits && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">{Object.entries(limits).map(([key, value]) => { const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', dailyAtmWithdrawal: '每日ATM取款', monthlyAtmWithdrawal: '每月ATM取款', lifetimeLimit: '终身限额' }; return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null; })}</div></section>}
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>{supportedPaymentMethods && supportedPaymentMethods.length > 0 ? <div class="grid grid-cols-2 md:grid-cols-4 gap-6">{supportedPaymentMethods.map(method => { const info = getPaymentMethodInfo(method); return <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}><div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}><img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" /></div><span class={`font-bold ${info.textColor} text-center`}>{info.name}</span></div>; })}</div> : <p>暂无数据</p>}</section>
+              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
+              {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
+            </div>
           )}
 
+          
           <GiscusComments title={`${name} 用户评论`} />
         </div>
 
