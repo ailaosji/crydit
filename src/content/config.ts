@@ -25,6 +25,25 @@ const articlesCollection = defineCollection({
 });
 
 // U卡评测集合配置
+
+const cardTierSchema = z.object({
+  name: z.string(),
+  description: z.string().optional(),
+  theme: z.enum(['dark', 'light', 'green', 'blue', 'yellow', 'gray']).default('light'),
+  isVirtual: z.boolean().optional(),
+  isPhysical: z.boolean().optional(),
+  cardMaterial: z.string().optional(),
+  price: z.string(),
+  priceUnit: z.string(),
+  fees: z.record(z.string()).optional(),
+  limits: z.record(z.string()).optional(),
+  rewards: z.object({
+    title: z.string(),
+    features: z.array(z.string()),
+  }).optional(),
+  affiliateLink: z.string().url().optional(),
+});
+
 const cardsCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -33,15 +52,6 @@ const cardsCollection = defineCollection({
     description: z.string(),
     shortDescription: z.string().optional(),
     cardType: z.enum(['visa', 'mastercard']),
-    isVirtual: z.boolean(),
-    isPhysical: z.boolean(),
-    virtualCardPrice: z.number().optional(),
-    physicalCardPrice: z.number().nullable().optional(),
-    depositFee: z.string(),
-    transactionFee: z.string(),
-    withdrawalFee: z.string().optional(),
-    atmFee: z.string().nullable().optional(),
-    annualFee: z.boolean(),
     supportedCurrencies: z.array(z.string()),
     supportedPaymentMethods: z.array(z.string()).optional(),
     rating: z.number().min(1).max(5).optional(),
@@ -61,23 +71,10 @@ const cardsCollection = defineCollection({
     applicationDocuments: z.array(z.string()).optional(),
     kycRequired: z.boolean().default(true),
     minimumAge: z.number().default(18),
-
-    // 限额信息
-    limits: z.object({
-      dailySpending: z.string().optional(),
-      monthlySpending: z.string().optional(),
-      atmWithdrawal: z.string().optional(),
-      monthlyAtmWithdrawal: z.string().nullable().optional(),
-      singleTransaction: z.string().optional(),
-    }).optional(),
+    importantReminders: z.array(z.string()).optional(), // New field for shared reminders
 
     // 特色功能
     features: z.array(z.string()).optional(),
-    rewards: z.object({
-      cashback: z.string().nullable().optional(),
-      loyaltyProgram: z.string().optional(),
-      points: z.union([z.boolean(), z.string()]).optional(),
-    }).optional(),
 
     // SEO和关联
     seo: z.object({
@@ -90,6 +87,37 @@ const cardsCollection = defineCollection({
     // 状态控制
     status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
     lastReviewed: z.coerce.date().optional(),
+
+    // Tiers - New structure for multiple card levels
+    tiers: z.array(cardTierSchema).optional(),
+
+    // Legacy fields for backward compatibility
+    isVirtual: z.boolean().optional(),
+    isPhysical: z.boolean().optional(),
+    virtualCardPrice: z.number().optional(),
+    physicalCardPrice: z.number().nullable().optional(),
+    depositFee: z.string().optional(),
+    transactionFee: z.string().optional(),
+    withdrawalFee: z.string().optional(),
+    atmFee: z.string().nullable().optional(),
+    annualFee: z.boolean().optional(),
+    limits: z.object({
+      dailySpending: z.string().optional(),
+      monthlySpending: z.string().optional(),
+      atmWithdrawal: z.string().optional(),
+      monthlyAtmWithdrawal: z.string().nullable().optional(),
+      singleTransaction: z.string().optional(),
+      perTransactionLimit: z.string().optional(),
+      transactionLimit: z.string().optional(),
+      singleTransactionLimit: z.string().optional(),
+      dailyAtmWithdrawal: z.string().optional(),
+      atmWithdrawalLimit: z.string().optional(),
+    }).optional(),
+    rewards: z.object({
+      cashback: z.string().nullable().optional(),
+      loyaltyProgram: z.string().optional(),
+      points: z.union([z.boolean(), z.string()]).optional(),
+    }).optional(),
   }),
 });
 
