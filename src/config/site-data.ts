@@ -13,7 +13,7 @@ export const CURRENCY_DATA = {
 // Centralized data for payment methods
 export const PAYMENT_METHOD_DATA = {
   applepay: { name: 'Apple Pay', bgGradient: 'from-gray-800 to-black', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800', icon: '/icons/methods/applepay.svg' },
-  googlepay: { name: 'Google Pay', bgGradient: 'from-blue-500 via-green-500 to-yellow-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/googlepay.svg' },
+  googlepay: { name: 'Google Pay', bgGradient: 'from-blue-500 via-green-500 to-yellow-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/googlepay.webp' },
   alipay: { name: 'Alipay', bgGradient: 'from-blue-500 to-cyan-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/alipay.svg' },
   wechatpay: { name: 'WeChat Pay', bgGradient: 'from-green-500 to-green-600', bgLight: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700', icon: '/icons/methods/wechatpay.svg' },
   // Add more payment methods here
