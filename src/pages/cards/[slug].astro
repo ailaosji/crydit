@@ -125,7 +125,7 @@ const relatedArticles = allArticles
 // 渲染Markdown内容
 const { Content } = await card.render();
 
-import { getCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
+import { getEnhancedCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
 
 // 生成结构化数据
 const structuredData = {
@@ -289,152 +289,6 @@ const structuredData = {
             <div class="prose prose-lg max-w-none">
               <Content />
             </div>
-          </section>
-          
-          <!-- 支持的加密货币模块 - 优化版本 -->
-<section class="bg-white rounded-3xl shadow-xl p-8">
-  <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3">
-      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-      </svg>
-    </div>
-    支持的加密货币
-  </h2>
-  {supportedCurrencies && supportedCurrencies.length > 0 ? (
-    <!-- 优化后的布局：左对齐，与其他模块保持一致 -->
-    <div class="flex flex-wrap items-center gap-3">
-      {supportedCurrencies.map((currency) => {
-        const currencyInfo = getCurrencyInfo(currency);
-
-        return (
-          <div class="flex flex-col items-center hover:scale-110 transition-all duration-300 group cursor-pointer p-2">
-            <!-- 加密货币图标 - 调整大小和添加名称 -->
-            <div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}>
-              <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" />
-            </div>
-            <!-- 添加货币名称标签 -->
-            <span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100 transition-opacity duration-300`}>
-              {currencyInfo.symbol}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  ) : (
-    <div class="text-center py-16">
-      <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6 shadow-lg">
-        ₿
-      </div>
-      <h3 class="text-xl font-semibold text-gray-800 mb-2">支持多种主流加密货币</h3>
-      <p class="text-gray-600">包括比特币、以太坊、USDT等热门数字资产</p>
-    </div>
-  )}
-</section>
-
-          <!-- 支持的支付方式模块 -->
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-              <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-              支持的支付方式
-            </h2>
-            
-            {supportedPaymentMethods && Array.isArray(supportedPaymentMethods) && supportedPaymentMethods.length > 0 ? (
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {supportedPaymentMethods.map((method) => {
-                  const info = getPaymentMethodInfo(method);
-                  
-                  return (
-                    <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden`}>
-                      <!-- 装饰性背景元素 -->
-                      <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent rounded-full transform translate-x-8 -translate-y-8"></div>
-                      
-                      <!-- 图标容器 -->
-                      <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-1 transition-all duration-300 text-xl`}>
-                        <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
-                        <!-- 图标反光效果 -->
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      </div>
-                      
-                      <!-- 支付方式名称 -->
-                      <span class={`font-bold ${info.textColor} text-center text-base mb-2`}>
-                        {info.name}
-                      </span>
-                      
-                      <!-- 支持状态 -->
-                      <div class="flex items-center space-x-2">
-                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
-                        <span class="text-sm text-gray-600 font-medium">已支持</span>
-                      </div>
-                      
-                      <!-- 悬停箭头指示 -->
-                      <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div class="text-center py-8">
-                <!-- 显示默认的主流支付方式 -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                  <!-- Apple Pay -->
-                  <div class="flex flex-col items-center p-4 bg-gray-50 rounded-2xl border-2 border-gray-200 hover:scale-105 transition-all duration-300">
-                    <div class="w-12 h-12 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      <img src="/icons/methods/applepay.svg" alt="Apple Pay icon" class="w-7 h-7" />
-                    </div>
-                    <span class="font-bold text-gray-800 mb-1 text-sm">Apple Pay</span>
-                    <div class="flex items-center space-x-1">
-                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span class="text-xs text-gray-500">支持</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Google Pay -->
-                  <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg text-white font-bold">
-                      <img src="/icons/methods/googlepay.svg" alt="Google Pay icon" class="w-7 h-7" />
-                    </div>
-                    <span class="font-bold text-blue-700 mb-1 text-sm">Google Pay</span>
-                    <div class="flex items-center space-x-1">
-                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span class="text-xs text-gray-500">支持</span>
-                    </div>
-                  </div>
-                  
-                  <!-- Alipay -->
-                  <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      <img src="/icons/methods/alipay.svg" alt="Alipay icon" class="w-7 h-7" />
-                    </div>
-                    <span class="font-bold text-blue-700 mb-1 text-sm">Alipay</span>
-                    <div class="flex items-center space-x-1">
-                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span class="text-xs text-gray-500">支持</span>
-                    </div>
-                  </div>
-                  
-                  <!-- WeChat Pay -->
-                  <div class="flex flex-col items-center p-4 bg-green-50 rounded-2xl border-2 border-green-200 hover:scale-105 transition-all duration-300">
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
-                      <img src="/icons/methods/wechatpay.svg" alt="WeChat Pay icon" class="w-7 h-7" />
-                    </div>
-                    <span class="font-bold text-green-700 mb-1 text-sm">WeChat Pay</span>
-                    <div class="flex items-center space-x-1">
-                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                      <span class="text-xs text-gray-500">支持</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </section>
 
           <!-- 费用详情模块 -->
@@ -625,6 +479,161 @@ const structuredData = {
               </div>
             </section>
           )}
+
+          <!-- 支持的加密货币模块 - 增强版 -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+              <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                </svg>
+              </div>
+              支持的货币
+            </h2>
+            {supportedCurrencies && supportedCurrencies.length > 0 ? (
+              <div class="flex flex-wrap items-center gap-4">
+                {supportedCurrencies.map((currency) => {
+                  const currencyInfo = getEnhancedCurrencyInfo(currency);
+                  return (
+                    <div class="flex flex-col items-center group cursor-pointer p-2 relative">
+                      <div class={`relative w-16 h-16 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold`}>
+                        {/* Decorative Dots */}
+                        {!currencyInfo.isUrl && (
+                          <div class="absolute inset-0 bg-repeat bg-center opacity-10" style="background-image: radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 5px 5px;"></div>
+                        )}
+
+                        {/* Icon or Text */}
+                        {currencyInfo.isUrl ? (
+                          <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-9 h-9" />
+                        ) : (
+                          <span class="text-sm font-bold tracking-wider">{currencyInfo.icon}</span>
+                        )}
+
+                        {/* Gloss Effect */}
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+                      </div>
+                      <span class="text-xs font-medium text-gray-600 mt-2 group-hover:text-black transition-colors duration-300">
+                        {currencyInfo.symbol}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div class="text-center py-12">
+                <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6 shadow-lg">
+                  ₿
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">支持多种主流货币</h3>
+                <p class="text-gray-600">包括加密货币和法定货币</p>
+              </div>
+            )}
+          </section>
+
+          <!-- 支持的支付方式模块 -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+              <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              支持的支付方式
+            </h2>
+
+            {supportedPaymentMethods && Array.isArray(supportedPaymentMethods) && supportedPaymentMethods.length > 0 ? (
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {supportedPaymentMethods.map((method) => {
+                  const info = getPaymentMethodInfo(method);
+
+                  return (
+                    <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden`}>
+                      <!-- 装饰性背景元素 -->
+                      <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent rounded-full transform translate-x-8 -translate-y-8"></div>
+
+                      <!-- 图标容器 -->
+                      <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-1 transition-all duration-300 text-xl`}>
+                        <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
+                        <!-- 图标反光效果 -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+
+                      <!-- 支付方式名称 -->
+                      <span class={`font-bold ${info.textColor} text-center text-base mb-2`}>
+                        {info.name}
+                      </span>
+
+                      <!-- 支持状态 -->
+                      <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
+                        <span class="text-sm text-gray-600 font-medium">已支持</span>
+                      </div>
+
+                      <!-- 悬停箭头指示 -->
+                      <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div class="text-center py-8">
+                <!-- 显示默认的主流支付方式 -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                  <!-- Apple Pay -->
+                  <div class="flex flex-col items-center p-4 bg-gray-50 rounded-2xl border-2 border-gray-200 hover:scale-105 transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-gray-800 to-black rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
+                      <img src="/icons/methods/applepay.svg" alt="Apple Pay icon" class="w-7 h-7" />
+                    </div>
+                    <span class="font-bold text-gray-800 mb-1 text-sm">Apple Pay</span>
+                    <div class="flex items-center space-x-1">
+                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span class="text-xs text-gray-500">支持</span>
+                    </div>
+                  </div>
+
+                  <!-- Google Pay -->
+                  <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 105 42"><path fill="#3C4043" d="M49.029 20.84v12.1h-3.83V3.06h10.153c2.573 0 4.767.86 6.563 2.58 1.835 1.72 2.752 3.82 2.752 6.3 0 2.54-.917 4.64-2.752 6.34-1.776 1.7-3.97 2.54-6.563 2.54H49.03v.02Zm0-14.1v10.42h6.403c1.516 0 2.792-.52 3.79-1.54 1.017-1.02 1.536-2.26 1.536-3.66 0-1.38-.519-2.6-1.536-3.62-.998-1.06-2.254-1.58-3.79-1.58h-6.403v-.02ZM74.68 11.82c2.833 0 5.067.76 6.703 2.28 1.636 1.52 2.454 3.6 2.454 6.24v12.6h-3.65V30.1h-.16c-1.576 2.34-3.69 3.5-6.323 3.5-2.254 0-4.13-.66-5.645-2-1.516-1.34-2.274-3-2.274-5 0-2.12.797-3.8 2.393-5.04 1.596-1.26 3.73-1.88 6.383-1.88 2.274 0 4.15.42 5.605 1.26v-.88c0-1.34-.518-2.46-1.575-3.4-1.058-.94-2.294-1.4-3.71-1.4-2.135 0-3.83.9-5.067 2.72l-3.371-2.12c1.855-2.7 4.608-4.04 8.238-4.04Zm-4.946 14.84c0 1 .419 1.84 1.277 2.5.838.66 1.835 1 2.972 1 1.615 0 3.052-.6 4.308-1.8 1.257-1.2 1.895-2.6 1.895-4.22-1.197-.94-2.852-1.42-4.986-1.42-1.556 0-2.853.38-3.89 1.12-1.057.78-1.576 1.72-1.576 2.82ZM104.661 12.48 91.895 41.92h-3.95l4.748-10.3-8.418-19.14h4.169l6.064 14.68h.08l5.904-14.68h4.169Z"></path><path fill="#4285F4" d="M33.796 18.4c0-1.251-.111-2.45-.319-3.601H17.424v6.6l9.245.002a7.942 7.942 0 0 1-3.43 5.316v4.282h5.503c3.213-2.982 5.054-7.39 5.054-12.598Z"></path><path fill="#34A853" d="M23.24 26.717c-1.531 1.036-3.504 1.642-5.812 1.642-4.458 0-8.24-3.012-9.594-7.072H2.157v4.416C4.969 31.3 10.75 35.14 17.428 35.14c4.616 0 8.493-1.522 11.316-4.142l-5.503-4.28Z"></path><path fill="#FABB05" d="M7.299 18.01c0-1.14.19-2.242.534-3.278v-4.416H2.157A17.081 17.081 0 0 0 .339 18.01c0 2.768.657 5.38 1.818 7.694l5.676-4.416A10.356 10.356 0 0 1 7.3 18.01Z"></path><path fill="#E94235" d="M17.428 7.66c2.52 0 4.775.87 6.556 2.57l4.877-4.885C25.9 2.579 22.038.88 17.428.88c-6.676 0-12.459 3.84-15.271 9.436l5.677 4.416c1.354-4.06 5.136-7.072 9.594-7.072Z"></path></svg>
+                    </div>
+                    <span class="font-bold text-blue-700 mb-1 text-sm">Google Pay</span>
+                    <div class="flex items-center space-x-1">
+                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span class="text-xs text-gray-500">支持</span>
+                    </div>
+                  </div>
+
+                  <!-- Alipay -->
+                  <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
+                      <img src="/icons/methods/alipay.svg" alt="Alipay icon" class="w-7 h-7" />
+                    </div>
+                    <span class="font-bold text-blue-700 mb-1 text-sm">Alipay</span>
+                    <div class="flex items-center space-x-1">
+                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span class="text-xs text-gray-500">支持</span>
+                    </div>
+                  </div>
+
+                  <!-- WeChat Pay -->
+                  <div class="flex flex-col items-center p-4 bg-green-50 rounded-2xl border-2 border-green-200 hover:scale-105 transition-all duration-300">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
+                      <img src="/icons/methods/wechatpay.svg" alt="WeChat Pay icon" class="w-7 h-7" />
+                    </div>
+                    <span class="font-bold text-green-700 mb-1 text-sm">WeChat Pay</span>
+                    <div class="flex items-center space-x-1">
+                      <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span class="text-xs text-gray-500">支持</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
 
           <!-- 优缺点分析 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
