@@ -16,6 +16,7 @@ affiliateLink: "https://www.ready.co/"
 publishDate: "2025-08-10"
 updateDate: "2025-08-10"
 kycRequired: true
+
 pros:
   - "消费时直接将USDC兑换成美金，无需手动操作"
   - "高额返现，特别是Metal卡首月优惠"
@@ -70,6 +71,7 @@ tiers:
       monthlySpending: "$30,000"
     rewards:
       cashback: "首月10% (上限$1500消费), 之后3%"
+
 ---
 
 ## Ready Card 简介
