@@ -3,8 +3,6 @@ title: "OneKey Card - 安全便捷的硬件钱包U卡"
 name: "OneKey Card"
 description: "OneKey硬件钱包推出的Visa虚拟卡，主打安全性和隐私保护，支持多种加密货币。"
 cardType: "visa"
-isVirtual: true
-isPhysical: false
 issuer: "OneKey"
 supportedRegions:
   - "全球大部分地区"
@@ -19,20 +17,11 @@ supportedPaymentMethods:
   - "Google Pay"
   - "Alipay"
   - "WeChat Pay"
-virtualCardPrice: 10
-physicalCardPrice: null
-depositFee: "1%"
-transactionFee: "1.5%"
-withdrawalFee: "不适用"
-atmFee: null
-annualFee: false
-limits:
-  dailySpending: "$5,000"
-  monthlySpending: "$50,000"
-  dailyAtmWithdrawal: "$500"
-  monthlyAtmWithdrawal: "$5,000"
-rewards:
-  cashback: "消费返还KEY代币"
+rating: 4.7
+affiliateLink: "https://onekey.so/card"
+publishDate: "2024-03-10"
+updateDate: "2025-08-11"
+kycRequired: true
 pros:
   - "与OneKey硬件钱包无缝集成，安全性高"
   - "支持多种主流稳定币和加密货币"
@@ -46,19 +35,34 @@ features:
   - "硬件钱包集成"
   - "多重安全验证"
   - "隐私保护"
-relatedArticles:
-  - "onekey-wallet-guide"
-affiliateLink: "https://onekey.so/card"
 tags:
   - "OneKey"
   - "硬件钱包"
   - "U卡"
   - "安全"
   - "隐私"
-publishDate: "2024-03-10"
-updateDate: "2025-08-08"
-rating: 4.7
-kycRequired: true
+
+tiers:
+  - name: "Standard"
+    theme: "gray"
+    isVirtual: true
+    isPhysical: false
+    cardMaterial: "虚拟卡"
+    price: "$10"
+    priceUnit: "开卡费"
+    fees:
+      "充值费": "1%"
+      "交易费": "1.5%"
+      "年费": "免费"
+    rewards:
+      title: "返现奖励"
+      features:
+        - "消费返还KEY代币"
+    limits:
+      "每日消费": "$5,000"
+      "每月消费": "$50,000"
+      "每日ATM提现": "$500"
+      "每月ATM提现": "$5,000"
 ---
 
 ## OneKey Card 评测

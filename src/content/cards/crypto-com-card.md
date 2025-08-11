@@ -3,15 +3,13 @@ title: "Crypto.com Visa卡 - 高返现金属U卡"
 name: "Crypto.com Card"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 cardType: "visa"
-isVirtual: true
-isPhysical: true
 issuer: "Crypto.com"
 supportedRegions:
   - "美国"
   - "加拿大"
   - "欧洲"
   - "亚太地区"
-applicationDocuments: []
+applicationDocuments: ["身份验证 (KYC)"]
 supportedCurrencies:
   - "BTC"
   - "ETH"
@@ -22,19 +20,11 @@ supportedCurrencies:
 supportedPaymentMethods:
   - "Apple Pay"
   - "Google Pay"
-virtualCardPrice: 0
-physicalCardPrice: 0
-depositFee: "免费"
-transactionFee: "免费"
-withdrawalFee: "根据等级有免费额度"
-atmFee: "根据等级有免费额度"
-annualFee: false
-limits:
-  dailySpending: "$25,000"
-  monthlySpending: "$25,000"
-  monthlyAtmWithdrawal: "$1,000"
-rewards:
-  cashback: "最高5%的CRO返现"
+rating: 4.8
+affiliateLink: "https://crypto.com/app/"
+publishDate: "2024-01-05"
+updateDate: "2025-08-11"
+kycRequired: true
 pros:
   - "高额消费返现"
   - "金属卡片，质感好"
@@ -49,19 +39,62 @@ features:
   - "机场贵宾厅"
   - "订阅服务报销"
   - "金属卡"
-relatedArticles:
-  - "crypto-com-staking-guide"
-affiliateLink: "https://crypto.com/app/"
 tags:
   - "Crypto.com"
   - "CRO"
   - "返现"
   - "金属卡"
   - "U卡"
-publishDate: "2024-01-05"
-updateDate: "2024-03-01"
-rating: 4.8
-kycRequired: true
+
+tiers:
+  - name: "Midnight Blue"
+    theme: "blue"
+    isPhysical: true
+    cardMaterial: "塑料卡"
+    price: "免费"
+    priceUnit: "无需质押"
+    fees:
+      "CRO 质押": "无"
+      "月费": "免费"
+    rewards:
+      title: "基础功能"
+      features:
+        - "0% CRO 返现"
+    limits:
+      "ATM免费提现额度": "$200/月"
+  - name: "Ruby Steel"
+    theme: "dark"
+    isPhysical: true
+    cardMaterial: "金属卡"
+    price: "$400"
+    priceUnit: "CRO质押"
+    fees:
+      "CRO 质押": "$400"
+      "月费": "免费"
+    rewards:
+      title: "奖励与福利"
+      features:
+        - "1% CRO 返现"
+        - "Spotify 全额报销 (首6个月)"
+    limits:
+      "ATM免费提现额度": "$400/月"
+  - name: "Jade Green / Royal Indigo"
+    theme: "green"
+    isPhysical: true
+    cardMaterial: "金属卡"
+    price: "$4,000"
+    priceUnit: "CRO质押"
+    fees:
+      "CRO 质押": "$4,000"
+      "月费": "免费"
+    rewards:
+      title: "奖励与福利"
+      features:
+        - "2% CRO 返现"
+        - "Spotify & Netflix 全额报销 (首6个月)"
+        - "机场贵宾厅 (LoungeKey™)"
+    limits:
+      "ATM免费提现额度": "$800/月"
 ---
 
 ## Crypto.com Visa 卡评测
