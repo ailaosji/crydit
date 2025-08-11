@@ -125,7 +125,7 @@ const relatedArticles = allArticles
 // 渲染Markdown内容
 const { Content } = await card.render();
 
-import { getCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
+import { getEnhancedCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
 
 // 生成结构化数据
 const structuredData = {
@@ -291,46 +291,55 @@ const structuredData = {
             </div>
           </section>
           
-          <!-- 支持的加密货币模块 - 优化版本 -->
-<section class="bg-white rounded-3xl shadow-xl p-8">
-  <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3">
-      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-      </svg>
-    </div>
-    支持的加密货币
-  </h2>
-  {supportedCurrencies && supportedCurrencies.length > 0 ? (
-    <!-- 优化后的布局：左对齐，与其他模块保持一致 -->
-    <div class="flex flex-wrap items-center gap-3">
-      {supportedCurrencies.map((currency) => {
-        const currencyInfo = getCurrencyInfo(currency);
+          <!-- 支持的加密货币模块 - 增强版 -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+              <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3 shadow-md">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                </svg>
+              </div>
+              支持的货币
+            </h2>
+            {supportedCurrencies && supportedCurrencies.length > 0 ? (
+              <div class="flex flex-wrap items-center gap-4">
+                {supportedCurrencies.map((currency) => {
+                  const currencyInfo = getEnhancedCurrencyInfo(currency);
+                  return (
+                    <div class="flex flex-col items-center group cursor-pointer p-2 relative">
+                      <div class={`relative w-16 h-16 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold`}>
+                        {/* Decorative Dots */}
+                        {!currencyInfo.isUrl && (
+                          <div class="absolute inset-0 bg-repeat bg-center opacity-10" style="background-image: radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 5px 5px;"></div>
+                        )}
 
-        return (
-          <div class="flex flex-col items-center hover:scale-110 transition-all duration-300 group cursor-pointer p-2">
-            <!-- 加密货币图标 - 调整大小和添加名称 -->
-            <div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}>
-              <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" />
-            </div>
-            <!-- 添加货币名称标签 -->
-            <span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100 transition-opacity duration-300`}>
-              {currencyInfo.symbol}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  ) : (
-    <div class="text-center py-16">
-      <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6 shadow-lg">
-        ₿
-      </div>
-      <h3 class="text-xl font-semibold text-gray-800 mb-2">支持多种主流加密货币</h3>
-      <p class="text-gray-600">包括比特币、以太坊、USDT等热门数字资产</p>
-    </div>
-  )}
-</section>
+                        {/* Icon or Text */}
+                        {currencyInfo.isUrl ? (
+                          <img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-9 h-9" />
+                        ) : (
+                          <span class="text-sm font-bold tracking-wider">{currencyInfo.icon}</span>
+                        )}
+
+                        {/* Gloss Effect */}
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></div>
+                      </div>
+                      <span class="text-xs font-medium text-gray-600 mt-2 group-hover:text-black transition-colors duration-300">
+                        {currencyInfo.symbol}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div class="text-center py-12">
+                <div class="w-24 h-24 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white font-bold text-3xl mx-auto mb-6 shadow-lg">
+                  ₿
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-2">支持多种主流货币</h3>
+                <p class="text-gray-600">包括加密货币和法定货币</p>
+              </div>
+            )}
+          </section>
 
           <!-- 支持的支付方式模块 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
@@ -396,11 +405,11 @@ const structuredData = {
                       <span class="text-xs text-gray-500">支持</span>
                     </div>
                   </div>
-                  
+
                   <!-- Google Pay -->
                   <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg text-white font-bold">
-                      <img src="/icons/methods/googlepay.svg" alt="Google Pay icon" class="w-7 h-7" />
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 via-green-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg">
+                      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"> <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"></path> </svg>
                     </div>
                     <span class="font-bold text-blue-700 mb-1 text-sm">Google Pay</span>
                     <div class="flex items-center space-x-1">
@@ -408,7 +417,7 @@ const structuredData = {
                       <span class="text-xs text-gray-500">支持</span>
                     </div>
                   </div>
-                  
+
                   <!-- Alipay -->
                   <div class="flex flex-col items-center p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
