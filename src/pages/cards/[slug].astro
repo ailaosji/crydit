@@ -125,7 +125,7 @@ const relatedArticles = allArticles
 // 渲染Markdown内容
 const { Content } = await card.render();
 
-import { getCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
+import { getEnhancedCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
 
 // 生成结构化数据
 const structuredData = {
@@ -319,6 +319,7 @@ const structuredData = {
                         <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl"><span class="text-gray-700">交易手续费</span><span class="font-bold text-gray-900">{tier.fees?.transactionFee || 'N/A'}</span></div>
                         <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl"><span class="text-gray-700">提现费用</span><span class="font-bold text-gray-900">{tier.fees?.withdrawalFee || 'N/A'}</span></div>
                       </div>
+
                     </div>
                     {tier.fees?.annualFee !== undefined && <div class="mt-2 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200 flex justify-between items-center"><div class="flex items-center"><svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-700">年费</span></div><span class={`font-bold ${tier.fees.annualFee ? 'text-orange-600' : 'text-green-600'}`}>{tier.fees.annualFee ? '收费' : '免费'}</span></div>}
                   </div>
@@ -387,6 +388,7 @@ const structuredData = {
             ) : <p>暂无数据</p>}
           </section>
 
+          <!-- 优缺点分析 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2>
             <div class="grid md:grid-cols-2 gap-8">
