@@ -38,7 +38,64 @@ const defaultPaymentMethod = {
   icon: '💳'
 };
 
+// Helper function to generate a color hash from a string
+const stringToColorHash = (str: string): number => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return hash;
+};
+
+// Predefined array of TailwindCSS gradient classes
+const GRADIENT_COLORS = [
+  'from-red-500 to-orange-500',
+  'from-yellow-500 to-lime-500',
+  'from-green-500 to-emerald-500',
+  'from-teal-500 to-cyan-500',
+  'from-sky-500 to-blue-500',
+  'from-indigo-500 to-violet-500',
+  'from-purple-500 to-fuchsia-500',
+  'from-pink-500 to-rose-500',
+];
+
 /**
+ * Checks if the icon string is a path to an image.
+ * @param icon The icon string to check.
+ */
+export const isIconUrl = (icon: string | undefined): boolean => {
+  return typeof icon === 'string' && icon.startsWith('/');
+};
+
+/**
+ * Retrieves enhanced information for a given cryptocurrency, including dynamic color generation.
+ * @param currency The symbol or name of the currency (e.g., 'USDT', 'btc', 'EUR').
+ */
+export function getEnhancedCurrencyInfo(currency: string) {
+  const key = currency.toLowerCase() as keyof typeof CURRENCY_DATA;
+  const data = CURRENCY_DATA[key];
+
+  if (data) {
+    return { ...data, isUrl: isIconUrl(data.icon) };
+  }
+
+  // Fallback for currencies not in the centralized data (e.g., fiat)
+  const hash = stringToColorHash(currency);
+  const colorIndex = Math.abs(hash) % GRADIENT_COLORS.length;
+  const bgGradient = GRADIENT_COLORS[colorIndex];
+
+  return {
+    ...defaultCurrency,
+    name: currency.toUpperCase(),
+    symbol: currency.toUpperCase(),
+    bgGradient: bgGradient,
+    icon: currency.toUpperCase(), // Display the currency code as text
+    isUrl: false, // This is a text symbol, not a URL
+  };
+}
+
+/**
+ * @deprecated Use getEnhancedCurrencyInfo for more robust handling.
  * Retrieves information for a given cryptocurrency.
  * @param currency The symbol or name of the currency (e.g., 'USDT', 'btc').
  */
