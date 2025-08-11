@@ -10,7 +10,7 @@ supportedRegions:
 applicationDocuments: ["身份证件 (驾照/护照/身份证)"]
 supportedCurrencies:
   - "USDC"
-supportedPaymentMethods: []
+supportedPaymentMethods: ["Apple Pay", "Google Pay"]
 rating: 4.6
 affiliateLink: "https://www.ready.co/"
 publishDate: "2025-08-10"
@@ -39,37 +39,44 @@ tags:
   - "自托管"
   - "返现"
 
+importantReminders:
+  - "<strong>开卡费约 $6:</strong> 创建卡片时收取（基于官方数据）"
+  - "<strong>外币交易费 2.5%:</strong> 非本国货币交易时收取"
+  - "<strong>休眠费 $3.95/月:</strong> 13个月不活跃后开始收取"
+  - "<strong>汇率优势:</strong> 使用官方万事达汇率，无额外加价"
+
 tiers:
-  - name: "Ready Lite"
-    isVirtual: false
+  - name: "Metal Lite"
+    theme: "dark"
     isPhysical: true
-    price: "$6.99 运费"
-    depositFee: "0"
-    transactionFee: "0"
-    withdrawalFee: "超出免费额度后2%"
-    atmFee: "$200/月免费"
-    annualFee: "无"
-    limits:
-      singleTransaction: "$5,000"
-      dailySpending: "$10,000"
-      monthlySpending: "$30,000"
+    cardMaterial: "金属卡"
+    price: "$120"
+    priceUnit: "年费"
+    fees:
+      "充值费": "免费"
+      "外汇费": "免费"
+      "年费": "$120"
+      "快递费": "免费"
     rewards:
-      cashback: "0.5%"
-  - name: "Ready Metal"
-    isVirtual: false
+      title: "奖励福利"
+      features:
+        - "首月返现: 10% (最高$150/月)"
+        - "完全自托管"
+  - name: "Plastic"
+    theme: "green"
     isPhysical: true
-    price: "120 USDC"
-    depositFee: "0"
-    transactionFee: "0"
-    withdrawalFee: "超出免费额度后2%"
-    atmFee: "$800/月免费"
-    annualFee: "120 USDC"
-    limits:
-      singleTransaction: "$5,000"
-      dailySpending: "$10,000"
-      monthlySpending: "$30,000"
+    cardMaterial: "塑料卡"
+    price: "免费"
+    priceUnit: "年费"
+    fees:
+      "充值费": "免费"
+      "外汇费": "免费"
+      "年费": "免费"
+      "快递费": "$6.99"
     rewards:
-      cashback: "首月10% (上限$1500消费), 之后3%"
+      title: "基础功能"
+      features:
+        - "标准预付卡功能，支持全球消费"
 ---
 
 ## Ready Card 简介

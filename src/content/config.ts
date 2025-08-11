@@ -28,25 +28,20 @@ const articlesCollection = defineCollection({
 
 const cardTierSchema = z.object({
   name: z.string(),
-  isVirtual: z.boolean(),
-  isPhysical: z.boolean(),
+  description: z.string().optional(),
+  theme: z.enum(['dark', 'light', 'green', 'blue', 'yellow', 'gray']).default('light'),
+  isVirtual: z.boolean().optional(),
+  isPhysical: z.boolean().optional(),
+  cardMaterial: z.string().optional(),
   price: z.string(),
-  depositFee: z.string(),
-  transactionFee: z.string(),
-  withdrawalFee: z.string().optional(),
-  atmFee: z.string().nullable().optional(),
-  annualFee: z.string(),
-  limits: z.object({
-    dailySpending: z.string().optional(),
-    monthlySpending: z.string().optional(),
-    atmWithdrawal: z.string().optional(),
-    monthlyAtmWithdrawal: z.string().nullable().optional(),
-    singleTransaction: z.string().optional(),
-  }).optional(),
+  priceUnit: z.string(),
+  fees: z.record(z.string()).optional(),
+  limits: z.record(z.string()).optional(),
   rewards: z.object({
-    cashback: z.string().nullable().optional(),
-    loyaltyProgram: z.string().optional(),
+    title: z.string(),
+    features: z.array(z.string()),
   }).optional(),
+  affiliateLink: z.string().url().optional(),
 });
 
 const cardsCollection = defineCollection({
@@ -76,6 +71,7 @@ const cardsCollection = defineCollection({
     applicationDocuments: z.array(z.string()).optional(),
     kycRequired: z.boolean().default(true),
     minimumAge: z.number().default(18),
+    importantReminders: z.array(z.string()).optional(), // New field for shared reminders
 
     // 特色功能
     features: z.array(z.string()).optional(),
@@ -111,6 +107,11 @@ const cardsCollection = defineCollection({
       atmWithdrawal: z.string().optional(),
       monthlyAtmWithdrawal: z.string().nullable().optional(),
       singleTransaction: z.string().optional(),
+      perTransactionLimit: z.string().optional(),
+      transactionLimit: z.string().optional(),
+      singleTransactionLimit: z.string().optional(),
+      dailyAtmWithdrawal: z.string().optional(),
+      atmWithdrawalLimit: z.string().optional(),
     }).optional(),
     rewards: z.object({
       cashback: z.string().nullable().optional(),

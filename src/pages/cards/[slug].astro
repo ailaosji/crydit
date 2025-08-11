@@ -291,65 +291,192 @@ const structuredData = {
             </div>
           </section>
           
-          <!-- Tiered Data Rendering -->
-          {card.data.tiers && card.data.tiers.length > 0 ? (
-            card.data.tiers.map((tier, index) => (
-              <div class={`tier-section ${index > 0 ? 'mt-12 pt-12 border-t-4 border-dashed border-gray-200' : ''}`}>
-                {/* <!-- Tier Header --> */}
-                <header class="mb-8">
-                  <h2 class="text-4xl font-bold text-gray-900">{tier.name}</h2>
-                  {tier.description && <p class="mt-2 text-lg text-gray-600">{tier.description}</p>}
-                </header>
+          <!-- Enhanced Fee Details Module with Tiers Support -->
+          <section class="bg-white rounded-3xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 flex items-center">
+              <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
+              </div>
+              费用详情
+            </h2>
 
-                {/* <!-- Fee Details for Tier --> */}
-                <section class="bg-white rounded-3xl shadow-xl p-8 mb-8">
-                  <h3 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h3>
-                  <div class="space-y-8">
-                    <div>
-                      <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>卡片费用</h4>
-                      <div class="grid md:grid-cols-2 gap-4">
-                        {isVirtual && <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100"><p class="text-sm text-gray-600 mb-1">虚拟卡</p><p class="text-2xl font-bold text-gray-900">{tier.fees?.virtualCardPrice ?? 'N/A'}</p></div>}
-                        {isPhysical && <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100"><p class="text-sm text-gray-600 mb-1">实体卡</p><p class="text-2xl font-bold text-gray-900">{tier.fees?.physicalCardPrice ?? 'N/A'}</p>{tier.fees?.atmFee && <p class="text-xs text-gray-500 mt-2">ATM取现: {tier.fees.atmFee}</p>}</div>}
-                      </div>
-                    </div>
-                    <div>
-                      <h4 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>交易费用</h4>
-                      <div class="space-y-3">
-                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl"><span class="text-gray-700">充值费用</span><span class="font-bold text-gray-900">{tier.fees?.depositFee || '免费'}</span></div>
-                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl"><span class="text-gray-700">交易手续费</span><span class="font-bold text-gray-900">{tier.fees?.transactionFee || 'N/A'}</span></div>
-                        <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl"><span class="text-gray-700">提现费用</span><span class="font-bold text-gray-900">{tier.fees?.withdrawalFee || 'N/A'}</span></div>
-                      </div>
+            {card.data.tiers && card.data.tiers.length > 0 ? (
+              <>
+                <div class="mb-8">
+                  <h3 class="text-2xl font-semibold text-gray-800 mb-6">{name} 等级对比</h3>
+                  <div class="grid gap-6 lg:grid-cols-2">
+                    {card.data.tiers.map(tier => {
+                      const themeClasses = {
+                        dark: {
+                          border: 'border-gray-800',
+                          bg: 'bg-gradient-to-br from-gray-900 to-black',
+                          badgeBg: 'bg-gray-800',
+                          badgeText: 'text-white',
+                          priceText: 'text-yellow-400',
+                          feeTitleText: 'text-gray-200',
+                          feeLabelText: 'text-gray-400',
+                          feeValueText: 'text-green-400',
+                          feeHighlightText: 'text-yellow-400',
+                          rewardsBg: 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/50',
+                          rewardsBorder: 'border-yellow-600',
+                          rewardsTitleText: 'text-yellow-300',
+                          rewardsFeatureText: 'text-yellow-200',
+                          buttonBg: 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800',
+                          buttonText: 'text-white',
+                        },
+                        green: {
+                          border: 'border-green-200',
+                          bg: 'bg-gradient-to-br from-green-50 to-emerald-50',
+                          badgeBg: 'bg-green-500',
+                          badgeText: 'text-white',
+                          priceText: 'text-green-600',
+                          feeTitleText: 'text-gray-800',
+                          feeLabelText: 'text-gray-600',
+                          feeValueText: 'text-green-600',
+                          feeHighlightText: 'text-gray-900',
+                          rewardsBg: 'bg-white/80',
+                          rewardsBorder: 'border-gray-200',
+                          rewardsTitleText: 'text-gray-800',
+                          rewardsFeatureText: 'text-gray-700',
+                          buttonBg: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
+                          buttonText: 'text-white',
+                        }
+                      };
+                      const currentTheme = themeClasses[tier.theme] || themeClasses.green;
 
-                    </div>
-                    {tier.fees?.annualFee !== undefined && <div class="mt-2 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200 flex justify-between items-center"><div class="flex items-center"><svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-700">年费</span></div><span class={`font-bold ${tier.fees.annualFee ? 'text-orange-600' : 'text-green-600'}`}>{tier.fees.annualFee ? '收费' : '免费'}</span></div>}
+                      return (
+                        <div class={`relative rounded-2xl p-6 border-2 ${currentTheme.border} ${currentTheme.bg} transition-all duration-300 hover:shadow-2xl hover:scale-105`}>
+                          <div class="absolute -top-3 left-6">
+                            <span class={`px-4 py-2 rounded-full text-sm font-bold shadow-lg ${currentTheme.badgeBg} ${currentTheme.badgeText}`}>{tier.name}</span>
+                          </div>
+                          <div class="flex justify-between items-start mb-6 mt-4">
+                            <div class="flex space-x-3">
+                              <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-gray-700">
+                                  <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                                </div>
+                                <span class={`text-xs font-medium mt-2 ${currentTheme.feeLabelText}`}>{tier.cardMaterial}</span>
+                              </div>
+                            </div>
+                            <div class="text-right">
+                              <div class={`text-3xl font-bold ${currentTheme.priceText}`}>{tier.price}</div>
+                              <div class={`text-sm ${currentTheme.feeLabelText} font-medium`}>{tier.priceUnit}</div>
+                            </div>
+                          </div>
+                          <div class="space-y-4">
+                            {tier.fees && (
+                              <div class={`bg-gray-800/80 rounded-xl p-4 backdrop-blur-sm`}>
+                                <h4 class={`font-semibold ${currentTheme.feeTitleText} mb-3 flex items-center`}>
+                                  <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
+                                  费用详情
+                                </h4>
+                                <div class="grid grid-cols-2 gap-3 text-sm">
+                                  {Object.entries(tier.fees).map(([key, value]) => (
+                                    <div class="flex justify-between">
+                                      <span class={currentTheme.feeLabelText}>{key}:</span>
+                                      <span class={`font-medium ${value.toLowerCase() === '免费' ? currentTheme.feeValueText : currentTheme.feeHighlightText}`}>{value}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {tier.rewards && (
+                              <div class={`${currentTheme.rewardsBg} rounded-xl p-4 border ${currentTheme.rewardsBorder}`}>
+                                <h4 class={`font-semibold ${currentTheme.rewardsTitleText} mb-2 flex items-center`}>
+                                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 0v1m-2 0a2 2 0 00-2 2v8a2 2 0 002 2 2 2 0 002-2V8a2 2 0 00-2-2z"></path></svg>
+                                  {tier.rewards.title}
+                                </h4>
+                                <div class="text-sm space-y-1">
+                                  {tier.rewards.features.map(feature => (
+                                    <div class={`flex justify-between ${currentTheme.rewardsFeatureText}`}>
+                                      <span>{feature}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div class="mt-6">
+                            <a href={tier.affiliateLink || affiliateLink} target="_blank" rel="noopener noreferrer" class={`w-full inline-flex items-center justify-center px-6 py-3 font-medium rounded-xl transition-all transform hover:scale-105 ${currentTheme.buttonBg} ${currentTheme.buttonText}`}>
+                              申请 {tier.name}
+                              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </a>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                </section>
+                </div>
 
-                {/* <!-- Spending Limits for Tier --> */}
-                {tier.limits && Object.keys(tier.limits).length > 0 && (
-                  <section class="bg-white rounded-3xl shadow-xl p-8 mb-8">
-                    <h3 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h3>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {tier.limits.dailySpending && <div class="p-5 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100"><p class="text-sm text-gray-600 mb-1">每日消费</p><p class="text-2xl font-bold text-indigo-600">{tier.limits.dailySpending}</p></div>}
-                      {tier.limits.monthlySpending && <div class="p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-100"><p class="text-sm text-gray-600 mb-1">每月消费</p><p class="text-2xl font-bold text-purple-600">{tier.limits.monthlySpending}</p></div>}
-                      {tier.limits.singleTransaction && <div class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100"><p class="text-sm text-gray-600 mb-1">单笔交易</p><p class="text-2xl font-bold text-green-600">{tier.limits.singleTransaction}</p></div>}
-                      {tier.limits.dailyAtmWithdrawal && <div class="p-5 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl border border-yellow-100"><p class="text-sm text-gray-600 mb-1">每日ATM取款</p><p class="text-2xl font-bold text-yellow-600">{tier.limits.dailyAtmWithdrawal}</p></div>}
-                      {tier.limits.monthlyAtmWithdrawal && <div class="p-5 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl border border-orange-100"><p class="text-sm text-gray-600 mb-1">每月ATM取款</p><p class="text-2xl font-bold text-orange-600">{tier.limits.monthlyAtmWithdrawal}</p></div>}
-                      {tier.limits.lifetimeLimit && <div class="p-5 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl border border-teal-100"><p class="text-sm text-gray-600 mb-1">终身限额</p><p class="text-2xl font-bold text-teal-600">{tier.limits.lifetimeLimit}</p></div>}
+                {card.data.importantReminders && card.data.importantReminders.length > 0 && (
+                  <div class="mb-8 p-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border-2 border-amber-200">
+                    <div class="flex items-start space-x-4">
+                      <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                      </div>
+                      <div class="flex-1">
+                        <h3 class="text-xl font-bold text-amber-800 mb-2">重要费用提醒</h3>
+                        <ul class="space-y-2 text-amber-700">
+                          {card.data.importantReminders.map(reminder => (
+                            <li class="flex items-start">
+                              <span class="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                              <span set:html={reminder}></span>
+                            </li>
+                          ))}
+                        </ul>
+                        <p class="text-sm text-amber-600 mt-3 font-medium">*费用信息基于官方文档，具体以申请时为准</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {/* Fallback for non-tiered cards */}
+                <div class="space-y-8">
+                  {/* Fee Details Section */}
+                  <section class="bg-white rounded-3xl shadow-xl p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+                    <div class="space-y-6">
+                      <div class="grid md:grid-cols-2 gap-4">
+                        {isVirtual && (
+                          <div class="bg-blue-50 rounded-xl p-4 border border-blue-100"><p class="text-sm text-gray-600">虚拟卡费用</p><p class="text-xl font-bold text-gray-900">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</p></div>
+                        )}
+                        <div class="bg-purple-50 rounded-xl p-4 border border-purple-100"><p class="text-sm text-gray-600">实体卡费用</p><p class="text-xl font-bold text-gray-900">{!isPhysical ? 'N/A' : physicalCardPrice === 0 ? '免费' : `${physicalCardPrice}`}</p></div>
+                      </div>
+                      <div class="space-y-3">
+                        <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">充值费用</span><span class="font-medium">{depositFee || 'N/A'}</span></div>
+                        <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">交易手续费</span><span class="font-medium">{transactionFee || 'N/A'}</span></div>
+                        <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">ATM取现费</span><span class="font-medium">{atmFee || 'N/A'}</span></div>
+                      </div>
+                      {annualFee !== undefined && <div class="p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex justify-between items-center"><span class="text-gray-700">年费</span><span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span></div>}
                     </div>
                   </section>
-                )}
-              </div>
-            ))
-          ) : (
-            <>
-              {/* <!-- Fallback to old structure if no tiers are defined --> */}
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2></section>
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2></section>
-            </>
-          )}
+                  {/* Limits Section */}
+                  {limits && (
+                    <section class="bg-white rounded-3xl shadow-xl p-8">
+                      <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
+                      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {Object.entries(limits).map(([key, value]) => {
+                          const limitLabels = {
+                            dailySpending: '每日消费',
+                            monthlySpending: '每月消费',
+                            singleTransaction: '单笔交易',
+                            dailyAtmWithdrawal: '每日ATM取款',
+                            monthlyAtmWithdrawal: '每月ATM取款',
+                            lifetimeLimit: '终身限额',
+                          };
+                          return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null;
+                        })}
+                      </div>
+                    </section>
+                  )}
+                </div>
+              </>
+            )}
+          </section>
 
-          {/* <!-- Common Sections (Not tiered) --> */}
+          {/* Common Sections - moved outside the conditional to render for all cards */}
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>
             {supportedCurrencies && supportedCurrencies.length > 0 ? (
@@ -368,6 +495,7 @@ const structuredData = {
               </div>
             ) : <p>暂无数据</p>}
           </section>
+
 
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
@@ -388,7 +516,6 @@ const structuredData = {
             ) : <p>暂无数据</p>}
           </section>
 
-          <!-- 优缺点分析 -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2>
             <div class="grid md:grid-cols-2 gap-8">
