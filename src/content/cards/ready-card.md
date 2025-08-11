@@ -3,8 +3,6 @@ title: "Ready Card - 连接数字货币与现实生活的消费卡"
 name: "Ready Card"
 description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
 cardType: "mastercard"
-isVirtual: false
-isPhysical: true
 issuer: "Ready / Kulipa"
 supportedRegions:
   - "英国"
@@ -13,18 +11,12 @@ applicationDocuments: ["身份证件 (驾照/护照/身份证)"]
 supportedCurrencies:
   - "USDC"
 supportedPaymentMethods: []
-physicalCardPrice: 6.99 # Lite卡运费，Metal卡年费在下文描述
-depositFee: "0"
-transactionFee: "0"
-withdrawalFee: "超出免费额度后2%"
-atmFee: "Lite卡: $200/月免费, Metal卡: $800/月免费"
-annualFee: true # Metal卡收费
-limits:
-  singleTransaction: "$5,000"
-  dailySpending: "$10,000"
-  monthlySpending: "$30,000"
-rewards:
-  cashback: "Lite: 0.5%, Metal: 3% (首月10%)"
+rating: 4.6
+affiliateLink: "https://www.ready.co/"
+publishDate: "2025-08-10"
+updateDate: "2025-08-10"
+kycRequired: true
+
 pros:
   - "消费时直接将USDC兑换成美金，无需手动操作"
   - "高额返现，特别是Metal卡首月优惠"
@@ -41,18 +33,45 @@ features:
   - "全球Mastercard网络"
   - "STRK代币返现"
   - "跨链充值"
-relatedArticles: []
-affiliateLink: "https://www.ready.co/"
 tags:
   - "Ready"
   - "Argent"
   - "U卡"
   - "自托管"
   - "返现"
-publishDate: "2025-08-10"
-updateDate: "2025-08-10"
-rating: 4.6
-kycRequired: true
+
+tiers:
+  - name: "Ready Lite"
+    isVirtual: false
+    isPhysical: true
+    price: "$6.99 运费"
+    depositFee: "0"
+    transactionFee: "0"
+    withdrawalFee: "超出免费额度后2%"
+    atmFee: "$200/月免费"
+    annualFee: "无"
+    limits:
+      singleTransaction: "$5,000"
+      dailySpending: "$10,000"
+      monthlySpending: "$30,000"
+    rewards:
+      cashback: "0.5%"
+  - name: "Ready Metal"
+    isVirtual: false
+    isPhysical: true
+    price: "120 USDC"
+    depositFee: "0"
+    transactionFee: "0"
+    withdrawalFee: "超出免费额度后2%"
+    atmFee: "$800/月免费"
+    annualFee: "120 USDC"
+    limits:
+      singleTransaction: "$5,000"
+      dailySpending: "$10,000"
+      monthlySpending: "$30,000"
+    rewards:
+      cashback: "首月10% (上限$1500消费), 之后3%"
+
 ---
 
 ## Ready Card 简介
@@ -63,19 +82,12 @@ Ready Card 是其推出的可以将数字货币和现实生活连接起来的消
 
 ## Ready 实体卡
 
-这张 Mastercard 借记卡，也被称为“人人卡”（因其Logo形似“人”字），分为两种类型：
+这张 Mastercard 借记卡，也被称为“人人卡”（因其Logo形似“人”字），分为两种类型，它们共享相同的消费限额，但在费用和返现上有所不同。
 
-### Ready Metal 卡 (高阶16g金属卡)
-- **年度费用**：前一年需一次性支付 120 USDC（未来计划引入月付选项）。
-- **返现**：首月消费$1500内享10%返现，之后为3%，每月最高返现$150。
-- **ATM 提现**：每月免费额度为 $800，超出部分收取 2% 费用。
-
-### Ready Lite 卡 (基础塑料卡)
-- **卡片费用**：卡本身免费，但需支付一次性 **$6.99** 的快递费。
-- **返现**：每笔交易可获得0.5%返现，每月最高返现$150。
-- **ATM 提现**：每月免费额度为 $200，超出部分收取 2% 费用。
-
-两张卡的消费限额相同：单笔最高 $5,000；日消费上限 $10,000；月消费上限 $30,000。
+* **通用消费限额**:
+  * 单笔最高: $5,000
+  * 日消费: $10,000
+  * 月消费: $30,000
 
 ## 注册流程
 

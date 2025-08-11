@@ -291,193 +291,141 @@ const structuredData = {
             </div>
           </section>
 
-          <!-- 费用详情模块 -->
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-            
-            <!-- 卡片费用 -->
-            <div class="mb-8">
-              <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                </svg>
-                卡片费用
-              </h3>
-              <div class="grid md:grid-cols-2 gap-4">
-                {isVirtual && (
-                  <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
-                    <div class="flex justify-between items-start">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">虚拟卡费用</p>
-                        <p class="text-2xl font-bold text-gray-900">
-                          {virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}
-                        </p>
-                      </div>
-                      <div class="p-2 bg-white rounded-lg">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
-                  <div class="flex justify-between items-start">
-                    <div>
-                      <p class="text-sm text-gray-600 mb-1">实体卡费用</p>
-                      <p class="text-2xl font-bold text-gray-900">
-                        {!isPhysical 
-                          ? '暂未提供实体卡' 
-                          : physicalCardPrice === 0 || physicalCardPrice === null || physicalCardPrice === undefined
-                          ? '免费' 
-                          : `${physicalCardPrice}`
-                        }
-                      </p>
-                      {isPhysical && atmFee && (
-                        <p class="text-xs text-gray-500 mt-2">
-                          ATM取现: {atmFee}
-                        </p>
-                      )}
-                    </div>
-                    <div class="p-2 bg-white rounded-lg">
-                      <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <!-- Tiered Fee & Limits Details -->
+          {card.data.tiers && card.data.tiers.length > 0 ? (
+            card.data.tiers.map(tier => (
+              <section class="bg-white rounded-3xl shadow-xl p-8 border-l-4 border-indigo-500 mb-8">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">{tier.name}</h3>
 
-            <!-- 交易费用 -->
-            <div class="mb-8">
-              <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                交易费用
-              </h3>
-              <div class="space-y-3">
-                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <span class="text-gray-700 font-medium">充值费用</span>
-                  <span class="font-bold text-gray-900">{depositFee || '免费'}</span>
+                <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                  <div>
+                    <h4 class="text-lg font-semibold text-gray-700 mb-3">卡片费用</h4>
+                    <ul class="space-y-2 text-sm">
+                      <li class="flex justify-between"><span>开卡费:</span> <span class="font-medium">{tier.price}</span></li>
+                      <li class="flex justify-between"><span>年费:</span> <span class="font-medium">{tier.annualFee}</span></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-semibold text-gray-700 mb-3">交易费用</h4>
+                    <ul class="space-y-2 text-sm">
+                      <li class="flex justify-between"><span>充值费:</span> <span class="font-medium">{tier.depositFee}</span></li>
+                      <li class="flex justify-between"><span>交易费:</span> <span class="font-medium">{tier.transactionFee}</span></li>
+                      <li class="flex justify-between"><span>ATM提现费:</span> <span class="font-medium">{tier.atmFee}</span></li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-semibold text-gray-700 mb-3">消费限额</h4>
+                    <ul class="space-y-2 text-sm">
+                      <li class="flex justify-between"><span>单笔交易:</span> <span class="font-medium">{tier.limits?.singleTransaction || 'N/A'}</span></li>
+                      <li class="flex justify-between"><span>每日消费:</span> <span class="font-medium">{tier.limits?.dailySpending || 'N/A'}</span></li>
+                      <li class="flex justify-between"><span>每月消费:</span> <span class="font-medium">{tier.limits?.monthlySpending || 'N/A'}</span></li>
+                    </ul>
+                  </div>
+                   <div>
+                    <h4 class="text-lg font-semibold text-gray-700 mb-3">奖励</h4>
+                    <ul class="space-y-2 text-sm">
+                      <li class="flex justify-between"><span>返现:</span> <span class="font-medium text-green-600">{tier.rewards?.cashback || 'N/A'}</span></li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <span class="text-gray-700 font-medium">交易手续费</span>
-                  <span class="font-bold text-gray-900">{transactionFee || '0.9%'}</span>
+              </section>
+            ))
+          ) : (
+            <>
+              {/* Legacy Fee Details Module */}
+              <section class="bg-white rounded-3xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+                <div class="mb-8">
+                  <h3 class="text-xl font-semibold text-gray-800 mb-4">卡片费用</h3>
+                   <div class="grid md:grid-cols-2 gap-4">
+                    {isVirtual && (
+                      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 border border-blue-100">
+                        <div class="flex justify-between items-start">
+                          <div>
+                            <p class="text-sm text-gray-600 mb-1">虚拟卡费用</p>
+                            <p class="text-2xl font-bold text-gray-900">
+                              {virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}
+                            </p>
+                          </div>
+                          <div class="p-2 bg-white rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {isPhysical && (
+                       <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-5 border border-purple-100">
+                        <div class="flex justify-between items-start">
+                          <div>
+                            <p class="text-sm text-gray-600 mb-1">实体卡费用</p>
+                            <p class="text-2xl font-bold text-gray-900">
+                              {physicalCardPrice === 0 || physicalCardPrice === null ? '免费' : `${physicalCardPrice}`}
+                            </p>
+                            {atmFee && (
+                              <p class="text-xs text-gray-500 mt-2">
+                                ATM取现: {atmFee}
+                              </p>
+                            )}
+                          </div>
+                          <div class="p-2 bg-white rounded-lg">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <span class="text-gray-700 font-medium">提现费用</span>
-                  <span class="font-bold text-gray-900">{withdrawalFee || '€0.90/次'}</span>
+                <div class="mb-8">
+                  <h3 class="text-xl font-semibold text-gray-800 mb-4">交易费用</h3>
+                  <div class="space-y-3">
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                      <span class="text-gray-700">充值费用</span>
+                      <span class="font-bold text-gray-900">{depositFee || '免费'}</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                      <span class="text-gray-700">交易手续费</span>
+                      <span class="font-bold text-gray-900">{transactionFee || '0.9%'}</span>
+                    </div>
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded-xl">
+                      <span class="text-gray-700">提现费用</span>
+                      <span class="font-bold text-gray-900">{withdrawalFee || '€0.90/次'}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+                {annualFee !== undefined && (
+                  <div class="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-gray-700">年费</span>
+                      </div>
+                      <span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>
+                        {annualFee ? '收费' : '免费'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </section>
 
-            <!-- 年费信息 -->
-            {annualFee !== undefined && (
-              <div class="mt-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border border-yellow-200">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="text-gray-700 font-medium">年费</span>
+              {/* Legacy Spending Limits Module */}
+              {limits && (
+                <section class="bg-white rounded-3xl shadow-xl p-8">
+                  <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
+                  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {limits.dailySpending && <div>...</div>}
+                    {limits.monthlySpending && <div>...</div>}
+                    {limits.singleTransaction && <div>...</div>}
+                    {limits.monthlyAtmWithdrawal && <div>...</div>}
+                    {limits.dailyAtmWithdrawal && <div>...</div>}
+                    {limits.atmWithdrawalLimit && <div>...</div>}
                   </div>
-                  <span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>
-                    {annualFee ? '收费' : '免费'}
-                  </span>
-                </div>
-              </div>
-            )}
-          </section>
-
-          <!-- 消费限额模块 -->
-          {limits && (
-            <section class="bg-white rounded-3xl shadow-xl p-8">
-              <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
-              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {limits.dailySpending && (
-                  <div class="p-5 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl border border-indigo-100">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">每日消费限额</p>
-                        <p class="text-2xl font-bold text-indigo-600">{limits.dailySpending}</p>
-                      </div>
-                      <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                {limits.monthlySpending && (
-                  <div class="p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">每月消费限额</p>
-                        <p class="text-2xl font-bold text-purple-600">{limits.monthlySpending}</p>
-                      </div>
-                      <svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                {(limits.singleTransaction || limits.perTransactionLimit || limits.transactionLimit || limits.singleTransactionLimit) && (
-                  <div class="p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">单笔交易限额</p>
-                        <p class="text-2xl font-bold text-green-600">
-                          {limits.singleTransaction || limits.perTransactionLimit || limits.transactionLimit || limits.singleTransactionLimit}
-                        </p>
-                      </div>
-                      <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                {limits.monthlyAtmWithdrawal && (
-                  <div class="p-5 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl border border-orange-100">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">ATM每月取现</p>
-                        <p class="text-2xl font-bold text-orange-600">{limits.monthlyAtmWithdrawal}</p>
-                      </div>
-                      <svg class="w-8 h-8 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                {limits.dailyAtmWithdrawal && (
-                  <div class="p-5 bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl border border-yellow-100">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">ATM每日取现</p>
-                        <p class="text-2xl font-bold text-yellow-600">{limits.dailyAtmWithdrawal}</p>
-                      </div>
-                      <svg class="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                )}
-                {limits.atmWithdrawalLimit && (
-                  <div class="p-5 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl border border-teal-100">
-                    <div class="flex items-start justify-between">
-                      <div>
-                        <p class="text-sm text-gray-600 mb-1">ATM取现总限额</p>
-                        <p class="text-2xl font-bold text-teal-600">{limits.atmWithdrawalLimit}</p>
-                      </div>
-                      <svg class="w-8 h-8 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </section>
+                </section>
+              )}
+            </>
           )}
 
           <!-- 支持的加密货币模块 - 增强版 -->
@@ -540,35 +488,35 @@ const structuredData = {
               </div>
               支持的支付方式
             </h2>
-
+            
             {supportedPaymentMethods && Array.isArray(supportedPaymentMethods) && supportedPaymentMethods.length > 0 ? (
               <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {supportedPaymentMethods.map((method) => {
                   const info = getPaymentMethodInfo(method);
-
+                  
                   return (
                     <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden`}>
                       <!-- 装饰性背景元素 -->
                       <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent rounded-full transform translate-x-8 -translate-y-8"></div>
-
+                      
                       <!-- 图标容器 -->
                       <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 group-hover:rotate-1 transition-all duration-300 text-xl`}>
                         <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
                         <!-- 图标反光效果 -->
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
-
+                      
                       <!-- 支付方式名称 -->
                       <span class={`font-bold ${info.textColor} text-center text-base mb-2`}>
                         {info.name}
                       </span>
-
+                      
                       <!-- 支持状态 -->
                       <div class="flex items-center space-x-2">
                         <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
                         <span class="text-sm text-gray-600 font-medium">已支持</span>
                       </div>
-
+                      
                       <!-- 悬停箭头指示 -->
                       <div class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -618,7 +566,7 @@ const structuredData = {
                       <span class="text-xs text-gray-500">支持</span>
                     </div>
                   </div>
-
+                  
                   <!-- WeChat Pay -->
                   <div class="flex flex-col items-center p-4 bg-green-50 rounded-2xl border-2 border-green-200 hover:scale-105 transition-all duration-300">
                     <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-3 shadow-lg text-lg">
