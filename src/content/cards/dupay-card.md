@@ -33,6 +33,7 @@ virtualCardPrice: 0  # 虚拟卡免费
 physicalCardPrice: 79.00
 depositFee: "免费"
 transactionFee: "1.5%"
+foreignExchangeFee: "1.5%"
 withdrawalFee: "€1.50/次"
 atmFee: null  # 虚拟卡无ATM功能
 annualFee: false  # 无年费
@@ -42,7 +43,6 @@ limits:
   dailySpending: "$3,000"
   monthlySpending: "$15,000"
   singleTransaction: "$2,000"  # 单笔交易限额
-  monthlyAtmWithdrawal: null  # 虚拟卡无ATM功能
 
 # 优点
 pros:

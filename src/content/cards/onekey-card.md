@@ -17,7 +17,6 @@ supportedPaymentMethods:
   - "Google Pay"
   - "Alipay"
   - "WeChat Pay"
-rating: 4.7
 affiliateLink: "https://onekey.so/card"
 publishDate: "2024-03-10"
 updateDate: "2025-08-11"
@@ -51,18 +50,18 @@ tiers:
     price: "$10"
     priceUnit: "开卡费"
     fees:
-      "充值费": "1%"
-      "交易费": "1.5%"
-      "年费": "免费"
+      deposit: "1%"
+      transaction: "1.5%"
+      foreignExchange: "1.5%"
+      annual: "免费"
     rewards:
       title: "返现奖励"
       features:
         - "消费返还KEY代币"
     limits:
-      "每日消费": "$5,000"
-      "每月消费": "$50,000"
-      "每日ATM提现": "$500"
-      "每月ATM提现": "$5,000"
+      dailySpending: "$5,000"
+      monthlySpending: "$50,000"
+      monthlyAtmWithdrawal: "$5,000"
 ---
 
 ## OneKey Card 评测
