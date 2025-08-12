@@ -18,8 +18,8 @@ virtualCardPrice: 0
 physicalCardPrice: null
 depositFee: "免费"
 transactionFee: "免费"
-withdrawalFee: "不适用"
-atmFee: "私测中"
+foreignExchangeFee: "免费"
+withdrawalFee: "不适用 (ATM功能私测中)"
 annualFee: false
 rewards:
   cashback: "转$10送$10 (活动详情请以官方为准)"
@@ -50,7 +50,6 @@ tags:
   - "无密码"
 publishDate: "2025-08-09"
 updateDate: "2025-08-09"
-rating: 4.5
 kycRequired: true
 ---
 

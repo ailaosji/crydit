@@ -25,18 +25,29 @@ const articlesCollection = defineCollection({
 });
 
 // U卡评测集合配置
-
 const cardTierSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  theme: z.enum(['dark', 'light', 'green', 'blue', 'yellow', 'gray']).default('light'),
+  theme: z.enum(['dark', 'light', 'green', 'blue', 'yellow', 'gray']),
   isVirtual: z.boolean().optional(),
   isPhysical: z.boolean().optional(),
   cardMaterial: z.string().optional(),
   price: z.string(),
   priceUnit: z.string(),
-  fees: z.record(z.string()).optional(),
-  limits: z.record(z.string()).optional(),
+  fees: z.object({
+    deposit: z.string().optional(),
+    transaction: z.string().optional(),
+    foreignExchange: z.string().optional(),
+    withdrawal: z.string().optional(),
+    exchangeRate: z.string().optional(),    // 兑换汇率（新增）
+    annual: z.string().optional(),
+  }).catchall(z.string()).optional(),
+  limits: z.object({
+    singleTransaction: z.string().optional(),
+    dailySpending: z.string().optional(),
+    monthlySpending: z.string().optional(),
+    monthlyAtmWithdrawal: z.string().optional(),
+  }).catchall(z.string()).optional(),
   rewards: z.object({
     title: z.string(),
     features: z.array(z.string()),
@@ -46,78 +57,90 @@ const cardTierSchema = z.object({
 
 const cardsCollection = defineCollection({
   type: 'content',
-  schema: z.object({
+  schema: ({ image }) => z.object({
+    // Core Identity
     name: z.string(),
     title: z.string(),
     description: z.string(),
     shortDescription: z.string().optional(),
+
+    // Card Type
     cardType: z.enum(['visa', 'mastercard']),
-    supportedCurrencies: z.array(z.string()),
-    supportedPaymentMethods: z.array(z.string()).optional(),
-    rating: z.number().min(1).max(5).optional(),
-    affiliateLink: z.string().optional(),
-    invitationCode: z.string().optional(),
-    publishDate: z.coerce.date().optional(),
-    updateDate: z.coerce.date().optional(),
-    featured: z.boolean().default(false),
-    pros: z.array(z.string()),
-    cons: z.array(z.string()),
-    image: z.string().optional(),
-    gallery: z.array(z.string()).optional(),
-
-    // 详细信息
     issuer: z.string(),
-    supportedRegions: z.array(z.string()),
-    applicationDocuments: z.array(z.string()).optional(),
-    kycRequired: z.boolean().default(true),
-    minimumAge: z.number().default(18),
-    importantReminders: z.array(z.string()).optional(), // New field for shared reminders
 
-    // 特色功能
-    features: z.array(z.string()).optional(),
-
-    // SEO和关联
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
-
-    // 状态控制
-    status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
-    lastReviewed: z.coerce.date().optional(),
-
-    // Tiers - New structure for multiple card levels
-    tiers: z.array(cardTierSchema).optional(),
-
-    // Legacy fields for backward compatibility
+    // Card Form (for single-tier cards)
     isVirtual: z.boolean().optional(),
     isPhysical: z.boolean().optional(),
+
+    // Region and Currency Support
+    supportedRegions: z.array(z.string()),
+    supportedCurrencies: z.array(z.string()),
+    supportedPaymentMethods: z.array(z.string()).optional(),
+    applicationDocuments: z.array(z.string()).optional(),
+
+    // Fees (for single-tier cards)
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
     transactionFee: z.string().optional(),
-    withdrawalFee: z.string().optional(),
-    atmFee: z.string().nullable().optional(),
+    foreignExchangeFee: z.string().optional(),
+    withdrawalFee: z.string().optional(), // Combined withdrawal and ATM fee
+    exchangeRate: z.string().optional(),       // 兑换汇率（新增）
     annualFee: z.boolean().optional(),
+
+    // Limits (for single-tier cards)
     limits: z.object({
+      singleTransaction: z.string().optional(),
       dailySpending: z.string().optional(),
       monthlySpending: z.string().optional(),
-      atmWithdrawal: z.string().optional(),
-      monthlyAtmWithdrawal: z.string().nullable().optional(),
-      singleTransaction: z.string().optional(),
-      perTransactionLimit: z.string().optional(),
-      transactionLimit: z.string().optional(),
-      singleTransactionLimit: z.string().optional(),
-      dailyAtmWithdrawal: z.string().optional(),
-      atmWithdrawalLimit: z.string().optional(),
+      monthlyAtmWithdrawal: z.string().optional(),
     }).optional(),
+
+    // Rewards (for single-tier cards)
     rewards: z.object({
       cashback: z.string().nullable().optional(),
       loyaltyProgram: z.string().optional(),
       points: z.union([z.boolean(), z.string()]).optional(),
     }).optional(),
+
+    // Ratings and Features
+    pros: z.array(z.string()),
+    cons: z.array(z.string()),
+    features: z.array(z.string()).optional(),
+    featured: z.boolean().default(false),
+
+    // Tiers (for multi-level cards)
+    tiers: z.array(cardTierSchema).optional(),
+    importantReminders: z.array(z.string()).optional(),
+
+    // Other Information
+    kycRequired: z.boolean().default(true),
+    minimumAge: z.number().default(18),
+
+    // Links
+    affiliateLink: z.string().url().optional(),
+    invitationCode: z.string().optional(),
+    relatedCards: z.array(z.string()).optional(),
+    relatedArticles: z.array(z.string()).optional(),
+
+    // Status and Dates
+    status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
+    publishDate: z.coerce.date().optional(),
+    updateDate: z.coerce.date().optional(),
+    lastReviewed: z.coerce.date().optional(),
+
+    // SEO
+    seo: z.object({
+      keywords: z.array(z.string()).optional(),
+      canonicalUrl: z.string().url().optional(),
+    }).optional(),
+
+    // Media
+    image: image().optional(),
+    gallery: z.array(image()).optional(),
+
+    // Taxonomy
+    tags: z.array(z.string()).optional(),
   }),
 });
 

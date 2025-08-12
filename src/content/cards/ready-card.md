@@ -11,7 +11,6 @@ applicationDocuments: ["身份证件 (驾照/护照/身份证)"]
 supportedCurrencies:
   - "USDC"
 supportedPaymentMethods: ["Apple Pay", "Google Pay"]
-rating: 4.6
 affiliateLink: "https://www.ready.co/"
 publishDate: "2025-08-10"
 updateDate: "2025-08-10"
@@ -53,15 +52,19 @@ tiers:
     price: "$120"
     priceUnit: "年费"
     fees:
-      "充值费": "免费"
-      "外汇费": "免费"
-      "年费": "$120"
+      deposit: "免费"
+      foreignExchange: "免费"
+      annual: "$120"
       "快递费": "免费"
     rewards:
       title: "奖励福利"
       features:
         - "首月返现: 10% (最高$150/月)"
         - "完全自托管"
+    limits:
+      singleTransaction: "$5,000"
+      dailySpending: "$10,000"
+      monthlySpending: "$30,000"
   - name: "Plastic"
     theme: "green"
     isPhysical: true
@@ -69,14 +72,18 @@ tiers:
     price: "免费"
     priceUnit: "年费"
     fees:
-      "充值费": "免费"
-      "外汇费": "免费"
-      "年费": "免费"
+      deposit: "免费"
+      foreignExchange: "免费"
+      annual: "免费"
       "快递费": "$6.99"
     rewards:
       title: "基础功能"
       features:
         - "标准预付卡功能，支持全球消费"
+    limits:
+      singleTransaction: "$5,000"
+      dailySpending: "$10,000"
+      monthlySpending: "$30,000"
 ---
 
 ## Ready Card 简介
