@@ -39,6 +39,7 @@ const cardTierSchema = z.object({
     transaction: z.string().optional(),
     foreignExchange: z.string().optional(),
     withdrawal: z.string().optional(),
+    exchangeRate: z.string().optional(),    // 兑换汇率（新增）
     annual: z.string().optional(),
   }).catchall(z.string()).optional(),
   limits: z.object({
@@ -84,6 +85,7 @@ const cardsCollection = defineCollection({
     transactionFee: z.string().optional(),
     foreignExchangeFee: z.string().optional(),
     withdrawalFee: z.string().optional(), // Combined withdrawal and ATM fee
+    exchangeRate: z.string().optional(),       // 兑换汇率（新增）
     annualFee: z.boolean().optional(),
 
     // Limits (for single-tier cards)
