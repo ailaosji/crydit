@@ -161,7 +161,6 @@ const relatedArticles = allArticles
 const { Content } = await card.render();
 
 import { getCurrencyInfo } from '../../config/site-data';
-
 // 更新支付方式信息函数，直接在模板中处理Google Pay图标
 function getPaymentMethodIcon(method) {
   const method_lower = method.toLowerCase().replace(/\s+/g, '');
@@ -508,6 +507,7 @@ const structuredData = {
                   <p>暂无数据</p>
                 )}
               </section>
+
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
               {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>
@@ -516,6 +516,7 @@ const structuredData = {
               {/* Single-tier card rendering */}
               <section class="bg-white rounded-3xl shadow-xl p-8">
                 <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
                     <thead class="bg-gray-50">
@@ -597,6 +598,7 @@ const structuredData = {
                   <p>暂无数据</p>
                 )}
               </section>
+
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
               {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>
