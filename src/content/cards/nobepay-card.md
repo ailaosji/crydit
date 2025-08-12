@@ -16,6 +16,7 @@ virtualCardPrice: 1
 physicalCardPrice: null
 depositFee: "3%"
 transactionFee: "2%"
+foreignExchangeFee: "2%"
 withdrawalFee: "1%"
 atmFee: null
 annualFee: true
@@ -46,7 +47,6 @@ tags:
   - "海淘"
 publishDate: "2024-02-25"
 updateDate: "2024-02-25"
-rating: 4.3
 kycRequired: false
 ---
 

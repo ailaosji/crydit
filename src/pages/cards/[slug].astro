@@ -33,32 +33,67 @@ if (!card) {
 }
 
 const { 
-  title, 
-  name, 
-  description, 
-  cardType, 
-  isVirtual, 
-  isPhysical, 
-  pros, 
-  cons, 
-  features, 
-  limits, 
-  rewards, 
-  issuer, 
-  supportedRegions,
-  applicationDocuments,
-  supportedCurrencies, 
-  supportedPaymentMethods,
-  virtualCardPrice, 
-  physicalCardPrice, 
-  depositFee, 
-  transactionFee, 
-  withdrawalFee, 
-  atmFee, 
-  annualFee, 
-  affiliateLink,
-  invitationCode
+  title, name, description, cardType, isVirtual, isPhysical,
+  pros, cons, features, limits, rewards, issuer, supportedRegions,
+  applicationDocuments, supportedCurrencies, supportedPaymentMethods,
+  virtualCardPrice, physicalCardPrice, depositFee, transactionFee,
+  foreignExchangeFee, withdrawalFee, annualFee, affiliateLink,
+  invitationCode, tiers, importantReminders
 } = card.data;
+
+// 判断是否为多层级卡片
+const hasTiers = tiers && tiers.length > 0;
+
+// 获取费用信息的辅助函数
+const getFeeInfo = () => {
+  if (hasTiers) {
+    // 多层级卡片：从tiers中提取费用范围
+    return {
+      depositFeeRange: extractFeeRange(tiers, 'deposit'),
+      foreignExchangeFeeRange: extractFeeRange(tiers, 'foreignExchange'),
+      withdrawalFeeRange: extractFeeRange(tiers, 'withdrawal'),
+    };
+  } else {
+    // 单层级卡片：直接使用顶层费用
+    return {
+      depositFee: depositFee,
+      foreignExchangeFee: foreignExchangeFee,
+      withdrawalFee: withdrawalFee,
+    };
+  }
+};
+
+function extractFeeRange(tiers, feeKey) {
+  if (!tiers || tiers.length === 0) return 'N/A';
+
+  const fees = tiers.map(tier => tier.fees ? tier.fees[feeKey] : undefined)
+                     .filter(fee => fee !== undefined && fee !== null);
+
+  if (fees.length === 0) return 'N/A';
+
+  const numericFees = fees.map(fee => {
+    if (typeof fee === 'string') {
+      const cleaned = fee.replace(/[^0-9.]/g, '');
+      return cleaned ? parseFloat(cleaned) : NaN;
+    }
+    return NaN;
+  }).filter(n => !isNaN(n));
+
+  if (numericFees.length === 0) {
+    const uniqueFees = [...new Set(fees)];
+    return uniqueFees.join(' / ');
+  }
+
+  const minFee = Math.min(...numericFees);
+  const maxFee = Math.max(...numericFees);
+
+  const feeSuffix = fees[0].includes('%') ? '%' : '';
+
+  if (minFee === maxFee) {
+    return `${minFee}${feeSuffix}`;
+  }
+  return `${minFee}${feeSuffix} - ${maxFee}${feeSuffix}`;
+}
 
 // 获取相关U卡（系统推荐算法）
 const allCards = await getCollection('cards');
@@ -125,7 +160,98 @@ const relatedArticles = allArticles
 // 渲染Markdown内容
 const { Content } = await card.render();
 
-import { getCurrencyInfo, getPaymentMethodInfo } from '../../config/site-data';
+import { getCurrencyInfo } from '../../config/site-data';
+
+// 更新支付方式信息函数，直接在模板中处理Google Pay图标
+function getPaymentMethodIcon(method) {
+  const method_lower = method.toLowerCase().replace(/\s+/g, '');
+
+  switch(method_lower) {
+    case 'applepay':
+      return `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.05 20.28c-.98.95-2.05.88-3.08.35-1.09-.54-2.08-.52-3.25 0-1.43.65-2.18.53-3.04-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+      </svg>`;
+
+    case 'googlepay':
+      return `<svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 105 42">
+        <path fill="#3C4043" d="M49.029 20.84v12.1h-3.83V3.06h10.153c2.573 0 4.767.86 6.563 2.58 1.835 1.72 2.752 3.82 2.752 6.3 0 2.54-.917 4.64-2.752 6.34-1.776 1.7-3.97 2.54-6.563 2.54H49.03v.02Zm0-14.1v10.42h6.403c1.516 0 2.792-.52 3.79-1.54 1.017-1.02 1.536-2.26 1.536-3.66 0-1.38-.519-2.6-1.536-3.62-.998-1.06-2.254-1.58-3.79-1.58h-6.403v-.02ZM74.68 11.82c2.833 0 5.067.76 6.703 2.28 1.636 1.52 2.454 3.6 2.454 6.24v12.6h-3.65V30.1h-.16c-1.576 2.34-3.69 3.5-6.323 3.5-2.254 0-4.13-.66-5.645-2-1.516-1.34-2.274-3-2.274-5 0-2.12.797-3.8 2.393-5.04 1.596-1.26 3.73-1.88 6.383-1.88 2.274 0 4.15.42 5.605 1.26v-.88c0-1.34-.518-2.46-1.575-3.4-1.058-.94-2.294-1.4-3.71-1.4-2.135 0-3.83.9-5.067 2.72l-3.371-2.12c1.855-2.7 4.608-4.04 8.238-4.04Zm-4.946 14.84c0 1 .419 1.84 1.277 2.5.838.66 1.835 1 2.972 1 1.615 0 3.052-.6 4.308-1.8 1.257-1.2 1.895-2.6 1.895-4.22-1.197-.94-2.852-1.42-4.986-1.42-1.556 0-2.853.38-3.89 1.12-1.057.78-1.576 1.72-1.576 2.82ZM104.661 12.48 91.895 41.92h-3.95l4.748-10.3-8.418-19.14h4.169l6.064 14.68h.08l5.904-14.68h4.169Z"/>
+        <path fill="#4285F4" d="M33.796 18.4c0-1.251-.111-2.45-.319-3.601H17.424v6.6l9.245.002a7.942 7.942 0 0 1-3.43 5.316v4.282h5.503c3.213-2.982 5.054-7.39 5.054-12.598Z"/>
+        <path fill="#34A853" d="M23.24 26.717c-1.531 1.036-3.504 1.642-5.812 1.642-4.458 0-8.24-3.012-9.594-7.072H2.157v4.416C4.969 31.3 10.75 35.14 17.428 35.14c4.616 0 8.493-1.522 11.316-4.142l-5.503-4.28Z"/>
+        <path fill="#FABB05" d="M7.299 18.01c0-1.14.19-2.242.534-3.278v-4.416H2.157A17.081 17.081 0 0 0 .339 18.01c0 2.768.657 5.38 1.818 7.694l5.676-4.416A10.356 10.356 0 0 1 7.3 18.01Z"/>
+        <path fill="#E94235" d="M17.428 7.66c2.52 0 4.775.87 6.556 2.57l4.877-4.885C25.9 2.579 22.038.88 17.428.88c-6.676 0-12.459 3.84-15.271 9.436l5.677 4.416c1.354-4.06 5.136-7.072 9.594-7.072Z"/>
+      </svg>`;
+
+    case 'alipay':
+      return `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M5.5 2C4.119 2 3 3.119 3 4.5v15C3 20.881 4.119 22 5.5 22h13c1.381 0 2.5-1.119 2.5-2.5v-15C21 3.119 19.881 2 18.5 2h-13zm.5 4.5h12v2H6v-2zm0 4h12v2H6v-2zm0 4h12v2H6v-2z"/>
+      </svg>`;
+
+    case 'wechatpay':
+      return `<svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.162 4.203 2.97 5.498-.6 1.48-1.897 2.833-1.897 2.833s2.906-.143 4.974-1.719c.623.067 1.256.101 1.903.101 4.8 0 8.691-3.288 8.691-7.342C16.641 5.446 13.491 2.188 8.691 2.188z"/>
+      </svg>`;
+
+    default:
+      return `<div class="w-8 h-8 bg-gray-300 rounded"></div>`;
+  }
+}
+
+function getPaymentMethodInfo(method) {
+  const method_lower = method.toLowerCase().replace(/\s+/g, '');
+
+  switch(method_lower) {
+    case 'applepay':
+      return {
+        name: 'Apple Pay',
+        bgGradient: 'from-gray-800 to-black',
+        bgLight: 'bg-gray-50',
+        borderColor: 'border-gray-200',
+        textColor: 'text-gray-800',
+        icon: getPaymentMethodIcon('applepay')
+      };
+
+    case 'googlepay':
+      return {
+        name: 'Google Pay',
+        bgGradient: 'from-blue-500 via-green-500 to-yellow-500',
+        bgLight: 'bg-blue-50',
+        borderColor: 'border-blue-200',
+        textColor: 'text-blue-700',
+        icon: getPaymentMethodIcon('googlepay')
+      };
+
+    case 'alipay':
+      return {
+        name: 'Alipay',
+        bgGradient: 'from-blue-500 to-cyan-500',
+        bgLight: 'bg-blue-50',
+        borderColor: 'border-blue-200',
+        textColor: 'text-blue-700',
+        icon: getPaymentMethodIcon('alipay')
+      };
+
+    case 'wechatpay':
+    case 'wechat pay':
+      return {
+        name: 'WeChat Pay',
+        bgGradient: 'from-green-500 to-green-600',
+        bgLight: 'bg-green-50',
+        borderColor: 'border-green-200',
+        textColor: 'text-green-700',
+        icon: getPaymentMethodIcon('wechatpay')
+      };
+
+    default:
+      return {
+        name: method,
+        bgGradient: 'from-gray-400 to-gray-500',
+        bgLight: 'bg-gray-50',
+        borderColor: 'border-gray-200',
+        textColor: 'text-gray-700',
+        icon: getPaymentMethodIcon('default')
+      };
+  }
+}
 
 // 生成结构化数据
 const structuredData = {
@@ -290,7 +416,7 @@ const structuredData = {
             </div>
           </section>
           
-          {card.data.tiers && card.data.tiers.length > 0 ? (
+          {hasTiers ? (
             <div class="space-y-8">
               {/* Tier-specific rendering */}
               <section class="bg-white rounded-3xl shadow-xl p-8">
@@ -298,15 +424,19 @@ const structuredData = {
                   <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center mr-3">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
                   </div>
-                  费用详情
+                  费用与等级详情
                 </h2>
                 <div class="mb-8">
                     <h3 class="text-2xl font-semibold text-gray-800 mb-6">{name} 等级对比</h3>
                     <div class="grid gap-6 lg:grid-cols-2">
-                      {card.data.tiers.map(tier => {
+                      {tiers.map(tier => {
                         const themeClasses = {
                           dark: { border: 'border-gray-800', bg: 'bg-gradient-to-br from-gray-900 to-black', badgeBg: 'bg-gray-800', badgeText: 'text-white', priceText: 'text-yellow-400', feeTitleText: 'text-gray-200', feeLabelText: 'text-gray-400', feeValueText: 'text-green-400', feeHighlightText: 'text-yellow-400', rewardsBg: 'bg-gradient-to-r from-yellow-900/50 to-yellow-800/50', rewardsBorder: 'border-yellow-600', rewardsTitleText: 'text-yellow-300', rewardsFeatureText: 'text-yellow-200', buttonBg: 'bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800', buttonText: 'text-white' },
-                          green: { border: 'border-green-200', bg: 'bg-gradient-to-br from-green-50 to-emerald-50', badgeBg: 'bg-green-500', badgeText: 'text-white', priceText: 'text-green-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700', buttonText: 'text-white' }
+                          green: { border: 'border-green-200', bg: 'bg-gradient-to-br from-green-50 to-emerald-50', badgeBg: 'bg-green-500', badgeText: 'text-white', priceText: 'text-green-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700', buttonText: 'text-white' },
+                          blue: { border: 'border-blue-200', bg: 'bg-gradient-to-br from-blue-50 to-sky-50', badgeBg: 'bg-blue-500', badgeText: 'text-white', priceText: 'text-blue-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700', buttonText: 'text-white' },
+                          yellow: { border: 'border-yellow-200', bg: 'bg-gradient-to-br from-yellow-50 to-amber-50', badgeBg: 'bg-yellow-500', badgeText: 'text-white', priceText: 'text-yellow-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700', buttonText: 'text-white' },
+                          gray: { border: 'border-gray-200', bg: 'bg-gradient-to-br from-gray-50 to-slate-50', badgeBg: 'bg-gray-500', badgeText: 'text-white', priceText: 'text-gray-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700', buttonText: 'text-white' },
+                          light: { border: 'border-gray-200', bg: 'bg-gradient-to-br from-gray-50 to-slate-50', badgeBg: 'bg-gray-500', badgeText: 'text-white', priceText: 'text-gray-600', feeTitleText: 'text-gray-800', feeLabelText: 'text-gray-600', feeValueText: 'text-green-600', feeHighlightText: 'text-gray-900', rewardsBg: 'bg-white/80', rewardsBorder: 'border-gray-200', rewardsTitleText: 'text-gray-800', rewardsFeatureText: 'text-gray-700', buttonBg: 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700', buttonText: 'text-white' }
                         };
                         const currentTheme = themeClasses[tier.theme] || themeClasses.green;
                         return (
@@ -334,35 +464,73 @@ const structuredData = {
                       })}
                     </div>
                 </div>
-                {card.data.importantReminders && card.data.importantReminders.length > 0 && <div class="mb-8 p-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border-2 border-amber-200"><div class="flex items-start space-x-4"><div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1"><h3 class="text-xl font-bold text-amber-800 mb-2">重要费用提醒</h3><ul class="space-y-2 text-amber-700">{card.data.importantReminders.map(reminder => <li class="flex items-start"><span class="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span set:html={reminder}></span></li>)}</ul><p class="text-sm text-amber-600 mt-3 font-medium">*费用信息基于官方文档，具体以申请时为准</p></div></div></div>}
+                {importantReminders && importantReminders.length > 0 && <div class="mb-8 p-6 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border-2 border-amber-200"><div class="flex items-start space-x-4"><div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0"><svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div><div class="flex-1"><h3 class="text-xl font-bold text-amber-800 mb-2">重要费用提醒</h3><ul class="space-y-2 text-amber-700">{importantReminders.map(reminder => <li class="flex items-start"><span class="w-2 h-2 bg-amber-500 rounded-full mt-2 mr-3 flex-shrink-0"></span><span set:html={reminder}></span></li>)}</ul><p class="text-sm text-amber-600 mt-3 font-medium">*费用信息基于官方文档，具体以申请时为准</p></div></div></div>}
               </section>
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>{supportedPaymentMethods && supportedPaymentMethods.length > 0 ? <div class="grid grid-cols-2 md:grid-cols-4 gap-6">{supportedPaymentMethods.map(method => { const info = getPaymentMethodInfo(method); return <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}><div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}><img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" /></div><span class={`font-bold ${info.textColor} text-center`}>{info.name}</span></div>; })}</div> : <p>暂无数据</p>}</section>
+              <section class="bg-white rounded-3xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
+                {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {supportedPaymentMethods.map(method => {
+                      const info = getPaymentMethodInfo(method);
+                      return (
+                        <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}>
+                          <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}>
+                            <div set:html={info.icon}></div>
+                          </div>
+                          <span class={`font-bold ${info.textColor} text-center`}>{info.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p>暂无数据</p>
+                )}
+              </section>
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
               {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>
           ) : (
             <div class="space-y-8">
-              {/* Legacy Fallback Rendering */}
+              {/* Single-tier card rendering */}
               <section class="bg-white rounded-3xl shadow-xl p-8">
                 <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
                 <div class="space-y-6">
                     <div class="grid md:grid-cols-2 gap-4">
-                      {isVirtual && <div class="bg-blue-50 rounded-xl p-4 border border-blue-100"><p class="text-sm text-gray-600">虚拟卡费用</p><p class="text-xl font-bold text-gray-900">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</p></div>}
-                      <div class="bg-purple-50 rounded-xl p-4 border border-purple-100"><p class="text-sm text-gray-600">实体卡费用</p><p class="text-xl font-bold text-gray-900">{!isPhysical ? 'N/A' : physicalCardPrice === 0 ? '免费' : `${physicalCardPrice}`}</p></div>
+                      {isVirtual && <div class="bg-blue-50 rounded-xl p-4 border border-blue-100"><p class="text-sm text-gray-600">虚拟卡费用</p><p class="text-xl font-bold text-gray-900">{virtualCardPrice === 0 ? '免费' : `$${virtualCardPrice}`}</p></div>}
+                      <div class="bg-purple-50 rounded-xl p-4 border border-purple-100"><p class="text-sm text-gray-600">实体卡费用</p><p class="text-xl font-bold text-gray-900">{!isPhysical ? 'N/A' : physicalCardPrice === 0 ? '免费' : `$${physicalCardPrice}`}</p></div>
                     </div>
                     <div class="space-y-3">
                       <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">充值费用</span><span class="font-medium">{depositFee || 'N/A'}</span></div>
                       <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">交易手续费</span><span class="font-medium">{transactionFee || 'N/A'}</span></div>
-                      <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">提现手续费</span><span class="font-medium">{isVirtual && !isPhysical ? '暂不支持' : (withdrawalFee || 'N/A')}</span></div>
-                      <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">ATM取现费</span><span class="font-medium">{atmFee || 'N/A'}</span></div>
+                      <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">外汇手续费</span><span class="font-medium">{foreignExchangeFee || 'N/A'}</span></div>
+                      <div class="flex justify-between p-3 bg-gray-50 rounded-lg"><span class="text-gray-700">提现手续费</span><span class="font-medium">{withdrawalFee || 'N/A'}</span></div>
                     </div>
-                    {annualFee !== undefined && <div class="p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex justify-between items-center"><span class="text-gray-700">年费</span><span class={`font-bold ${annualFee ? 'text-orange-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span></div>}
+                    {annualFee !== undefined && <div class="p-3 bg-yellow-50 border border-yellow-100 rounded-lg flex justify-between items-center"><span class="text-gray-700">年费</span><span class={`font-bold ${!annualFee ? 'text-green-600' : 'text-orange-600'}`}>{!annualFee ? '免费' : '收费'}</span></div>}
                 </div>
               </section>
-              {limits && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">{Object.entries(limits).map(([key, value]) => { const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', dailyAtmWithdrawal: '每日ATM取款', monthlyAtmWithdrawal: '每月ATM取款', lifetimeLimit: '终身限额' }; return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null; })}</div></section>}
+              {limits && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">{Object.entries(limits).map(([key, value]) => { const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' }; return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null; })}</div></section>}
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>{supportedPaymentMethods && supportedPaymentMethods.length > 0 ? <div class="grid grid-cols-2 md:grid-cols-4 gap-6">{supportedPaymentMethods.map(method => { const info = getPaymentMethodInfo(method); return <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}><div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}><img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" /></div><span class={`font-bold ${info.textColor} text-center`}>{info.name}</span></div>; })}</div> : <p>暂无数据</p>}</section>
+              <section class="bg-white rounded-3xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
+                {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    {supportedPaymentMethods.map(method => {
+                      const info = getPaymentMethodInfo(method);
+                      return (
+                        <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}>
+                          <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}>
+                            <div set:html={info.icon}></div>
+                          </div>
+                          <span class={`font-bold ${info.textColor} text-center`}>{info.name}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p>暂无数据</p>
+                )}
+              </section>
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
               {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>

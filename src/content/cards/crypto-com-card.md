@@ -20,7 +20,6 @@ supportedCurrencies:
 supportedPaymentMethods:
   - "Apple Pay"
   - "Google Pay"
-rating: 4.8
 affiliateLink: "https://crypto.com/app/"
 publishDate: "2024-01-05"
 updateDate: "2025-08-11"
@@ -61,7 +60,7 @@ tiers:
       features:
         - "0% CRO 返现"
     limits:
-      "ATM免费提现额度": "$200/月"
+      "monthlyAtmWithdrawal": "$200/月"
   - name: "Ruby Steel"
     theme: "dark"
     isPhysical: true
@@ -77,7 +76,7 @@ tiers:
         - "1% CRO 返现"
         - "Spotify 全额报销 (首6个月)"
     limits:
-      "ATM免费提现额度": "$400/月"
+      "monthlyAtmWithdrawal": "$400/月"
   - name: "Jade Green / Royal Indigo"
     theme: "green"
     isPhysical: true
@@ -94,7 +93,7 @@ tiers:
         - "Spotify & Netflix 全额报销 (首6个月)"
         - "机场贵宾厅 (LoungeKey™)"
     limits:
-      "ATM免费提现额度": "$800/月"
+      "monthlyAtmWithdrawal": "$800/月"
 ---
 
 ## Crypto.com Visa 卡评测
