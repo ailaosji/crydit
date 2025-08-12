@@ -161,8 +161,8 @@ const relatedArticles = allArticles
 const { Content } = await card.render();
 
 import { getCurrencyInfo } from '../../config/site-data';
-import applePayIcon from '../../assets/icons/applepay.svg?raw';
 
+import applePayIcon from '../../assets/icons/applepay.svg?raw';
 // 更新支付方式信息函数，直接在模板中处理Google Pay图标
 function getPaymentMethodIcon(method) {
   const method_lower = method.toLowerCase().replace(/\s+/g, '');
@@ -170,7 +170,6 @@ function getPaymentMethodIcon(method) {
   switch(method_lower) {
     case 'applepay':
       return applePayIcon;
-
     case 'googlepay':
       return `<svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 105 42">
         <path fill="#3C4043" d="M49.029 20.84v12.1h-3.83V3.06h10.153c2.573 0 4.767.86 6.563 2.58 1.835 1.72 2.752 3.82 2.752 6.3 0 2.54-.917 4.64-2.752 6.34-1.776 1.7-3.97 2.54-6.563 2.54H49.03v.02Zm0-14.1v10.42h6.403c1.516 0 2.792-.52 3.79-1.54 1.017-1.02 1.536-2.26 1.536-3.66 0-1.38-.519-2.6-1.536-3.62-.998-1.06-2.254-1.58-3.79-1.58h-6.403v-.02ZM74.68 11.82c2.833 0 5.067.76 6.703 2.28 1.636 1.52 2.454 3.6 2.454 6.24v12.6h-3.65V30.1h-.16c-1.576 2.34-3.69 3.5-6.323 3.5-2.254 0-4.13-.66-5.645-2-1.516-1.34-2.274-3-2.274-5 0-2.12.797-3.8 2.393-5.04 1.596-1.26 3.73-1.88 6.383-1.88 2.274 0 4.15.42 5.605 1.26v-.88c0-1.34-.518-2.46-1.575-3.4-1.058-.94-2.294-1.4-3.71-1.4-2.135 0-3.83.9-5.067 2.72l-3.371-2.12c1.855-2.7 4.608-4.04 8.238-4.04Zm-4.946 14.84c0 1 .419 1.84 1.277 2.5.838.66 1.835 1 2.972 1 1.615 0 3.052-.6 4.308-1.8 1.257-1.2 1.895-2.6 1.895-4.22-1.197-.94-2.852-1.42-4.986-1.42-1.556 0-2.853.38-3.89 1.12-1.057.78-1.576 1.72-1.576 2.82ZM104.661 12.48 91.895 41.92h-3.95l4.748-10.3-8.418-19.14h4.169l6.064 14.68h.08l5.904-14.68h4.169Z"/>
@@ -484,6 +483,7 @@ const structuredData = {
               </section>
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
               <section class="bg-white rounded-3xl shadow-xl p-8">
+
                 <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
                 {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
                   <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -503,6 +503,7 @@ const structuredData = {
                   <p>暂无数据</p>
                 )}
               </section>
+
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
               {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>
@@ -511,6 +512,7 @@ const structuredData = {
               {/* Single-tier card rendering */}
               <section class="bg-white rounded-3xl shadow-xl p-8">
                 <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+
                 <div class="overflow-x-auto">
                   <table class="w-full text-left border-collapse">
                     <thead class="bg-gray-50">
@@ -569,6 +571,7 @@ const structuredData = {
               {limits && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">{Object.entries(limits).map(([key, value]) => { const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' }; return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null; })}</div></section>}
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
               <section class="bg-white rounded-3xl shadow-xl p-8">
+
                 <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
                 {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
                   <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -588,6 +591,7 @@ const structuredData = {
                   <p>暂无数据</p>
                 )}
               </section>
+
               <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
               {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
             </div>
