@@ -36,7 +36,7 @@ const articlesCollection = defineCollection({
     featured: z.boolean().default(false),
     author: z.string().default('U卡评测团队'),
     readingTime: z.number().optional(), // 预计阅读时间（分钟）
-    seo: seoSchema,
+    seo: seoSchema.optional(),
   }).merge(relatedContentSchema.pick({ relatedCards: true, relatedExchanges: true })),
 });
 
@@ -106,7 +106,7 @@ const cardsCollection = defineCollection({
     lastReviewed: z.coerce.date().optional(),
 
     // SEO
-    seo: seoSchema,
+    seo: seoSchema.optional(),
 
     // Media
     image: image().optional(),
@@ -205,7 +205,7 @@ const exchangesCollection = defineCollection({
     cons: z.array(z.string()).optional(),
     
     // SEO和关联
-    seo: seoSchema,
+    seo: seoSchema.optional(),
     
     // 状态和时间
     status: z.enum(['active', 'maintenance', 'restricted']).default('active'),
@@ -239,7 +239,7 @@ const guidesCollection = defineCollection({
     tools: z.array(z.string()).optional(),
     
     // SEO
-    seo: seoSchema,
+    seo: seoSchema.optional(),
     
   }).merge(relatedContentSchema.pick({relatedGuides: true, relatedCards: true, relatedArticles: true})),
 });
@@ -272,7 +272,7 @@ const pagesCollection = defineCollection({
     template: z.enum(['default', 'landing', 'comparison']).default('default'),
     
     // SEO
-    seo: seoSchema,
+    seo: seoSchema.optional(),
     
     // Schema.org 结构化数据
     schema: z.object({

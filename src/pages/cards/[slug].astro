@@ -2,7 +2,6 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import GiscusComments from '../../components/GiscusComments.astro';
-import FeeTable from '../../components/FeeTable.tsx';
 
 // Ensure this function is correctly exported
 export async function getStaticPaths() {
@@ -192,46 +191,22 @@ const structuredData = {
             </div>
           </section>
           
-          {hasTiers ? (
-            <div class="space-y-8">
-              <FeeTable client:load tiers={tiers} cardName={name} />
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
-              <section class="bg-white rounded-3xl shadow-xl p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
-                {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {supportedPaymentMethods.map(method => {
-                      const info = getPaymentMethodInfo(method);
-                      return (
-                        <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}>
-                          <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}>
-                            <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
-                          </div>
-                          <span class={`font-bold ${info.textColor} text-center`}>
-                            {info.name}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p>暂无数据</p>
-                )}
-              </section>
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
-              {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
-            </div>
-          ) : (
-            <div class="space-y-8">
-              {/* Single-tier card rendering */}
-              <section class="bg-white rounded-3xl shadow-xl p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费用项目</th>
-                        <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费率</th>
+          <div class="space-y-8">
+            <section class="bg-white rounded-3xl shadow-xl p-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费用项目</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费率</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(cardType === 'virtual' || cardType === 'both') && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">虚拟卡开卡费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</td>
                       </tr>
                     )}
                     {(cardType === 'physical' || cardType === 'both') && (
