@@ -2,10 +2,9 @@
 title: "Nexo Card - Spend & Earn"
 name: "Nexo Card"
 description: "The Nexo Card is a dual-mode crypto card that lets you switch between Credit and Debit Mode. Spend your crypto, earn interest, and get up to 2% cashback."
-cardType: "mastercard"
+network: "mastercard"
+cardType: both
 issuer: "Nexo"
-isVirtual: true
-isPhysical: true
 supportedRegions:
   - "EEA"
   - "UK"
@@ -42,68 +41,8 @@ tags:
   - "Mastercard"
   - "Cashback"
   - "Dual-mode"
-tiers:
-  - name: "Base"
-    theme: "gray"
-    isVirtual: true
-    isPhysical: false
-    cardMaterial: "Virtual"
-    price: "0%"
-    priceUnit: "NEXO Tokens in portfolio"
-    fees:
-      foreignExchange: "0.2% (Weekdays), 0.7% (Weekends)"
-    rewards:
-      title: "Cashback"
-      features:
-        - "0.5% in NEXO Tokens or 0.1% in BTC"
-    limits:
-      monthlyAtmWithdrawal: "€200"
-  - name: "Silver"
-    theme: "blue"
-    isVirtual: true
-    isPhysical: false
-    cardMaterial: "Virtual"
-    price: "1-5%"
-    priceUnit: "NEXO Tokens in portfolio"
-    fees:
-      foreignExchange: "0.2% (Weekdays), 0.7% (Weekends)"
-    rewards:
-      title: "Cashback"
-      features:
-        - "0.7% in NEXO Tokens or 0.2% in BTC"
-    limits:
-      monthlyAtmWithdrawal: "€400"
-  - name: "Gold"
-    theme: "yellow"
-    isVirtual: true
-    isPhysical: true
-    cardMaterial: "Virtual/Physical"
-    price: "5-10%"
-    priceUnit: "NEXO Tokens in portfolio"
-    fees:
-      foreignExchange: "0.2% (Weekdays), 0.7% (Weekends)"
-    rewards:
-      title: "Cashback"
-      features:
-        - "1% in NEXO Tokens or 0.3% in BTC"
-    limits:
-      monthlyAtmWithdrawal: "€1,000"
-  - name: "Platinum"
-    theme: "dark"
-    isVirtual: true
-    isPhysical: true
-    cardMaterial: "Virtual/Physical"
-    price: ">10%"
-    priceUnit: "NEXO Tokens in portfolio"
-    fees:
-      foreignExchange: "0.2% (Weekdays), 0.7% (Weekends)"
-    rewards:
-      title: "Cashback"
-      features:
-        - "2% in NEXO Tokens or 0.5% in BTC"
-    limits:
-      monthlyAtmWithdrawal: "€2,000"
 ---
+
 
 ## Nexo Card Review
 

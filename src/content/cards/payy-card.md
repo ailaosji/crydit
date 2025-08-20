@@ -2,9 +2,8 @@
 title: "Payy Card - 无账号密码的隐私安全U卡"
 name: "Payy Card"
 description: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-cardType: "visa"
-isVirtual: true
-isPhysical: true
+network: "visa"
+cardType: both
 issuer: "Payy (Polybase Labs)"
 supportedRegions:
   - "全球大部分地区"
@@ -52,6 +51,7 @@ publishDate: "2025-08-09"
 updateDate: "2025-08-09"
 kycRequired: true
 ---
+
 
 ## Payy Card 评测
 

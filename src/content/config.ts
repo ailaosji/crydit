@@ -40,37 +40,6 @@ const articlesCollection = defineCollection({
   }).merge(relatedContentSchema.pick({ relatedCards: true, relatedExchanges: true })),
 });
 
-// U卡评测集合配置
-const cardTierSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  theme: z.enum(['dark', 'light', 'green', 'blue', 'yellow', 'gray']),
-  isVirtual: z.boolean().optional(),
-  isPhysical: z.boolean().optional(),
-  cardMaterial: z.string().optional(),
-  price: z.string(),
-  priceUnit: z.string(),
-  fees: z.object({
-    deposit: z.string().optional(),
-    transaction: z.string().optional(),
-    foreignExchange: z.string().optional(),
-    withdrawal: z.string().optional(),
-    exchangeRate: z.string().optional(),    // 兑换汇率（新增）
-    annual: z.string().optional(),
-  }).catchall(z.string()).optional(),
-  limits: z.object({
-    singleTransaction: z.string().optional(),
-    dailySpending: z.string().optional(),
-    monthlySpending: z.string().optional(),
-    monthlyAtmWithdrawal: z.string().optional(),
-  }).catchall(z.string()).optional(),
-  rewards: z.object({
-    title: z.string(),
-    features: z.array(z.string()),
-  }).optional(),
-  affiliateLink: z.string().url().optional(),
-});
-
 const cardsCollection = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
@@ -79,14 +48,10 @@ const cardsCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     shortDescription: z.string().optional(),
-
-    // Card Type
-    cardType: z.enum(['visa', 'mastercard', 'unionpay']),
+    // Card Type and Network
+    cardType: z.enum(['virtual', 'physical', 'both']),
+    network: z.enum(['visa', 'mastercard', 'unionpay']),
     issuer: z.string(),
-
-    // Card Form (for single-tier cards)
-    isVirtual: z.boolean().optional(),
-    isPhysical: z.boolean().optional(),
 
     // Region and Currency Support
     supportedRegions: z.array(z.string()),
@@ -94,17 +59,17 @@ const cardsCollection = defineCollection({
     supportedPaymentMethods: z.array(z.string()).optional(),
     applicationDocuments: z.array(z.string()).optional(),
 
-    // Fees (for single-tier cards)
+    // Fees
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
     transactionFee: z.string().optional(),
     foreignExchangeFee: z.string().optional(),
-    withdrawalFee: z.string().optional(), // Combined withdrawal and ATM fee
-    exchangeRate: z.string().optional(),       // 兑换汇率（新增）
+    withdrawalFee: z.string().optional(),
+    exchangeRate: z.string().optional(),
     annualFee: z.boolean().optional(),
 
-    // Limits (for single-tier cards)
+    // Limits
     limits: z.object({
       singleTransaction: z.string().optional(),
       dailySpending: z.string().optional(),
@@ -112,7 +77,7 @@ const cardsCollection = defineCollection({
       monthlyAtmWithdrawal: z.string().optional(),
     }).optional(),
 
-    // Rewards (for single-tier cards)
+    // Rewards
     rewards: z.object({
       cashback: z.string().nullable().optional(),
       loyaltyProgram: z.string().optional(),
@@ -124,9 +89,6 @@ const cardsCollection = defineCollection({
     cons: z.array(z.string()),
     features: z.array(z.string()).optional(),
     featured: z.boolean().default(false),
-
-    // Tiers (for multi-level cards)
-    tiers: z.array(cardTierSchema).optional(),
     importantReminders: z.array(z.string()).optional(),
 
     // Other Information
