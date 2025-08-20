@@ -2,10 +2,9 @@
 title: "Wirex Card - 全能型加密货币借记卡"
 name: "Wirex Card"
 description: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
-cardType: "visa"
+network: "visa"
+cardType: both
 issuer: "Wirex"
-isVirtual: true
-isPhysical: true
 supportedRegions:
   - "全球多个地区"
 applicationDocuments: ["身份证明", "地址证明"]
@@ -41,70 +40,8 @@ tags:
   - "Visa"
   - "返现卡"
   - "多币种"
-tiers:
-  - name: "Standard"
-    theme: "gray"
-    isVirtual: true
-    isPhysical: true
-    cardMaterial: "虚拟卡/塑料卡"
-    price: "€0"
-    priceUnit: "每月"
-    fees:
-      deposit: "免费"
-      transaction: "免费"
-      foreignExchange: "免费"
-      annual: "免费"
-    rewards:
-      title: "返现奖励"
-      features:
-        - "高达 1% Cryptoback™ 返现"
-        - "WXT 余额年化利率高达 1%"
-        - "X-Accounts 年化利率高达 12%"
-    limits:
-      monthlyAtmWithdrawal: "€250"
-  - name: "Premium"
-    theme: "blue"
-    isVirtual: true
-    isPhysical: true
-    cardMaterial: "虚拟卡/塑料卡"
-    price: "€9.99"
-    priceUnit: "每月"
-    fees:
-      deposit: "免费"
-      transaction: "免费"
-      foreignExchange: "免费"
-      annual: "包含在月费中"
-    rewards:
-      title: "返现奖励"
-      features:
-        - "高达 3% Cryptoback™ 返现"
-        - "WXT 余额年化利率高达 6%"
-        - "X-Accounts 年化利率高达 13%"
-        - "专属商户优惠"
-    limits:
-      monthlyAtmWithdrawal: "€250"
-  - name: "Elite"
-    theme: "dark"
-    isVirtual: true
-    isPhysical: true
-    cardMaterial: "虚拟卡/塑料卡"
-    price: "€29.99"
-    priceUnit: "每月"
-    fees:
-      deposit: "免费"
-      transaction: "免费"
-      foreignExchange: "免费"
-      annual: "包含在月费中"
-    rewards:
-      title: "返现奖励"
-      features:
-        - "高达 8% Cryptoback™ 返现"
-        - "WXT 余额年化利率高达 16%"
-        - "X-Accounts 年化利率高达 16%"
-        - "精选精英商户合作伙伴优惠"
-    limits:
-      monthlyAtmWithdrawal: "€250"
 ---
+
 
 ## Wirex Card 评测
 
