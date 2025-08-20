@@ -2,14 +2,11 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import GiscusComments from '../../components/GiscusComments.astro';
-import FeeTable from '../../components/FeeTable.tsx';
 
-// 确保这个函数被正确导出
+// Ensure this function is correctly exported
 export async function getStaticPaths() {
   try {
     const cards = await getCollection('cards');
-    console.log('Cards found:', cards.length); // 调试信息
-    
     return cards.map((card) => ({
       params: { slug: card.slug },
       props: { card },
@@ -20,106 +17,42 @@ export async function getStaticPaths() {
   }
 }
 
-// 类型定义
+// Type definition
 interface Props {
   card: CollectionEntry<'cards'>;
 }
 
-// 获取传递的 props
+// Get passed props
 const { card } = Astro.props as Props;
 
-// 检查 card 是否存在
+// Check if card exists
 if (!card) {
   throw new Error('Card not found');
 }
 
 const { 
-  title, name, description, cardType, isVirtual, isPhysical,
+  title, name, description, network, cardType,
   pros, cons, features, limits, rewards, issuer, supportedRegions,
   applicationDocuments, supportedCurrencies, supportedPaymentMethods,
   virtualCardPrice, physicalCardPrice, depositFee, transactionFee,
   foreignExchangeFee, withdrawalFee, annualFee, affiliateLink,
-  invitationCode, tiers, importantReminders
+  invitationCode, importantReminders
 } = card.data;
 
-// 判断是否为多层级卡片
-const hasTiers = tiers && tiers.length > 0;
-
-// 获取费用信息的辅助函数
-const getFeeInfo = () => {
-  if (hasTiers) {
-    // 多层级卡片：从tiers中提取费用范围
-    return {
-      depositFeeRange: extractFeeRange(tiers, 'deposit'),
-      foreignExchangeFeeRange: extractFeeRange(tiers, 'foreignExchange'),
-      withdrawalFeeRange: extractFeeRange(tiers, 'withdrawal'),
-    };
-  } else {
-    // 单层级卡片：直接使用顶层费用
-    return {
-      depositFee: depositFee,
-      foreignExchangeFee: foreignExchangeFee,
-      withdrawalFee: withdrawalFee,
-    };
-  }
-};
-
-function extractFeeRange(tiers, feeKey) {
-  if (!tiers || tiers.length === 0) return 'N/A';
-
-  const fees = tiers.map(tier => tier.fees ? tier.fees[feeKey] : undefined)
-                     .filter(fee => fee !== undefined && fee !== null);
-
-  if (fees.length === 0) return 'N/A';
-
-  const numericFees = fees.map(fee => {
-    if (typeof fee === 'string') {
-      const cleaned = fee.replace(/[^0-9.]/g, '');
-      return cleaned ? parseFloat(cleaned) : NaN;
-    }
-    return NaN;
-  }).filter(n => !isNaN(n));
-
-  if (numericFees.length === 0) {
-    const uniqueFees = [...new Set(fees)];
-    return uniqueFees.join(' / ');
-  }
-
-  const minFee = Math.min(...numericFees);
-  const maxFee = Math.max(...numericFees);
-
-  const feeSuffix = fees[0].includes('%') ? '%' : '';
-
-  if (minFee === maxFee) {
-    return `${minFee}${feeSuffix}`;
-  }
-  return `${minFee}${feeSuffix} - ${maxFee}${feeSuffix}`;
-}
-
-// 获取相关U卡（系统推荐算法）
+// Recommendation algorithm for related cards
 const allCards = await getCollection('cards');
 const relatedCards = allCards
   .map(otherCard => {
     if (otherCard.slug === card.slug) {
       return { card: otherCard, score: -1 };
     }
-
     let score = 0;
-    // 1. 卡类型匹配
-    if (otherCard.data.cardType === card.data.cardType) {
-      score += 3;
-    }
-    // 2. 标签匹配
+    if (otherCard.data.network === network) score += 3;
     const commonTags = (card.data.tags || []).filter(tag => (otherCard.data.tags || []).includes(tag));
     score += commonTags.length * 2;
-    // 3. 支持的货币匹配
     const commonCurrencies = (card.data.supportedCurrencies || []).filter(currency => (otherCard.data.supportedCurrencies || []).includes(currency));
-    score += commonCurrencies.length * 1;
-    // 4. 发行商惩罚
-    if (otherCard.data.issuer === card.data.issuer) {
-      score -= 100;
-    }
-
+    score += commonCurrencies.length;
+    if (otherCard.data.issuer === issuer) score -= 100;
     return { card: otherCard, score };
   })
   .filter(item => item.score > 0)
@@ -127,30 +60,19 @@ const relatedCards = allCards
   .map(item => item.card)
   .slice(0, 3);
 
-// 获取相关文章（U卡教程等）
+// Recommendation algorithm for related articles
 const allArticles = await getCollection('articles');
 const relatedArticles = allArticles
   .map(article => {
     let score = 0;
     const articleTitle = article.data.title.toLowerCase();
-    const cardName = card.data.name.toLowerCase();
-    const cardIssuer = card.data.issuer.toLowerCase();
-
-    // 1. 直接关联
-    if ((article.data.relatedCards || []).includes(card.slug)) {
-      score += 10;
-    }
-    // 2. 卡名或发行商在标题中
-    if (articleTitle.includes(cardName)) {
-      score += 5;
-    }
-    if (articleTitle.includes(cardIssuer)) {
-      score += 3;
-    }
-    // 3. 共同标签
+    const cardName = name.toLowerCase();
+    const cardIssuer = issuer.toLowerCase();
+    if ((article.data.relatedCards || []).includes(card.slug)) score += 10;
+    if (articleTitle.includes(cardName)) score += 5;
+    if (articleTitle.includes(cardIssuer)) score += 3;
     const commonTags = (card.data.tags || []).filter(tag => (article.data.tags || []).includes(tag));
     score += commonTags.length * 2;
-
     return { article, score };
   })
   .filter(item => item.score > 0)
@@ -158,77 +80,28 @@ const relatedArticles = allArticles
   .map(item => item.article)
   .slice(0, 4);
 
-// 渲染Markdown内容
+// Render Markdown content
 const { Content } = await card.render();
 
 import { getCurrencyInfo } from '../../config/site-data';
 function getPaymentMethodInfo(method) {
   const method_lower = method.toLowerCase().replace(/\s+/g, '');
-
   switch(method_lower) {
-    case 'applepay':
-      return {
-        name: 'Apple Pay',
-        bgGradient: 'from-gray-800 to-black',
-        bgLight: 'bg-gray-50',
-        borderColor: 'border-gray-200',
-        textColor: 'text-gray-800',
-        icon: '/icons/methods/applepay.svg',
-      };
-
-    case 'googlepay':
-      return {
-        name: 'Google Pay',
-        bgGradient: 'from-blue-500 via-green-500 to-yellow-500',
-        bgLight: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        textColor: 'text-blue-700',
-        icon: '/icons/methods/googlepay.svg',
-      };
-
-    case 'alipay':
-      return {
-        name: 'Alipay',
-        bgGradient: 'from-blue-500 to-cyan-500',
-        bgLight: 'bg-blue-50',
-        borderColor: 'border-blue-200',
-        textColor: 'text-blue-700',
-        icon: '/icons/methods/alipay.svg',
-      };
-
-    case 'wechatpay':
-    case 'wechat pay':
-      return {
-        name: 'WeChat Pay',
-        bgGradient: 'from-green-500 to-green-600',
-        bgLight: 'bg-green-50',
-        borderColor: 'border-green-200',
-        textColor: 'text-green-700',
-        icon: '/icons/methods/wechatpay.svg',
-      };
-
-    default:
-      return {
-        name: method,
-        bgGradient: 'from-gray-400 to-gray-500',
-        bgLight: 'bg-gray-50',
-        borderColor: 'border-gray-200',
-        textColor: 'text-gray-700',
-        icon: '', // No default icon for now
-      };
+    case 'applepay': return { name: 'Apple Pay', bgGradient: 'from-gray-800 to-black', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800', icon: '/icons/methods/applepay.svg' };
+    case 'googlepay': return { name: 'Google Pay', bgGradient: 'from-blue-500 via-green-500 to-yellow-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/googlepay.svg' };
+    case 'alipay': return { name: 'Alipay', bgGradient: 'from-blue-500 to-cyan-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/alipay.svg' };
+    case 'wechatpay': case 'wechat pay': return { name: 'WeChat Pay', bgGradient: 'from-green-500 to-green-600', bgLight: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700', icon: '/icons/methods/wechatpay.svg' };
+    default: return { name: method, bgGradient: 'from-gray-400 to-gray-500', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-700', icon: '' };
   }
 }
 
-// 生成结构化数据
+// Generate structured data for SEO
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Product",
   "name": name,
   "description": description,
-  "brand": {
-    "@type": "Brand",
-    "name": issuer
-  },
+  "brand": { "@type": "Brand", "name": issuer },
   "offers": {
     "@type": "Offer",
     "price": virtualCardPrice || physicalCardPrice || "0",
@@ -237,21 +110,8 @@ const structuredData = {
   },
   "category": "Financial Services",
   "additionalProperty": [
-    {
-      "@type": "PropertyValue",
-      "name": "Card Type",
-      "value": cardType
-    },
-    {
-      "@type": "PropertyValue", 
-      "name": "Virtual Card",
-      "value": isVirtual ? "Yes" : "No"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "Physical Card", 
-      "value": isPhysical ? "Yes" : "No"
-    }
+    { "@type": "PropertyValue", "name": "Card Network", "value": network },
+    { "@type": "PropertyValue", "name": "Card Type", "value": cardType }
   ]
 };
 ---
@@ -261,95 +121,49 @@ const structuredData = {
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      <!-- Hero Section with Card Image -->
       <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-12">
         <div class="relative">
-          <!-- Background Gradient -->
           <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
-          
-          <!-- Content Container -->
           <div class="relative p-8 lg:p-12">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              
-              <!-- Left: Card Info -->
               <div class="text-white">
                 <div class="flex flex-wrap items-center gap-3 mb-6">
                   <span class={`px-4 py-2 rounded-full text-sm font-semibold ${
-                    cardType === 'visa' ? 'bg-blue-500 text-white' :
-                    cardType === 'mastercard' ? 'bg-red-500 text-white' :
+                    network === 'visa' ? 'bg-blue-500 text-white' :
+                    network === 'mastercard' ? 'bg-red-500 text-white' :
                     'bg-gray-500 text-white'
                   }`}>
-                    {cardType?.toUpperCase()}
+                    {network?.toUpperCase()}
                   </span>
-                  {isVirtual && (
-                    <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
-                      虚拟卡
-                    </span>
+                  {(cardType === 'virtual' || cardType === 'both') && (
+                    <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">虚拟卡</span>
                   )}
-                  {isPhysical && (
-                    <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
-                      实体卡
-                    </span>
+                  {(cardType === 'physical' || cardType === 'both') && (
+                    <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">实体卡</span>
                   )}
                 </div>
-                
                 <h1 class="text-4xl lg:text-5xl font-bold mb-4">{name}</h1>
                 <p class="text-xl text-white/90 leading-relaxed mb-8">{description}</p>
-                
-                <!-- CTA Button -->
                 {affiliateLink && (
-                  <a 
-                    href={affiliateLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg"
-                  >
+                  <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
                     立即申请
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                    </svg>
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                   </a>
                 )}
               </div>
               
-              <!-- Right: Card Visual -->
               <div class="relative">
-                <!-- 推荐标签 -->
-                <div class="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-10">
-                  推荐
-                </div>
-                
-                <!-- 信用卡设计 -->
+                <div class="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-10">推荐</div>
                 <div class="relative w-96 h-60 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-all duration-300 hover:scale-105">
-                  <!-- 卡片背景渐变 -->
                   <div class="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 rounded-2xl"></div>
-                  
-                  <!-- 装饰性圆形背景 -->
                   <div class="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full"></div>
                   <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-pink-400/10 to-transparent rounded-full"></div>
-                  
-                  <!-- 卡片内容 -->
                   <div class="relative z-10 p-8 h-full flex flex-col justify-between text-white">
-                    <!-- 顶部：芯片和VISA标志 -->
                     <div class="flex justify-between items-start">
-                      <!-- 芯片 -->
                       <div class="w-12 h-9 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-md shadow-inner"></div>
-                      <!-- VISA标志 -->
-                      <div class="text-2xl font-bold text-white/90 tracking-wider">
-                        {cardType === 'visa' ? 'VISA' : 
-                         cardType === 'mastercard' ? 'MasterCard' : 
-                         cardType?.toUpperCase()}
-                      </div>
+                      <div class="text-2xl font-bold text-white/90 tracking-wider">{network?.toUpperCase()}</div>
                     </div>
-                    
-                    <!-- 中部：卡号 -->
-                    <div class="space-y-6">
-                      <div class="font-mono text-2xl tracking-wider">
-                        •••• •••• •••• ••••
-                      </div>
-                    </div>
-                    
-                    <!-- 底部：持卡人和有效期 -->
+                    <div class="space-y-6"><div class="font-mono text-2xl tracking-wider">•••• •••• •••• ••••</div></div>
                     <div class="flex justify-between items-end">
                       <div>
                         <div class="text-xs text-gray-400 mb-1">CARD HOLDER</div>
@@ -361,8 +175,6 @@ const structuredData = {
                       </div>
                     </div>
                   </div>
-                  
-                  <!-- 光泽效果 -->
                   <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl transform -skew-x-12 -translate-x-full animate-pulse"></div>
                 </div>
               </div>
@@ -372,239 +184,155 @@ const structuredData = {
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Main Content -->
         <div class="lg:col-span-2 space-y-8">
-          
-          <!-- Markdown Content -->
           <section class="bg-white rounded-3xl shadow-xl p-8">
             <div class="prose prose-lg max-w-none">
               <Content />
             </div>
           </section>
           
-          {hasTiers ? (
-            <div class="space-y-8">
-              <FeeTable client:load tiers={tiers} cardName={name} />
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
-              <section class="bg-white rounded-3xl shadow-xl p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
-                {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {supportedPaymentMethods.map(method => {
-                      const info = getPaymentMethodInfo(method);
-                      return (
-                        <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}>
-                          <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}>
-                            <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
-                          </div>
-                          <span class={`font-bold ${info.textColor} text-center`}>
-                            {info.name}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p>暂无数据</p>
-                )}
-              </section>
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
-              {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
-            </div>
-          ) : (
-            <div class="space-y-8">
-              {/* Single-tier card rendering */}
-              <section class="bg-white rounded-3xl shadow-xl p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50">
-                      <tr>
-                        <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费用项目</th>
-                        <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费率</th>
+          <div class="space-y-8">
+            <section class="bg-white rounded-3xl shadow-xl p-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费用项目</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费率</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(cardType === 'virtual' || cardType === 'both') && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">虚拟卡开卡费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {isVirtual !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">虚拟卡开卡费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{virtualCardPrice === 0 ? '免费' : `$${virtualCardPrice}`}</td>
-                        </tr>
-                      )}
-                      {isPhysical !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">实体卡开卡费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{!isPhysical ? 'N/A' : physicalCardPrice === 0 ? '免费' : `$${physicalCardPrice}`}</td>
-                        </tr>
-                      )}
-                      {depositFee !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">充值手续费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{depositFee}</td>
-                        </tr>
-                      )}
-                      {transactionFee !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">交易手续费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{transactionFee}</td>
-                        </tr>
-                      )}
-                      {foreignExchangeFee !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">外汇手续费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{foreignExchangeFee}</td>
-                        </tr>
-                      )}
-                      {withdrawalFee !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">提现/ATM手续费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{withdrawalFee}</td>
-                        </tr>
-                      )}
-                      {annualFee !== undefined && (
-                        <tr class="hover:bg-gray-50">
-                          <td class="px-6 py-4 border-b border-gray-200">年费</td>
-                          <td class="px-6 py-4 border-b border-gray-200 font-medium">{!annualFee ? '免费' : '收费'}</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+                    )}
+                    {(cardType === 'physical' || cardType === 'both') && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">实体卡开卡费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{physicalCardPrice === 0 ? '免费' : `${physicalCardPrice}`}</td>
+                      </tr>
+                    )}
+                    {depositFee !== undefined && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">充值手续费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{depositFee}</td>
+                      </tr>
+                    )}
+                    {transactionFee !== undefined && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">交易手续费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{transactionFee}</td>
+                      </tr>
+                    )}
+                    {foreignExchangeFee !== undefined && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">外汇手续费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{foreignExchangeFee}</td>
+                      </tr>
+                    )}
+                    {withdrawalFee !== undefined && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">提现/ATM手续费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{withdrawalFee}</td>
+                      </tr>
+                    )}
+                    {annualFee !== undefined && (
+                      <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 border-b border-gray-200">年费</td>
+                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{!annualFee ? '免费' : '收费'}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            {limits && (
+              <section class="bg-white rounded-3xl shadow-xl p-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {Object.entries(limits).map(([key, value]) => {
+                    const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' };
+                    return value ? (
+                      <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                        <p class="text-sm text-gray-600">{limitLabels[key] || key}</p>
+                        <p class="text-lg font-bold text-indigo-600">{value}</p>
+                      </div>
+                    ) : null;
+                  })}
                 </div>
               </section>
-              {limits && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">{Object.entries(limits).map(([key, value]) => { const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' }; return value ? <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100"><p class="text-sm text-gray-600">{limitLabels[key] || key}</p><p class="text-lg font-bold text-indigo-600">{value}</p></div> : null; })}</div></section>}
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">支持的加密货币</h2>{supportedCurrencies && supportedCurrencies.length > 0 ? <div class="flex flex-wrap items-center gap-3">{supportedCurrencies.map(currency => { const currencyInfo = getCurrencyInfo(currency); return <div class="flex flex-col items-center p-2 group cursor-pointer"><div class={`w-14 h-14 bg-gradient-to-br ${currencyInfo.bgGradient} rounded-full flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300 text-xl font-bold mb-2`}><img src={currencyInfo.icon} alt={`${currencyInfo.name} icon`} class="w-8 h-8" /></div><span class={`text-xs font-medium ${currencyInfo.textColor} opacity-80 group-hover:opacity-100`}>{currencyInfo.symbol}</span></div>; })}</div> : <p>暂无数据</p>}</section>
-              <section class="bg-white rounded-3xl shadow-xl p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">支持的支付方式</h2>
-                {supportedPaymentMethods && supportedPaymentMethods.length > 0 ? (
-                  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {supportedPaymentMethods.map(method => {
-                      const info = getPaymentMethodInfo(method);
-                      return (
-                        <div class={`group flex flex-col items-center p-6 ${info.bgLight} rounded-2xl border-2 ${info.borderColor} hover:scale-105 hover:shadow-lg transition-all`}>
-                          <div class={`relative w-16 h-16 bg-gradient-to-br ${info.bgGradient} rounded-2xl flex items-center justify-center mb-4 shadow-md group-hover:scale-110`}>
-                            <img src={info.icon} alt={`${info.name} icon`} class="w-8 h-8" />
-                          </div>
-                          <span class={`font-bold ${info.textColor} text-center`}>
-                            {info.name}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : (
-                  <p>暂无数据</p>
-                )}
-              </section>
-              <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">优缺点分析</h2><div class="grid md:grid-cols-2 gap-8">{pros && pros.length > 0 && <div><h3 class="text-xl font-semibold text-green-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>优点</h3><ul class="space-y-3">{pros.map(pro => <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{pro}</span></li>)}</ul></div>}{cons && cons.length > 0 && <div><h3 class="text-xl font-semibold text-red-600 mb-4 flex items-center"><svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>缺点</h3><ul class="space-y-3">{cons.map(con => <li class="flex items-start"><svg class="w-5 h-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg><span class="text-gray-700">{con}</span></li>)}</ul></div>}</div></section>
-              {features && features.length > 0 && <section class="bg-white rounded-3xl shadow-xl p-8"><h2 class="text-3xl font-bold text-gray-900 mb-8">特色功能</h2><div class="grid md:grid-cols-2 gap-4">{features.map(feature => <div class="flex items-center p-4 bg-indigo-50 rounded-xl"><svg class="w-6 h-6 text-indigo-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="text-gray-800 font-medium">{feature}</span></div>)}</div></section>}
-            </div>
-          )}
+            )}
+          </div>
+
           <GiscusComments title={`${name} 用户评论`} />
         </div>
 
-        <!-- Sidebar -->
         <div class="space-y-8">
-          <!-- Quick Info Card -->
           <div class="bg-white rounded-3xl shadow-xl p-8 sticky top-24">
             <h3 class="text-2xl font-bold text-gray-900 mb-6">基本信息</h3>
-            
             <div class="space-y-4">
               <div class="flex justify-between items-center py-2 border-b border-gray-100">
                 <span class="text-gray-600">发卡机构</span>
                 <span class="font-medium text-gray-900">{issuer}</span>
               </div>
-              
               <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                <span class="text-gray-600">卡片类型</span>
+                <span class="text-gray-600">卡片网络</span>
                 <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                  cardType === 'visa' ? 'bg-blue-100 text-blue-800' :
-                  cardType === 'mastercard' ? 'bg-red-100 text-red-800' :
+                  network === 'visa' ? 'bg-blue-100 text-blue-800' :
+                  network === 'mastercard' ? 'bg-red-100 text-red-800' :
                   'bg-gray-100 text-gray-800'
                 }`}>
-                  {cardType?.toUpperCase()}
+                  {network?.toUpperCase()}
                 </span>
               </div>
-              
               <div class="flex justify-between items-center py-2 border-b border-gray-100">
                 <span class="text-gray-600">申请证件</span>
-                <span class="font-medium text-gray-900">
-                  {applicationDocuments && applicationDocuments.length > 0 ?
-                    applicationDocuments.join(' / ') :
-                    'N/A'}
-                </span>
+                <span class="font-medium text-gray-900">{applicationDocuments && applicationDocuments.length > 0 ? applicationDocuments.join(' / ') : 'N/A'}</span>
               </div>
-              
               {rewards && rewards.cashback && (
                 <div class="flex justify-between items-center py-2 border-b border-gray-100">
                   <span class="text-gray-600">返现比例</span>
                   <span class="font-medium text-green-600">{rewards.cashback}</span>
                 </div>
               )}
-              
               <div class="flex justify-between items-center py-2">
                 <span class="text-gray-600">年费</span>
-                <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>
-                  {annualFee ? '收费' : '免费'}
-                </span>
+                <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span>
               </div>
             </div>
-            
-            <!-- Apply Button -->
             {affiliateLink && (
-              <a 
-                href={affiliateLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105"
-              >
+              <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105">
                 立即申请
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                </svg>
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
               </a>
             )}
-
-            <!-- Invitation Code Section -->
             {invitationCode && (
               <div class="mt-6 pt-6 border-t border-gray-100">
                 <label for="invite-code" class="block text-sm font-medium text-gray-700 mb-2">邀请码</label>
                 <div class="relative">
-                  <input
-                    id="invite-code"
-                    type="text"
-                    readonly
-                    value={invitationCode}
-                    class="w-full pl-4 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                  <button
-                    id="copy-button"
-                    class="absolute inset-y-0 right-0 flex items-center px-4 bg-gray-200 text-gray-700 font-semibold text-sm rounded-r-xl hover:bg-gray-300 transition-colors"
-                  >
-                    复制
-                  </button>
+                  <input id="invite-code" type="text" readonly value={invitationCode} class="w-full pl-4 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                  <button id="copy-button" class="absolute inset-y-0 right-0 flex items-center px-4 bg-gray-200 text-gray-700 font-semibold text-sm rounded-r-xl hover:bg-gray-300 transition-colors">复制</button>
                 </div>
               </div>
             )}
           </div>
 
-          <!-- Related Cards -->
           {relatedCards && relatedCards.length > 0 && (
             <div class="bg-white rounded-3xl shadow-xl p-8">
               <h3 class="text-2xl font-bold text-gray-900 mb-6">相关U卡推荐</h3>
               <div class="space-y-4">
                 {relatedCards.map((relatedCard) => (
-                  <a 
-                    href={`/cards/${relatedCard.slug}`}
-                    class="block p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition-colors"
-                  >
+                  <a href={`/cards/${relatedCard.slug}`} class="block p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition-colors">
                     <div class="flex items-center justify-between">
                       <div>
                         <h4 class="font-semibold text-gray-900">{relatedCard.data.name}</h4>
-                        <p class="text-sm text-gray-600 mt-1">{relatedCard.data.cardType?.toUpperCase()}</p>
+                        <p class="text-sm text-gray-600 mt-1">{relatedCard.data.network?.toUpperCase()}</p>
                       </div>
-                      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
+                      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </div>
                   </a>
                 ))}
@@ -620,21 +348,17 @@ const structuredData = {
 <script>
   const copyButton = document.getElementById('copy-button');
   const inviteCodeInput = document.getElementById('invite-code');
-
   if (copyButton && inviteCodeInput) {
     copyButton.addEventListener('click', () => {
       const codeToCopy = inviteCodeInput.value;
-
       navigator.clipboard.writeText(codeToCopy).then(() => {
-        // Success feedback
         copyButton.textContent = '已复制!';
         copyButton.classList.add('bg-green-500', 'text-white');
         setTimeout(() => {
           copyButton.textContent = '复制';
           copyButton.classList.remove('bg-green-500', 'text-white');
-        }, 2000); // Reset text after 2 seconds
+        }, 2000);
       }).catch(err => {
-        // Error feedback
         console.error('Failed to copy: ', err);
         copyButton.textContent = '失败';
         copyButton.classList.add('bg-red-500', 'text-white');
