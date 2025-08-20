@@ -1,6 +1,27 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
 
+// --- Reusable Schemas ---
+
+const seoSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
+  canonicalUrl: z.string().url().optional(),
+  noindex: z.boolean().default(false).optional(),
+});
+
+const relatedContentSchema = z.object({
+    relatedCards: z.array(z.string()).optional(),
+    relatedExchanges: z.array(z.string()).optional(),
+    relatedArticles: z.array(z.string()).optional(),
+    relatedGuides: z.array(z.string()).optional(),
+});
+
+
+// --- Collection Definitions ---
+
+
 // 文章集合配置
 const articlesCollection = defineCollection({
   type: 'content',
@@ -15,44 +36,8 @@ const articlesCollection = defineCollection({
     featured: z.boolean().default(false),
     author: z.string().default('U卡评测团队'),
     readingTime: z.number().optional(), // 预计阅读时间（分钟）
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
-    relatedCards: z.array(z.string()).optional(), // 相关U卡slug
-    relatedExchanges: z.array(z.string()).optional(), // 相关交易所slug
-  }),
-});
-
-// U卡评测集合配置
-const cardTierSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  theme: z.enum(['dark', 'light', 'green', 'blue', 'yellow', 'gray']),
-  isVirtual: z.boolean().optional(),
-  isPhysical: z.boolean().optional(),
-  cardMaterial: z.string().optional(),
-  price: z.string(),
-  priceUnit: z.string(),
-  fees: z.object({
-    deposit: z.string().optional(),
-    transaction: z.string().optional(),
-    foreignExchange: z.string().optional(),
-    withdrawal: z.string().optional(),
-    exchangeRate: z.string().optional(),    // 兑换汇率（新增）
-    annual: z.string().optional(),
-  }).catchall(z.string()).optional(),
-  limits: z.object({
-    singleTransaction: z.string().optional(),
-    dailySpending: z.string().optional(),
-    monthlySpending: z.string().optional(),
-    monthlyAtmWithdrawal: z.string().optional(),
-  }).catchall(z.string()).optional(),
-  rewards: z.object({
-    title: z.string(),
-    features: z.array(z.string()),
-  }).optional(),
-  affiliateLink: z.string().url().optional(),
+    seo: seoSchema,
+  }).merge(relatedContentSchema.pick({ relatedCards: true, relatedExchanges: true })),
 });
 
 const cardsCollection = defineCollection({
@@ -63,14 +48,10 @@ const cardsCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     shortDescription: z.string().optional(),
-
-    // Card Type
-    cardType: z.enum(['visa', 'mastercard']),
+    // Card Type and Network
+    cardType: z.enum(['virtual', 'physical', 'both']),
+    network: z.enum(['visa', 'mastercard', 'unionpay']),
     issuer: z.string(),
-
-    // Card Form (for single-tier cards)
-    isVirtual: z.boolean().optional(),
-    isPhysical: z.boolean().optional(),
 
     // Region and Currency Support
     supportedRegions: z.array(z.string()),
@@ -78,17 +59,17 @@ const cardsCollection = defineCollection({
     supportedPaymentMethods: z.array(z.string()).optional(),
     applicationDocuments: z.array(z.string()).optional(),
 
-    // Fees (for single-tier cards)
+    // Fees
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
     transactionFee: z.string().optional(),
     foreignExchangeFee: z.string().optional(),
-    withdrawalFee: z.string().optional(), // Combined withdrawal and ATM fee
-    exchangeRate: z.string().optional(),       // 兑换汇率（新增）
+    withdrawalFee: z.string().optional(),
+    exchangeRate: z.string().optional(),
     annualFee: z.boolean().optional(),
 
-    // Limits (for single-tier cards)
+    // Limits
     limits: z.object({
       singleTransaction: z.string().optional(),
       dailySpending: z.string().optional(),
@@ -96,7 +77,7 @@ const cardsCollection = defineCollection({
       monthlyAtmWithdrawal: z.string().optional(),
     }).optional(),
 
-    // Rewards (for single-tier cards)
+    // Rewards
     rewards: z.object({
       cashback: z.string().nullable().optional(),
       loyaltyProgram: z.string().optional(),
@@ -108,9 +89,6 @@ const cardsCollection = defineCollection({
     cons: z.array(z.string()),
     features: z.array(z.string()).optional(),
     featured: z.boolean().default(false),
-
-    // Tiers (for multi-level cards)
-    tiers: z.array(cardTierSchema).optional(),
     importantReminders: z.array(z.string()).optional(),
 
     // Other Information
@@ -120,8 +98,6 @@ const cardsCollection = defineCollection({
     // Links
     affiliateLink: z.string().url().optional(),
     invitationCode: z.string().optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
 
     // Status and Dates
     status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
@@ -130,10 +106,7 @@ const cardsCollection = defineCollection({
     lastReviewed: z.coerce.date().optional(),
 
     // SEO
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().url().optional(),
-    }).optional(),
+    seo: seoSchema,
 
     // Media
     image: image().optional(),
@@ -141,7 +114,7 @@ const cardsCollection = defineCollection({
 
     // Taxonomy
     tags: z.array(z.string()).optional(),
-  }),
+  }).merge(relatedContentSchema.pick({ relatedCards: true, relatedArticles: true })),
 });
 
 
@@ -232,20 +205,14 @@ const exchangesCollection = defineCollection({
     cons: z.array(z.string()).optional(),
     
     // SEO和关联
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
-    relatedExchanges: z.array(z.string()).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
+    seo: seoSchema,
     
     // 状态和时间
     status: z.enum(['active', 'maintenance', 'restricted']).default('active'),
     publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
     lastReviewed: z.coerce.date().optional(),
-  }),
+  }).merge(relatedContentSchema),
 });
 
 // 指南集合配置
@@ -272,16 +239,9 @@ const guidesCollection = defineCollection({
     tools: z.array(z.string()).optional(),
     
     // SEO
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
+    seo: seoSchema,
     
-    // 关联内容
-    relatedGuides: z.array(z.string()).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
-  }),
+  }).merge(relatedContentSchema.pick({relatedGuides: true, relatedCards: true, relatedArticles: true})),
 });
 
 // 作者集合配置
@@ -312,13 +272,7 @@ const pagesCollection = defineCollection({
     template: z.enum(['default', 'landing', 'comparison']).default('default'),
     
     // SEO
-    seo: z.object({
-      title: z.string().optional(),
-      description: z.string().optional(),
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-      noindex: z.boolean().default(false),
-    }).optional(),
+    seo: seoSchema,
     
     // Schema.org 结构化数据
     schema: z.object({
@@ -337,10 +291,8 @@ const faqCollection = defineCollection({
     category: z.string(),
     order: z.number().default(0),
     tags: z.array(z.string()).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedExchanges: z.array(z.string()).optional(),
     lastUpdated: z.coerce.date(),
-  }),
+  }).merge(relatedContentSchema.pick({relatedCards: true, relatedExchanges: true})),
 });
 
 // 通知公告集合

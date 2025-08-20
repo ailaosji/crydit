@@ -2,9 +2,8 @@
 title: "Dupay 虚拟信用卡 - 全球支付首选"
 name: "Dupay Card"
 description: "支持多种加密货币充值的全球虚拟信用卡，无月费，支持全球在线支付"
-cardType: "visa"
-isVirtual: true
-isPhysical: true
+network: "visa"
+cardType: "both"
 issuer: "Dupay"
 
 # 支持的地区
@@ -76,9 +75,7 @@ rewards:
 affiliateLink: "https://example.com/dupay-apply"
 
 # 相关卡片 (可选)
-relatedCards:
-  - "nobepay-card"
-  - "onekey-card"
+relatedCards: []
 
 # 相关文章 (可选)
 relatedArticles:
