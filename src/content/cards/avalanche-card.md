@@ -2,9 +2,10 @@
 title: "Avalanche Card - Spend Your Crypto Everywhere"
 name: "Avalanche Card"
 description: "A crypto-backed Visa card that allows you to seamlessly spend your USDC and AVAX anywhere Visa is accepted."
-network: "visa"
-cardType: "both"
+cardType: "visa"
 issuer: "Rain Liquidity"
+isVirtual: true
+isPhysical: true
 supportedRegions:
   - "USA"
   - "Latin America"

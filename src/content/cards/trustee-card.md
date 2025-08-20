@@ -2,9 +2,10 @@
 title: "Trustee Card (Temporarily Unavailable)"
 name: "Trustee Card"
 description: "The Trustee crypto card is a payment card for everyday use of digital currencies. Note: The card is temporarily unavailable, with the provider suggesting their partner, Quicko, as an alternative."
-network: "visa"
-cardType: both
+cardType: "visa"
 issuer: "Trustee"
+isVirtual: true
+isPhysical: true
 supportedRegions:
   - "EU"
 applicationDocuments: ["Passport", "ID card"]
@@ -32,7 +33,6 @@ tags:
   - "Unavailable"
 status: "discontinued"
 ---
-
 
 ## Trustee Card
 
