@@ -194,7 +194,6 @@ export async function batchGetCommentCounts(cards) {
  */
 function getMockCommentCount(identifier) {
   const mockData = {
-    'binance-card': 156,
     'crypto-com-card': 89,
     'coinbase-card': 67,
     'nexo-card': 45,
