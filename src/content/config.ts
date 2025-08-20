@@ -81,7 +81,7 @@ const cardsCollection = defineCollection({
     shortDescription: z.string().optional(),
 
     // Card Type
-    cardType: z.enum(['visa', 'mastercard']),
+    cardType: z.enum(['visa', 'mastercard', 'unionpay']),
     issuer: z.string(),
 
     // Card Form (for single-tier cards)
