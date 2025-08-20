@@ -2,7 +2,8 @@
 title: "Ready Card - 连接数字货币与现实生活的消费卡"
 name: "Ready Card"
 description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
-cardType: "mastercard"
+network: "mastercard"
+cardType: virtual
 issuer: "Ready / Kulipa"
 supportedRegions:
   - "英国"
@@ -37,54 +38,13 @@ tags:
   - "U卡"
   - "自托管"
   - "返现"
-
 importantReminders:
   - "<strong>开卡费约 $6:</strong> 创建卡片时收取（基于官方数据）"
   - "<strong>外币交易费 2.5%:</strong> 非本国货币交易时收取"
   - "<strong>休眠费 $3.95/月:</strong> 13个月不活跃后开始收取"
   - "<strong>汇率优势:</strong> 使用官方万事达汇率，无额外加价"
-
-tiers:
-  - name: "Metal Lite"
-    theme: "dark"
-    isPhysical: true
-    cardMaterial: "金属卡"
-    price: "$120"
-    priceUnit: "年费"
-    fees:
-      deposit: "免费"
-      foreignExchange: "免费"
-      annual: "$120"
-      "快递费": "免费"
-    rewards:
-      title: "奖励福利"
-      features:
-        - "首月返现: 10% (最高$150/月)"
-        - "完全自托管"
-    limits:
-      singleTransaction: "$5,000"
-      dailySpending: "$10,000"
-      monthlySpending: "$30,000"
-  - name: "Plastic"
-    theme: "green"
-    isPhysical: true
-    cardMaterial: "塑料卡"
-    price: "免费"
-    priceUnit: "年费"
-    fees:
-      deposit: "免费"
-      foreignExchange: "免费"
-      annual: "免费"
-      "快递费": "$6.99"
-    rewards:
-      title: "基础功能"
-      features:
-        - "标准预付卡功能，支持全球消费"
-    limits:
-      singleTransaction: "$5,000"
-      dailySpending: "$10,000"
-      monthlySpending: "$30,000"
 ---
+
 
 ## Ready Card 简介
 

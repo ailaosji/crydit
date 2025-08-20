@@ -2,10 +2,9 @@
 title: "MetaMask Card - Spend Crypto Everywhere"
 name: "MetaMask Card"
 description: "The MetaMask Card is a crypto debit card that lets you spend your crypto anywhere Mastercard is accepted, directly from your MetaMask wallet."
-cardType: "mastercard"
+network: "mastercard"
+cardType: both
 issuer: "MetaMask"
-isVirtual: true
-isPhysical: true
 supportedRegions:
   - "Argentina"
   - "Brazil"
@@ -47,43 +46,8 @@ tags:
   - "Mastercard"
   - "Self-custody"
   - "Linea"
-tiers:
-  - name: "Free"
-    theme: "light"
-    isVirtual: true
-    isPhysical: false
-    cardMaterial: "Virtual"
-    price: "$0"
-    priceUnit: "Annual"
-    fees:
-      tokenConversion: "0.875% (for non-stablecoins)"
-      atmWithdrawal: "2%"
-      crossBorder: "1%"
-    limits:
-      dailySpending: "$15,000"
-      monthlySpending: "N/A"
-      monthlyAtmWithdrawal: "$30,000"
-  - name: "Metal"
-    theme: "dark"
-    isVirtual: true
-    isPhysical: true
-    cardMaterial: "Metal"
-    price: "$199"
-    priceUnit: "Annual"
-    fees:
-      tokenConversion: "0.875% (for non-stablecoins)"
-      atmWithdrawal: "0% up to $1,200/mo, then 2%"
-      crossBorder: "0%"
-    rewards:
-      title: "Premium Rewards"
-      features:
-        - "Exclusive event access"
-        - "Surprise perks"
-    limits:
-      dailySpending: "$30,000"
-      monthlySpending: "N/A"
-      monthlyAtmWithdrawal: "$150,000"
 ---
+
 
 ## MetaMask Card Review
 

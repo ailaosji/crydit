@@ -2,10 +2,9 @@
 title: "Stables Card - Spend Your Stables"
 name: "Stables Card"
 description: "The Stables Card is a Mastercard that allows you to spend your stablecoins like cash, anywhere in the world."
-cardType: "mastercard"
+network: "mastercard"
+cardType: both
 issuer: "Stables"
-isVirtual: true
-isPhysical: true
 supportedRegions:
   - "Global"
 applicationDocuments: ["ID/Passport"]
@@ -45,6 +44,7 @@ foreignExchangeFee: "$0"
 withdrawalFee: "Varies by method"
 annualFee: false
 ---
+
 
 ## Stables Card Review
 
