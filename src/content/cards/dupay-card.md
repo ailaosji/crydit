@@ -76,9 +76,7 @@ rewards:
 affiliateLink: "https://example.com/dupay-apply"
 
 # 相关卡片 (可选)
-relatedCards:
-  - "nobepay-card"
-  - "onekey-card"
+relatedCards: []
 
 # 相关文章 (可选)
 relatedArticles:
