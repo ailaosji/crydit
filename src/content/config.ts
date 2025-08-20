@@ -1,6 +1,27 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
 
+// --- Reusable Schemas ---
+
+const seoSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
+  canonicalUrl: z.string().url().optional(),
+  noindex: z.boolean().default(false).optional(),
+});
+
+const relatedContentSchema = z.object({
+    relatedCards: z.array(z.string()).optional(),
+    relatedExchanges: z.array(z.string()).optional(),
+    relatedArticles: z.array(z.string()).optional(),
+    relatedGuides: z.array(z.string()).optional(),
+});
+
+
+// --- Collection Definitions ---
+
+
 // 文章集合配置
 const articlesCollection = defineCollection({
   type: 'content',
@@ -15,13 +36,8 @@ const articlesCollection = defineCollection({
     featured: z.boolean().default(false),
     author: z.string().default('U卡评测团队'),
     readingTime: z.number().optional(), // 预计阅读时间（分钟）
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
-    relatedCards: z.array(z.string()).optional(), // 相关U卡slug
-    relatedExchanges: z.array(z.string()).optional(), // 相关交易所slug
-  }),
+    seo: seoSchema,
+  }).merge(relatedContentSchema.pick({ relatedCards: true, relatedExchanges: true })),
 });
 
 // U卡评测集合配置
@@ -65,7 +81,7 @@ const cardsCollection = defineCollection({
     shortDescription: z.string().optional(),
 
     // Card Type
-    cardType: z.enum(['visa', 'mastercard']),
+    cardType: z.enum(['visa', 'mastercard', 'unionpay']),
     issuer: z.string(),
 
     // Card Form (for single-tier cards)
@@ -120,8 +136,6 @@ const cardsCollection = defineCollection({
     // Links
     affiliateLink: z.string().url().optional(),
     invitationCode: z.string().optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
 
     // Status and Dates
     status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
@@ -130,10 +144,7 @@ const cardsCollection = defineCollection({
     lastReviewed: z.coerce.date().optional(),
 
     // SEO
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().url().optional(),
-    }).optional(),
+    seo: seoSchema,
 
     // Media
     image: image().optional(),
@@ -141,7 +152,7 @@ const cardsCollection = defineCollection({
 
     // Taxonomy
     tags: z.array(z.string()).optional(),
-  }),
+  }).merge(relatedContentSchema.pick({ relatedCards: true, relatedArticles: true })),
 });
 
 
@@ -232,20 +243,14 @@ const exchangesCollection = defineCollection({
     cons: z.array(z.string()).optional(),
     
     // SEO和关联
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
-    relatedExchanges: z.array(z.string()).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
+    seo: seoSchema,
     
     // 状态和时间
     status: z.enum(['active', 'maintenance', 'restricted']).default('active'),
     publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
     lastReviewed: z.coerce.date().optional(),
-  }),
+  }).merge(relatedContentSchema),
 });
 
 // 指南集合配置
@@ -272,16 +277,9 @@ const guidesCollection = defineCollection({
     tools: z.array(z.string()).optional(),
     
     // SEO
-    seo: z.object({
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-    }).optional(),
+    seo: seoSchema,
     
-    // 关联内容
-    relatedGuides: z.array(z.string()).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedArticles: z.array(z.string()).optional(),
-  }),
+  }).merge(relatedContentSchema.pick({relatedGuides: true, relatedCards: true, relatedArticles: true})),
 });
 
 // 作者集合配置
@@ -312,13 +310,7 @@ const pagesCollection = defineCollection({
     template: z.enum(['default', 'landing', 'comparison']).default('default'),
     
     // SEO
-    seo: z.object({
-      title: z.string().optional(),
-      description: z.string().optional(),
-      keywords: z.array(z.string()).optional(),
-      canonicalUrl: z.string().optional(),
-      noindex: z.boolean().default(false),
-    }).optional(),
+    seo: seoSchema,
     
     // Schema.org 结构化数据
     schema: z.object({
@@ -337,10 +329,8 @@ const faqCollection = defineCollection({
     category: z.string(),
     order: z.number().default(0),
     tags: z.array(z.string()).optional(),
-    relatedCards: z.array(z.string()).optional(),
-    relatedExchanges: z.array(z.string()).optional(),
     lastUpdated: z.coerce.date(),
-  }),
+  }).merge(relatedContentSchema.pick({relatedCards: true, relatedExchanges: true})),
 });
 
 // 通知公告集合
