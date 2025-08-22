@@ -888,7 +888,7 @@ const featuredCards = allCards.slice(0, 20);
     function getCardTypeInfo(isActive, price) {
       if (isActive) {
         const displayPrice = price ? `${price}` : '免费';
-        return '<div class="text-center"><span class="text-green-600 text-lg block">✓</span><span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
+        return '<div class="text-center"><span class="text-green-600 text-lg block">✅</span><span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
       } else {
         return '<span class="text-gray-400 text-lg">✗</span>';
       }
@@ -959,12 +959,12 @@ const featuredCards = allCards.slice(0, 20);
       
       // 虚拟卡（显示价格）
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.isVirtual, card.data.virtualCardPrice);
+      row += getCardTypeInfo(card.data.cardType === 'virtual' || card.data.cardType === 'both', card.data.virtualCardPrice);
       row += '</td>';
       
       // 实体卡（显示价格）
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.isPhysical, card.data.physicalCardPrice);
+      row += getCardTypeInfo(card.data.cardType === 'physical' || card.data.cardType === 'both', card.data.physicalCardPrice);
       row += '</td>';
       
       // 手续费（外汇费+兑换费+充值费）
