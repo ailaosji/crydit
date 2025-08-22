@@ -430,9 +430,6 @@ const featuredCards = allCards.slice(0, 20);
                       # & 卡片
                     </th>
                     <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[12%]">
-                      Network
-                    </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[12%]">
                       虚拟卡
                     </th>
                     <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[12%]">
@@ -872,22 +869,12 @@ const featuredCards = allCards.slice(0, 20);
       return Math.abs(hash % 50) + 5;
     }
 
-    // 获取网络类型样式
-    function getNetworkDisplay(network) {
-      const networks = {
-        'visa': 'bg-blue-100 text-blue-800',
-        'mastercard': 'bg-orange-100 text-orange-800'
-      };
-      const className = networks[network] || 'bg-gray-100 text-gray-800';
-      const text = network ? network.charAt(0).toUpperCase() + network.slice(1) : 'N/A';
-      return '<span class="px-2 py-1 text-xs font-medium rounded-full ' + className + '">' + text + '</span>';
-    }
-
     // 生成虚拟卡/实体卡显示内容
-    function getCardTypeInfo(isActive, price) {
+    function getCardTypeInfo(isActive, price, network) {
       if (isActive) {
         const displayPrice = price ? `${price}` : '免费';
-        return '<div class="text-center"><span class="text-green-600 text-lg block">✅</span><span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
+        const networkText = network ? `<span class="text-xs text-gray-500"> ${network.charAt(0).toUpperCase() + network.slice(1)}</span>` : '';
+        return '<div class="text-center"><span class="text-green-600 text-lg block">✅' + networkText + '</span><span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
       } else {
         return '<span class="text-gray-400 text-lg">✗</span>';
       }
@@ -951,19 +938,14 @@ const featuredCards = allCards.slice(0, 20);
       row += '</div>';
       row += '</td>';
       
-      // Network
-      row += '<td class="px-2 py-4 text-center">';
-      row += getNetworkDisplay(card.data.network);
-      row += '</td>';
-      
       // 虚拟卡（显示价格）
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.cardType === 'virtual' || card.data.cardType === 'both', card.data.virtualCardPrice);
+      row += getCardTypeInfo(card.data.cardType === 'virtual' || card.data.cardType === 'both', card.data.virtualCardPrice, card.data.network);
       row += '</td>';
       
       // 实体卡（显示价格）
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.cardType === 'physical' || card.data.cardType === 'both', card.data.physicalCardPrice);
+      row += getCardTypeInfo(card.data.cardType === 'physical' || card.data.cardType === 'both', card.data.physicalCardPrice, card.data.network);
       row += '</td>';
       
       // 手续费（外汇费+兑换费+充值费）
