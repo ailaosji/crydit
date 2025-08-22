@@ -873,7 +873,7 @@ const featuredCards = allCards.slice(0, 20);
     function getCardTypeInfo(isActive, price, network) {
       if (isActive) {
         const displayPrice = price ? `${price}` : '免费';
-        const networkText = network ? `<span class="text-xs text-gray-500"> ${network.charAt(0).toUpperCase() + network.slice(1)}</span>` : '';
+        const networkText = network ? `<br><span class="text-xs text-gray-500">${network.charAt(0).toUpperCase() + network.slice(1)}</span>` : '';
         return '<div class="text-center"><span class="text-green-600 text-lg block">✅' + networkText + '</span><span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
       } else {
         return '<span class="text-gray-400 text-lg">✗</span>';
@@ -940,12 +940,12 @@ const featuredCards = allCards.slice(0, 20);
       
       // 虚拟卡（显示价格）
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.cardType === 'virtual' || card.data.cardType === 'both', card.data.virtualCardPrice, card.data.network);
+      row += getCardTypeInfo(card.data.cardType === 'virtual' || card.data.cardType === 'both', card.data.virtualCardPrice, card.data.virtualNetwork);
       row += '</td>';
       
       // 实体卡（显示价格）
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.cardType === 'physical' || card.data.cardType === 'both', card.data.physicalCardPrice, card.data.network);
+      row += getCardTypeInfo(card.data.cardType === 'physical' || card.data.cardType === 'both', card.data.physicalCardPrice, card.data.physicalNetwork);
       row += '</td>';
       
       // 手续费（外汇费+兑换费+充值费）

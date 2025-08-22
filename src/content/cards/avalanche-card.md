@@ -3,6 +3,8 @@ title: "雪崩卡（Avalanche Card）- 随时随地消费您的加密货币"
 name: "Avalanche Card"
 description: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
 network: "visa"
+virtualNetwork: "visa"
+physicalNetwork: "visa"
 cardType: "both"
 issuer: "Rain Liquidity"
 supportedRegions:
