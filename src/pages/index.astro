@@ -874,7 +874,7 @@ const featuredCards = allCards.slice(0, 20);
       if (isActive) {
         const displayPrice = price ? `${price}` : '免费';
         const networkText = network ? `<br><span class="text-xs text-gray-500">${network.charAt(0).toUpperCase() + network.slice(1)}</span>` : '';
-        return '<div class="text-center"><span class="text-green-600 text-lg block">✅' + networkText + '</span><span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
+        return '<div class="text-center"><span class="text-green-600 text-lg block">✅</span>' + networkText + '<span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
       } else {
         return '<span class="text-gray-400 text-lg">✗</span>';
       }
