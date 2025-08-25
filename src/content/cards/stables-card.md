@@ -1,13 +1,24 @@
 ---
-title: "Stables Card - Spend Your Stables"
+title: "Stables Card - 消费您的稳定币"
 name: "Stables Card"
-description: "The Stables Card is a Mastercard that allows you to spend your stablecoins like cash, anywhere in the world."
+logo: ""
+description: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
+shortDescription: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
+cardType: "both"
 network: "mastercard"
-cardType: both
+isVirtual: true
+isPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "mastercard"
+virtualAnnualFee: false
+physicalCardPrice: 0
+physicalNetwork: "mastercard"
+physicalAnnualFee: false
+monthlyFee: false
 issuer: "Stables"
 supportedRegions:
-  - "Global"
-applicationDocuments: ["ID/Passport"]
+  - "全球"
+applicationDocuments: ["身份证/护照"]
 supportedCurrencies:
   - "USDT"
   - "USDC"
@@ -17,48 +28,48 @@ supportedCurrencies:
 supportedPaymentMethods:
   - "Apple Pay"
   - "Google Pay"
-  - "Bank Transfer"
+  - "银行转账"
 affiliateLink: "https://stables.money/"
 publishDate: "2025-08-18"
 kycRequired: true
 pros:
-  - "Spend stablecoins directly"
-  - "No activation, monthly, or FX fees"
-  - "Earn Stables Points on transactions"
-  - "Supports over 20 crypto networks for top-ups"
+  - "直接消费稳定币"
+  - "无激活费、月费或外汇费"
+  - "交易可赚取Stables积分"
+  - "支持超过20个加密网络进行充值"
 cons:
-  - "Fee structure for top-ups and sending can be complex"
-  - "Regional availability information is slightly unclear"
+  - "充值和发送的费用结构可能很复杂"
+  - "地区可用性信息略有不清楚"
 features:
-  - "On-chain balance"
-  - "MPC cryptography for security"
-  - "24/7 support"
+  - "链上余额"
+  - "MPC加密技术保障安全"
+  - "24/7支持"
 tags:
   - "Stables"
   - "Mastercard"
-  - "Stablecoin"
-  - "Global"
-depositFee: "Varies by method"
-transactionFee: "$0"
-foreignExchangeFee: "$0"
-withdrawalFee: "Varies by method"
+  - "稳定币"
+  - "全球"
+depositFee: "因方法而异"
+transactionFee: "0美元"
+foreignExchangeFee: "0美元"
+withdrawalFee: "因方法而异"
 annualFee: false
 ---
 
 
-## Stables Card Review
+## Stables Card 评测
 
-The Stables Card is designed for users who want to spend their stablecoins as easily as cash. It functions as a Mastercard and is available in both virtual and physical forms.
+Stables Card专为希望像现金一样轻松消费稳定币的用户而设计。它作为万事达卡使用，并提供虚拟和实体两种形式。
 
-### Key Features:
+### 主要特点：
 
-*   **Direct Stablecoin Spending:** Use stablecoins like USDT, USDC, and DAI for everyday purchases without needing to convert them to fiat first.
-*   **Zero Spending Fees:** Stables charges no fees for local or international spending, and no foreign exchange (FX) fees.
-*   **Rewards Program:** Earn "Stables Points" with every transaction.
-*   **Flexible Top-ups:** Fund your account with stablecoins from over 20 different blockchain networks, or with local currencies via bank transfer or debit card.
+*   **直接消费稳定币**：使用USDT、USDC和DAI等稳定币进行日常购物，无需先将其转换为法定货币。
+*   **零消费费用**：Stables对本地或国际消费不收取任何费用，也没有外汇（FX）费用。
+*   **奖励计划**：每次交易均可赚取“Stables积分”。
+*   **灵活充值**：通过超过20个不同的区块链网络使用稳定币为您的账户充值，或通过银行转账或借记卡使用本地货币充值。
 
-### Fees:
+### 费用：
 
-While spending is free, there are fees associated with topping up your account with fiat and sending money to external wallets or bank accounts. These fees vary depending on the method and region. Stablecoin deposits are free.
+虽然消费是免费的，但用法定货币充值账户以及向外部钱包或银行账户汇款会产生费用。这些费用因方法和地区而异。稳定币存款是免费的。
 
-The Stables Card aims to bridge the gap between DeFi and traditional finance, offering a secure and convenient way to use your digital assets globally.
+Stables Card旨在弥合DeFi和传统金融之间的差距，为您在全球范围内使用数字资产提供一种安全便捷的方式。

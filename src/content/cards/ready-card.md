@@ -1,9 +1,20 @@
 ---
 title: "Ready Card - 连接数字货币与现实生活的消费卡"
 name: "Ready Card"
+logo: ""
 description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
+shortDescription: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
+cardType: "both"
 network: "mastercard"
-cardType: virtual
+isVirtual: true
+isPhysical: true
+virtualCardPrice: 6
+virtualNetwork: "mastercard"
+virtualAnnualFee: false
+physicalCardPrice: 6
+physicalNetwork: "mastercard"
+physicalAnnualFee: 120
+monthlyFee: false
 issuer: "Ready / Kulipa"
 supportedRegions:
   - "英国"

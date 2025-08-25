@@ -1,9 +1,20 @@
 ---
 title: "Payy Card - 无账号密码的隐私安全U卡"
 name: "Payy Card"
+logo: ""
 description: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
+shortDescription: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
+cardType: "both"
 network: "visa"
-cardType: both
+isVirtual: true
+isPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "visa"
+virtualAnnualFee: false
+physicalCardPrice: null
+physicalNetwork: "visa"
+physicalAnnualFee: false
+monthlyFee: false
 issuer: "Payy (Polybase Labs)"
 supportedRegions:
   - "全球大部分地区"
@@ -13,8 +24,6 @@ supportedCurrencies:
 supportedPaymentMethods:
   - "Apple Pay"
   - "Google Pay"
-virtualCardPrice: 0
-physicalCardPrice: null
 depositFee: "免费"
 transactionFee: "免费"
 foreignExchangeFee: "免费"
@@ -69,8 +78,4 @@ Payy Card 是一款由 Polybase Labs 推出的创新型加密货币Visa卡，其
 
 Payy支持中国大陆身份证和护照进行KYC验证，无需地址证明。验证后，虚拟卡会即时发放，可添加至Apple Pay或Google Pay使用。根据用户分享，现在可能有“存$10送$10”的活动，具体请以官方信息为准。
 
-总的来说，Payy Card为那些高度重视隐私和资产自托管权的用户提供了一个极具吸引力的选择。然而，作为一个新兴平台，其长期的稳定性和生态发展还有待市场检验。
-
-
 **邀请链接**: [点击这里申请Payy Card](https://payy.link/invite/8UFBN7) (邀请码: `8UFBN7`)
-
