@@ -441,7 +441,7 @@ const featuredCards = allCards;
                     <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
                       提现费
                     </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[15%]" data-astro-cid-j7pv25f6>
+                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[15%]">
                       年费/月费
                     </th>
                     <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
@@ -769,7 +769,8 @@ const featuredCards = allCards;
           data: {
             name: 'Crypto.com Visa Card',
             shortDescription: '全球领先的加密货币借记卡',
-            cardType: 'visa',
+            cardType: 'both',
+            network: 'visa',
             isVirtual: true,
             isPhysical: true,
             virtualCardPrice: 0, // 免费
@@ -787,7 +788,8 @@ const featuredCards = allCards;
           data: {
             name: 'Binance Card',
             shortDescription: '币安官方发行的数字货币卡',
-            cardType: 'visa',
+            cardType: 'both',
+            network: 'visa',
             isVirtual: true,
             isPhysical: true,
             virtualCardPrice: 5, // $5
@@ -805,7 +807,8 @@ const featuredCards = allCards;
           data: {
             name: 'Nexo Card',
             shortDescription: '支持多种加密货币的借记卡',
-            cardType: 'mastercard',
+            cardType: 'virtual',
+            network: 'mastercard',
             isVirtual: true,
             isPhysical: false, // 仅虚拟卡
             virtualCardPrice: 0, // 免费
@@ -832,14 +835,27 @@ const featuredCards = allCards;
     };
 
     // 生成虚拟卡/实体卡显示内容
-    function getCardTypeInfo(isActive, price, network) {
-      if (isActive) {
-        const displayPrice = (price !== null && price > 0) ? `$${price}` : '免费';
-        const networkText = network ? `<br><span class="text-xs text-gray-500">${network.charAt(0).toUpperCase() + network.slice(1)}</span>` : '';
-        return '<div class="text-center"><span class="text-green-600 text-lg block">✅</span>' + networkText + '<span class="text-xs text-gray-500">' + displayPrice + '</span></div>';
-      } else {
+    function getCardTypeInfo(isActive, price, network, annualFee, monthlyFee) {
+      if (!isActive) {
         return '<span class="text-gray-400 text-lg">✗</span>';
       }
+
+      const displayPrice = (price !== null && price > 0) ? `$${price}` : '免费';
+      const networkText = network ? `<div class="text-xs text-gray-500">${network.charAt(0).toUpperCase() + network.slice(1)}</div>` : '';
+
+      let feeText = '';
+      if (monthlyFee && monthlyFee !== false) {
+        feeText = `<div class="text-xs text-blue-600">${typeof monthlyFee === 'string' ? monthlyFee : '$' + monthlyFee}/月</div>`;
+      } else if (annualFee && annualFee !== false) {
+        feeText = `<div class="text-xs text-blue-600">$${annualFee}/年</div>`;
+      }
+
+      return `<div class="text-center">
+                <div><span class="text-green-600 text-lg">✅</span></div>
+                ${networkText}
+                <div class="text-xs text-gray-500">${displayPrice}</div>
+                ${feeText}
+              </div>`;
     }
 
     // 计算总手续费（外汇费+兑换费+充值费）
@@ -871,26 +887,6 @@ const featuredCards = allCards;
       return '<span class="text-xs text-gray-900">' + (card.data.withdrawalFee || '2%') + '</span>';
     }
 
-    // 获取年费/月费显示
-    function getRecurringFeeDisplay(card) {
-      const data = card.data;
-      if (data.monthlyFee && data.monthlyFee !== false) {
-        // 如果是字符串，直接显示；如果是数字，格式化
-        const feeText = typeof data.monthlyFee === 'string' ? data.monthlyFee : `$${data.monthlyFee}`;
-        return `<span class="text-xs text-gray-900">${feeText}/月</span>`;
-      }
-      if (data.annualFee && data.annualFee !== false) {
-        return `<span class="text-xs text-gray-900">$${data.annualFee}/年</span>`;
-      }
-      if (data.physicalAnnualFee && data.physicalAnnualFee !== false) {
-        return `<span class="text-xs text-gray-900">$${data.physicalAnnualFee}/年 (实体)</span>`;
-      }
-      if (data.virtualAnnualFee && data.virtualAnnualFee !== false) {
-        return `<span class="text-xs text-gray-900">$${data.virtualAnnualFee}/年 (虚拟)</span>`;
-      }
-      return '<span class="text-xs text-gray-500">无</span>';
-    }
-
     // 渲染表格行
     function renderTableRow(card, index) {
       const rank = index + 1;
@@ -914,14 +910,14 @@ const featuredCards = allCards;
       row += '</div>';
       row += '</td>';
       
-      // 虚拟卡（显示价格）
+      // 虚拟卡
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.cardType === 'virtual' || card.data.cardType === 'both', card.data.virtualCardPrice, card.data.virtualNetwork);
+      row += getCardTypeInfo(card.data.isVirtual, card.data.virtualCardPrice, card.data.virtualNetwork, card.data.virtualAnnualFee, card.data.monthlyFee);
       row += '</td>';
       
-      // 实体卡（显示价格）
+      // 实体卡
       row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.cardType === 'physical' || card.data.cardType === 'both', card.data.physicalCardPrice, card.data.physicalNetwork);
+      row += getCardTypeInfo(card.data.isPhysical, card.data.physicalCardPrice, card.data.physicalNetwork, card.data.physicalAnnualFee, card.data.monthlyFee);
       row += '</td>';
       
       // 手续费
@@ -934,11 +930,6 @@ const featuredCards = allCards;
       row += getWithdrawalFeeDisplay(card);
       row += '</td>';
       
-      // 年费/月费
-      row += '<td class="px-2 py-4 text-center">';
-      row += getRecurringFeeDisplay(card);
-      row += '</td>';
-
       // 操作列
       row += '<td class="px-2 py-4 text-center">';
       row += `<a href="/cards/${card.slug}" class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md transform hover:scale-105">`;
@@ -1035,7 +1026,7 @@ const featuredCards = allCards;
         // 显示无数据状态
         tableBody.innerHTML = `
           <tr>
-            <td colspan="7" class="px-6 py-12 text-center">
+            <td colspan="6" class="px-6 py-12 text-center">
               <div class="text-gray-500">
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                 <h3 class="mt-2 text-sm font-medium text-gray-900">未找到匹配的卡片</h3>
