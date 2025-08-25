@@ -1,11 +1,20 @@
 ---
 title: "Wirex Card - 全能型加密货币借记卡"
 name: "Wirex Card"
+logo: ""
 description: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
-network: "visa"
-virtualNetwork: "visa"
-physicalNetwork: "visa"
+shortDescription: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
 cardType: "both"
+network: "visa"
+isVirtual: true
+isPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "visa"
+virtualAnnualFee: false
+physicalCardPrice: 0
+physicalNetwork: "visa"
+physicalAnnualFee: false
+monthlyFee: "€0 - €29.99"
 issuer: "Wirex"
 supportedRegions:
   - "全球多个地区"

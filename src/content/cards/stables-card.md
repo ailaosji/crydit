@@ -1,11 +1,20 @@
 ---
 title: "Stables Card - 消费您的稳定币"
 name: "Stables Card"
+logo: ""
 description: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
-network: "mastercard"
-virtualNetwork: "mastercard"
-physicalNetwork: "mastercard"
+shortDescription: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
 cardType: "both"
+network: "mastercard"
+isVirtual: true
+isPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "mastercard"
+virtualAnnualFee: false
+physicalCardPrice: 0
+physicalNetwork: "mastercard"
+physicalAnnualFee: false
+monthlyFee: false
 issuer: "Stables"
 supportedRegions:
   - "全球"

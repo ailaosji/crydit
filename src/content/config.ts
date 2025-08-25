@@ -68,6 +68,7 @@ const cardsCollection = defineCollection({
     withdrawalFee: z.string().optional(),
     exchangeRate: z.string().optional(),
     annualFee: z.boolean().optional(),
+    monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
 
     // Limits
     limits: z.object({
