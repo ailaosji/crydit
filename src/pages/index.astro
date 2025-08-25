@@ -839,7 +839,6 @@ const featuredCards = allCards;
       if (!isActive) {
         return '<span class="text-gray-400 text-lg">✗</span>';
       }
-
       const displayPrice = (price !== null && price > 0) ? `$${price}` : '免费';
       const networkText = network ? `<div class="text-xs text-gray-500">${network.charAt(0).toUpperCase() + network.slice(1)}</div>` : '';
 
