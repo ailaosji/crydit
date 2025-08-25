@@ -3,6 +3,8 @@ title: "MetaMask Card - 随时随地消费加密货币"
 name: "MetaMask Card"
 description: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
 network: "mastercard"
+virtualNetwork: "mastercard"
+physicalNetwork: "mastercard"
 cardType: "both"
 issuer: "MetaMask"
 supportedRegions:
