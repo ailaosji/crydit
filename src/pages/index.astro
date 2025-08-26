@@ -744,3 +744,331 @@ const popularArticles = allArticles.slice(1, 6);
       </section>
 
     </main>
+  </div>
+
+  <!-- 样式和脚本 -->
+  <style>
+    .filter-btn {
+      @apply bg-gray-100 text-gray-600 hover:bg-gray-200;
+    }
+    .filter-btn.active {
+      @apply bg-indigo-100 text-indigo-700 border-indigo-200;
+    }
+    .filter-btn:hover {
+      @apply shadow-sm transform scale-105;
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    tbody tr {
+      animation: fadeIn 0.3s ease-out;
+    }
+    .loading-shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
+
+  <script>
+    // 无限滚动加载功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const searchInput = document.getElementById('search-input');
+      const resetButton = document.getElementById('reset-filters');
+      const filteredCount = document.getElementById('filtered-count');
+      const tableBody = document.getElementById('card-table-body');
+      const loadingIndicator = document.getElementById('loading-indicator');
+      const loadComplete = document.getElementById('load-complete');
+      const totalLoadedSpan = document.getElementById('total-loaded');
+
+      // 模拟更多卡片数据（实际项目中从API获取）
+      const allCardRows = Array.from(tableBody.querySelectorAll('tr'));
+
+      // 无限滚动相关变量
+      const itemsPerLoad = 5; // 每次加载5张卡片
+      let currentlyDisplayed = Math.min(itemsPerLoad, allCardRows.length);
+      let filteredRows = [...allCardRows];
+      let isLoading = false;
+      let hasMoreItems = allCardRows.length > itemsPerLoad;
+
+      let activeFilters = new Set();
+      let searchTerm = '';
+
+      // 初始化显示
+      initializeDisplay();
+
+      // 无限滚动监听
+      const tableContainer = document.querySelector('.bg-white.rounded-2xl.shadow-lg');
+
+      // 使用 Intersection Observer 监听滚动
+      const loadMoreObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && hasMoreItems && !isLoading) {
+            loadMoreItems();
+          }
+        });
+      }, {
+        rootMargin: '100px' // 提前100px开始加载
+      });
+
+      // 创建一个触发元素用于监听
+      const loadTrigger = document.createElement('div');
+      loadTrigger.id = 'load-trigger';
+      loadTrigger.style.height = '1px';
+      tableContainer.appendChild(loadTrigger);
+      loadMoreObserver.observe(loadTrigger);
+
+      // 筛选按钮事件
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const filterId = this.id.replace('filter-', '');
+
+          if (filterId === 'all') {
+            activeFilters.clear();
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+          } else {
+            document.getElementById('filter-all').classList.remove('active');
+
+            if (activeFilters.has(filterId)) {
+              activeFilters.delete(filterId);
+              this.classList.remove('active');
+            } else {
+              activeFilters.add(filterId);
+              this.classList.add('active');
+            }
+
+            if (activeFilters.size === 0) {
+              document.getElementById('filter-all').classList.add('active');
+            }
+          }
+
+          applyFilters();
+        });
+      });
+
+      // 搜索输入事件
+      searchInput.addEventListener('input', function() {
+        searchTerm = this.value.toLowerCase().trim();
+        applyFilters();
+      });
+
+      // 重置按钮事件
+      resetButton.addEventListener('click', function() {
+        activeFilters.clear();
+        searchTerm = '';
+        searchInput.value = '';
+
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        document.getElementById('filter-all').classList.add('active');
+
+        applyFilters();
+      });
+
+      // 初始化显示
+      function initializeDisplay() {
+        // 初始只显示前几项
+        allCardRows.forEach((row, index) => {
+          if (index < currentlyDisplayed) {
+            row.style.display = '';
+            row.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s both`;
+          } else {
+            row.style.display = 'none';
+          }
+        });
+
+        updateLoadingState();
+      }
+
+      // 应用筛选逻辑
+      function applyFilters() {
+        filteredRows = allCardRows.filter(row => {
+          let shouldShow = true;
+          const rowText = row.textContent.toLowerCase();
+
+          // 搜索筛选
+          if (searchTerm && !rowText.includes(searchTerm)) {
+            shouldShow = false;
+          }
+
+          // 筛选器逻辑
+          if (activeFilters.size > 0) {
+            let passesFilter = false;
+
+            activeFilters.forEach(filter => {
+              switch(filter) {
+                case 'free':
+                  if (rowText.includes('免费')) passesFilter = true;
+                  break;
+                case 'virtual':
+                  if (rowText.includes('支持') && rowText.includes('虚拟卡')) passesFilter = true;
+                  break;
+                case 'visa':
+                  if (rowText.includes('visa')) passesFilter = true;
+                  break;
+                case 'physical':
+                  if (rowText.includes('支持') && rowText.includes('实体卡')) passesFilter = true;
+                  break;
+              }
+            });
+
+            if (!passesFilter) shouldShow = false;
+          }
+
+          return shouldShow;
+        });
+
+        // 重置显示状态
+        currentlyDisplayed = Math.min(itemsPerLoad, filteredRows.length);
+        hasMoreItems = filteredRows.length > currentlyDisplayed;
+
+        // 重新显示筛选后的结果
+        displayFilteredResults();
+
+        // 更新计数
+        if (filteredCount) {
+          filteredCount.textContent = filteredRows.length;
+        }
+
+        updateLoadingState();
+      }
+
+      // 显示筛选后的结果
+      function displayFilteredResults() {
+        // 先隐藏所有行
+        allCardRows.forEach(row => {
+          row.style.display = 'none';
+        });
+
+        // 显示筛选后的前几项
+        filteredRows.forEach((row, index) => {
+          if (index < currentlyDisplayed) {
+            row.style.display = '';
+            // 添加进入动画
+            row.style.animation = `fadeInUp 0.4s ease-out ${index * 0.05}s both`;
+          }
+        });
+
+        // 显示无结果状态
+        if (filteredRows.length === 0) {
+          showNoResultsMessage();
+        } else {
+          hideNoResultsMessage();
+        }
+      }
+
+      // 加载更多项目
+      function loadMoreItems() {
+        if (isLoading || !hasMoreItems) return;
+
+        isLoading = true;
+        loadingIndicator.classList.remove('hidden');
+
+        // 模拟加载延迟
+        setTimeout(() => {
+          const nextBatch = Math.min(itemsPerLoad, filteredRows.length - currentlyDisplayed);
+
+          // 显示下一批项目
+          for (let i = currentlyDisplayed; i < currentlyDisplayed + nextBatch; i++) {
+            if (filteredRows[i]) {
+              filteredRows[i].style.display = '';
+              filteredRows[i].style.animation = `fadeInUp 0.5s ease-out ${(i - currentlyDisplayed) * 0.1}s both`;
+            }
+          }
+
+          currentlyDisplayed += nextBatch;
+          hasMoreItems = currentlyDisplayed < filteredRows.length;
+
+          isLoading = false;
+          updateLoadingState();
+        }, 800); // 模拟网络延迟
+      }
+
+      // 更新加载状态
+      function updateLoadingState() {
+        if (isLoading) {
+          loadingIndicator.classList.remove('hidden');
+          loadComplete.classList.add('hidden');
+        } else if (!hasMoreItems && filteredRows.length > 0) {
+          loadingIndicator.classList.add('hidden');
+          loadComplete.classList.remove('hidden');
+          if (totalLoadedSpan) {
+            totalLoadedSpan.textContent = currentlyDisplayed;
+          }
+        } else {
+          loadingIndicator.classList.add('hidden');
+          loadComplete.classList.add('hidden');
+        }
+      }
+
+      // 显示无结果消息
+      function showNoResultsMessage() {
+        const existingMessage = document.getElementById('no-results-message');
+        if (existingMessage) return;
+
+        const noResultsRow = document.createElement('tr');
+        noResultsRow.id = 'no-results-message';
+        noResultsRow.innerHTML = `
+          <td colspan="6" class="px-6 py-12 text-center">
+            <div class="text-gray-500">
+              <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">未找到匹配的卡片</h3>
+              <p class="text-sm text-gray-500 mb-4">请尝试调整筛选条件或搜索关键词</p>
+              <button onclick="document.getElementById('reset-filters').click()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                <i class="fas fa-undo mr-2"></i>重置筛选
+              </button>
+            </div>
+          </td>
+        `;
+        tableBody.appendChild(noResultsRow);
+      }
+
+      // 隐藏无结果消息
+      function hideNoResultsMessage() {
+        const existingMessage = document.getElementById('no-results-message');
+        if (existingMessage) {
+          existingMessage.remove();
+        }
+      }
+
+      // 增强的悬停效果
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+          this.style.transform = 'translateY(-2px)';
+          this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+        });
+
+        row.addEventListener('mouseleave', function() {
+          this.style.transform = 'translateY(0)';
+          this.style.boxShadow = 'none';
+        });
+      });
+    });
+  </script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</Layout>
