@@ -1,5 +1,5 @@
 ---
-// src/pages/index.astro
+// src/pages/index.astro - Merged Version
 import Layout from '../layouts/Layout.astro';
 
 // 安全地获取内容集合，添加错误处理
@@ -44,7 +44,9 @@ try {
   }
   
   if (allCards.length > 0) {
-    allCards = allCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
+    allCards = allCards.sort((a, b) =>
+      new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime()
+    );
   }
   
   if (allExchanges.length > 0) {
@@ -58,7 +60,7 @@ try {
 // 获取最新文章和热门文章
 const latestArticle = allArticles[0];
 const popularArticles = allArticles.slice(1, 6);
-const featuredCards = allCards;
+const featuredCards = allCards.slice(0, 20);
 ---
 
 <Layout title="数字货币U卡评测与推荐 - 2025年最新加密货币借记卡指南">
@@ -420,59 +422,49 @@ const featuredCards = allCards;
               </div>
             </div>
 
-                            <!-- 优化后的卡片表格 -->
-            <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-200">
+            <!-- 紧凑表格设计 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
               <table class="w-full table-auto" id="cards-table">
                 <!-- 表头 -->
                 <thead class="bg-gray-50 border-b border-gray-200">
                   <tr>
-                    <th class="px-4 py-4 text-left text-sm font-medium text-gray-700 uppercase tracking-wider w-[25%]">
-                      # & 卡片
+                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-700 w-[45%]">
+                      # 卡片信息
                     </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
+                    <th class="px-2 py-3 text-center text-sm font-medium text-gray-700 w-[10%]">
                       虚拟卡
                     </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
+                    <th class="px-2 py-3 text-center text-sm font-medium text-gray-700 w-[10%]">
                       实体卡
                     </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
+                    <th class="px-2 py-3 text-center text-sm font-medium text-gray-700 w-[10%]">
                       手续费
                     </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
-                      提现费
+                    <th class="px-2 py-3 text-center text-sm font-medium text-gray-700 w-[10%]">
+                      年/月费
                     </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[15%]">
-                      年费/月费
-                    </th>
-                    <th class="px-2 py-4 text-center text-sm font-medium text-gray-700 uppercase tracking-wider w-[10%]">
+                    <th class="px-2 py-3 text-center text-sm font-medium text-gray-700 w-[15%]">
                       操作
                     </th>
                   </tr>
                 </thead>
-                <tbody id="card-table-body" class="bg-white divide-y divide-gray-200">
+                <tbody id="card-table-body" class="bg-white divide-y divide-gray-100">
                   <!-- 表格内容将通过JavaScript动态生成 -->
                 </tbody>
               </table>
               
-              <!-- 分页控件 -->
-              <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <div class="flex items-center justify-between">
-                  <div class="text-sm text-gray-700">
-                    显示 <span id="page-start" class="font-medium">1</span> 到 
-                    <span id="page-end" class="font-medium">10</span> 条，
-                    共 <span id="total-items" class="font-medium"></span> 条记录
-                  </div>
-                  <div class="flex items-center space-x-2">
-                    <button id="prev-page" class="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                      上一页
-                    </button>
-                    <div id="page-numbers" class="flex space-x-1">
-                      <!-- 页码将通过JavaScript动态生成 -->
-                    </div>
-                    <button id="next-page" class="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
-                      下一页
-                    </button>
-                  </div>
+              <!-- 无限加载状态 -->
+              <div id="loading-more" class="px-6 py-8 text-center border-t border-gray-200 hidden">
+                <div class="flex items-center justify-center space-x-2">
+                  <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600"></div>
+                  <span class="text-gray-600 text-sm">正在加载更多...</span>
+                </div>
+              </div>
+
+              <!-- 已加载完所有内容提示 -->
+              <div id="all-loaded" class="px-6 py-4 text-center border-t border-gray-200 hidden">
+                <div class="text-sm text-gray-500">
+                  已显示全部 <span id="total-displayed" class="font-medium text-indigo-600"></span> 张卡片
                 </div>
               </div>
             </div>
@@ -754,79 +746,166 @@ const featuredCards = allCards;
     }
   </style>
   
-  <script define:vars={{ featuredCards }}>
-    // 配置
-    const itemsPerPage = 10;
-    let currentPage = 1;
-    
-    // 模拟卡片数据（如果没有真实数据的话）
-    let allCards = featuredCards;
-    if (!allCards || allCards.length === 0) {
-      // 添加一些示例数据用于展示
-      allCards = [
-        {
-          slug: 'sample-card-1',
-          data: {
-            name: 'Crypto.com Visa Card',
-            shortDescription: '全球领先的加密货币借记卡',
-            cardType: 'both',
-            network: 'visa',
-            isVirtual: true,
-            isPhysical: true,
-            virtualCardPrice: 0, // 免费
-            physicalCardPrice: 10, // $10
-            depositFee: '0%',
-            exchangeFee: '0.5%',
-            transactionFee: '1.0%', // 外汇费
-            withdrawalFee: '2.0%',
-            annualFee: false,
-            monthlyFee: false
-          }
-        },
-        {
-          slug: 'sample-card-2',
-          data: {
-            name: 'Binance Card',
-            shortDescription: '币安官方发行的数字货币卡',
-            cardType: 'both',
-            network: 'visa',
-            isVirtual: true,
-            isPhysical: true,
-            virtualCardPrice: 5, // $5
-            physicalCardPrice: 15, // $15
-            depositFee: '0%',
-            exchangeFee: '0.3%',
-            transactionFee: '0.9%',
-            withdrawalFee: '1.8%',
-            annualFee: false,
-            monthlyFee: false
-          }
-        },
-        {
-          slug: 'sample-card-3',
-          data: {
-            name: 'Nexo Card',
-            shortDescription: '支持多种加密货币的借记卡',
-            cardType: 'virtual',
-            network: 'mastercard',
-            isVirtual: true,
-            isPhysical: false, // 仅虚拟卡
-            virtualCardPrice: 0, // 免费
-            physicalCardPrice: null,
-            depositFee: '0%',
-            exchangeFee: '0.5%',
-            transactionFee: '1.2%',
-            withdrawalFee: '2.5%', // 但因为只有虚拟卡，会显示"暂不支持"
-            annualFee: true,
-            monthlyFee: false
-          }
-        }
-      ];
+  <!-- JavaScript代码 -->
+  <script define:vars={{ allCards: featuredCards }}>
+    // 获取卡片类型显示
+    function getCardTypeDisplay(cardType) {
+      const typeStyles = {
+        'visa': '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-600 text-white ml-2">VISA</span>',
+        'mastercard': '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-orange-600 text-white ml-2">MASTERCARD</span>',
+        'unionpay': '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-600 text-white ml-2">银联</span>'
+      };
+      return typeStyles[cardType] || '';
     }
-    
-    let filteredCards = [...allCards];
-    
-    // 筛选状态
+
+    // 计算总手续费
+    function calculateTotalFees(card) {
+      const parsePercentage = (value) => {
+        if (!value || value === '免费' || value === 'Free') return 0;
+        const cleanValue = String(value).replace(/[^\d.]/g, '');
+        const parsed = parseFloat(cleanValue);
+        return isNaN(parsed) ? 0 : parsed;
+      };
+
+      const depositFee = parsePercentage(card.data.depositFee);
+      const transactionFee = parsePercentage(card.data.transactionFee);
+
+      // 手续费 = 充值手续费 + 消费手续费
+      const total = depositFee + transactionFee;
+      return total === 0 ? '免费' : total.toFixed(2) + '%';
+    }
+
+    // 渲染优化后的表格行
+    function renderTableRow(card, index) {
+      const rank = index + 1;
+      
+      // 获取卡片名称的前两个字母作为logo
+      const logoText = card.data.name.substring(0, 2).toUpperCase();
+      
+      // 根据排名设置不同的样式
+      let rankBgClass = 'bg-gray-100 text-gray-600';
+      if (rank === 1) rankBgClass = 'bg-gradient-to-br from-yellow-400 to-amber-500 text-white';
+      else if (rank === 2) rankBgClass = 'bg-gradient-to-br from-gray-300 to-gray-400 text-white';
+      else if (rank === 3) rankBgClass = 'bg-gradient-to-br from-orange-400 to-orange-500 text-white';
+
+      // 根据卡片名称生成不同的渐变背景
+      const cardColors = [
+        'from-blue-500 to-indigo-600',
+        'from-purple-500 to-pink-600',
+        'from-green-500 to-teal-600',
+        'from-red-500 to-orange-600',
+        'from-cyan-500 to-blue-600',
+        'from-violet-500 to-purple-600',
+        'from-rose-500 to-pink-600',
+        'from-amber-500 to-orange-600'
+      ];
+      const colorIndex = index % cardColors.length;
+      const cardGradient = cardColors[colorIndex];
+
+      let row = '<tr class="hover:bg-gray-50/50 transition-colors duration-150">';
+
+      // 第一列：排名和卡片信息
+      row += '<td class="px-6 py-4">';
+      row += '<div class="flex items-center gap-3">';
+      
+      // 排名圆圈
+      row += `<div class="flex-shrink-0 w-8 h-8 rounded-full ${rankBgClass} flex items-center justify-center">`;
+      row += '<span class="text-sm font-bold">' + rank + '</span>';
+      row += '</div>';
+
+      // 卡片logo
+      row += `<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br ${cardGradient} flex items-center justify-center shadow-sm">`;
+      row += '<span class="text-white font-bold text-sm">' + logoText + '</span>';
+      row += '</div>';
+
+      // 卡片信息
+      row += '<div class="min-w-0 flex-1">';
+      row += '<div class="flex items-center gap-2">';
+      row += '<a href="/cards/' + card.slug + '" class="text-sm font-semibold text-gray-900 hover:text-indigo-600 transition-colors">';
+      row += card.data.name;
+      row += '</a>';
+      row += getCardTypeDisplay(card.data.cardType);
+      row += '</div>';
+      row += '<p class="mt-1 text-xs text-gray-500 line-clamp-1">' + (card.data.shortDescription || card.data.description || '') + '</p>';
+      row += '</div>';
+      row += '</div>';
+      row += '</td>';
+
+      // 虚拟卡状态
+      row += '<td class="px-4 py-4 text-center">';
+      if (card.data.isVirtual) {
+        row += '<span class="text-sm font-medium text-green-600">支持</span>';
+        const price = card.data.virtualCardPrice;
+        if (price > 0) {
+            row += '<div class="text-xs text-gray-500">开卡费: $' + price + '</div>';
+        }
+      } else {
+        row += '<span class="text-gray-300 text-lg">×</span>';
+        row += '<div class="text-xs text-gray-400">不支持</div>';
+      }
+      row += '</td>';
+
+      // 实体卡状态
+      row += '<td class="px-4 py-4 text-center">';
+      if (card.data.isPhysical) {
+        row += '<span class="text-sm font-medium text-green-600">支持</span>';
+        const price = card.data.physicalCardPrice;
+        if (price > 0) {
+            row += '<div class="text-xs text-gray-500">开卡费: $' + price + '</div>';
+        }
+      } else {
+        row += '<span class="text-gray-300 text-lg">×</span>';
+        row += '<div class="text-xs text-gray-400">不支持</div>';
+      }
+      row += '</td>';
+
+      // 手续费
+      row += '<td class="px-4 py-4 text-center">';
+      const totalFees = calculateTotalFees(card);
+      if (totalFees === '免费') {
+        row += '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800">免费</span>';
+      } else {
+        row += '<span class="text-sm font-medium text-gray-900">' + totalFees + '</span>';
+      }
+      row += '</td>';
+
+      // 年/月费
+      row += '<td class="px-4 py-4 text-center">';
+      let feeHtml = '';
+      if (card.data.isVirtual || card.data.isPhysical) {
+          if (card.data.isVirtual) {
+              feeHtml += '<div class="text-xs">虚拟卡: ' + (card.data.virtualCardAnnualFee || '无') + '</div>';
+          }
+          if (card.data.isPhysical) {
+              feeHtml += '<div class="text-xs">实体卡: ' + (card.data.physicalCardAnnualFee || '无') + '</div>';
+          }
+      }
+
+      if (feeHtml) {
+        row += '<div class="text-sm font-medium text-gray-900">' + feeHtml.trim() + '</div>';
+      } else {
+        row += '<span class="text-sm font-medium text-gray-900">无</span>';
+      }
+      row += '</td>';
+
+      // 操作列
+      row += '<td class="px-4 py-4 text-center">';
+      row += '<a href="/cards/' + card.slug + '" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md">';
+      row += '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>';
+      row += '立即申请';
+      row += '</a>';
+      row += '</td>';
+
+      row += '</tr>';
+      return row;
+    }
+
+    // 筛选和渲染逻辑
+    let filteredCards = allCards;
+    let currentlyDisplayed = 0;
+    const itemsPerLoad = 10;
+    let isLoading = false;
+    let observerInitialized = false;
     let filters = {
       cardType: '',
       cardForm: '',
@@ -834,122 +913,13 @@ const featuredCards = allCards;
       search: ''
     };
 
-    // 生成虚拟卡/实体卡显示内容
-    function getCardTypeInfo(isActive, price, network, annualFee, monthlyFee) {
-      if (!isActive) {
-        return '<span class="text-gray-400 text-lg">✗</span>';
-      }
-      const displayPrice = (price !== null && price > 0) ? `$${price}` : '免费';
-      const networkText = network ? `<div class="text-xs text-gray-500">${network.charAt(0).toUpperCase() + network.slice(1)}</div>` : '';
-
-      let feeText = '';
-      if (monthlyFee && monthlyFee !== false) {
-        feeText = `<div class="text-xs text-blue-600">${typeof monthlyFee === 'string' ? monthlyFee : '$' + monthlyFee}/月</div>`;
-      } else if (annualFee && annualFee !== false) {
-        feeText = `<div class="text-xs text-blue-600">$${annualFee}/年</div>`;
-      }
-
-      return `<div class="text-center">
-                <div><span class="text-green-600 text-lg">✅</span></div>
-                ${networkText}
-                <div class="text-xs text-gray-500">${displayPrice}</div>
-                ${feeText}
-              </div>`;
-    }
-
-    // 计算总手续费（外汇费+兑换费+充值费）
-    function calculateTotalFees(card) {
-      // 安全地解析费率，处理各种格式
-      const parsePercentage = (value) => {
-        if (!value) return 0;
-        // 移除所有非数字字符（除了小数点），然后转换为数字
-        const cleanValue = value.toString().replace(/[^0-9.]/g, '');
-        const parsed = parseFloat(cleanValue);
-        return isNaN(parsed) ? 0 : parsed;
-      };
-      
-      const depositFee = parsePercentage(card.data.depositFee);
-      const exchangeFee = parsePercentage(card.data.exchangeFee);
-      const transactionFee = parsePercentage(card.data.transactionFee); // 外汇费
-      
-      const total = depositFee + exchangeFee + transactionFee;
-      
-      // 如果总和为0，显示"免费"，否则显示百分比
-      return total === 0 ? '免费' : total.toFixed(1) + '%';
-    }
-
-    // 获取提现费显示（如果只有虚拟卡则显示"暂不支持"）
-    function getWithdrawalFeeDisplay(card) {
-      if (card.data.isVirtual && !card.data.isPhysical) {
-        return '<span class="text-xs text-gray-500">暂不支持</span>';
-      }
-      return '<span class="text-xs text-gray-900">' + (card.data.withdrawalFee || '2%') + '</span>';
-    }
-
-    // 渲染表格行
-    function renderTableRow(card, index) {
-      const rank = index + 1;
-      
-      let row = '<tr class="hover:bg-gray-50 transition-colors">';
-      
-      // # & 卡片
-      row += '<td class="px-4 py-4">';
-      row += '<div class="flex items-center">';
-      row += `<div class="flex-shrink-0 w-6 h-6 flex items-center justify-center text-gray-600 font-bold text-sm mr-3">${rank}</div>`;
-      
-      // 卡片logo
-      row += '<div class="flex-shrink-0 w-8 h-8 mr-3">';
-      row += `<div class="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500 font-medium">${card.data.name.substring(0, 2).toUpperCase()}</div>`;
-      row += '</div>';
-      
-      row += '<div class="flex-1">';
-      row += `<a href="/cards/${card.slug}" class="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors cursor-pointer block">${card.data.name}</a>`;
-      row += `<div class="text-xs text-gray-500 line-clamp-2 mt-1">${card.data.shortDescription || card.data.description || ''}</div>`;
-      row += '</div>';
-      row += '</div>';
-      row += '</td>';
-      
-      // 虚拟卡
-      row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.isVirtual, card.data.virtualCardPrice, card.data.virtualNetwork, card.data.virtualAnnualFee, card.data.monthlyFee);
-      row += '</td>';
-      
-      // 实体卡
-      row += '<td class="px-2 py-4 text-center">';
-      row += getCardTypeInfo(card.data.isPhysical, card.data.physicalCardPrice, card.data.physicalNetwork, card.data.physicalAnnualFee, card.data.monthlyFee);
-      row += '</td>';
-      
-      // 手续费
-      row += '<td class="px-2 py-4 text-center">';
-      row += `<span class="text-xs text-gray-900">${calculateTotalFees(card)}</span>`;
-      row += '</td>';
-      
-      // 提现费
-      row += '<td class="px-2 py-4 text-center">';
-      row += getWithdrawalFeeDisplay(card);
-      row += '</td>';
-      
-      // 操作列
-      row += '<td class="px-2 py-4 text-center">';
-      row += `<a href="/cards/${card.slug}" class="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all shadow-sm hover:shadow-md transform hover:scale-105">`;
-      row += '立即申请';
-      row += '<svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
-      row += '</a>';
-      row += '</td>';
-      
-      row += '</tr>';
-      return row;
-    }
-
     // 应用筛选
     function applyFilters() {
       filteredCards = allCards.filter(card => {
-        // 卡片类型筛选
-        if (filters.cardType && card.data.network.toLowerCase() !== filters.cardType) {
+        if (filters.cardType && card.data.cardType !== filters.cardType) {
           return false;
         }
         
-        // 卡片形态筛选
         if (filters.cardForm) {
           if (filters.cardForm === 'virtual' && !card.data.isVirtual) {
             return false;
@@ -962,27 +932,20 @@ const featuredCards = allCards;
           }
         }
         
-        // 年费筛选
         if (filters.annualFee) {
-          const data = card.data;
-          const hasFee = (data.monthlyFee && data.monthlyFee !== false) ||
-                         (data.annualFee && data.annualFee !== false) ||
-                         (data.physicalAnnualFee && data.physicalAnnualFee !== false) ||
-                         (data.virtualAnnualFee && data.virtualAnnualFee !== false);
-          if (filters.annualFee === 'free' && hasFee) {
+          if (filters.annualFee === 'free' && card.data.annualFee !== false) {
             return false;
           }
-          if (filters.annualFee === 'paid' && !hasFee) {
+          if (filters.annualFee === 'paid' && card.data.annualFee === false) {
             return false;
           }
         }
-        
-        // 搜索筛选
+
         if (filters.search) {
           const searchTerm = filters.search.toLowerCase();
           const cardName = card.data.name.toLowerCase();
           const cardDescription = (card.data.shortDescription || card.data.description || '').toLowerCase();
-          
+
           if (!cardName.includes(searchTerm) && !cardDescription.includes(searchTerm)) {
             return false;
           }
@@ -990,15 +953,11 @@ const featuredCards = allCards;
         
         return true;
       });
-      
-      // 重置到第一页
-      currentPage = 1;
-      
-      // 更新统计
+
+      currentlyDisplayed = 0;
       updateFilteredCount();
-      
-      // 重新渲染
-      renderPage();
+      renderInitialItems();
+      initInfiniteScroll();
     }
 
     // 更新筛选结果统计
@@ -1009,134 +968,219 @@ const featuredCards = allCards;
       }
     }
 
-    // 渲染当前页
-    function renderPage() {
-      const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const endIndex = Math.min(startIndex + itemsPerPage, filteredCards.length);
-      const currentCards = filteredCards.slice(startIndex, endIndex);
-      
+    // 初始渲染
+    function renderInitialItems() {
       const tableBody = document.getElementById('card-table-body');
       if (!tableBody) return;
-      
+
       tableBody.innerHTML = '';
-      
-      if (currentCards.length === 0) {
-        // 显示无数据状态
+
+      if (filteredCards.length === 0) {
         tableBody.innerHTML = `
           <tr>
             <td colspan="6" class="px-6 py-12 text-center">
               <div class="text-gray-500">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
                 <h3 class="mt-2 text-sm font-medium text-gray-900">未找到匹配的卡片</h3>
                 <p class="mt-1 text-sm text-gray-500">请尝试调整筛选条件或搜索关键词。</p>
               </div>
             </td>
           </tr>
         `;
-      } else {
-        // 渲染卡片行
-        currentCards.forEach((card, index) => {
-          const globalIndex = startIndex + index;
-          tableBody.innerHTML += renderTableRow(card, globalIndex);
-        });
+        hideLoadingElements();
+        return;
       }
-      
-      // 更新分页信息
-      updatePagination(totalPages, startIndex, endIndex);
+
+      loadMoreItems();
     }
 
-    // 更新分页控件
-    function updatePagination(totalPages, startIndex, endIndex) {
-      const pageStartEl = document.getElementById('page-start');
-      const pageEndEl = document.getElementById('page-end');
-      const totalItemsEl = document.getElementById('total-items');
-      
-      if (pageStartEl) pageStartEl.textContent = filteredCards.length > 0 ? startIndex + 1 : 0;
-      if (pageEndEl) pageEndEl.textContent = endIndex;
-      if (totalItemsEl) totalItemsEl.textContent = filteredCards.length;
-      
-      const prevBtn = document.getElementById('prev-page');
-      const nextBtn = document.getElementById('next-page');
-      
-      if (prevBtn) prevBtn.disabled = currentPage <= 1;
-      if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
-      
-      const pageNumbersEl = document.getElementById('page-numbers');
-      if (pageNumbersEl) {
-        pageNumbersEl.innerHTML = '';
-        
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
-        
-        if (endPage - startPage < 4) {
-          if (startPage === 1) {
-            endPage = Math.min(totalPages, startPage + 4);
-          } else {
-            startPage = Math.max(1, endPage - 4);
+    // 加载更多项目
+    function loadMoreItems() {
+      if (isLoading || currentlyDisplayed >= filteredCards.length) {
+        return;
+      }
+
+      isLoading = true;
+      showLoading();
+
+      // 模拟加载延迟
+      setTimeout(() => {
+        const tableBody = document.getElementById('card-table-body');
+        if (!tableBody) return;
+
+        const endIndex = Math.min(currentlyDisplayed + itemsPerLoad, filteredCards.length);
+        const itemsToAdd = filteredCards.slice(currentlyDisplayed, endIndex);
+
+        itemsToAdd.forEach((card, index) => {
+          const globalIndex = currentlyDisplayed + index;
+          tableBody.innerHTML += renderTableRow(card, globalIndex);
+        });
+
+        currentlyDisplayed = endIndex;
+        isLoading = false;
+        hideLoading();
+
+        // 检查是否已加载完所有内容
+        if (currentlyDisplayed >= filteredCards.length) {
+          showAllLoaded();
+        }
+
+        updateTotalDisplayed();
+      }, 300);
+    }
+
+    // 显示加载状态
+    function showLoading() {
+      const loadingEl = document.getElementById('loading-more');
+      if (loadingEl) {
+        loadingEl.classList.remove('hidden');
+      }
+    }
+
+    // 隐藏加载状态
+    function hideLoading() {
+      const loadingEl = document.getElementById('loading-more');
+      if (loadingEl) {
+        loadingEl.classList.add('hidden');
+      }
+    }
+
+    // 显示全部已加载
+    function showAllLoaded() {
+      const allLoadedEl = document.getElementById('all-loaded');
+      if (allLoadedEl) {
+        allLoadedEl.classList.remove('hidden');
+      }
+    }
+
+    // 隐藏加载相关元素
+    function hideLoadingElements() {
+      hideLoading();
+      const allLoadedEl = document.getElementById('all-loaded');
+      if (allLoadedEl) {
+        allLoadedEl.classList.add('hidden');
+      }
+    }
+
+    // 更新总显示数量
+    function updateTotalDisplayed() {
+      const totalEl = document.getElementById('total-displayed');
+      if (totalEl) {
+        totalEl.textContent = currentlyDisplayed;
+      }
+    }
+
+    // 初始化无限滚动
+    function initInfiniteScroll() {
+      if (observerInitialized) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !isLoading && currentlyDisplayed < filteredCards.length) {
+            loadMoreItems();
           }
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-          const pageBtn = document.createElement('button');
-          pageBtn.className = `px-3 py-1 text-sm font-medium rounded-md border ${ i === currentPage ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' }`;
-          pageBtn.textContent = i;
-          pageBtn.onclick = () => {
-            currentPage = i;
-            renderPage();
-          };
-          pageNumbersEl.appendChild(pageBtn);
-        }
+        });
+      }, {
+        root: null,
+        rootMargin: '100px',
+        threshold: 0.1
+      });
+
+      const loadingEl = document.getElementById('loading-more');
+      if (loadingEl) {
+        observer.observe(loadingEl);
+        observerInitialized = true;
       }
     }
 
     // 初始化事件监听器
     function initializeEventListeners() {
+      // 筛选控件事件
       const cardTypeFilter = document.getElementById('card-type-filter');
       const cardFormFilter = document.getElementById('card-form-filter');
       const annualFeeFilter = document.getElementById('annual-fee-filter');
       const searchInput = document.getElementById('search-input');
       const searchBtn = document.getElementById('search-btn');
       const resetBtn = document.getElementById('reset-filters');
-      
-      if (cardTypeFilter) cardTypeFilter.addEventListener('change', (e) => { filters.cardType = e.target.value; applyFilters(); });
-      if (cardFormFilter) cardFormFilter.addEventListener('change', (e) => { filters.cardForm = e.target.value; applyFilters(); });
-      if (annualFeeFilter) annualFeeFilter.addEventListener('change', (e) => { filters.annualFee = e.target.value; applyFilters(); });
-      
-      if (searchInput) {
-        searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { filters.search = e.target.value.trim(); applyFilters(); } });
-        searchInput.addEventListener('input', (e) => {
-          clearTimeout(searchInput.searchTimeout);
-          searchInput.searchTimeout = setTimeout(() => { filters.search = e.target.value.trim(); applyFilters(); }, 300);
+
+      if (cardTypeFilter) {
+        cardTypeFilter.addEventListener('change', (e) => {
+          filters.cardType = e.target.value;
+          applyFilters();
         });
       }
-      
-      if (searchBtn) searchBtn.addEventListener('click', () => { if (searchInput) { filters.search = searchInput.value.trim(); applyFilters(); } });
-      
+
+      if (cardFormFilter) {
+        cardFormFilter.addEventListener('change', (e) => {
+          filters.cardForm = e.target.value;
+          applyFilters();
+        });
+      }
+
+      if (annualFeeFilter) {
+        annualFeeFilter.addEventListener('change', (e) => {
+          filters.annualFee = e.target.value;
+          applyFilters();
+        });
+      }
+
+      if (searchInput) {
+        // 回车键搜索
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            filters.search = e.target.value.trim();
+            applyFilters();
+          }
+        });
+
+        // 实时搜索（延迟）
+        searchInput.addEventListener('input', (e) => {
+          clearTimeout(searchInput.searchTimeout);
+          searchInput.searchTimeout = setTimeout(() => {
+            filters.search = e.target.value.trim();
+            applyFilters();
+          }, 300);
+        });
+      }
+
+      if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+          if (searchInput) {
+            filters.search = searchInput.value.trim();
+            applyFilters();
+          }
+        });
+      }
+
       if (resetBtn) {
         resetBtn.addEventListener('click', () => {
-          filters = { cardType: '', cardForm: '', annualFee: '', search: '' };
+          // 重置所有筛选条件
+          filters = {
+            cardType: '',
+            cardForm: '',
+            annualFee: '',
+            search: ''
+          };
+
+          // 重置表单控件
           if (cardTypeFilter) cardTypeFilter.value = '';
           if (cardFormFilter) cardFormFilter.value = '';
           if (annualFeeFilter) annualFeeFilter.value = '';
           if (searchInput) searchInput.value = '';
+
+          // 应用筛选
           applyFilters();
         });
       }
-      
-      const prevBtn = document.getElementById('prev-page');
-      const nextBtn = document.getElementById('next-page');
-      
-      if (prevBtn) prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderPage(); } });
-      if (nextBtn) nextBtn.addEventListener('click', () => { const totalPages = Math.ceil(filteredCards.length / itemsPerPage); if (currentPage < totalPages) { currentPage++; renderPage(); } });
     }
 
+    // DOM加载完成后初始化
     document.addEventListener('DOMContentLoaded', function() {
       initializeEventListeners();
-      if (featuredCards && featuredCards.length > 0) {
-        updateFilteredCount();
-        renderPage();
-      }
+      renderInitialItems();
+      initInfiniteScroll();
     });
   </script>
 </Layout>
