@@ -1,67 +1,43 @@
 ---
-// src/pages/index.astro - Merged Version
+// src/pages/index.astro - Cleaned-up Version
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 let allArticles = [];
 let allExchanges = [];
-let featuredCards = [];
+let allCards = [];
 
+// Fetch Articles
 try {
-  // Fetch Articles
-  try {
-    allArticles = await getCollection('articles');
-    allArticles = allArticles.sort((a, b) =>
-      new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
-    );
-  } catch (error) {
-    console.warn('Articles collection not found:', error.message);
-    allArticles = [];
-  }
-
-  // Fetch Featured Cards (user's new logic)
-  try {
-    const allCards = await getCollection('cards');
-    featuredCards = allCards
-      .sort((a, b) => new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime())
-      .slice(0, 8);
-  } catch (error) {
-    console.error('Error loading cards:', error);
-    featuredCards = [];
-  }
-
-  // Fetch Exchanges
-  try {
-    allExchanges = await getCollection('exchanges');
-    allExchanges = allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
-  } catch (error) {
-    console.warn('Exchanges collection not found:', error.message);
-    allExchanges = [];
-  }
-  
-  // 只有在数据存在时才进行排序
-  if (allArticles.length > 0) {
-    allArticles = allArticles.sort((a, b) => 
-      new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
-    );
-  }
-  
-  if (allCards.length > 0) {
-    allCards = allCards.sort((a, b) =>
-      new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime()
-    );
-  }
-  
-  if (allExchanges.length > 0) {
-    allExchanges = allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
-  }
-  
+  allArticles = await getCollection('articles');
+  allArticles.sort((a, b) =>
+    new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
+  );
 } catch (error) {
-  console.error('Error loading content collections:', error);
+  console.warn('Articles collection not found:', error.message);
+  allArticles = [];
+}
+
+// Fetch Cards
+try {
+  allCards = await getCollection('cards');
+  allCards.sort((a, b) => new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime());
+} catch (error) {
+  console.error('Error loading cards:', error);
+  allCards = [];
+}
+
+// Fetch Exchanges
+try {
+  allExchanges = await getCollection('exchanges');
+  allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
+} catch (error) {
+  console.warn('Exchanges collection not found:', error.message);
+  allExchanges = [];
 }
 
 // Article variables
-const latestArticle = allArticles[0];
+const latestArticle = allArticles.length > 0 ? allArticles[0] : null;
 const popularArticles = allArticles.slice(1, 6);
 const featuredCards = allCards.slice(0, 20);
 ---
