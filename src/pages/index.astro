@@ -814,8 +814,13 @@ const featuredCards = allCards.slice(0, 20);
       row += '</div>';
 
       // 卡片logo
-      row += `<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br ${cardGradient} flex items-center justify-center shadow-sm">`;
-      row += '<span class="text-white font-bold text-sm">' + logoText + '</span>';
+      row += `<div class="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center shadow-sm overflow-hidden ${!card.data.logo ? cardGradient : 'bg-white'}">`;
+      if (card.data.logo) {
+        row += `<img src="${card.data.logo}" alt="${card.data.name} logo" class="w-full h-full object-contain p-1">`;
+      } else {
+        const logoText = card.data.name.substring(0, 2).toUpperCase();
+        row += '<span class="text-white font-bold text-sm">' + logoText + '</span>';
+      }
       row += '</div>';
 
       // 卡片信息
