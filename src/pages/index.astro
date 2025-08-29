@@ -1,67 +1,43 @@
 ---
-// src/pages/index.astro - Merged Version
+// src/pages/index.astro - Cleaned-up Version
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 let allArticles = [];
 let allExchanges = [];
-let featuredCards = [];
+let allCards = [];
 
+// Fetch Articles
 try {
-  // Fetch Articles
-  try {
-    allArticles = await getCollection('articles');
-    allArticles = allArticles.sort((a, b) =>
-      new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
-    );
-  } catch (error) {
-    console.warn('Articles collection not found:', error.message);
-    allArticles = [];
-  }
-
-  // Fetch Featured Cards (user's new logic)
-  try {
-    const allCards = await getCollection('cards');
-    featuredCards = allCards
-      .sort((a, b) => new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime())
-      .slice(0, 8);
-  } catch (error) {
-    console.error('Error loading cards:', error);
-    featuredCards = [];
-  }
-
-  // Fetch Exchanges
-  try {
-    allExchanges = await getCollection('exchanges');
-    allExchanges = allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
-  } catch (error) {
-    console.warn('Exchanges collection not found:', error.message);
-    allExchanges = [];
-  }
-  
-  // 只有在数据存在时才进行排序
-  if (allArticles.length > 0) {
-    allArticles = allArticles.sort((a, b) => 
-      new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
-    );
-  }
-  
-  if (allCards.length > 0) {
-    allCards = allCards.sort((a, b) =>
-      new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime()
-    );
-  }
-  
-  if (allExchanges.length > 0) {
-    allExchanges = allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
-  }
-  
+  allArticles = await getCollection('articles');
+  allArticles.sort((a, b) =>
+    new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
+  );
 } catch (error) {
-  console.error('Error loading content collections:', error);
+  console.warn('Articles collection not found:', error.message);
+  allArticles = [];
+}
+
+// Fetch Cards
+try {
+  allCards = await getCollection('cards');
+  allCards.sort((a, b) => new Date(b.data.publishDate || 0).getTime() - new Date(a.data.publishDate || 0).getTime());
+} catch (error) {
+  console.error('Error loading cards:', error);
+  allCards = [];
+}
+
+// Fetch Exchanges
+try {
+  allExchanges = await getCollection('exchanges');
+  allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
+} catch (error) {
+  console.warn('Exchanges collection not found:', error.message);
+  allExchanges = [];
 }
 
 // Article variables
-const latestArticle = allArticles[0];
+const latestArticle = allArticles.length > 0 ? allArticles[0] : null;
 const popularArticles = allArticles.slice(1, 6);
 const featuredCards = allCards.slice(0, 20);
 ---
@@ -794,7 +770,9 @@ const featuredCards = allCards.slice(0, 20);
   
   <!-- JavaScript代码 -->
   <script define:vars={{ allCards: featuredCards }}>
-    // 获取卡片类型显示
+    // --- UTILITY FUNCTIONS ---
+
+    // Gets the display HTML for a given card type
     function getCardTypeDisplay(cardType) {
       const typeStyles = {
         'visa': '<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-600 text-white ml-2">VISA</span>',
@@ -804,7 +782,7 @@ const featuredCards = allCards.slice(0, 20);
       return typeStyles[cardType] || '';
     }
 
-    // 计算总手续费
+    // Calculates the total fees for a card
     function calculateTotalFees(card) {
       const parsePercentage = (value) => {
         if (!value || value === '免费' || value === 'Free') return 0;
@@ -820,129 +798,107 @@ const featuredCards = allCards.slice(0, 20);
       const total = depositFee + exchangeFee + transactionFee;
       return total === 0 ? '免费' : total.toFixed(1) + '%';
     }
-    row += '</td>';
 
-    // 渲染优化后的表格行
+    // Renders a single table row for a card
     function renderTableRow(card, index) {
       const rank = index + 1;
-      
-      // 获取卡片名称的前两个字母作为logo
       const logoText = card.data.name.substring(0, 2).toUpperCase();
       
-      // 根据排名设置不同的样式
       let rankBgClass = 'bg-gray-100 text-gray-600';
       if (rank === 1) rankBgClass = 'bg-gradient-to-br from-yellow-400 to-amber-500 text-white';
       else if (rank === 2) rankBgClass = 'bg-gradient-to-br from-gray-300 to-gray-400 text-white';
       else if (rank === 3) rankBgClass = 'bg-gradient-to-br from-orange-400 to-orange-500 text-white';
 
-      // 根据卡片名称生成不同的渐变背景
       const cardColors = [
-        'from-blue-500 to-indigo-600',
-        'from-purple-500 to-pink-600',
-        'from-green-500 to-teal-600',
-        'from-red-500 to-orange-600',
-        'from-cyan-500 to-blue-600',
-        'from-violet-500 to-purple-600',
-        'from-rose-500 to-pink-600',
-        'from-amber-500 to-orange-600'
+        'from-blue-500 to-indigo-600', 'from-purple-500 to-pink-600', 'from-green-500 to-teal-600',
+        'from-red-500 to-orange-600', 'from-cyan-500 to-blue-600', 'from-violet-500 to-purple-600',
+        'from-rose-500 to-pink-600', 'from-amber-500 to-orange-600'
       ];
-      const colorIndex = index % cardColors.length;
-      const cardGradient = cardColors[colorIndex];
+      const cardGradient = cardColors[index % cardColors.length];
 
-      let row = '<tr class="hover:bg-gray-50/50 transition-colors duration-150">';
+      let row = `<tr class="hover:bg-gray-50/50 transition-colors duration-150">
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full ${rankBgClass} flex items-center justify-center">
+              <span class="text-sm font-bold">${rank}</span>
+            </div>
+            <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br ${cardGradient} flex items-center justify-center shadow-sm">
+              <span class="text-white font-bold text-sm">${logoText}</span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2">
+                <a href="/cards/${card.slug}" class="text-sm font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
+                  ${card.data.name}
+                </a>
+                ${getCardTypeDisplay(card.data.cardType)}
+              </div>
+              <p class="mt-1 text-xs text-gray-500 line-clamp-1">${card.data.shortDescription || card.data.description || ''}</p>
+            </div>
+          </div>
+        </td>`;
 
-      // 第一列：排名和卡片信息
-      row += '<td class="px-6 py-4">';
-      row += '<div class="flex items-center gap-3">';
-      
-      // 排名圆圈
-      row += `<div class="flex-shrink-0 w-8 h-8 rounded-full ${rankBgClass} flex items-center justify-center">`;
-      row += '<span class="text-sm font-bold">' + rank + '</span>';
-      row += '</div>';
-
-      // 卡片logo
-      row += `<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br ${cardGradient} flex items-center justify-center shadow-sm">`;
-      row += '<span class="text-white font-bold text-sm">' + logoText + '</span>';
-      row += '</div>';
-
-      // 卡片信息
-      row += '<div class="min-w-0 flex-1">';
-      row += '<div class="flex items-center gap-2">';
-      row += '<a href="/cards/' + card.slug + '" class="text-sm font-semibold text-gray-900 hover:text-indigo-600 transition-colors">';
-      row += card.data.name;
-      row += '</a>';
-      row += getCardTypeDisplay(card.data.cardType);
-      row += '</div>';
-      row += '<p class="mt-1 text-xs text-gray-500 line-clamp-1">' + (card.data.shortDescription || card.data.description || '') + '</p>';
-      row += '</div>';
-      row += '</div>';
-      row += '</td>';
-
-      // 虚拟卡状态
+      // Virtual Card
       row += '<td class="px-4 py-4 text-center">';
       if (card.data.isVirtual) {
         const price = card.data.virtualCardPrice;
         if (price === 0 || !price) {
           row += '<div class="inline-flex items-center justify-center"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg></div>';
         } else {
-          row += '<span class="text-sm font-medium text-blue-600">$' + price + '</span>';
+          row += `<span class="text-sm font-medium text-blue-600">$${price}</span>`;
         }
       } else {
-        row += '<span class="text-gray-300 text-lg">×</span>';
-        row += '<div class="text-xs text-gray-400">不支持</div>';
+        row += '<span class="text-gray-300 text-lg">×</span><div class="text-xs text-gray-400">不支持</div>';
       }
       row += '</td>';
 
-      // 实体卡状态
+      // Physical Card
       row += '<td class="px-4 py-4 text-center">';
       if (card.data.isPhysical) {
         const price = card.data.physicalCardPrice;
         if (price === 0 || !price) {
           row += '<div class="inline-flex items-center justify-center"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg></div>';
         } else {
-          row += '<span class="text-sm font-medium text-blue-600">$' + price + '</span>';
+          row += `<span class="text-sm font-medium text-blue-600">$${price}</span>`;
         }
       } else {
-        row += '<span class="text-gray-300 text-lg">×</span>';
-        row += '<div class="text-xs text-gray-400">不支持</div>';
+        row += '<span class="text-gray-300 text-lg">×</span><div class="text-xs text-gray-400">不支持</div>';
       }
       row += '</td>';
 
-      // 手续费
-      row += '<td class="px-4 py-4 text-center">';
+      // Fees
       const totalFees = calculateTotalFees(card);
+      row += '<td class="px-4 py-4 text-center">';
       if (totalFees === '免费') {
         row += '<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800">免费</span>';
       } else {
-        row += '<span class="text-sm font-medium text-gray-900">' + totalFees + '</span>';
+        row += `<span class="text-sm font-medium text-gray-900">${totalFees}</span>`;
       }
       row += '</td>';
 
-      // 年/月费
+      // Annual/Monthly Fee
       row += '<td class="px-4 py-4 text-center">';
       if (!card.data.annualFee) {
         row += '<span class="text-sm font-medium text-gray-900">无</span>';
       } else if (typeof card.data.annualFee === 'string') {
-        row += '<span class="text-sm font-medium text-red-600">' + card.data.annualFee + '</span>';
+        row += `<span class="text-sm font-medium text-red-600">${card.data.annualFee}</span>`;
       } else {
         row += '<span class="text-sm font-medium text-red-600">$150.00/年</span>';
       }
       row += '</td>';
 
-      // 操作列
-      row += '<td class="px-4 py-4 text-center">';
-      row += '<a href="/cards/' + card.slug + '" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md">';
-      row += '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>';
-      row += '立即申请';
-      row += '</a>';
-      row += '</td>';
-
-      row += '</tr>';
+      // Action Button
+      row += `<td class="px-4 py-4 text-center">
+          <a href="/cards/${card.slug}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-sm hover:shadow-md">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            立即申请
+          </a>
+        </td>
+      </tr>`;
       return row;
     }
-    row += '</td>';
 
-    // 筛选和渲染逻辑
+    // --- STATE & LOGIC ---
+
     let filteredCards = allCards;
     let currentlyDisplayed = 0;
     const itemsPerLoad = 10;
@@ -955,99 +911,40 @@ const featuredCards = allCards.slice(0, 20);
       search: ''
     };
 
-    // 应用筛选
+    // Applies the current filters to the card list
     function applyFilters() {
       filteredCards = allCards.filter(card => {
-        if (filters.cardType && card.data.cardType !== filters.cardType) {
-          return false;
-        }
-        
+        if (filters.cardType && card.data.cardType !== filters.cardType) return false;
         if (filters.cardForm) {
-          if (filters.cardForm === 'virtual' && !card.data.isVirtual) {
-            return false;
-          }
-          if (filters.cardForm === 'physical' && !card.data.isPhysical) {
-            return false;
-          }
-          if (filters.cardForm === 'both' && (!card.data.isVirtual || !card.data.isPhysical)) {
-            return false;
-          }
+          if (filters.cardForm === 'virtual' && !card.data.isVirtual) return false;
+          if (filters.cardForm === 'physical' && !card.data.isPhysical) return false;
+          if (filters.cardForm === 'both' && (!card.data.isVirtual || !card.data.isPhysical)) return false;
         }
-        
         if (filters.annualFee) {
-          if (filters.annualFee === 'free' && card.data.annualFee !== false) {
-            return false;
-          }
-          if (filters.annualFee === 'paid' && card.data.annualFee === false) {
-            return false;
-          }
+          if (filters.annualFee === 'free' && card.data.annualFee !== false) return false;
+          if (filters.annualFee === 'paid' && card.data.annualFee === false) return false;
         }
-
         if (filters.search) {
           const searchTerm = filters.search.toLowerCase();
           const cardName = card.data.name.toLowerCase();
           const cardDescription = (card.data.shortDescription || card.data.description || '').toLowerCase();
-
-          if (!cardName.includes(searchTerm) && !cardDescription.includes(searchTerm)) {
-            return false;
-          }
+          if (!cardName.includes(searchTerm) && !cardDescription.includes(searchTerm)) return false;
         }
-        
         return true;
       });
 
       currentlyDisplayed = 0;
       updateFilteredCount();
       renderInitialItems();
-      initInfiniteScroll();
-    }
-  }
-
-  // 初始渲染
-  function renderInitialItems() {
-    const tableBody = document.getElementById('card-table-body');
-    if (!tableBody) return;
-
-    // 清空表格
-    tableBody.innerHTML = '';
-
-    if (filteredCards.length === 0) {
-      // 显示无数据状态
-      tableBody.innerHTML = `
-        <tr>
-          <td colspan="6" class="px-6 py-12 text-center">
-            <div class="text-gray-500">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">未找到匹配的卡片</h3>
-              <p class="mt-1 text-sm text-gray-500">请尝试调整筛选条件或搜索关键词。</p>
-            </div>
-          </td>
-        </tr>
-      `;
-
-      // 隐藏加载相关元素
-      hideLoadingElements();
-      return;
     }
 
-    // 加载初始数据
-    loadMoreItems();
-  }
-
-  // 加载更多数据
-  function loadMoreItems() {
-    if (isLoading || currentlyDisplayed >= filteredCards.length) {
-      return;
-    }
-
-    // 初始渲染
+    // Renders the initial set of items or a "no results" message
     function renderInitialItems() {
       const tableBody = document.getElementById('card-table-body');
       if (!tableBody) return;
 
       tableBody.innerHTML = '';
+      hideLoadingElements();
 
       if (filteredCards.length === 0) {
         tableBody.innerHTML = `
@@ -1061,25 +958,20 @@ const featuredCards = allCards.slice(0, 20);
                 <p class="mt-1 text-sm text-gray-500">请尝试调整筛选条件或搜索关键词。</p>
               </div>
             </td>
-          </tr>
-        `;
-        hideLoadingElements();
-        return;
+          </tr>`;
+      } else {
+        loadMoreItems();
       }
-
-      loadMoreItems();
     }
 
-    // 加载更多项目
+    // Loads the next batch of cards into the table
     function loadMoreItems() {
-      if (isLoading || currentlyDisplayed >= filteredCards.length) {
-        return;
-      }
+      if (isLoading || currentlyDisplayed >= filteredCards.length) return;
 
       isLoading = true;
       showLoading();
 
-      // 模拟加载延迟
+      // Using a timeout to simulate network latency, can be removed if not needed
       setTimeout(() => {
         const tableBody = document.getElementById('card-table-body');
         if (!tableBody) return;
@@ -1096,83 +988,66 @@ const featuredCards = allCards.slice(0, 20);
         isLoading = false;
         hideLoading();
 
-        // 检查是否已加载完所有内容
         if (currentlyDisplayed >= filteredCards.length) {
           showAllLoaded();
         }
-
         updateTotalDisplayed();
       }, 300);
     }
 
-    // 显示加载状态
+    // --- UI UPDATE FUNCTIONS ---
+
     function showLoading() {
       const loadingEl = document.getElementById('loading-more');
-      if (loadingEl) {
-        loadingEl.classList.remove('hidden');
-      }
+      if (loadingEl) loadingEl.classList.remove('hidden');
     }
-  }
 
-    // 隐藏加载状态
     function hideLoading() {
       const loadingEl = document.getElementById('loading-more');
-      if (loadingEl) {
-        loadingEl.classList.add('hidden');
-      }
+      if (loadingEl) loadingEl.classList.add('hidden');
     }
 
-    // 显示全部已加载
     function showAllLoaded() {
       const allLoadedEl = document.getElementById('all-loaded');
-      if (allLoadedEl) {
-        allLoadedEl.classList.remove('hidden');
-      }
+      if (allLoadedEl) allLoadedEl.classList.remove('hidden');
     }
 
-    // 隐藏加载相关元素
     function hideLoadingElements() {
       hideLoading();
       const allLoadedEl = document.getElementById('all-loaded');
-      if (allLoadedEl) {
-        allLoadedEl.classList.add('hidden');
-      }
+      if (allLoadedEl) allLoadedEl.classList.add('hidden');
     }
 
-    // 更新总显示数量
     function updateTotalDisplayed() {
       const totalEl = document.getElementById('total-displayed');
-      if (totalEl) {
-        totalEl.textContent = currentlyDisplayed;
-      }
+      if (totalEl) totalEl.textContent = currentlyDisplayed;
     }
 
-    // 初始化无限滚动
+    function updateFilteredCount() {
+        const countEl = document.getElementById('filtered-count');
+        if(countEl) countEl.textContent = String(filteredCards.length);
+    }
+
+    // --- INITIALIZATION ---
+
+    // Sets up the Intersection Observer for infinite scrolling
     function initInfiniteScroll() {
       if (observerInitialized) return;
+      const loadingEl = document.getElementById('loading-more');
+      if (!loadingEl) return;
 
       const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !isLoading && currentlyDisplayed < filteredCards.length) {
-            loadMoreItems();
-          }
-        });
-      }, {
-        root: null,
-        rootMargin: '100px',
-        threshold: 0.1
-      });
+        if (entries[0].isIntersecting && !isLoading && currentlyDisplayed < filteredCards.length) {
+          loadMoreItems();
+        }
+      }, { rootMargin: '200px' });
 
-      const loadingEl = document.getElementById('loading-more');
-      if (loadingEl) {
-        observer.observe(loadingEl);
-        observerInitialized = true;
-      }
+      observer.observe(loadingEl);
+      observerInitialized = true;
     }
 
-    // 初始化事件监听器
+    // Attaches event listeners to filter controls
     function initializeEventListeners() {
-      // 筛选控件事件
       const cardTypeFilter = document.getElementById('card-type-filter');
       const cardFormFilter = document.getElementById('card-form-filter');
       const annualFeeFilter = document.getElementById('annual-fee-filter');
@@ -1180,80 +1055,60 @@ const featuredCards = allCards.slice(0, 20);
       const searchBtn = document.getElementById('search-btn');
       const resetBtn = document.getElementById('reset-filters');
 
-      if (cardTypeFilter) {
-        cardTypeFilter.addEventListener('change', (e) => {
-          filters.cardType = e.target.value;
-          applyFilters();
-        });
-      }
+      if (cardTypeFilter) cardTypeFilter.addEventListener('change', (e) => {
+        filters.cardType = e.target.value;
+        applyFilters();
+      });
 
-      if (cardFormFilter) {
-        cardFormFilter.addEventListener('change', (e) => {
-          filters.cardForm = e.target.value;
-          applyFilters();
-        });
-      }
+      if (cardFormFilter) cardFormFilter.addEventListener('change', (e) => {
+        filters.cardForm = e.target.value;
+        applyFilters();
+      });
 
-      if (annualFeeFilter) {
-        annualFeeFilter.addEventListener('change', (e) => {
-          filters.annualFee = e.target.value;
-          applyFilters();
-        });
-      }
+      if (annualFeeFilter) annualFeeFilter.addEventListener('change', (e) => {
+        filters.annualFee = e.target.value;
+        applyFilters();
+      });
 
       if (searchInput) {
-        // 回车键搜索
-        searchInput.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            filters.search = e.target.value.trim();
-            applyFilters();
-          }
-        });
-
-        // 实时搜索（延迟）
+        let searchTimeout;
         searchInput.addEventListener('input', (e) => {
-          clearTimeout(searchInput.searchTimeout);
-          searchInput.searchTimeout = setTimeout(() => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
             filters.search = e.target.value.trim();
             applyFilters();
           }, 300);
         });
-      }
-
-      if (searchBtn) {
-        searchBtn.addEventListener('click', () => {
-          if (searchInput) {
-            filters.search = searchInput.value.trim();
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            clearTimeout(searchTimeout);
+            filters.search = e.target.value.trim();
             applyFilters();
           }
         });
       }
 
-      if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-          // 重置所有筛选条件
-          filters = {
-            cardType: '',
-            cardForm: '',
-            annualFee: '',
-            search: ''
-          };
+      if (searchBtn) searchBtn.addEventListener('click', () => {
+        if(searchInput) {
+            filters.search = searchInput.value.trim();
+            applyFilters();
+        }
+      });
 
-          // 重置表单控件
-          if (cardTypeFilter) cardTypeFilter.value = '';
-          if (cardFormFilter) cardFormFilter.value = '';
-          if (annualFeeFilter) annualFeeFilter.value = '';
-          if (searchInput) searchInput.value = '';
-
-          // 应用筛选
-          applyFilters();
-        });
-      }
+      if (resetBtn) resetBtn.addEventListener('click', () => {
+        filters = { cardType: '', cardForm: '', annualFee: '', search: '' };
+        if (cardTypeFilter) cardTypeFilter.value = '';
+        if (cardFormFilter) cardFormFilter.value = '';
+        if (annualFeeFilter) annualFeeFilter.value = '';
+        if (searchInput) searchInput.value = '';
+        applyFilters();
+      });
     }
 
-    // DOM加载完成后初始化
+    // Run when the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', function() {
       initializeEventListeners();
+      updateFilteredCount();
       renderInitialItems();
       initInfiniteScroll();
     });
