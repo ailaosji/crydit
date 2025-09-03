@@ -477,30 +477,41 @@ const popularArticles = allArticles.slice(1, 6);
     };
 
     // 获取卡片类型显示
-    function getCardTypeDisplay(cardType) {
+    function getCardTypeDisplay(network) {
       const typeStyles = {
         'visa': '<span class="inline-block px-2 py-0.5 bg-blue-600 text-white text-xs rounded">VISA</span>',
         'mastercard': '<span class="inline-block px-2 py-0.5 bg-red-600 text-white text-xs rounded">MASTERCARD</span>',
         'unionpay': '<span class="inline-block px-2 py-0.5 bg-purple-600 text-white text-xs rounded">银联</span>'
       };
-      return typeStyles[cardType] || '';
+      return typeStyles[network] || '';
     }
 
     // 计算总手续费
     function calculateTotalFees(card) {
-      const parsePercentage = (value) => {
-        if (!value || value === '免费' || value === 'Free') return 0;
-        const cleanValue = value.toString().replace(/[^0-9.]/g, '');
-        const parsed = parseFloat(cleanValue);
-        return isNaN(parsed) ? 0 : parsed;
-      };
+      const fees = [card.data.depositFee, card.data.exchangeFee, card.data.transactionFee];
+      let total = 0;
+      let hasNumericFee = false;
 
-      const depositFee = parsePercentage(card.data.depositFee);
-      const exchangeFee = parsePercentage(card.data.exchangeFee);
-      const transactionFee = parsePercentage(card.data.transactionFee);
+      for (const fee of fees) {
+        if (typeof fee === 'string' && fee.includes('%')) {
+          const parsed = parseFloat(fee.replace('%', ''));
+          if (!isNaN(parsed)) {
+            total += parsed;
+            hasNumericFee = true;
+          }
+        } else if (typeof fee === 'number') {
+          total += fee;
+          hasNumericFee = true;
+        } else if (typeof fee === 'string' && (fee.toLowerCase() === 'free' || fee === '免费')) {
+            // Do nothing, it's 0
+        } else if (typeof fee === 'string') {
+            // If we find a non-numeric string fee like "浮动", we return it directly.
+            return fee;
+        }
+      }
 
-      const total = depositFee + exchangeFee + transactionFee;
-      return total === 0 ? '免费' : total.toFixed(1) + '%';
+      if (!hasNumericFee) return '免费';
+      return total.toFixed(1) + '%';
     }
 
     // 获取卡片Logo背景色
@@ -514,6 +525,7 @@ const popularArticles = allArticles.slice(1, 6);
       ];
       return colors[index % colors.length];
     }
+
 
     // 渲染表格行
     function renderTableRow(card, index) {
@@ -548,11 +560,11 @@ const popularArticles = allArticles.slice(1, 6);
         row += '<div class="flex flex-col items-center">';
         row += '<svg class="w-5 h-5 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
 
-        // 显示卡片类型徽章
-        row += getCardTypeDisplay(card.data.cardType);
+        row += getCardTypeDisplay(card.data.virtualNetwork);
 
         if (price && price > 0) {
-          row += `<div class="text-xs text-gray-500 mt-1">${price}.00</div>`;
+          row += `<div class="text-xs text-gray-500 mt-1">$${price.toFixed(2)}</div>`;
+
         } else {
           row += '<div class="text-xs text-gray-500 mt-1">免费</div>';
         }
@@ -572,11 +584,10 @@ const popularArticles = allArticles.slice(1, 6);
         row += '<div class="flex flex-col items-center">';
         row += '<svg class="w-5 h-5 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
 
-        // 显示卡片类型徽章
-        row += getCardTypeDisplay(card.data.cardType);
+        row += getCardTypeDisplay(card.data.physicalNetwork);
 
         if (price && price > 0) {
-          row += `<div class="text-xs text-gray-500 mt-1">${price}.00</div>`;
+          row += `<div class="text-xs text-gray-500 mt-1">$${price.toFixed(2)}</div>`;
         } else {
           row += '<div class="text-xs text-gray-500 mt-1">免费</div>';
         }
@@ -601,17 +612,15 @@ const popularArticles = allArticles.slice(1, 6);
 
       // 年/月费列
       row += '<td class="py-4 px-4 text-center">';
-      if (!card.data.annualFee) {
-        row += '<span class="text-sm text-gray-700">无</span>';
-      } else if (typeof card.data.annualFee === 'string') {
-        if (card.data.annualFee.includes('月')) {
-          row += `<span class="text-sm text-orange-600">${card.data.annualFee}</span>`;
-        } else {
-          row += `<span class="text-sm text-red-600">${card.data.annualFee}</span>`;
-        }
-      } else {
-        row += '<span class="text-sm text-red-600">$150.00/年</span>';
+      const physicalFee = card.data.physicalAnnualFee;
+      const virtualFee = card.data.virtualAnnualFee;
+      let feeDisplay = '<span class="text-sm text-gray-700">无</span>';
+      if (physicalFee) {
+        feeDisplay = `<span class="text-sm text-red-600">$${physicalFee}/年</span>`;
+      } else if (virtualFee) {
+        feeDisplay = `<span class="text-sm text-orange-600">$${virtualFee}/年</span>`;
       }
+      row += feeDisplay;
       row += '</td>';
 
       // 操作按钮列
