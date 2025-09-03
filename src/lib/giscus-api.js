@@ -356,12 +356,5 @@ export const GiscusClient = {
   }
 };
 
-// 如果在Node环境中，导出服务端函数
-if (typeof window === 'undefined') {
-  export default {
-    getDiscussionCommentCount,
-    batchGetCommentCounts,
-    ensureDiscussionExists,
-    getMockCommentCount
-  };
-}
+// The named exports above are sufficient for server-side usage.
+// This block is syntactically incorrect and unnecessary.

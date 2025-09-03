@@ -293,6 +293,9 @@ const popularArticles = allArticles.slice(1, 6);
                         年/月费
                       </th>
                       <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        讨论
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
                         操作
                       </th>
                     </tr>
@@ -622,6 +625,15 @@ const popularArticles = allArticles.slice(1, 6);
       row += feeDisplay;
       row += '</td>';
 
+      // 讨论列
+      row += '<td class="py-4 px-4 text-center">';
+      if (card.data.commentCount && card.data.commentCount > 0) {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors">
+                  ${card.data.commentCount}
+                </a>`;
+      }
+      row += '</td>';
+
       // 操作按钮列
       row += `<td class="py-4 px-4 text-center">
           <button onclick="window.location.href='/cards/${card.slug}'"
@@ -889,27 +901,30 @@ const popularArticles = allArticles.slice(1, 6);
     }
 
     // 页面加载完成后初始化
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', function() {
       initializeEventListeners();
       setupInfiniteScroll();
 
-      try {
-        const response = await fetch('/api/cards.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const cardData = await response.json();
-        allCards = cardData;
-        filteredCards = [...allCards];
+      fetch('/api/cards.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(cardData => {
+          allCards = cardData;
+          filteredCards = [...allCards];
 
-        updateFilteredCount();
-        loadMore(); // 初始加载第一批数据
-      } catch (error) {
-        console.error("Could not fetch card data:", error);
-        // 如果没有数据，显示空状态
-        clearTable();
-        appendRows([], 0);
-      }
+          updateFilteredCount();
+          loadMore(); // Initial load
+        })
+        .catch(error => {
+          console.error("Could not fetch card data:", error);
+          // 如果没有数据，显示空状态
+          clearTable();
+          appendRows([], 0);
+        });
     });
   </script>
 </Layout>
