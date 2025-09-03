@@ -526,6 +526,7 @@ const popularArticles = allArticles.slice(1, 6);
       return colors[index % colors.length];
     }
 
+
     // 渲染表格行
     function renderTableRow(card, index) {
       const rank = index + 1;
@@ -563,6 +564,7 @@ const popularArticles = allArticles.slice(1, 6);
 
         if (price && price > 0) {
           row += `<div class="text-xs text-gray-500 mt-1">$${price.toFixed(2)}</div>`;
+
         } else {
           row += '<div class="text-xs text-gray-500 mt-1">免费</div>';
         }
