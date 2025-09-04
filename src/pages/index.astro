@@ -17,7 +17,7 @@ try {
     console.log('Articles loaded:', allArticles.length);
   } catch (error) {
     console.warn('Articles collection not found:', error.message);
-    allArticles = [];
+    allCards = [];
   }
 
   try {
@@ -293,7 +293,10 @@ const popularArticles = allArticles.slice(1, 6);
                         年/月费
                       </th>
                       <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
-                        操作
+                        讨论
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        申请
                       </th>
                     </tr>
                   </thead>
@@ -480,7 +483,8 @@ const popularArticles = allArticles.slice(1, 6);
     function getCardTypeDisplay(network) {
       const typeStyles = {
         'visa': '<span class="inline-block px-2 py-0.5 bg-blue-600 text-white text-xs rounded">VISA</span>',
-        'mastercard': '<span class="inline-block px-2 py-0.5 bg-red-600 text-white text-xs rounded">MASTERCARD</span>',
+        'mastercard': '<span class="inline-block px-2 py-0.5 bg-orange-500 text-white text-xs rounded">MASTERCARD</span>',
+
         'unionpay': '<span class="inline-block px-2 py-0.5 bg-purple-600 text-white text-xs rounded">银联</span>'
       };
       return typeStyles[network] || '';
@@ -488,25 +492,26 @@ const popularArticles = allArticles.slice(1, 6);
 
     // 计算总手续费
     function calculateTotalFees(card) {
-      const fees = [card.data.depositFee, card.data.exchangeFee, card.data.transactionFee];
+      const fees = [card.data.depositFee, card.data.transactionFee, card.data.foreignExchangeFee];
       let total = 0;
       let hasNumericFee = false;
 
       for (const fee of fees) {
-        if (typeof fee === 'string' && fee.includes('%')) {
-          const parsed = parseFloat(fee.replace('%', ''));
-          if (!isNaN(parsed)) {
-            total += parsed;
-            hasNumericFee = true;
-          }
-        } else if (typeof fee === 'number') {
-          total += fee;
-          hasNumericFee = true;
-        } else if (typeof fee === 'string' && (fee.toLowerCase() === 'free' || fee === '免费')) {
-            // Do nothing, it's 0
-        } else if (typeof fee === 'string') {
-            // If we find a non-numeric string fee like "浮动", we return it directly.
+        // If a fee is a non-numeric string (like "浮动"), return it immediately.
+        if (typeof fee === 'string' && isNaN(parseFloat(fee))) {
+          if (fee.toLowerCase() !== 'free' && fee !== '免费') {
             return fee;
+          }
+        }
+
+        // Otherwise, parse it as a percentage.
+        if (typeof fee === 'string' || typeof fee === 'number') {
+            const cleanValue = fee.toString().replace(/[^0-9.]/g, '');
+            const parsed = parseFloat(cleanValue);
+            if (!isNaN(parsed)) {
+                total += parsed;
+                hasNumericFee = true;
+            }
         }
       }
 
@@ -525,7 +530,6 @@ const popularArticles = allArticles.slice(1, 6);
       ];
       return colors[index % colors.length];
     }
-
 
     // 渲染表格行
     function renderTableRow(card, index) {
@@ -564,7 +568,6 @@ const popularArticles = allArticles.slice(1, 6);
 
         if (price && price > 0) {
           row += `<div class="text-xs text-gray-500 mt-1">$${price.toFixed(2)}</div>`;
-
         } else {
           row += '<div class="text-xs text-gray-500 mt-1">免费</div>';
         }
@@ -623,10 +626,26 @@ const popularArticles = allArticles.slice(1, 6);
       row += feeDisplay;
       row += '</td>';
 
+      // 讨论列
+      row += '<td class="py-4 px-4 text-center">';
+      if (card.data.commentCount > 0) {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors" title="查看评论">
+                  ${card.data.commentCount}
+                </a>`;
+      } else {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors" title="参与讨论">
+                  <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                  </svg>
+                </a>`;
+      }
+      row += feeDisplay;
+      row += '</td>';
+
       // 操作按钮列
       row += `<td class="py-4 px-4 text-center">
           <button onclick="window.location.href='/cards/${card.slug}'"
-                  class="inline-flex items-center gap-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-lg transition-colors">
+                  class="inline-flex items-center justify-center gap-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
@@ -689,7 +708,6 @@ const popularArticles = allArticles.slice(1, 6);
         tableBody.innerHTML = '';
       }
     }
-
     // 加载更多数据
     function loadMore() {
       if (isLoading || !hasMoreData) return;
@@ -890,27 +908,31 @@ const popularArticles = allArticles.slice(1, 6);
     }
 
     // 页面加载完成后初始化
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', function() {
       initializeEventListeners();
       setupInfiniteScroll();
 
-      try {
-        const response = await fetch('/api/cards.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const cardData = await response.json();
-        allCards = cardData;
-        filteredCards = [...allCards];
+      fetch('/api/cards.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(cardData => {
+          allCards = cardData;
+          filteredCards = [...allCards];
 
-        updateFilteredCount();
-        loadMore(); // 初始加载第一批数据
-      } catch (error) {
-        console.error("Could not fetch card data:", error);
-        // 如果没有数据，显示空状态
-        clearTable();
-        appendRows([], 0);
-      }
+          updateFilteredCount();
+          loadMore(); // Initial load
+        })
+        .catch(error => {
+          console.error("Could not fetch card data:", error);
+          // 如果没有数据，显示空状态
+          clearTable();
+          appendRows([], 0);
+        });
+
     });
   </script>
 </Layout>
