@@ -50,11 +50,7 @@ const cardsCollection = defineCollection({
     shortDescription: z.string().optional(),
     // Card Type and Network
     cardType: z.enum(['virtual', 'physical', 'both']),
-    isVirtual: z.boolean().optional(),
-    isPhysical: z.boolean().optional(),
     network: z.enum(['visa', 'mastercard', 'unionpay']),
-    virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
     issuer: z.string(),
 
     // Region and Currency Support
@@ -71,9 +67,7 @@ const cardsCollection = defineCollection({
     foreignExchangeFee: z.string().optional(),
     withdrawalFee: z.string().optional(),
     exchangeRate: z.string().optional(),
-    annualFee: z.any().optional(),
-    virtualAnnualFee: z.any().optional(),
-    physicalAnnualFee: z.any().optional(),
+    annualFee: z.boolean().optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
 
     // Limits

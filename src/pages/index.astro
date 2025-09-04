@@ -627,9 +627,15 @@ const popularArticles = allArticles.slice(1, 6);
 
       // 讨论列
       row += '<td class="py-4 px-4 text-center">';
-      if (card.data.commentCount && card.data.commentCount > 0) {
-        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors">
+      if (card.data.commentCount > 0) {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors" title="查看评论">
                   ${card.data.commentCount}
+                </a>`;
+      } else {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors" title="参与讨论">
+                  <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                  </svg>
                 </a>`;
       }
       row += '</td>';
