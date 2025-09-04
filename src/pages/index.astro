@@ -296,7 +296,7 @@ const popularArticles = allArticles.slice(1, 6);
                         讨论
                       </th>
                       <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
-                        操作
+                        申请
                       </th>
                     </tr>
                   </thead>
@@ -484,6 +484,7 @@ const popularArticles = allArticles.slice(1, 6);
       const typeStyles = {
         'visa': '<span class="inline-block px-2 py-0.5 bg-blue-600 text-white text-xs rounded">VISA</span>',
         'mastercard': '<span class="inline-block px-2 py-0.5 bg-orange-500 text-white text-xs rounded">MASTERCARD</span>',
+
         'unionpay': '<span class="inline-block px-2 py-0.5 bg-purple-600 text-white text-xs rounded">银联</span>'
       };
       return typeStyles[network] || '';
@@ -638,6 +639,7 @@ const popularArticles = allArticles.slice(1, 6);
                   </svg>
                 </a>`;
       }
+      row += feeDisplay;
       row += '</td>';
 
       // 操作按钮列
@@ -706,7 +708,6 @@ const popularArticles = allArticles.slice(1, 6);
         tableBody.innerHTML = '';
       }
     }
-
     // 加载更多数据
     function loadMore() {
       if (isLoading || !hasMoreData) return;
@@ -931,6 +932,7 @@ const popularArticles = allArticles.slice(1, 6);
           clearTable();
           appendRows([], 0);
         });
+
     });
   </script>
 </Layout>
