@@ -211,7 +211,7 @@ function getMockCommentCount(identifier) {
     'monolith-card': 25
   };
   
-  return mockData[identifier] || Math.floor(Math.random() * 30 + 5);
+  return identifier in mockData ? mockData[identifier] : Math.floor(Math.random() * 30 + 5);
 }
 
 /**
