@@ -296,7 +296,7 @@ const popularArticles = allArticles.slice(1, 6);
                         讨论
                       </th>
                       <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
-                        操作
+                        申请
                       </th>
                     </tr>
                   </thead>
@@ -470,7 +470,6 @@ const popularArticles = allArticles.slice(1, 6);
     let filteredCards = [];
     let isLoading = false;
     let hasMoreData = true;
-
     // 筛选状态
     let filters = {
       cardType: '',
@@ -529,6 +528,7 @@ const popularArticles = allArticles.slice(1, 6);
       ];
       return colors[index % colors.length];
     }
+
 
     // 渲染表格行
     function renderTableRow(card, index) {
@@ -610,6 +610,7 @@ const popularArticles = allArticles.slice(1, 6);
       } else {
         row += `<span class="text-sm text-gray-700">${totalFees}</span>`;
       }
+      row += feeDisplay;
       row += '</td>';
 
       // 年/月费列
@@ -652,6 +653,7 @@ if (card.data.commentCount > 0) {
           </a>`;
 }
 row += '</td>';
+
 
       // 操作按钮列
       row += `<td class="py-4 px-4 text-center">
@@ -944,6 +946,7 @@ row += '</td>';
           clearTable();
           appendRows([], 0);
         });
+
     });
   </script>
 </Layout>
