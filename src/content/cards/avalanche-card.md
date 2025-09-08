@@ -6,16 +6,18 @@ description: "一款由加密货币支持的Visa卡，让您可以在任何接�
 shortDescription: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
 cardType: "both"
 network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: 0
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: false
 issuer: "Rain Liquidity"
+virtualCard:
+  isAvailable: true
+  price: 0
+  network: "visa"
+  annualFee: false
+physicalCard:
+  isAvailable: true
+  price: 0
+  network: "visa"
+  annualFee: false
+monthlyFee: false
 supportedRegions:
   - "美国"
   - "拉丁美洲"
@@ -53,7 +55,6 @@ depositFee: "浮动"
 transactionFee: "浮动"
 foreignExchangeFee: "1%"
 withdrawalFee: "浮动"
-annualFee: false
 ---
 
 ## Avalanche Card 评测

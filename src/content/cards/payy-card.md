@@ -6,16 +6,18 @@ description: "Payy Card是一款自托管Visa卡，使用零知识证明技术�
 shortDescription: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
 cardType: "both"
 network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: null
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: false
 issuer: "Payy (Polybase Labs)"
+virtualCard:
+  isAvailable: true
+  price: 0
+  network: "visa"
+  annualFee: false
+physicalCard:
+  isAvailable: true
+  price: null
+  network: "visa"
+  annualFee: false
+monthlyFee: false
 supportedRegions:
   - "全球大部分地区"
 applicationDocuments: ["护照", "身份证"]
@@ -28,7 +30,6 @@ depositFee: "免费"
 transactionFee: "免费"
 foreignExchangeFee: "免费"
 withdrawalFee: "不适用 (ATM功能私测中)"
-annualFee: false
 rewards:
   cashback: "转$10送$10 (活动详情请以官方为准)"
 pros:
