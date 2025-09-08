@@ -53,21 +53,6 @@ const cardsCollection = defineCollection({
     network: z.enum(['visa', 'mastercard', 'unionpay']),
     issuer: z.string(),
 
-    // Card Details
-    virtualCard: z.object({
-        isAvailable: z.boolean().default(true),
-        network: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-        price: z.number().nullable().default(0),
-        annualFee: z.union([z.string(), z.number(), z.boolean()]).optional(),
-    }).optional(),
-
-    physicalCard: z.object({
-        isAvailable: z.boolean().default(true),
-        network: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-        price: z.number().nullable().default(0),
-        annualFee: z.union([z.string(), z.number(), z.boolean()]).optional(),
-    }).optional(),
-
     // Region and Currency Support
     supportedRegions: z.array(z.string()),
     supportedCurrencies: z.array(z.string()),
@@ -75,11 +60,14 @@ const cardsCollection = defineCollection({
     applicationDocuments: z.array(z.string()).optional(),
 
     // Fees
+    virtualCardPrice: z.number().optional(),
+    physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
     transactionFee: z.string().optional(),
     foreignExchangeFee: z.string().optional(),
     withdrawalFee: z.string().optional(),
     exchangeRate: z.string().optional(),
+    annualFee: z.boolean().optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
 
     // Limits
