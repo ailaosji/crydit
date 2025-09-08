@@ -43,84 +43,60 @@ const articlesCollection = defineCollection({
 const cardsCollection = defineCollection({
   type: 'content',
   schema: ({ image }) => z.object({
-    // Core Identity
+    // === 基础信息 ===
     name: z.string(),
-    title: z.string(),
+    issuer: z.string(),
+    logo: z.string().url().optional(),
     description: z.string(),
     shortDescription: z.string().optional(),
-    // Card Type and Network
-    cardType: z.enum(['virtual', 'physical', 'both']),
-    isVirtual: z.boolean().optional(),
-    isPhysical: z.boolean().optional(),
-    network: z.enum(['visa', 'mastercard', 'unionpay']),
-    virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    issuer: z.string(),
 
-    // Region and Currency Support
+    // === 卡片类型（核心优化点）===
+    hasVirtual: z.boolean(),
+    hasPhysical: z.boolean(),
+
+    // === 虚拟卡信息 ===
+    virtualCard: z.object({
+      price: z.number().optional(),
+      network: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
+      annualFee: z.number().optional(),
+    }).optional(),
+
+    // === 实体卡信息 ===
+    physicalCard: z.object({
+      price: z.number().optional(),
+      network: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
+      annualFee: z.number().optional(),
+      deliveryDays: z.number().optional(),
+    }).optional(),
+
+    // === 通用费用 ===
+    depositFee: z.number(),
+    transactionFee: z.number(),
+    withdrawalFee: z.number(),
+    monthlyFee: z.number(),
+
+    // === 支持信息 ===
     supportedRegions: z.array(z.string()),
     supportedCurrencies: z.array(z.string()),
-    supportedPaymentMethods: z.array(z.string()).optional(),
-    applicationDocuments: z.array(z.string()).optional(),
 
-    // Fees
-    virtualCardPrice: z.number().optional(),
-    physicalCardPrice: z.number().nullable().optional(),
-    depositFee: z.string().optional(),
-    transactionFee: z.string().optional(),
-    foreignExchangeFee: z.string().optional(),
-    withdrawalFee: z.string().optional(),
-    exchangeRate: z.string().optional(),
-    annualFee: z.any().optional(),
-    virtualAnnualFee: z.any().optional(),
-    physicalAnnualFee: z.any().optional(),
-    monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
-
-    // Limits
-    limits: z.object({
-      singleTransaction: z.string().optional(),
-      dailySpending: z.string().optional(),
-      monthlySpending: z.string().optional(),
-      monthlyAtmWithdrawal: z.string().optional(),
-    }).optional(),
-
-    // Rewards
-    rewards: z.object({
-      cashback: z.string().nullable().optional(),
-      loyaltyProgram: z.string().optional(),
-      points: z.union([z.boolean(), z.string()]).optional(),
-    }).optional(),
-
-    // Ratings and Features
-    pros: z.array(z.string()),
-    cons: z.array(z.string()),
-    features: z.array(z.string()).optional(),
-    featured: z.boolean().default(false),
-    importantReminders: z.array(z.string()).optional(),
-
-    // Other Information
-    kycRequired: z.boolean().default(true),
-    minimumAge: z.number().default(18),
-
-    // Links
+    // === 其他信息 ===
+    kycRequired: z.boolean(),
     affiliateLink: z.string().url().optional(),
     invitationCode: z.string().optional(),
+    tags: z.array(z.string()),
 
-    // Status and Dates
-    status: z.enum(['active', 'discontinued', 'coming-soon']).default('active'),
-    publishDate: z.coerce.date().optional(),
+    // === 状态 ===
+    status: z.enum(['active', 'discontinued', 'pending']),
+    featured: z.boolean().default(false),
+    publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
-    lastReviewed: z.coerce.date().optional(),
 
-    // SEO
-    seo: seoSchema.optional(),
-
-    // Media
+    // === 元数据 ===
+    pros: z.array(z.string()).optional(),
+    cons: z.array(z.string()).optional(),
+    features: z.array(z.string()).optional(),
     image: image().optional(),
-    gallery: z.array(image()).optional(),
-
-    // Taxonomy
-    tags: z.array(z.string()).optional(),
+    seo: seoSchema.optional(),
   }).merge(relatedContentSchema.pick({ relatedCards: true, relatedArticles: true })),
 });
 

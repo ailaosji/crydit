@@ -1,64 +1,47 @@
 ---
-title: "Payy Card - 无账号密码的隐私安全U卡"
-name: "Payy Card"
-logo: ""
-description: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-shortDescription: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-cardType: "both"
-network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: null
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: false
-issuer: "Payy (Polybase Labs)"
+name: Payy Card
+issuer: Payy (Polybase Labs)
+description: Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。
+shortDescription: Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。
+hasVirtual: false
+hasPhysical: false
+depositFee: 0
+transactionFee: 0
+withdrawalFee: 0
+monthlyFee: 0
 supportedRegions:
-  - "全球大部分地区"
-applicationDocuments: ["护照", "身份证"]
+- 全球大部分地区
 supportedCurrencies:
-  - "USDC"
-supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
-depositFee: "免费"
-transactionFee: "免费"
-foreignExchangeFee: "免费"
-withdrawalFee: "不适用 (ATM功能私测中)"
-annualFee: false
-rewards:
-  cashback: "转$10送$10 (活动详情请以官方为准)"
-pros:
-  - "无账户密码设计，私钥自持，安全性高"
-  - "零知识证明技术，保护交易隐私"
-  - "无申请、充值、交易、月费"
-  - "支持中国大陆身份证/护照KYC"
-  - "实体卡会发光，设计独特"
-cons:
-  - "非银行机构，不受存款保险保护"
-  - "申请实体卡有门槛（需10000 Point）"
-  - "ATM取现功能仍在私测阶段"
-  - "新平台，长期可靠性待观察"
-features:
-  - "自托管钱包"
-  - "隐私支付 (ZK)"
-  - "发光实体卡"
-  - "全球Visa网络"
-relatedArticles: []
-affiliateLink: "https://payy.link/invite/8UFBN7"
-invitationCode: '8UFBN7'
-tags:
-  - "Payy"
-  - "U卡"
-  - "隐私"
-  - "零知识证明"
-  - "无密码"
-publishDate: "2025-08-09"
-updateDate: "2025-08-09"
+- USDC
 kycRequired: true
+tags:
+- Payy
+- U卡
+- 隐私
+- 零知识证明
+- 无密码
+status: active
+featured: false
+publishDate: '2025-08-09'
+updateDate: '2025-08-09'
+pros:
+- 无账户密码设计，私钥自持，安全性高
+- 零知识证明技术，保护交易隐私
+- 无申请、充值、交易、月费
+- 支持中国大陆身份证/护照KYC
+- 实体卡会发光，设计独特
+cons:
+- 非银行机构，不受存款保险保护
+- 申请实体卡有门槛（需10000 Point）
+- ATM取现功能仍在私测阶段
+- 新平台，长期可靠性待观察
+features:
+- 自托管钱包
+- 隐私支付 (ZK)
+- 发光实体卡
+- 全球Visa网络
+affiliateLink: https://payy.link/invite/8UFBN7
+invitationCode: 8UFBN7
 ---
 
 

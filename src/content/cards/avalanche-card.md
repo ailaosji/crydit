@@ -1,59 +1,48 @@
 ---
-title: "雪崩卡（Avalanche Card）- 随时随地消费您的加密货币"
-name: "Avalanche Card"
-logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg"
-description: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
-shortDescription: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
-cardType: "both"
-network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: 0
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: false
-issuer: "Rain Liquidity"
+name: Avalanche Card
+issuer: Rain Liquidity
+description: 一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。
+shortDescription: 一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。
+hasVirtual: false
+hasPhysical: false
+depositFee: 0
+transactionFee: 0
+withdrawalFee: 0
+monthlyFee: 0
 supportedRegions:
-  - "美国"
-  - "拉丁美洲"
-  - "加勒比地区"
-applicationDocuments: ["身份证/护照", "SSN/国民身份证"]
+- 美国
+- 拉丁美洲
+- 加勒比地区
 supportedCurrencies:
-  - "AVAX"
-  - "USDC"
-  - "sAVAX"
-supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
-affiliateLink: "https://www.avalanchecard.com/"
-publishDate: "2025-08-18"
+- AVAX
+- USDC
+- sAVAX
 kycRequired: true
-pros:
-  - "Avalanche Card不收取Gas费或转换费"
-  - "全球任何接受Visa的地方都可以使用"
-  - "无需信用检查"
-  - "虚拟卡和实体卡均免费"
-cons:
-  - "并非在所有国家/地区都可用"
-  - "支持的加密货币数量有限"
-features:
-  - "即时访问加密资产"
-  - "消费提醒"
-  - "冻结卡片和更改PIN码"
-  - "24/7专属支持"
 tags:
-  - "Avalanche"
-  - "Visa"
-  - "加密货币支持"
-  - "全球通用"
-depositFee: "浮动"
-transactionFee: "浮动"
-foreignExchangeFee: "1%"
-withdrawalFee: "浮动"
-annualFee: false
+- Avalanche
+- Visa
+- 加密货币支持
+- 全球通用
+status: active
+featured: false
+publishDate: '2025-08-18'
+updateDate: null
+pros:
+- Avalanche Card不收取Gas费或转换费
+- 全球任何接受Visa的地方都可以使用
+- 无需信用检查
+- 虚拟卡和实体卡均免费
+cons:
+- 并非在所有国家/地区都可用
+- 支持的加密货币数量有限
+- 部分费用为浮动费率，具体取决于网络状况
+features:
+- 即时访问加密资产
+- 消费提醒
+- 冻结卡片和更改PIN码
+- 24/7专属支持
+logo: https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg
+affiliateLink: https://www.avalanchecard.com/
 ---
 
 ## Avalanche Card 评测

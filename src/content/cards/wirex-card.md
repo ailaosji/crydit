@@ -1,56 +1,48 @@
 ---
-title: "Wirex Card - 全能型加密货币借记卡"
-name: "Wirex Card"
-logo: ""
-description: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
-shortDescription: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
-cardType: "both"
-network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: 0
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: "€0 - €29.99"
-issuer: "Wirex"
+name: Wirex Card
+issuer: Wirex
+description: Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。
+shortDescription: Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。
+hasVirtual: false
+hasPhysical: false
+depositFee: 0
+transactionFee: 0
+withdrawalFee: 0
+monthlyFee: 1
 supportedRegions:
-  - "全球多个地区"
-applicationDocuments: ["身份证明", "地址证明"]
+- 全球多个地区
 supportedCurrencies:
-  - "BTC"
-  - "ETH"
-  - "LTC"
-  - "XRP"
-  - "DAI"
-  - "USDT"
-  - "USDC"
-supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
-affiliateLink: "https://wirexapp.com/card"
-publishDate: "2025-08-18"
+- BTC
+- ETH
+- LTC
+- XRP
+- DAI
+- USDT
+- USDC
 kycRequired: true
-pros:
-  - "高达8%的消费返现"
-  - "支持虚拟卡和实体卡"
-  - "全球超过6100万个地点接受"
-  - "应用内即时冻结卡片，安全性高"
-cons:
-  - "高级别套餐月费较高"
-  - "免费ATM取款有额度限制"
-  - "加密货币市场波动风险"
-features:
-  - "应用内管理"
-  - "即时支付提醒"
-  - "双重验证"
 tags:
-  - "Wirex"
-  - "Visa"
-  - "返现卡"
-  - "多币种"
+- Wirex
+- Visa
+- 返现卡
+- 多币种
+status: active
+featured: false
+publishDate: '2025-08-18'
+updateDate: null
+pros:
+- 高达8%的消费返现
+- 支持虚拟卡和实体卡
+- 全球超过6100万个地点接受
+- 应用内即时冻结卡片，安全性高
+cons:
+- 高级别套餐月费较高
+- 免费ATM取款有额度限制
+- 加密货币市场波动风险
+features:
+- 应用内管理
+- 即时支付提醒
+- 双重验证
+affiliateLink: https://wirexapp.com/card
 ---
 
 

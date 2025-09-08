@@ -1,59 +1,47 @@
 ---
-title: "Ready Card - 连接数字货币与现实生活的消费卡"
-name: "Ready Card"
-logo: ""
-description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
-shortDescription: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
-cardType: "both"
-network: "mastercard"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 6
-virtualNetwork: "mastercard"
-virtualAnnualFee: false
-physicalCardPrice: 6
-physicalNetwork: "mastercard"
-physicalAnnualFee: 120
-monthlyFee: false
-issuer: "Ready / Kulipa"
+name: Ready Card
+issuer: Ready / Kulipa
+description: Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。
+shortDescription: Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。
+hasVirtual: false
+hasPhysical: false
+depositFee: 0
+transactionFee: 0
+withdrawalFee: 0
+monthlyFee: 0
 supportedRegions:
-  - "英国"
-  - "欧洲经济区 (EEA)"
-applicationDocuments: ["身份证件 (驾照/护照/身份证)"]
+- 英国
+- 欧洲经济区 (EEA)
 supportedCurrencies:
-  - "USDC"
-supportedPaymentMethods: ["Apple Pay", "Google Pay"]
-affiliateLink: "https://www.ready.co/"
-publishDate: "2025-08-10"
-updateDate: "2025-08-10"
+- USDC
 kycRequired: true
-pros:
-  - "消费时直接将USDC兑换成美金，无需手动操作"
-  - "高额返现，特别是Metal卡首月优惠"
-  - "使用万事达卡官方汇率，无外汇损失"
-  - "无转换费、充值费"
-  - "完全自托管，掌控自己的资金"
-cons:
-  - "目前仅支持USDC"
-  - "支持地区有限（英国和欧洲经济区）"
-  - "虚拟卡和个人IBAN功能尚未推出"
-  - "Metal卡年费较高 (120 USDC)"
-features:
-  - "自托管钱包消费"
-  - "全球Mastercard网络"
-  - "STRK代币返现"
-  - "跨链充值"
 tags:
-  - "Ready"
-  - "Argent"
-  - "U卡"
-  - "自托管"
-  - "返现"
-importantReminders:
-  - "<strong>开卡费约 $6:</strong> 创建卡片时收取（基于官方数据）"
-  - "<strong>外币交易费 2.5%:</strong> 非本国货币交易时收取"
-  - "<strong>休眠费 $3.95/月:</strong> 13个月不活跃后开始收取"
-  - "<strong>汇率优势:</strong> 使用官方万事达汇率，无额外加价"
+- Ready
+- Argent
+- U卡
+- 自托管
+- 返现
+status: active
+featured: false
+publishDate: '2025-08-10'
+updateDate: '2025-08-10'
+pros:
+- 消费时直接将USDC兑换成美金，无需手动操作
+- 高额返现，特别是Metal卡首月优惠
+- 使用万事达卡官方汇率，无外汇损失
+- 无转换费、充值费
+- 完全自托管，掌控自己的资金
+cons:
+- 目前仅支持USDC
+- 支持地区有限（英国和欧洲经济区）
+- 虚拟卡和个人IBAN功能尚未推出
+- Metal卡年费较高 (120 USDC)
+features:
+- 自托管钱包消费
+- 全球Mastercard网络
+- STRK代币返现
+- 跨链充值
+affiliateLink: https://www.ready.co/
 ---
 
 
