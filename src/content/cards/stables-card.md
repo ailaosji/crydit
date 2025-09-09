@@ -1,45 +1,59 @@
 ---
-name: Stables Card
-issuer: Stables
-description: Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。
-shortDescription: Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。
-hasVirtual: false
-hasPhysical: false
-depositFee: 0
-transactionFee: 0
-withdrawalFee: 0
-monthlyFee: 0
+title: "Stables Card - 消费您的稳定币"
+name: "Stables Card"
+logo: ""
+description: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
+shortDescription: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
+# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+network: "mastercard"
+hasVirtual: true
+hasPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "mastercard"
+virtualAnnualFee: false
+physicalCardPrice: 0
+physicalNetwork: "mastercard"
+physicalAnnualFee: false
+monthlyFee: false
+issuer: "Stables"
 supportedRegions:
-- 全球
+  - "全球"
+applicationDocuments: ["身份证/护照"]
 supportedCurrencies:
-- USDT
-- USDC
-- DAI
-- PYUSD
-- HONEY
+  - "USDT"
+  - "USDC"
+  - "DAI"
+  - "PYUSD"
+  - "HONEY"
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
+  - "银行转账"
+affiliateLink: "https://stables.money/"
+publishDate: "2025-08-18"
 kycRequired: true
-tags:
-- Stables
-- Mastercard
-- 稳定币
-- 全球
-status: active
-featured: false
-publishDate: '2025-08-18'
-updateDate: null
 pros:
-- 直接消费稳定币
-- 无激活费、月费或外汇费
-- 交易可赚取Stables积分
-- 支持超过20个加密网络进行充值
+  - "直接消费稳定币"
+  - "无激活费、月费或外汇费"
+  - "交易可赚取Stables积分"
+  - "支持超过20个加密网络进行充值"
 cons:
-- 充值和发送的费用结构可能很复杂
-- 地区可用性信息略有不清楚
+  - "充值和发送的费用结构可能很复杂"
+  - "地区可用性信息略有不清楚"
 features:
-- 链上余额
-- MPC加密技术保障安全
-- 24/7支持
-affiliateLink: https://stables.money/
+  - "链上余额"
+  - "MPC加密技术保障安全"
+  - "24/7支持"
+tags:
+  - "Stables"
+  - "Mastercard"
+  - "稳定币"
+  - "全球"
+depositFee: "因方法而异"
+transactionFee: "0美元"
+foreignExchangeFee: "0美元"
+withdrawalFee: "因方法而异"
+annualFee: false
 ---
 
 

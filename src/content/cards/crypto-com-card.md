@@ -1,28 +1,27 @@
 ---
+title: "Crypto.com Visa卡 - 高返现金属U卡"
 name: "Crypto.com Card"
-issuer: "Crypto.com"
 logo: "https://gist.githubusercontent.com/mahnunchik/23066a318de2956df3c769c87e4e6cbd/raw/e0f246d0e26ce770f3c3adca748a5a454907f8bb/crypto-com-coin-cro-logo.svg"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
+# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+network: "visa"
 hasVirtual: true
 hasPhysical: true
-virtualCard:
-  price: 0
-  network: 'visa'
-  annualFee: 0
-physicalCard:
-  price: 4.99
-  network: 'visa'
-  annualFee: 0
-depositFee: 1
-transactionFee: 0
-withdrawalFee: 0
-monthlyFee: 0
+virtualCardPrice: 0
+virtualNetwork: "visa"
+virtualAnnualFee: false
+physicalCardPrice: 4.99
+physicalNetwork: "visa"
+physicalAnnualFee: false
+monthlyFee: false
+issuer: "Crypto.com"
 supportedRegions:
   - "美国"
   - "加拿大"
   - "欧洲"
   - "亚太地区"
+applicationDocuments: ["身份验证 (KYC)"]
 supportedCurrencies:
   - "BTC"
   - "ETH"
@@ -30,18 +29,13 @@ supportedCurrencies:
   - "USDT"
   - "EUR"
   - "GBP"
-kycRequired: true
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
 affiliateLink: "https://crypto.com/app/"
-tags:
-  - "Crypto.com"
-  - "CRO"
-  - "返现"
-  - "金属卡"
-  - "U卡"
-status: 'active'
-featured: true
 publishDate: "2024-01-05"
 updateDate: "2025-08-11"
+kycRequired: true
 pros:
   - "高额消费返现"
   - "金属卡片，质感好"
@@ -56,6 +50,12 @@ features:
   - "机场贵宾厅"
   - "订阅服务报销"
   - "金属卡"
+tags:
+  - "Crypto.com"
+  - "CRO"
+  - "返现"
+  - "金属卡"
+  - "U卡"
 ---
 
 ## Crypto.com Visa 卡评测

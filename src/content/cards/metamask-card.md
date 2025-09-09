@@ -1,55 +1,62 @@
 ---
-name: MetaMask Card
-issuer: MetaMask
-description: MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。
-shortDescription: MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。
-hasVirtual: false
-hasPhysical: false
-depositFee: 0
-transactionFee: 0
-withdrawalFee: 0
-monthlyFee: 0
+title: "MetaMask Card - 随时随地消费加密货币"
+name: "MetaMask Card"
+logo: "https://images.ctfassets.net/clixtyxoaeas/4rnpEzy1ATWRKVBOLxZ1Fm/a74dc1eed36d23d7ea6030383a4d5163/MetaMask-icon-fox.svg"
+description: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
+shortDescription: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
+# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+network: "mastercard"
+hasVirtual: true
+hasPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "mastercard"
+virtualAnnualFee: false
+physicalCardPrice: 0
+physicalNetwork: "mastercard"
+physicalAnnualFee: 199
+monthlyFee: false
+issuer: "MetaMask"
 supportedRegions:
-- 阿根廷
-- 巴西
-- 加拿大
-- 哥伦比亚
-- 欧盟
-- 墨西哥
-- 英国
+  - "阿根廷"
+  - "巴西"
+  - "加拿大"
+  - "哥伦比亚"
+  - "欧盟"
+  - "墨西哥"
+  - "英国"
+applicationDocuments: ["身份验证"]
 supportedCurrencies:
-- wETH
-- EURe
-- GBPe
-- aUSDC
-- USDC
-- USDT
+  - "wETH"
+  - "EURe"
+  - "GBPe"
+  - "aUSDC"
+  - "USDC"
+  - "USDT"
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
+affiliateLink: "https://metamask.io/card/"
+publishDate: "2025-08-18"
 kycRequired: true
-tags:
-- MetaMask
-- Mastercard
-- 自托管
-- Linea
-status: active
-featured: false
-publishDate: '2025-08-18'
-updateDate: null
 pros:
-- 直接从您的自托管钱包消费
-- 无需将资金转移到银行
-- 赚取链上奖励和现金返还
-- 即将推出实体金属卡
+  - "直接从您的自托管钱包消费"
+  - "无需将资金转移到银行"
+  - "赚取链上奖励和现金返还"
+  - "即将推出实体金属卡"
 cons:
-- 目前仅支持Linea网络
-- 仅限于少数稳定币和wETH
-- 并非在所有国家/地区都可用
+  - "目前仅支持Linea网络"
+  - "仅限于少数稳定币和wETH"
+  - "并非在所有国家/地区都可用"
 features:
-- 无缝消费
-- 即时结算
-- 链上奖励
-- 用户控制的托管
-logo: https://images.ctfassets.net/clixtyxoaeas/4rnpEzy1ATWRKVBOLxZ1Fm/a74dc1eed36d23d7ea6030383a4d5163/MetaMask-icon-fox.svg
-affiliateLink: https://metamask.io/card/
+  - "无缝消费"
+  - "即时结算"
+  - "链上奖励"
+  - "用户控制的托管"
+tags:
+  - "MetaMask"
+  - "Mastercard"
+  - "自托管"
+  - "Linea"
 ---
 
 

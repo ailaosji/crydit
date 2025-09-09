@@ -1,38 +1,47 @@
 ---
-name: Trustee Card
-issuer: Trustee
-description: Trustee加密卡是用于日常使用数字货币的支付卡。注意：该卡暂时不可用，提供商建议使用其合作伙伴Quicko作为替代方案。
-shortDescription: Trustee加密卡是用于日常使用数字货币的支付卡。注意：该卡暂时不可用，提供商建议使用其合作伙伴Quicko作为替代方案。
-hasVirtual: false
-hasPhysical: false
-depositFee: 0
-transactionFee: 0
-withdrawalFee: 0
-monthlyFee: 0
+title: "Trustee Card（暂时不可用）"
+name: "Trustee Card"
+logo: ""
+description: "Trustee加密卡是用于日常使用数字货币的支付卡。注意：该卡暂时不可用，提供商建议使用其合作伙伴Quicko作为替代方案。"
+shortDescription: "Trustee加密卡是用于日常使用数字货币的支付卡。注意：该卡暂时不可用，提供商建议使用其合作伙伴Quicko作为替代方案。"
+# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+network: "visa"
+hasVirtual: true
+hasPhysical: true
+virtualCardPrice: 0
+virtualNetwork: "visa"
+virtualAnnualFee: false
+physicalCardPrice: 0
+physicalNetwork: "visa"
+physicalAnnualFee: false
+monthlyFee: false
+issuer: "Trustee"
 supportedRegions:
-- 欧盟
+  - "欧盟"
+applicationDocuments: ["护照", "身份证"]
 supportedCurrencies:
-- USDT
-- BTC
-- ETH
+  - "USDT"
+  - "BTC"
+  - "ETH"
+supportedPaymentMethods:
+  - "Apple Pay"
+  - "Google Pay"
+affiliateLink: "https://trusteeglobal.eu/cryptocard/"
+publishDate: "2025-08-18"
 kycRequired: true
-tags:
-- Trustee
-- Visa
-- 不可用
-status: discontinued
-featured: false
-publishDate: '2025-08-18'
-updateDate: null
 pros:
-- 即时转换为当地货币
-- 支持Apple Pay和Google Pay
+  - "即时转换为当地货币"
+  - "支持Apple Pay和Google Pay"
 cons:
-- 暂时不可用
+  - "暂时不可用"
 features:
-- 从Trustee Plus应用支付
-- 在任何ATM机上取款
-affiliateLink: https://trusteeglobal.eu/cryptocard/
+  - "从Trustee Plus应用支付"
+  - "在任何ATM机上取款"
+tags:
+  - "Trustee"
+  - "Visa"
+  - "不可用"
+status: "discontinued"
 ---
 
 
