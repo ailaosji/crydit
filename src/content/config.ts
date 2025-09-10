@@ -49,8 +49,9 @@ const cardsCollection = defineCollection({
     description: z.string(),
     shortDescription: z.string().optional(),
     // Card Type and Network
-    hasVirtual: z.boolean(),
-    hasPhysical: z.boolean(),
+    cardType: z.enum(['virtual', 'physical', 'both']),
+    isVirtual: z.boolean().optional(),
+    isPhysical: z.boolean().optional(),
     network: z.enum(['visa', 'mastercard', 'unionpay']),
     virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
     physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),

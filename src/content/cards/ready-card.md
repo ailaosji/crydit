@@ -4,10 +4,10 @@ name: "Ready Card"
 logo: ""
 description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
 shortDescription: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "mastercard"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 6
 virtualNetwork: "mastercard"
 virtualAnnualFee: false

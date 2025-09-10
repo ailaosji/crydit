@@ -4,10 +4,10 @@ name: "Avalanche Card"
 logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg"
 description: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
 shortDescription: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "visa"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 0
 virtualNetwork: "visa"
 virtualAnnualFee: false

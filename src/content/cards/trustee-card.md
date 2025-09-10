@@ -4,10 +4,10 @@ name: "Trustee Card"
 logo: ""
 description: "Trustee加密卡是用于日常使用数字货币的支付卡。注意：该卡暂时不可用，提供商建议使用其合作伙伴Quicko作为替代方案。"
 shortDescription: "Trustee加密卡是用于日常使用数字货币的支付卡。注意：该卡暂时不可用，提供商建议使用其合作伙伴Quicko作为替代方案。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "visa"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 0
 virtualNetwork: "visa"
 virtualAnnualFee: false

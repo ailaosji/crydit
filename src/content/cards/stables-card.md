@@ -4,10 +4,10 @@ name: "Stables Card"
 logo: ""
 description: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
 shortDescription: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "mastercard"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 0
 virtualNetwork: "mastercard"
 virtualAnnualFee: false

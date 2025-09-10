@@ -4,10 +4,10 @@ name: "Payy Card"
 logo: ""
 description: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
 shortDescription: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "visa"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 0
 virtualNetwork: "visa"
 virtualAnnualFee: false

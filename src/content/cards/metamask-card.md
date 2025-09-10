@@ -4,10 +4,10 @@ name: "MetaMask Card"
 logo: "https://images.ctfassets.net/clixtyxoaeas/4rnpEzy1ATWRKVBOLxZ1Fm/a74dc1eed36d23d7ea6030383a4d5163/MetaMask-icon-fox.svg"
 description: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
 shortDescription: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "mastercard"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 0
 virtualNetwork: "mastercard"
 virtualAnnualFee: false

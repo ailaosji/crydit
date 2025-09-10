@@ -4,10 +4,10 @@ name: "Wirex Card"
 logo: ""
 description: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
 shortDescription: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
-# cardType: (已弃用，使用 hasVirtual 和 hasPhysical)
+cardType: "both"
 network: "visa"
-hasVirtual: true
-hasPhysical: true
+isVirtual: true
+isPhysical: true
 virtualCardPrice: 0
 virtualNetwork: "visa"
 virtualAnnualFee: false
