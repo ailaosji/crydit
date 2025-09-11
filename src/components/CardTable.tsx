@@ -14,7 +14,6 @@ interface Card {
     transactionFee: string;
     annualFee: boolean;
     supportedCurrencies: string[];
-    rating: number;
     affiliateLink: string;
     shortDescription?: string;
     description?: string;
@@ -80,7 +79,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
                 支持币种
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                评论
+                讨论
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 操作
@@ -167,7 +166,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
                     rel="noopener noreferrer"
                     className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
                   >
-                    申请
+                    立即申请
                   </a>
                 </td>
               </tr>
