@@ -36,11 +36,20 @@ interface CardTableProps {
 
 const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
 
-  const getCardTypeIcon = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
-    if (type === 'visa') return '💳';
-    if (type === 'mastercard') return '💳';
-    if (type === 'unionpay') return '💳';
-    return '💳';
+  const getCardTypeTag = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
+    if (!type) return null;
+
+    const styles = {
+      visa: 'bg-blue-600 text-white',
+      mastercard: 'bg-orange-500 text-white',
+      unionpay: 'bg-purple-600 text-white',
+    };
+
+    return (
+      <span className={`inline-block px-2 py-0.5 text-xs rounded ${styles[type]}`}>
+        {type.toUpperCase()}
+      </span>
+    );
   };
 
   return (
@@ -100,7 +109,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
                   <div>
                     {card.data.isVirtual ? (
                       <div>
-                        {getCardTypeIcon(card.data.virtualNetwork)} {card.data.virtualNetwork?.toUpperCase()}
+                        {getCardTypeTag(card.data.virtualNetwork)}
                         <div>${card.data.virtualCardPrice || 0}</div>
                       </div>
                     ) : 'N/A'}
@@ -110,7 +119,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
                   <div>
                     {card.data.isPhysical ? (
                       <div>
-                        {getCardTypeIcon(card.data.physicalNetwork)} {card.data.physicalNetwork?.toUpperCase()}
+                        {getCardTypeTag(card.data.physicalNetwork)}
                         <div>${card.data.physicalCardPrice || 0}</div>
                       </div>
                     ) : 'N/A'}
