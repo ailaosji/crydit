@@ -31,9 +31,10 @@ interface Card {
 
 interface CardTableProps {
   cards: Card[];
+  startIndex?: number;
 }
 
-const CardTable: React.FC<CardTableProps> = ({ cards }) => {
+const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
 
   const getCardTypeIcon = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
     if (type === 'visa') return '💳';
@@ -42,16 +43,15 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
     return '💳';
   };
 
-  const getRatingStars = (rating: number) => {
-    return '⭐'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '⭐' : '');
-  };
-
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                序号
+              </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 卡片名称
               </th>
@@ -71,9 +71,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 支持币种
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                评分
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 评论
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -82,8 +79,11 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {cards.map((card) => (
+            {cards.map((card, index) => (
               <tr key={card.slug} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {startIndex + index + 1}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div>
@@ -146,12 +146,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                         +{card.data.supportedCurrencies.length - 3}
                       </span>
                     )}
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <div className="flex items-center">
-                    <span className="mr-1">{getRatingStars(card.data.rating)}</span>
-                    <span>({card.data.rating})</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

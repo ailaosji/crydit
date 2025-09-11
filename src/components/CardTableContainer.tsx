@@ -113,6 +113,8 @@ const CardTableContainer: React.FC = () => {
       );
     }
 
+    // tempCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
+
     setFilteredCards(tempCards);
     setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
     setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
@@ -173,7 +175,7 @@ const CardTableContainer: React.FC = () => {
               </div>
         </div>
 
-      <CardTable cards={displayedCards} />
+      <CardTable cards={displayedCards} startIndex={(page - 1) * ITEMS_PER_PAGE} />
 
       <LoadMoreIndicator
         isLoading={isLoading}
