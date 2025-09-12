@@ -57,6 +57,8 @@ tags:
   - "Mastercard"
   - "自托管"
   - "Linea"
+depositFee: "0%"
+transactionFee: "0.875%"
 ---
 
 

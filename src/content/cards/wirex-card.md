@@ -51,6 +51,8 @@ tags:
   - "Visa"
   - "返现卡"
   - "多币种"
+depositFee: "0%"
+transactionFee: "0% (with limits)"
 ---
 
 

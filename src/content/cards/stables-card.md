@@ -49,8 +49,8 @@ tags:
   - "Mastercard"
   - "稳定币"
   - "全球"
-depositFee: "因方法而异"
-transactionFee: "0美元"
+depositFee: "0% (stablecoins)"
+transactionFee: "0%"
 foreignExchangeFee: "0美元"
 withdrawalFee: "因方法而异"
 annualFee: false

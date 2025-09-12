@@ -125,18 +125,15 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <div>
-                    <div>充值: {card.data.depositFee}</div>
-                    <div>刷卡: {card.data.transactionFee}</div>
+                    <div>充值: {card.data.depositFee || 'N/A'}</div>
+                    <div>刷卡: {card.data.transactionFee || 'N/A'}</div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    !card.data.annualFee
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {card.data.annualFee ? '收取' : '免费'}
-                  </span>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div>
+                    <div>虚拟卡: ${card.data.virtualAnnualFee || 0}</div>
+                    <div>实体卡: ${card.data.physicalAnnualFee || 0}</div>
+                  </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <div className="flex flex-wrap gap-1">
