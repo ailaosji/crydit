@@ -45,7 +45,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
     };
 
     return (
-      <span className={`inline-block px-2 py-0.5 text-xs rounded ${styles[type]}`}>
+      <span className={`inline-block px-1.5 py-0.5 text-[10px] rounded ${styles[type]}`}>
         {type.toUpperCase()}
       </span>
     );
