@@ -1,7 +1,7 @@
 ---
 title: "雪崩卡（Avalanche Card）- 随时随地消费您的加密货币"
 name: "Avalanche Card"
-logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg"
+logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/6708797d923ea1afb7204ac1_635153472587c97c19234198_Webclip.jpg"
 description: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
 shortDescription: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
 cardType: "both"

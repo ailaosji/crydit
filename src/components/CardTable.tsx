@@ -5,6 +5,7 @@ interface Card {
   slug: string;
   data: {
     name: string;
+    logo?: string;
     cardType: 'visa' | 'mastercard';
     isVirtual: boolean;
     isPhysical: boolean;
@@ -99,8 +100,12 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <span className="text-gray-500 font-bold text-sm">{card.data.name.substring(0, 2).toUpperCase()}</span>
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                      {card.data.logo ? (
+                        <img src={card.data.logo} alt={`${card.data.name} logo`} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-gray-500 font-bold text-sm">{card.data.name.substring(0, 2).toUpperCase()}</span>
+                      )}
                     </div>
                     <div>
                       <a 

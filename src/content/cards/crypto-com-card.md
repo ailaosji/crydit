@@ -1,7 +1,7 @@
 ---
 title: "Crypto.com Visa卡 - 高返现金属U卡"
 name: "Crypto.com Card"
-logo: "https://gist.githubusercontent.com/mahnunchik/23066a318de2956df3c769c87e4e6cbd/raw/e0f246d0e26ce770f3c3adca748a5a454907f8bb/crypto-com-coin-cro-logo.svg"
+logo: "https://crypto.com/favicon.ico"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 cardType: "both"

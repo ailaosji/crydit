@@ -1,7 +1,7 @@
 ---
 title: "Wirex Card - 全能型加密货币借记卡"
 name: "Wirex Card"
-logo: ""
+logo: "https://wirexapp.com/assets/images/favicon/apple-icon-180x180.png"
 description: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
 shortDescription: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
 cardType: "both"

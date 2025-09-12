@@ -1,7 +1,7 @@
 ---
 title: "Ready Card - 连接数字货币与现实生活的消费卡"
 name: "Ready Card"
-logo: ""
+logo: "https://cdn.prod.website-files.com/680f9220d4668b0e40862420/681b4c1ea23569cd7aef6add_4dd6e26543621bf8b5a31d5a93f83136_ready-logo-linear.svg"
 description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
 shortDescription: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
 cardType: "both"
