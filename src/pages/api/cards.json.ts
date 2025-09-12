@@ -1,44 +1,70 @@
+// src/pages/api/cards.json.ts
 import { getCollection } from 'astro:content';
-import type { APIRoute } from 'astro';
 import { batchGetCommentCounts } from '../../lib/giscus-api.js';
 
-export const GET: APIRoute = async () => {
+export async function GET() {
   try {
-    let allCards = await getCollection('cards');
+    const allCards = await getCollection('cards', ({ data }) => {
+      // 过滤掉所有被标记为 'draft' 或 'discontinued' 的卡片
+      return data.status !== 'draft' && data.status !== 'discontinued';
+    });
 
-    // Prepare card info for comment fetching
-    const cardIdentifiers = allCards.map(card => ({ slug: card.slug, title: card.data.title }));
+    if (!allCards || allCards.length === 0) {
+      console.warn('No active cards found.');
+      return new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
 
-    // Fetch all comment counts in a single batch
+    // 为批量获取评论数准备卡片信息
+    const cardIdentifiers = allCards.map(card => ({
+      slug: card.slug,
+      title: card.data.name,
+    }));
+
+    // 批量获取评论数
     const commentCounts = await batchGetCommentCounts(cardIdentifiers);
 
-    // Add comment counts to card data
-    const allCardsWithComments = allCards.map(card => {
+    // 将评论数附加到卡片数据中
+    const cardsWithCommentCounts = allCards.map(card => {
+      const commentCount = commentCounts.get(card.slug) || 0;
       return {
         ...card,
+        commentCount, // 在顶层添加评论数，方便访问
         data: {
           ...card.data,
-          commentCount: commentCounts.get(card.slug) || 0,
-        }
+          commentCount, // 同时也在data属性中保留，以兼容旧用法
+        },
       };
     });
 
-    // Sort cards by publish date in descending order
-    allCardsWithComments.sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime());
+    // 根据评分和评论数进行综合排序
+    const sortedCards = cardsWithCommentCounts.sort((a, b) => {
+      const ratingA = a.data.rating || 0;
+      const ratingB = b.data.rating || 0;
+      const commentsA = a.commentCount || 0;
+      const commentsB = b.commentCount || 0;
 
-    return new Response(JSON.stringify(allCardsWithComments), {
+      // 简单的加权排序：评分权重更高
+      const scoreA = ratingA * 0.7 + commentsA * 0.3;
+      const scoreB = ratingB * 0.7 + commentsB * 0.3;
+
+      return scoreB - scoreA;
+    });
+
+    return new Response(JSON.stringify(sortedCards), {
       status: 200,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+        'Cache-Control': 's-maxage=3600, stale-while-revalidate', // 1小时缓存
+      },
     });
   } catch (error) {
-    console.error("Error in cards API endpoint:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch card data." }), {
+    console.error('Error in cards.json API:', error);
+    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }
