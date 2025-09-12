@@ -6,6 +6,7 @@ interface CardFiltersProps {
     cardType: string;
     cardForm: string;
     annualFee: string;
+    fee: string;
   };
   onFilterChange: (filterName: string, value: string) => void;
   onResetFilters: () => void;
@@ -56,6 +57,20 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
             <option value="">全部</option>
             <option value="free">免年费</option>
             <option value="paid">收年费</option>
+          </select>
+        </div>
+
+        {/* Fee Filter */}
+        <div className="flex items-center space-x-2">
+          <label className="text-sm font-medium text-gray-700">手续费:</label>
+          <select
+            value={filters.fee}
+            onChange={(e) => onFilterChange('fee', e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="">全部</option>
+            <option value="has_fees">有手续费</option>
+            <option value="no_fees">无手续费</option>
           </select>
         </div>
 

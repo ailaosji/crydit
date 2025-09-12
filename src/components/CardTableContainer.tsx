@@ -19,7 +19,6 @@ interface Card {
     transactionFee: string;
     annualFee: boolean;
     supportedCurrencies: string[];
-    rating: number;
     affiliateLink: string;
     shortDescription?: string;
     description?: string;
@@ -48,10 +47,11 @@ const CardTableContainer: React.FC = () => {
     cardType: '',
     cardForm: '',
     annualFee: '',
+    fee: '',
     search: '',
   });
 
-  // Fetch initial data
+  // Fetch initial card data
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -73,6 +73,41 @@ const CardTableContainer: React.FC = () => {
 
     fetchCards();
   }, []);
+
+  // Fetch comment counts when allCards is populated
+  useEffect(() => {
+    if (allCards.length === 0) return;
+
+    const fetchCommentCounts = async () => {
+      try {
+        const slugs = allCards.map(card => card.slug);
+        const response = await fetch('/api/comments/batch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slugs }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch comment counts');
+        }
+        const counts = await response.json();
+
+        setAllCards(prevCards =>
+          prevCards.map(card => ({
+            ...card,
+            commentCount: counts[card.slug] || 0,
+            data: {
+              ...card.data,
+              commentCount: counts[card.slug] || 0,
+            }
+          }))
+        );
+      } catch (error) {
+        console.error("Could not fetch comment counts:", error);
+      }
+    };
+
+    fetchCommentCounts();
+  }, [allCards.length]); // Rerun when the number of cards changes
 
   // Apply filters and search
   useEffect(() => {
@@ -104,6 +139,16 @@ const CardTableContainer: React.FC = () => {
         }
     }
 
+    // Filter by fees
+    if (filters.fee) {
+      const hasFees = (card: Card) => (card.data.depositFee && card.data.depositFee !== '0%' && card.data.depositFee !== '免费') || (card.data.transactionFee && card.data.transactionFee !== '0%' && card.data.transactionFee !== '免费' && card.data.transactionFee !== '0% (with limits)');
+      if (filters.fee === 'has_fees') {
+        tempCards = tempCards.filter(card => hasFees(card));
+      } else if (filters.fee === 'no_fees') {
+        tempCards = tempCards.filter(card => !hasFees(card));
+      }
+    }
+
     // Filter by search term
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
@@ -112,8 +157,6 @@ const CardTableContainer: React.FC = () => {
         (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
       );
     }
-
-    // tempCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
 
     setFilteredCards(tempCards);
     setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
@@ -144,6 +187,7 @@ const CardTableContainer: React.FC = () => {
       cardType: '',
       cardForm: '',
       annualFee: '',
+      fee: '',
       search: '',
     });
   };

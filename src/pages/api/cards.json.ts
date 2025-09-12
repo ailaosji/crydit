@@ -39,21 +39,7 @@ export async function GET() {
       };
     });
 
-    // 根据评分和评论数进行综合排序
-    const sortedCards = cardsWithCommentCounts.sort((a, b) => {
-      const ratingA = a.data.rating || 0;
-      const ratingB = b.data.rating || 0;
-      const commentsA = a.commentCount || 0;
-      const commentsB = b.commentCount || 0;
-
-      // 简单的加权排序：评分权重更高
-      const scoreA = ratingA * 0.7 + commentsA * 0.3;
-      const scoreB = ratingB * 0.7 + commentsB * 0.3;
-
-      return scoreB - scoreA;
-    });
-
-    return new Response(JSON.stringify(sortedCards), {
+    return new Response(JSON.stringify(cardsWithCommentCounts), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
