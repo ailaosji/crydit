@@ -14,26 +14,41 @@ interface Card {
     transactionFee: string;
     annualFee: boolean;
     supportedCurrencies: string[];
-    rating: number;
     affiliateLink: string;
+    shortDescription?: string;
+    description?: string;
+    virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
+    physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
+    physicalAnnualFee?: number;
+    virtualAnnualFee?: number;
+    monthlyFee?: number;
+    commentCount?: number;
   };
   commentCount?: number;
 }
 
+
 interface CardTableProps {
   cards: Card[];
-  showAll?: boolean;
+  startIndex?: number;
 }
 
-const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
-  const displayCards = showAll ? cards : cards.slice(0, 5);
+const CardTable: React.FC<CardTableProps> = ({ cards, startIndex = 0 }) => {
 
-  const getCardTypeIcon = (type: 'visa' | 'mastercard') => {
-    return type === 'visa' ? '💳' : '💳';
-  };
+  const getCardTypeTag = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
+    if (!type) return null;
 
-  const getRatingStars = (rating: number) => {
-    return '⭐'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '⭐' : '');
+    const styles = {
+      visa: 'bg-blue-600 text-white',
+      mastercard: 'bg-orange-500 text-white',
+      unionpay: 'bg-purple-600 text-white',
+    };
+
+    return (
+      <span className={`inline-block px-2 py-0.5 text-xs rounded ${styles[type]}`}>
+        {type.toUpperCase()}
+      </span>
+    );
   };
 
   return (
@@ -43,13 +58,16 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                序号
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 卡片名称
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                卡片类型
+                虚拟卡
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                价格
+               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                实体卡
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 手续费
@@ -61,10 +79,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
                 支持币种
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                评分
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                评论
+                讨论
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 操作
@@ -72,8 +87,11 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {displayCards.map((card) => (
+            {cards.map((card, index) => (
               <tr key={card.slug} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {startIndex + index + 1}
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div>
@@ -86,22 +104,24 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
                     </div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <span className="mr-2">{getCardTypeIcon(card.data.cardType)}</span>
-                    <span className="text-sm text-gray-900 capitalize">
-                      {card.data.cardType}
-                    </span>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div>
+                    {card.data.isVirtual ? (
+                      <div>
+                        {getCardTypeTag(card.data.virtualNetwork)}
+                        <div>${card.data.virtualCardPrice || 0}</div>
+                      </div>
+                    ) : 'N/A'}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <div>
-                    {card.data.isVirtual && (
-                      <div>虚拟卡: ${card.data.virtualCardPrice || 0}</div>
-                    )}
-                    {card.data.isPhysical && (
-                      <div>实体卡: ${card.data.physicalCardPrice || 0}</div>
-                    )}
+                    {card.data.isPhysical ? (
+                      <div>
+                        {getCardTypeTag(card.data.physicalNetwork)}
+                        <div>${card.data.physicalCardPrice || 0}</div>
+                      </div>
+                    ) : 'N/A'}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -112,9 +132,9 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    card.data.annualFee 
-                      ? 'bg-red-100 text-red-800' 
-                      : 'bg-green-100 text-green-800'
+                    !card.data.annualFee
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
                   }`}>
                     {card.data.annualFee ? '收取' : '免费'}
                   </span>
@@ -136,14 +156,8 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
                     )}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <div className="flex items-center">
-                    <span className="mr-1">{getRatingStars(card.data.rating)}</span>
-                    <span>({card.data.rating})</span>
-                  </div>
-                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {card.commentCount || 0} 条
+                  {card.commentCount || card.data.commentCount || 0} 条
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <a
@@ -152,7 +166,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
                     rel="noopener noreferrer"
                     className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
                   >
-                    申请
+                    立即申请
                   </a>
                 </td>
               </tr>
@@ -160,16 +174,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards, showAll = false }) => {
           </tbody>
         </table>
       </div>
-      {!showAll && cards.length > 5 && (
-        <div className="bg-gray-50 px-6 py-3 text-center">
-          <a 
-            href="/cards" 
-            className="text-blue-600 hover:text-blue-800 font-medium"
-          >
-            查看全部 {cards.length} 张卡片 →
-          </a>
-        </div>
-      )}
     </div>
   );
 };
