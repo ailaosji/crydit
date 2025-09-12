@@ -72,9 +72,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 手续费
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                年费
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 支持币种
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -108,7 +105,8 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                     {card.data.isVirtual ? (
                       <div>
                         {getCardTypeTag(card.data.virtualNetwork)}
-                        <div>${card.data.virtualCardPrice || 0}</div>
+                        <div>开卡费: ${card.data.virtualCardPrice || 0}</div>
+                        <div>年费: ${card.data.virtualAnnualFee || 0}</div>
                       </div>
                     ) : 'N/A'}
                   </div>
@@ -118,7 +116,8 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                     {card.data.isPhysical ? (
                       <div>
                         {getCardTypeTag(card.data.physicalNetwork)}
-                        <div>${card.data.physicalCardPrice || 0}</div>
+                        <div>开卡费: ${card.data.physicalCardPrice || 0}</div>
+                        <div>年费: ${card.data.physicalAnnualFee || 0}</div>
                       </div>
                     ) : 'N/A'}
                   </div>
@@ -127,12 +126,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                   <div>
                     <div>充值: {card.data.depositFee || 'N/A'}</div>
                     <div>刷卡: {card.data.transactionFee || 'N/A'}</div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <div>
-                    <div>虚拟卡: ${card.data.virtualAnnualFee || 0}</div>
-                    <div>实体卡: ${card.data.physicalAnnualFee || 0}</div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
