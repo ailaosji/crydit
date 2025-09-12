@@ -51,8 +51,8 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
   };
 
   const renderFee = (price: number | undefined | null, annualFee: number | undefined | null) => {
-    const priceText = price === 0 ? '免费' : `$${price}`;
-    const annualFeeText = annualFee === 0 ? '免费' : `$${annualFee}`;
+    const priceText = (price === 0 || !price) ? <span className="text-green-600">免费</span> : `$${price}`;
+    const annualFeeText = (annualFee === 0 || !annualFee) ? <span className="text-green-600">免费</span> : `$${annualFee}`;
 
     return (
       <div className="text-xs">
