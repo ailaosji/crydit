@@ -10,6 +10,7 @@ interface Card {
   slug: string;
   data: {
     name: string;
+    logo?: string;
     cardType: 'visa' | 'mastercard';
     isVirtual: boolean;
     isPhysical: boolean;
