@@ -39,20 +39,47 @@ export async function GET() {
       };
     });
 
-    // 根据评分和评论数进行综合排序
-    const sortedCards = cardsWithCommentCounts.sort((a, b) => {
-      const ratingA = a.data.rating || 0;
-      const ratingB = b.data.rating || 0;
-      const commentsA = a.commentCount || 0;
-      const commentsB = b.commentCount || 0;
+    // 为列表视图处理分层数据
+    const cardsWithPromotedTier = cardsWithCommentCounts.map(card => {
+      const tiers = card.data.cardTiers;
+      // 如果卡片没有分层数据（例如，尚未迁移），则按原样返回
+      if (!tiers || tiers.length === 0) {
+        return card;
+      }
 
-      // 简单的加权排序：评分权重更高
-      const scoreA = ratingA * 0.7 + commentsA * 0.3;
-      const scoreB = ratingB * 0.7 + commentsB * 0.3;
+      // 选择一个“代表性”的等级来在主列表中显示
+      // 优先选择标记为 "recommended" 的，否则选择第一个
+      const representativeTier = tiers.find(t => t.recommended) || tiers[0];
 
-      return scoreB - scoreA;
+      // 将代表性等级的关键信息提升到顶层 data 对象，以便列表视图组件使用
+      const promotedData = {
+        virtualNetwork: representativeTier.virtualNetwork,
+        physicalNetwork: representativeTier.physicalNetwork,
+        isVirtual: representativeTier.isVirtual,
+        isPhysical: representativeTier.isPhysical,
+        // 从 fees 和 rewards 对象中提取数据
+        ...(representativeTier.fees),
+        ...(representativeTier.rewards),
+      };
+
+      return {
+        ...card,
+        data: {
+          ...card.data,
+          ...promotedData,
+        }
+      };
     });
 
+
+    // 根据评论数进行排序
+    const sortedCards = cardsWithPromotedTier.sort((a, b) => {
+      const commentsA = a.commentCount || 0;
+      const commentsB = b.commentCount || 0;
+      return commentsB - commentsA;
+    });
+
+    console.log(JSON.stringify(sortedCards, null, 2));
     return new Response(JSON.stringify(sortedCards), {
       status: 200,
       headers: {
