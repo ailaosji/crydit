@@ -9,7 +9,8 @@ import LoadMoreIndicator from './LoadMoreIndicator';
 interface Card {
   slug: string;
   data: {
-    name: string;
+    name:string;
+    logo?: string;
     cardType: 'visa' | 'mastercard';
     isVirtual: boolean;
     isPhysical: boolean;
@@ -19,7 +20,6 @@ interface Card {
     transactionFee: string;
     annualFee: boolean;
     supportedCurrencies: string[];
-    rating: number;
     affiliateLink: string;
     shortDescription?: string;
     description?: string;
@@ -48,10 +48,11 @@ const CardTableContainer: React.FC = () => {
     cardType: '',
     cardForm: '',
     annualFee: '',
+    fee: '',
     search: '',
   });
 
-  // Fetch initial data
+  // Fetch initial card data
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -80,7 +81,7 @@ const CardTableContainer: React.FC = () => {
 
     // Filter by card type
     if (filters.cardType) {
-      tempCards = tempCards.filter(card => card.data.network === filters.cardType);
+      tempCards = tempCards.filter(card => card.data.virtualNetwork === filters.cardType || card.data.physicalNetwork === filters.cardType);
     }
 
     // Filter by card form
@@ -96,12 +97,22 @@ const CardTableContainer: React.FC = () => {
 
     // Filter by annual fee
     if (filters.annualFee) {
-        const hasFee = (card: Card) => (card.data.physicalAnnualFee ?? 0) > 0 || (card.data.virtualAnnualFee ?? 0) > 0 || (card.data.monthlyFee ?? 0) > 0;
+        const hasFee = (card: Card) => (card.data.physicalAnnualFee ?? 0) > 0 || (card.data.virtualAnnualFee ?? 0) > 0 || (card.data.monthlyFee ?? 0) > 0 || card.data.annualFee;
         if (filters.annualFee === 'free') {
             tempCards = tempCards.filter(card => !hasFee(card));
         } else if (filters.annualFee === 'paid') {
             tempCards = tempCards.filter(card => hasFee(card));
         }
+    }
+
+    // Filter by fees
+    if (filters.fee) {
+      const hasFees = (card: Card) => (card.data.depositFee && card.data.depositFee !== '0%' && card.data.depositFee !== '免费') || (card.data.transactionFee && card.data.transactionFee !== '0%' && card.data.transactionFee !== '免费' && card.data.transactionFee !== '0% (with limits)');
+      if (filters.fee === 'has_fees') {
+        tempCards = tempCards.filter(card => hasFees(card));
+      } else if (filters.fee === 'no_fees') {
+        tempCards = tempCards.filter(card => !hasFees(card));
+      }
     }
 
     // Filter by search term
@@ -112,8 +123,6 @@ const CardTableContainer: React.FC = () => {
         (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
       );
     }
-
-    // tempCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
 
     setFilteredCards(tempCards);
     setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
@@ -144,6 +153,7 @@ const CardTableContainer: React.FC = () => {
       cardType: '',
       cardForm: '',
       annualFee: '',
+      fee: '',
       search: '',
     });
   };
@@ -175,7 +185,7 @@ const CardTableContainer: React.FC = () => {
               </div>
         </div>
 
-      <CardTable cards={displayedCards} startIndex={(page - 1) * ITEMS_PER_PAGE} />
+      <CardTable cards={displayedCards} />
 
       <LoadMoreIndicator
         isLoading={isLoading}

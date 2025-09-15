@@ -56,6 +56,8 @@ tags:
   - "返现"
   - "金属卡"
   - "U卡"
+depositFee: "1%"
+transactionFee: "3%"
 ---
 
 ## Crypto.com Visa 卡评测
