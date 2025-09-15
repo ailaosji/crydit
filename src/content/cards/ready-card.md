@@ -4,17 +4,6 @@ name: "Ready Card"
 logo: "https://cdn.prod.website-files.com/680f9220d4668b0e40862420/681b4c1ea23569cd7aef6add_4dd6e26543621bf8b5a31d5a93f83136_ready-logo-linear.svg"
 description: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
 shortDescription: "Ready Card是一款自托管的加密货币万事达借记卡，让您在全球范围内直接消费USDC，并享受高达10%的返现。"
-cardType: "both"
-network: "mastercard"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 6
-virtualNetwork: "mastercard"
-virtualAnnualFee: false
-physicalCardPrice: 6
-physicalNetwork: "mastercard"
-physicalAnnualFee: 120
-monthlyFee: false
 issuer: "Ready / Kulipa"
 supportedRegions:
   - "英国"
@@ -54,8 +43,37 @@ importantReminders:
   - "<strong>外币交易费 2.5%:</strong> 非本国货币交易时收取"
   - "<strong>休眠费 $3.95/月:</strong> 13个月不活跃后开始收取"
   - "<strong>汇率优势:</strong> 使用官方万事达汇率，无额外加价"
-depositFee: "0%"
-transactionFee: "0%"
+
+cardTiers:
+  - name: "Standard"
+    recommended: true
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "mastercard"
+    physicalNetwork: "mastercard"
+    fees:
+      monthlyFee: false
+      annualFee: false
+      virtualCardPrice: 6
+      physicalCardPrice: 6
+      depositFee: "0%"
+      transactionFee: "0%"
+      foreignExchangeFee: "2.5%"
+  - name: "Metal"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "mastercard"
+    physicalNetwork: "mastercard"
+    fees:
+      monthlyFee: false
+      annualFee: 120
+      virtualCardPrice: 6
+      physicalCardPrice: 6
+      depositFee: "0%"
+      transactionFee: "0%"
+      foreignExchangeFee: "2.5%"
+    rewards:
+      cashback: "高达10%"
 ---
 
 

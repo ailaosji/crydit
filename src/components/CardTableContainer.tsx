@@ -5,33 +5,87 @@ import CardFilters from './CardFilters';
 import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
 
-// Define the Card interface based on the data structure
+// Define the Card interface based on the new data structure
+interface CardTier {
+  name: string;
+  color?: string;
+  price?: string;
+  priceUnit?: string;
+  recommended?: boolean;
+  isVirtual?: boolean;
+  isPhysical?: boolean;
+  network?: 'visa' | 'mastercard' | 'unionpay';
+  fees?: {
+    stakingRequired?: string;
+    monthlyFee?: string | boolean | number;
+    annualFee?: any;
+    virtualCardPrice?: number;
+    physicalCardPrice?: number | null;
+    depositFee?: string;
+    transactionFee?: string;
+    foreignExchangeFee?: string;
+    withdrawalFee?: string;
+  };
+  rewards?: {
+    cashback?: string | null;
+    welcomeBonus?: string;
+    loyaltyProgram?: string;
+    points?: boolean | string;
+  };
+  limits?: {
+    singleTransaction?: string;
+    dailySpending?: string;
+    monthlySpending?: string;
+    monthlyAtmWithdrawal?: string;
+  };
+}
+
 interface Card {
   slug: string;
   data: {
-    name:string;
-    logo?: string;
-    cardType: 'visa' | 'mastercard';
-    isVirtual: boolean;
-    isPhysical: boolean;
-    virtualCardPrice?: number;
-    physicalCardPrice?: number;
-    depositFee: string;
-    transactionFee: string;
-    annualFee: boolean;
-    supportedCurrencies: string[];
-    affiliateLink: string;
+    name: string;
+    title: string;
+    description: string;
     shortDescription?: string;
-    description?: string;
+    issuer: string;
+    cardTiers: CardTier[];
+    supportedRegions: string[];
+    supportedCurrencies: string[];
+    supportedPaymentMethods?: string[];
+    applicationDocuments?: string[];
+    pros: string[];
+    cons: string[];
+    features?: string[];
+    featured?: boolean;
+    importantReminders?: string[];
+    kycRequired: boolean;
+    minimumAge: number;
+    affiliateLink?: string;
+    invitationCode?: string;
+    status: 'active' | 'discontinued' | 'coming-soon';
+    publishDate?: Date;
+    updateDate?: Date;
+    lastReviewed?: Date;
+    logo?: string;
+    commentCount?: number;
+
+    // Promoted fields from the representative tier for list view filtering
+    network?: 'visa' | 'mastercard' | 'unionpay';
+    isVirtual?: boolean;
+    isPhysical?: boolean;
+    depositFee?: string;
+    transactionFee?: string;
+    annualFee?: any;
+    monthlyFee?: string | boolean | number;
+    cashback?: string | null;
     virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
     physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
     physicalAnnualFee?: number;
     virtualAnnualFee?: number;
-    monthlyFee?: number;
-    commentCount?: number;
   };
   commentCount?: number;
 }
+
 
 const ITEMS_PER_PAGE = 5;
 
@@ -81,7 +135,7 @@ const CardTableContainer: React.FC = () => {
 
     // Filter by card type
     if (filters.cardType) {
-      tempCards = tempCards.filter(card => card.data.virtualNetwork === filters.cardType || card.data.physicalNetwork === filters.cardType);
+      tempCards = tempCards.filter(card => card.data.network === filters.cardType);
     }
 
     // Filter by card form

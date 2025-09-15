@@ -3,16 +3,47 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
-let allCards = [];
+let allCardsRaw = [];
 try {
-  allCards = await getCollection('cards');
+  allCardsRaw = await getCollection('cards');
 } catch (error) {
   console.error('Error loading cards:', error);
-  allCards = []; // Fallback to empty array on error
+  allCardsRaw = []; // Fallback to empty array on error
 }
 
+// Process cards to handle tiers and promote representative data
+const allCards = allCardsRaw.map(card => {
+  if (!card.data.cardTiers || card.data.cardTiers.length === 0) {
+    return card; // Return unmigrated card as is
+  }
+
+  const representativeTier = card.data.cardTiers.find(t => t.recommended) || card.data.cardTiers[0];
+  if (!representativeTier) {
+    return card; // Should not happen if cardTiers is not empty
+  }
+
+  const promotedData = {
+    network: representativeTier.virtualNetwork || representativeTier.physicalNetwork,
+    cardType: (representativeTier.isVirtual && representativeTier.isPhysical) ? 'both' : (representativeTier.isVirtual ? 'virtual' : 'physical'),
+    transactionFee: representativeTier.fees?.transactionFee,
+    annualFee: representativeTier.fees?.annualFee ? true : false, // Simplified for now
+    ...representativeTier,
+    ...(representativeTier.fees),
+    ...(representativeTier.rewards),
+  };
+
+  return {
+    ...card,
+    data: {
+      ...card.data,
+      ...promotedData,
+    }
+  };
+});
+
+
 // Initial sort: by publish date
-allCards = allCards.sort((a, b) => 
+allCards.sort((a, b) =>
   new Date(b.data.publishDate || 0).getTime() -
   new Date(a.data.publishDate || 0).getTime()
 );
@@ -109,13 +140,13 @@ allCards = allCards.sort((a, b) =>
                   {card.data.featured && <span class="px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-semibold rounded-full">推荐</span>}
                 </div>
                 <div class="flex gap-2">
-                  <span class={`px-3 py-1 text-xs font-medium rounded-full ${
+                  {card.data.network && <span class={`px-3 py-1 text-xs font-medium rounded-full ${
                     card.data.network === 'visa' ? 'bg-blue-100 text-blue-700' :
                     card.data.network === 'mastercard' ? 'bg-purple-100 text-purple-700' :
                     'bg-gray-100 text-gray-700'
                   }`}>
                     {card.data.network.toUpperCase()}
-                  </span>
+                  </span>}
                   {(card.data.cardType === 'virtual' || card.data.cardType === 'both') && <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">虚拟卡</span>}
                   {(card.data.cardType === 'physical' || card.data.cardType === 'both') && <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full">实体卡</span>}
                 </div>

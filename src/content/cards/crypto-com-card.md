@@ -4,17 +4,6 @@ name: "Crypto.com Card"
 logo: "https://gist.githubusercontent.com/mahnunchik/23066a318de2956df3c769c87e4e6cbd/raw/e0f246d0e26ce770f3c3adca748a5a454907f8bb/crypto-com-coin-cro-logo.svg"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
-cardType: "both"
-network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: 4.99
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: false
 issuer: "Crypto.com"
 supportedRegions:
   - "美国"
@@ -56,8 +45,71 @@ tags:
   - "返现"
   - "金属卡"
   - "U卡"
-depositFee: "1%"
-transactionFee: "3%"
+
+cardTiers:
+  - name: "Ruby Steel"
+    color: "Red"
+    price: "免费"
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    isVirtual: true
+    isPhysical: true
+    fees:
+      stakingRequired: "$400"
+      monthlyFee: "$0"
+      annualFee: "免费"
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "1%"
+      transactionFee: "3%"
+      atmWithdrawal: "$400/月 免费"
+      foreignExchange: "0%"
+    rewards:
+      cashback: "1%"
+      welcomeBonus: "Spotify (前6个月)"
+  - name: "Royal Indigo / Jade Green"
+    color: "Purple"
+    price: "免费"
+    recommended: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    isVirtual: true
+    isPhysical: true
+    fees:
+      stakingRequired: "$4,000"
+      monthlyFee: "$0"
+      annualFee: "免费"
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "1%"
+      transactionFee: "3%"
+      atmWithdrawal: "$800/月 免费"
+      foreignExchange: "0%"
+    rewards:
+      cashback: "2%"
+      welcomeBonus: "Spotify, Netflix"
+      loyaltyProgram: "机场贵宾厅 (LoungeKey)"
+  - name: "Obsidian"
+    color: "Black"
+    price: "免费"
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    isVirtual: true
+    isPhysical: true
+    fees:
+      stakingRequired: "$400,000"
+      monthlyFee: "$0"
+      annualFee: "免费"
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "1%"
+      transactionFee: "3%"
+      atmWithdrawal: "$1000/月 免费"
+      foreignExchange: "0%"
+    rewards:
+      cashback: "5%"
+      welcomeBonus: "Spotify, Netflix, Prime, etc."
+      loyaltyProgram: "机场贵宾厅 (LoungeKey) + 1位客人"
 ---
 
 ## Crypto.com Visa 卡评测

@@ -4,17 +4,6 @@ name: "Avalanche Card"
 logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg"
 description: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
 shortDescription: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
-cardType: "both"
-network: "visa"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "visa"
-virtualAnnualFee: false
-physicalCardPrice: 0
-physicalNetwork: "visa"
-physicalAnnualFee: false
-monthlyFee: false
 issuer: "Rain Liquidity"
 supportedRegions:
   - "美国"
@@ -49,11 +38,22 @@ tags:
   - "Visa"
   - "加密货币支持"
   - "全球通用"
-depositFee: "浮动"
-transactionFee: "浮动"
-foreignExchangeFee: "1%"
-withdrawalFee: "浮动"
-annualFee: false
+
+cardTiers:
+  - name: "Standard"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      monthlyFee: false
+      annualFee: false
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "浮动"
+      transactionFee: "浮动"
+      foreignExchangeFee: "1%"
+      withdrawalFee: "浮动"
 ---
 
 ## Avalanche Card 评测

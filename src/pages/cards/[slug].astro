@@ -23,7 +23,27 @@ interface Props {
 }
 
 // Get passed props
-const { card } = Astro.props as Props;
+const { card: rawCard } = Astro.props as Props;
+
+// Process card to handle tiers and promote representative data
+let card = rawCard;
+if (rawCard.data.cardTiers && rawCard.data.cardTiers.length > 0) {
+  const representativeTier = rawCard.data.cardTiers.find(t => t.recommended) || rawCard.data.cardTiers[0];
+  if (representativeTier) {
+    const promotedData = {
+      network: representativeTier.virtualNetwork || representativeTier.physicalNetwork,
+      cardType: (representativeTier.isVirtual && representativeTier.isPhysical) ? 'both' : (representativeTier.isVirtual ? 'virtual' : 'physical'),
+      isVirtual: representativeTier.isVirtual,
+      isPhysical: representativeTier.isPhysical,
+      virtualNetwork: representativeTier.virtualNetwork,
+      physicalNetwork: representativeTier.physicalNetwork,
+      ...representativeTier.fees,
+      ...representativeTier.rewards,
+    };
+    card.data = { ...rawCard.data, ...promotedData };
+  }
+}
+
 
 // Check if card exists
 if (!card) {
@@ -36,7 +56,7 @@ const {
   applicationDocuments, supportedCurrencies, supportedPaymentMethods,
   virtualCardPrice, physicalCardPrice, depositFee, transactionFee,
   foreignExchangeFee, withdrawalFee, annualFee, affiliateLink,
-  invitationCode, importantReminders
+  invitationCode, importantReminders, cardTiers
 } = card.data;
 
 // Recommendation algorithm for related cards
@@ -190,6 +210,34 @@ const structuredData = {
               <Content />
             </div>
           </section>
+
+          {cardTiers && cardTiers.length > 1 && (
+            <section class="bg-white rounded-3xl shadow-xl p-8">
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">各等级卡片对比</h2>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                  <thead class="bg-gray-50">
+                    <tr class="border-b-2 border-gray-200">
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">等级</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">质押要求</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">返现</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">月费/年费</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cardTiers.map(tier => (
+                      <tr class={`hover:bg-gray-50 border-b border-gray-100 ${tier.recommended ? 'bg-indigo-50' : ''}`}>
+                        <td class="px-6 py-4 font-semibold text-gray-800">{tier.name}</td>
+                        <td class="px-6 py-4">{tier.fees?.stakingRequired || '无'}</td>
+                        <td class="px-6 py-4 font-semibold text-green-600">{tier.rewards?.cashback || 'N/A'}</td>
+                        <td class="px-6 py-4">{tier.fees?.monthlyFee || (tier.fees?.annualFee ? `$${tier.fees.annualFee}/年` : '免费')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )}
           
           <div class="space-y-8">
             <section class="bg-white rounded-3xl shadow-xl p-8">
