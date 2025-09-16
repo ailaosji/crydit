@@ -160,7 +160,15 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                       {card.data.logo ? (
-                        <img src={card.data.logo} alt={`${card.data.name} logo`} className="w-full h-full object-cover" />
+                        <img
+                          src={card.data.logo}
+                          alt={card.data.name}
+                          className="w-full h-full object-contain"
+                          loading="lazy"
+                          decoding="async"
+                          width="40"
+                          height="40"
+                        />
                       ) : (
                         <span className="text-gray-500 font-bold text-sm">{card.data.name.substring(0, 2).toUpperCase()}</span>
                       )}
