@@ -103,6 +103,7 @@ const CardTableContainer: React.FC = () => {
     cardType: '',
     cardForm: '',
     annualFee: '',
+    fee: '',
     search: '',
   });
 
@@ -159,6 +160,16 @@ const CardTableContainer: React.FC = () => {
         }
     }
 
+    // Filter by fees
+    if (filters.fee) {
+      const hasFees = (card: Card) => (card.data.depositFee && card.data.depositFee !== '0%' && card.data.depositFee !== '免费') || (card.data.transactionFee && card.data.transactionFee !== '0%' && card.data.transactionFee !== '免费' && card.data.transactionFee !== '0% (with limits)');
+      if (filters.fee === 'has_fees') {
+        tempCards = tempCards.filter(card => hasFees(card));
+      } else if (filters.fee === 'no_fees') {
+        tempCards = tempCards.filter(card => !hasFees(card));
+      }
+    }
+
     // Filter by search term
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
@@ -197,6 +208,7 @@ const CardTableContainer: React.FC = () => {
       cardType: '',
       cardForm: '',
       annualFee: '',
+      fee: '',
       search: '',
     });
   };
