@@ -137,7 +137,10 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 实体卡
               </th>
               <th className="px-4 py-4 text-left text-sm font-medium text-gray-700 min-w-[120px]">
-                特性
+                特性标签
+              </th>
+              <th className="px-4 py-4 text-center text-sm font-medium text-gray-700">
+                支持大陆
               </th>
               <th className="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
                 讨论
@@ -191,17 +194,15 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 </td>
                 <td className="px-4 py-4 text-left text-sm text-gray-900">
                   <div className="flex flex-col items-start gap-1">
-                    {card.data.featureTags?.includes("支持大陆") && (
-                      <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full font-medium">
-                        ✅ 支持大陆
-                      </span>
-                    )}
                     {card.data.featureTags?.filter(t => t !== '支持大陆').map(tag => (
                       <span key={tag} className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full font-medium">
                         {tag}
                       </span>
                     ))}
                   </div>
+                </td>
+                <td className="px-4 py-4 text-center text-2xl">
+                  {card.data.featureTags?.includes("支持大陆") ? '✅' : '❌'}
                 </td>
                 <td className="px-4 py-4 text-center">
                   <a href={`/cards/${card.slug}#giscus-comments`} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-50 hover:bg-indigo-50 transition-all duration-200 group" title="参与讨论">
