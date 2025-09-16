@@ -211,9 +211,9 @@ const structuredData = {
             </div>
           </section>
 
-          {cardTiers && cardTiers.length > 1 && (
+          {cardTiers && cardTiers.length > 0 && (
             <section class="bg-white rounded-3xl shadow-xl p-8">
-              <h2 class="text-3xl font-bold text-gray-900 mb-8">各等级卡片对比</h2>
+              <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
               <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                   <thead class="bg-gray-50">
@@ -222,6 +222,9 @@ const structuredData = {
                       <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">质押要求</th>
                       <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">返现</th>
                       <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">月费/年费</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">充值费</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">交易费</th>
+                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">外汇费</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -231,6 +234,9 @@ const structuredData = {
                         <td class="px-6 py-4">{tier.fees?.stakingRequired || '无'}</td>
                         <td class="px-6 py-4 font-semibold text-green-600">{tier.rewards?.cashback || 'N/A'}</td>
                         <td class="px-6 py-4">{tier.fees?.monthlyFee || (tier.fees?.annualFee ? `$${tier.fees.annualFee}/年` : '免费')}</td>
+                        <td class="px-6 py-4">{tier.fees?.depositFee || 'N/A'}</td>
+                        <td class="px-6 py-4">{tier.fees?.transactionFee || 'N/A'}</td>
+                        <td class="px-6 py-4">{tier.fees?.foreignExchangeFee || 'N/A'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -238,67 +244,8 @@ const structuredData = {
               </div>
             </section>
           )}
-          
-          <div class="space-y-8">
-            <section class="bg-white rounded-3xl shadow-xl p-8">
-              <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费用项目</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600 border-b border-gray-200">费率</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(cardType === 'virtual' || cardType === 'both') && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">虚拟卡开卡费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{virtualCardPrice === 0 ? '免费' : `${virtualCardPrice}`}</td>
-                      </tr>
-                    )}
-                    {(cardType === 'physical' || cardType === 'both') && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">实体卡开卡费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{physicalCardPrice === 0 ? '免费' : `${physicalCardPrice}`}</td>
-                      </tr>
-                    )}
-                    {depositFee !== undefined && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">充值手续费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{depositFee}</td>
-                      </tr>
-                    )}
-                    {transactionFee !== undefined && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">交易手续费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{transactionFee}</td>
-                      </tr>
-                    )}
-                    {foreignExchangeFee !== undefined && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">外汇手续费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{foreignExchangeFee}</td>
-                      </tr>
-                    )}
-                    {withdrawalFee !== undefined && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">提现/ATM手续费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{withdrawalFee}</td>
-                      </tr>
-                    )}
-                    {annualFee !== undefined && (
-                      <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 border-b border-gray-200">年费</td>
-                        <td class="px-6 py-4 border-b border-gray-200 font-medium">{!annualFee ? '免费' : '收费'}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </section>
 
-            {limits && (
+          {limits && (
               <section class="bg-white rounded-3xl shadow-xl p-8">
                 <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -314,7 +261,6 @@ const structuredData = {
                 </div>
               </section>
             )}
-          </div>
 
           <GiscusComments title={`${name} 用户评论`} />
         </div>

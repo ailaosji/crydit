@@ -40,6 +40,7 @@ tags:
   - "Visa"
   - "返现卡"
   - "多币种"
+featureTags: []
 
 cardTiers:
   - name: "Standard"

@@ -38,6 +38,7 @@ tags:
   - "U卡"
   - "自托管"
   - "返现"
+featureTags: ["低费率"]
 importantReminders:
   - "<strong>开卡费约 $6:</strong> 创建卡片时收取（基于官方数据）"
   - "<strong>外币交易费 2.5%:</strong> 非本国货币交易时收取"

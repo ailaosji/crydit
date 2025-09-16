@@ -38,6 +38,7 @@ tags:
   - "Mastercard"
   - "稳定币"
   - "全球"
+featureTags: ["支持大陆", "低费率", "零损耗"]
 
 cardTiers:
   - name: "Standard"

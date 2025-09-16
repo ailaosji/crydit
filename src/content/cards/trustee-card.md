@@ -30,6 +30,7 @@ tags:
   - "Trustee"
   - "Visa"
   - "不可用"
+featureTags: []
 status: "discontinued"
 
 cardTiers:

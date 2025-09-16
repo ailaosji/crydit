@@ -38,6 +38,7 @@ tags:
   - "Visa"
   - "加密货币支持"
   - "全球通用"
+featureTags: ["支持大陆"]
 
 cardTiers:
   - name: "Standard"

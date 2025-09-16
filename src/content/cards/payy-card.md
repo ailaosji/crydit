@@ -41,6 +41,7 @@ tags:
   - "隐私"
   - "零知识证明"
   - "无密码"
+featureTags: ["支持大陆", "低费率", "零损耗"]
 
 cardTiers:
   - name: "Standard"
