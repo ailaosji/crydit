@@ -64,7 +64,7 @@ cardTiers:
       depositFee: "1%"
       transactionFee: "3%"
       atmWithdrawal: "$400/月 免费"
-      foreignExchange: "0%"
+      foreignExchangeFee: "0%"
     rewards:
       cashback: "1%"
       welcomeBonus: "Spotify (前6个月)"
@@ -85,7 +85,7 @@ cardTiers:
       depositFee: "1%"
       transactionFee: "3%"
       atmWithdrawal: "$800/月 免费"
-      foreignExchange: "0%"
+      foreignExchangeFee: "0%"
     rewards:
       cashback: "2%"
       welcomeBonus: "Spotify, Netflix"
@@ -106,7 +106,7 @@ cardTiers:
       depositFee: "1%"
       transactionFee: "3%"
       atmWithdrawal: "$1000/月 免费"
-      foreignExchange: "0%"
+      foreignExchangeFee: "0%"
     rewards:
       cashback: "5%"
       welcomeBonus: "Spotify, Netflix, Prime, etc."
