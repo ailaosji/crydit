@@ -1,9 +1,12 @@
 // src/components/CardTableContainer.tsx
 import React, { useState, useEffect, useCallback } from 'react';
+import { CARD_NETWORKS } from '../constants';
 import CardTable from './CardTable';
 import CardFilters from './CardFilters';
 import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
+
+type CardNetwork = typeof CARD_NETWORKS[keyof typeof CARD_NETWORKS];
 
 // Define the Card interface based on the new data structure
 interface CardTier {
@@ -14,7 +17,7 @@ interface CardTier {
   recommended?: boolean;
   isVirtual?: boolean;
   isPhysical?: boolean;
-  network?: 'visa' | 'mastercard' | 'unionpay';
+  network?: CardNetwork;
   fees?: {
     stakingRequired?: string;
     monthlyFee?: string | boolean | number;
@@ -71,7 +74,7 @@ interface Card {
     commentCount?: number;
 
     // Promoted fields from the representative tier for list view filtering
-    network?: 'visa' | 'mastercard' | 'unionpay';
+    network?: CardNetwork;
     isVirtual?: boolean;
     isPhysical?: boolean;
     depositFee?: string;
@@ -79,8 +82,8 @@ interface Card {
     annualFee?: any;
     monthlyFee?: string | boolean | number;
     cashback?: string | null;
-    virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
-    physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
+    virtualNetwork?: CardNetwork;
+    physicalNetwork?: CardNetwork;
     physicalAnnualFee?: number;
     virtualAnnualFee?: number;
   };
@@ -88,7 +91,7 @@ interface Card {
 }
 
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 const CardTableContainer: React.FC = () => {
   const [allCards, setAllCards] = useState<Card[]>([]);

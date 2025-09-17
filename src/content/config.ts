@@ -1,5 +1,6 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
+import { CARD_NETWORKS, CARD_CATEGORIES } from '../constants';
 
 // --- Reusable Schemas ---
 
@@ -27,8 +28,8 @@ const cardTierSchema = z.object({
 
   isVirtual: z.boolean().optional(),
   isPhysical: z.boolean().optional(),
-  virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-  physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
+  virtualNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+  physicalNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
 
   fees: z.object({
     stakingRequired: z.string().optional(),
@@ -69,7 +70,7 @@ const articlesCollection = defineCollection({
     description: z.string(),
     publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
-    category: z.enum(['news', 'guide', 'review', 'analysis', 'tutorial']),
+    category: z.enum(Object.values(CARD_CATEGORIES).map(c => c.value) as [string, ...string[]]),
     tags: z.array(z.string()).optional(),
     image: z.string().optional(),
     featured: z.boolean().default(false),
@@ -96,9 +97,9 @@ const cardsCollection = defineCollection({
     cardType: z.enum(['virtual', 'physical', 'both']).optional(),
     isVirtual: z.boolean().optional(),
     isPhysical: z.boolean().optional(),
-    network: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
+    network: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+    virtualNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+    physicalNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),

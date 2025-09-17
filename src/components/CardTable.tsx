@@ -1,5 +1,8 @@
 // src/components/CardTable.tsx
 import React from 'react';
+import { CARD_NETWORKS } from '../constants';
+
+type CardNetwork = typeof CARD_NETWORKS[keyof typeof CARD_NETWORKS];
 
 // Define the Card interface based on the new data structure
 interface CardTier {
@@ -10,7 +13,7 @@ interface CardTier {
   recommended?: boolean;
   isVirtual?: boolean;
   isPhysical?: boolean;
-  network?: 'visa' | 'mastercard' | 'unionpay';
+  network?: CardNetwork;
   fees?: {
     stakingRequired?: string;
     monthlyFee?: string | boolean | number;
@@ -67,7 +70,7 @@ interface Card {
     commentCount?: number;
 
     // Promoted fields from the representative tier for list view filtering
-    network?: 'visa' | 'mastercard' | 'unionpay';
+    network?: CardNetwork;
     isVirtual?: boolean;
     isPhysical?: boolean;
     depositFee?: string;
@@ -75,8 +78,8 @@ interface Card {
     annualFee?: any;
     monthlyFee?: string | boolean | number;
     cashback?: string | null;
-    virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
-    physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
+    virtualNetwork?: CardNetwork;
+    physicalNetwork?: CardNetwork;
     physicalAnnualFee?: number;
     virtualAnnualFee?: number;
   };
@@ -90,13 +93,13 @@ interface CardTableProps {
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
 
-  const getCardTypeTag = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
+  const getCardTypeTag = (type: CardNetwork | undefined) => {
     if (typeof type !== 'string' || !type) return null;
 
-    const styles = {
-      visa: 'bg-blue-600 text-white',
-      mastercard: 'bg-orange-500 text-white',
-      unionpay: 'bg-purple-600 text-white',
+    const styles: Record<CardNetwork, string> = {
+      [CARD_NETWORKS.VISA]: 'bg-blue-600 text-white',
+      [CARD_NETWORKS.MASTERCARD]: 'bg-orange-500 text-white',
+      [CARD_NETWORKS.UNIONPAY]: 'bg-purple-600 text-white',
     };
 
     return (
@@ -160,7 +163,15 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                       {card.data.logo ? (
-                        <img src={card.data.logo} alt={`${card.data.name} logo`} className="w-full h-full object-cover" />
+                        <img
+                          src={card.data.logo}
+                          alt={card.data.name}
+                          className="w-full h-full object-contain"
+                          loading="lazy"
+                          decoding="async"
+                          width="40"
+                          height="40"
+                        />
                       ) : (
                         <span className="text-gray-500 font-bold text-sm">{card.data.name.substring(0, 2).toUpperCase()}</span>
                       )}
