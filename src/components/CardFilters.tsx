@@ -1,5 +1,6 @@
 // src/components/CardFilters.tsx
 import React from 'react';
+import { CARD_NETWORKS } from '../constants';
 
 interface CardFiltersProps {
   filters: {
@@ -13,6 +14,12 @@ interface CardFiltersProps {
 }
 
 const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onResetFilters }) => {
+  const networkLabels: Record<string, string> = {
+    [CARD_NETWORKS.VISA]: 'VISA',
+    [CARD_NETWORKS.MASTERCARD]: 'MasterCard',
+    [CARD_NETWORKS.UNIONPAY]: '银联',
+  };
+
   return (
     <div className="bg-gray-50 rounded-2xl p-6 mb-8">
       <div className="flex flex-wrap items-center gap-4">
@@ -25,9 +32,11 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">全部类型</option>
-            <option value="visa">VISA</option>
-            <option value="mastercard">MasterCard</option>
-            <option value="unionpay">银联</option>
+            {Object.values(CARD_NETWORKS).map((network) => (
+              <option key={network} value={network}>
+                {networkLabels[network]}
+              </option>
+            ))}
           </select>
         </div>
 
