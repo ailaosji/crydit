@@ -2,17 +2,18 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ArticleList from '../../components/ArticleList.tsx';
+import { CARD_CATEGORIES } from '../../../constants';
 
 const allArticles = await getCollection('articles');
 allArticles.sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime());
 
 // 获取文章分类统计
-const categories = {
-  review: { count: 0, label: '深度评测', color: 'green', icon: '🔍' },
-  guide: { count: 0, label: '使用指南', color: 'blue', icon: '📚' },
-  news: { count: 0, label: '行业资讯', color: 'red', icon: '📰' },
-  analysis: { count: 0, label: '市场分析', color: 'purple', icon: '📊' }
-};
+const categories = Object.fromEntries(
+  Object.values(CARD_CATEGORIES).map(cat => [
+    cat.value,
+    { ...cat, count: 0 }
+  ])
+);
 
 allArticles.forEach(article => {
   if (categories[article.data.category]) {
@@ -22,6 +23,14 @@ allArticles.forEach(article => {
 
 // 获取热门文章（可以根据实际的浏览量或评论数）
 const featuredArticles = allArticles.slice(0, 3);
+
+const categoryStyles = {
+  news: 'bg-red-100 text-red-800',
+  guide: 'bg-blue-100 text-blue-800',
+  review: 'bg-green-100 text-green-800',
+  analysis: 'bg-purple-100 text-purple-800',
+  tutorial: 'bg-teal-100 text-teal-800',
+};
 ---
 
 <Layout title="最新文章 - U卡深度评测与使用指南">
@@ -91,10 +100,7 @@ const featuredArticles = allArticles.slice(0, 3);
                   {/* 分类标签 */}
                   <div class="flex items-center justify-between mb-4">
                     <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
-                      ${article.data.category === 'review' ? 'bg-green-100 text-green-800' :
-                        article.data.category === 'guide' ? 'bg-blue-100 text-blue-800' :
-                        article.data.category === 'news' ? 'bg-red-100 text-red-800' :
-                        'bg-purple-100 text-purple-800'}`}>
+                      ${categoryStyles[article.data.category]}`}>
                       {categories[article.data.category]?.icon} {categories[article.data.category]?.label}
                     </span>
                     {index === 0 && (

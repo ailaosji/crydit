@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import GiscusComments from '../../components/GiscusComments.astro';
+import { CARD_CATEGORIES } from '../../../constants';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles');
@@ -49,14 +50,12 @@ const categoryArticles = allArticles
   .slice(0, 5);
 
 // 分类配置
-const categoryConfig = {
-  review: { label: '深度评测', color: 'green', icon: '🔍', bgColor: 'from-green-500 to-emerald-600' },
-  guide: { label: '使用指南', color: 'blue', icon: '📚', bgColor: 'from-blue-500 to-indigo-600' },
-  news: { label: '行业资讯', color: 'red', icon: '📰', bgColor: 'from-red-500 to-pink-600' },
-  analysis: { label: '市场分析', color: 'purple', icon: '📊', bgColor: 'from-purple-500 to-indigo-600' }
-};
+const categoryConfig = Object.fromEntries(
+  Object.values(CARD_CATEGORIES).map(cat => [cat.value, cat])
+);
 
-const currentCategory = categoryConfig[category] || categoryConfig.analysis;
+const defaultCategory = { label: '文章', color: 'gray', icon: '📄', bgColor: 'from-gray-500 to-gray-600' };
+const currentCategory = categoryConfig[category] || defaultCategory;
 ---
 
 <Layout title={`${title} - U卡评测网`}>

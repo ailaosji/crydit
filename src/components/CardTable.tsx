@@ -1,87 +1,8 @@
 // src/components/CardTable.tsx
 import React from 'react';
+import { CARD_NETWORKS } from '../constants';
 
-// Define the Card interface based on the new data structure
-interface CardTier {
-  name: string;
-  color?: string;
-  price?: string;
-  priceUnit?: string;
-  recommended?: boolean;
-  isVirtual?: boolean;
-  isPhysical?: boolean;
-  network?: 'visa' | 'mastercard' | 'unionpay';
-  fees?: {
-    stakingRequired?: string;
-    monthlyFee?: string | boolean | number;
-    annualFee?: any;
-    virtualCardPrice?: number;
-    physicalCardPrice?: number | null;
-    depositFee?: string;
-    transactionFee?: string;
-    foreignExchangeFee?: string;
-    withdrawalFee?: string;
-  };
-  rewards?: {
-    cashback?: string | null;
-    welcomeBonus?: string;
-    loyaltyProgram?: string;
-    points?: boolean | string;
-  };
-  limits?: {
-    singleTransaction?: string;
-    dailySpending?: string;
-    monthlySpending?: string;
-    monthlyAtmWithdrawal?: string;
-  };
-}
-
-interface Card {
-  slug: string;
-  data: {
-    name: string;
-    title: string;
-    description: string;
-    shortDescription?: string;
-    issuer: string;
-    cardTiers: CardTier[];
-    supportedRegions: string[];
-    supportedCurrencies: string[];
-    supportedPaymentMethods?: string[];
-    applicationDocuments?: string[];
-    pros: string[];
-    cons: string[];
-    features?: string[];
-    featureTags?: string[];
-    featured?: boolean;
-    importantReminders?: string[];
-    kycRequired: boolean;
-    minimumAge: number;
-    affiliateLink?: string;
-    invitationCode?: string;
-    status: 'active' | 'discontinued' | 'coming-soon';
-    publishDate?: Date;
-    updateDate?: Date;
-    lastReviewed?: Date;
-    logo?: string;
-    commentCount?: number;
-
-    // Promoted fields from the representative tier for list view filtering
-    network?: 'visa' | 'mastercard' | 'unionpay';
-    isVirtual?: boolean;
-    isPhysical?: boolean;
-    depositFee?: string;
-    transactionFee?: string;
-    annualFee?: any;
-    monthlyFee?: string | boolean | number;
-    cashback?: string | null;
-    virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
-    physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
-    physicalAnnualFee?: number;
-    virtualAnnualFee?: number;
-  };
-  commentCount?: number;
-}
+import type { Card, CardNetwork } from '../types';
 
 
 interface CardTableProps {
@@ -90,13 +11,13 @@ interface CardTableProps {
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
 
-  const getCardTypeTag = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
+  const getCardTypeTag = (type: CardNetwork | undefined) => {
     if (typeof type !== 'string' || !type) return null;
 
-    const styles = {
-      visa: 'bg-blue-600 text-white',
-      mastercard: 'bg-orange-500 text-white',
-      unionpay: 'bg-purple-600 text-white',
+    const styles: Record<CardNetwork, string> = {
+      [CARD_NETWORKS.VISA]: 'bg-blue-600 text-white',
+      [CARD_NETWORKS.MASTERCARD]: 'bg-orange-500 text-white',
+      [CARD_NETWORKS.UNIONPAY]: 'bg-purple-600 text-white',
     };
 
     return (
