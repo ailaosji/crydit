@@ -1,5 +1,6 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
+import { CARD_NETWORKS, CARD_CATEGORIES } from '../constants';
 
 // --- Reusable Schemas ---
 
@@ -27,13 +28,13 @@ const cardTierSchema = z.object({
 
   isVirtual: z.boolean().optional(),
   isPhysical: z.boolean().optional(),
-  virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-  physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
+  virtualNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+  physicalNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
 
   fees: z.object({
     stakingRequired: z.string().optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
-    annualFee: z.any().optional(),
+    annualFee: z.union([z.number(), z.boolean()]).optional(),
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
@@ -69,7 +70,7 @@ const articlesCollection = defineCollection({
     description: z.string(),
     publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
-    category: z.enum(['news', 'guide', 'review', 'analysis', 'tutorial']),
+    category: z.enum(Object.values(CARD_CATEGORIES).map(c => c.value) as [string, ...string[]]),
     tags: z.array(z.string()).optional(),
     image: z.string().optional(),
     featured: z.boolean().default(false),
@@ -96,9 +97,9 @@ const cardsCollection = defineCollection({
     cardType: z.enum(['virtual', 'physical', 'both']).optional(),
     isVirtual: z.boolean().optional(),
     isPhysical: z.boolean().optional(),
-    network: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    virtualNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
-    physicalNetwork: z.enum(['visa', 'mastercard', 'unionpay']).optional(),
+    network: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+    virtualNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+    physicalNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
@@ -106,9 +107,9 @@ const cardsCollection = defineCollection({
     foreignExchangeFee: z.string().optional(),
     withdrawalFee: z.string().optional(),
     exchangeRate: z.string().optional(),
-    annualFee: z.any().optional(),
-    virtualAnnualFee: z.any().optional(),
-    physicalAnnualFee: z.any().optional(),
+    annualFee: z.union([z.number(), z.boolean()]).optional(),
+    virtualAnnualFee: z.union([z.number(), z.boolean()]).optional(),
+    physicalAnnualFee: z.union([z.number(), z.boolean()]).optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
     rewards: z.object({
       cashback: z.string().nullable().optional(),

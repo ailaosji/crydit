@@ -2,28 +2,43 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import GiscusComments from '../../components/GiscusComments.astro';
+import { CARD_NETWORKS } from '../../constants';
 
 // Ensure this function is correctly exported
 export async function getStaticPaths() {
   try {
     const cards = await getCollection('cards');
+    if (!cards || cards.length === 0) {
+      console.warn('No cards found in collection');
+      return [];
+    }
     return cards.map((card) => ({
       params: { slug: card.slug },
       props: { card },
     }));
   } catch (error) {
-    console.error('Error in getStaticPaths:', error);
-    return [];
+    console.error('Error loading cards collection:', error);
+    // 考虑返回一个默认的错误页面路由
+    return [{
+      params: { slug: 'error' },
+      props: { error: true }
+    }];
   }
 }
 
 // Type definition
 interface Props {
-  card: CollectionEntry<'cards'>;
+  card?: CollectionEntry<'cards'>;
+  error?: boolean;
 }
 
 // Get passed props
-const { card: rawCard } = Astro.props as Props;
+const { card: rawCard, error } = Astro.props as Props;
+
+// Handle error case
+if (error) {
+  // The error is handled by conditional rendering in the template below.
+}
 
 // Process card to handle tiers and promote representative data
 let card = rawCard;
@@ -135,208 +150,217 @@ const structuredData = {
   ]
 };
 ---
-<Layout title={title || `${name} - 全球虚拟信用卡评测`}>
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
-  
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<Layout title={error ? "Error" : (title || `${name} - 全球虚拟信用卡评测`)}>
+  {error ? (
+    <div class="container mx-auto my-12 text-center">
+      <h1 class="text-4xl font-bold mb-4">Error</h1>
+      <p class="text-lg">There was an error loading the card data. Please try again later.</p>
+    </div>
+  ) : (
+    <>
+      <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
       
-      <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-12">
-        <div class="relative">
-          <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
-          <div class="relative p-8 lg:p-12">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div class="text-white">
-                <div class="flex flex-wrap items-center gap-3 mb-6">
-                  <span class={`px-4 py-2 rounded-full text-sm font-semibold ${
-                    network === 'visa' ? 'bg-blue-500 text-white' :
-                    network === 'mastercard' ? 'bg-red-500 text-white' :
-                    'bg-gray-500 text-white'
-                  }`}>
-                    {network?.toUpperCase()}
-                  </span>
-                  {(cardType === 'virtual' || cardType === 'both') && (
-                    <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">虚拟卡</span>
-                  )}
-                  {(cardType === 'physical' || cardType === 'both') && (
-                    <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">实体卡</span>
-                  )}
-                </div>
-                <h1 class="text-4xl lg:text-5xl font-bold mb-4">{name}</h1>
-                <p class="text-xl text-white/90 leading-relaxed mb-8">{description}</p>
-                {affiliateLink && (
-                  <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
-                    立即申请
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-                  </a>
-                )}
-              </div>
-              
-              <div class="relative">
-                <div class="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-10">推荐</div>
-                <div class="relative w-96 h-60 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-all duration-300 hover:scale-105">
-                  <div class="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 rounded-2xl"></div>
-                  <div class="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full"></div>
-                  <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-pink-400/10 to-transparent rounded-full"></div>
-                  <div class="relative z-10 p-8 h-full flex flex-col justify-between text-white">
-                    <div class="flex justify-between items-start">
-                      <div class="w-12 h-9 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-md shadow-inner"></div>
-                      <div class="text-2xl font-bold text-white/90 tracking-wider">{network?.toUpperCase()}</div>
+      <div class="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-12">
+            <div class="relative">
+              <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
+              <div class="relative p-8 lg:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                  <div class="text-white">
+                    <div class="flex flex-wrap items-center gap-3 mb-6">
+                      <span class={`px-4 py-2 rounded-full text-sm font-semibold ${
+                        network === CARD_NETWORKS.VISA ? 'bg-blue-500 text-white' :
+                        network === CARD_NETWORKS.MASTERCARD ? 'bg-red-500 text-white' :
+                        'bg-gray-500 text-white'
+                      }`}>
+                        {network?.toUpperCase()}
+                      </span>
+                      {(cardType === 'virtual' || cardType === 'both') && (
+                        <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">虚拟卡</span>
+                      )}
+                      {(cardType === 'physical' || cardType === 'both') && (
+                        <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">实体卡</span>
+                      )}
                     </div>
-                    <div class="space-y-6"><div class="font-mono text-2xl tracking-wider">•••• •••• •••• ••••</div></div>
-                    <div class="flex justify-between items-end">
-                      <div>
-                        <div class="text-xs text-gray-400 mb-1">CARD HOLDER</div>
-                        <div class="font-semibold text-lg">{name && name.length > 12 ? name.substring(0, 12) + '...' : name}</div>
+                    <h1 class="text-4xl lg:text-5xl font-bold mb-4">{name}</h1>
+                    <p class="text-xl text-white/90 leading-relaxed mb-8">{description}</p>
+                    {affiliateLink && (
+                      <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+                        立即申请
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                      </a>
+                    )}
+                  </div>
+
+                  <div class="relative">
+                    <div class="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-10">推荐</div>
+                    <div class="relative w-96 h-60 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-all duration-300 hover:scale-105">
+                      <div class="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 rounded-2xl"></div>
+                      <div class="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full"></div>
+                      <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-pink-400/10 to-transparent rounded-full"></div>
+                      <div class="relative z-10 p-8 h-full flex flex-col justify-between text-white">
+                        <div class="flex justify-between items-start">
+                          <div class="w-12 h-9 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-md shadow-inner"></div>
+                          <div class="text-2xl font-bold text-white/90 tracking-wider">{network?.toUpperCase()}</div>
+                        </div>
+                        <div class="space-y-6"><div class="font-mono text-2xl tracking-wider">•••• •••• •••• ••••</div></div>
+                        <div class="flex justify-between items-end">
+                          <div>
+                            <div class="text-xs text-gray-400 mb-1">CARD HOLDER</div>
+                            <div class="font-semibold text-lg">{name && name.length > 12 ? name.substring(0, 12) + '...' : name}</div>
+                          </div>
+                          <div>
+                            <div class="text-xs text-gray-400 mb-1">VALID THRU</div>
+                            <div class="font-mono text-lg">••/••</div>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div class="text-xs text-gray-400 mb-1">VALID THRU</div>
-                        <div class="font-mono text-lg">••/••</div>
-                      </div>
+                      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl transform -skew-x-12 -translate-x-full animate-pulse"></div>
                     </div>
                   </div>
-                  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl transform -skew-x-12 -translate-x-full animate-pulse"></div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-8">
-          <section class="bg-white rounded-3xl shadow-xl p-8">
-            <div class="prose prose-lg max-w-none">
-              <Content />
-            </div>
-          </section>
-
-          {cardTiers && cardTiers.length > 0 && (
-            <section class="bg-white rounded-3xl shadow-xl p-8">
-              <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                  <thead class="bg-gray-50">
-                    <tr class="border-b-2 border-gray-200">
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">等级</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">质押要求</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">返现</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">月费/年费</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">充值费</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">交易费</th>
-                      <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">外汇费</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cardTiers.map(tier => (
-                      <tr class={`hover:bg-gray-50 border-b border-gray-100 ${tier.recommended ? 'bg-indigo-50' : ''}`}>
-                        <td class="px-6 py-4 font-semibold text-gray-800">{tier.name}</td>
-                        <td class="px-6 py-4">{tier.fees?.stakingRequired || '无'}</td>
-                        <td class="px-6 py-4 font-semibold text-green-600">{tier.rewards?.cashback || 'N/A'}</td>
-                        <td class="px-6 py-4">{tier.fees?.monthlyFee || (tier.fees?.annualFee ? `$${tier.fees.annualFee}/年` : '免费')}</td>
-                        <td class="px-6 py-4">{tier.fees?.depositFee || 'N/A'}</td>
-                        <td class="px-6 py-4">{tier.fees?.transactionFee || 'N/A'}</td>
-                        <td class="px-6 py-4">{tier.fees?.foreignExchangeFee || 'N/A'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-          )}
-
-          {limits && (
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
               <section class="bg-white rounded-3xl shadow-xl p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(limits).map(([key, value]) => {
-                    const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' };
-                    return value ? (
-                      <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-                        <p class="text-sm text-gray-600">{limitLabels[key] || key}</p>
-                        <p class="text-lg font-bold text-indigo-600">{value}</p>
-                      </div>
-                    ) : null;
-                  })}
+                <div class="prose prose-lg max-w-none">
+                  <Content />
                 </div>
               </section>
-            )}
 
-          <GiscusComments title={`${name} 用户评论`} />
-        </div>
+              {cardTiers && cardTiers.length > 0 && (
+                <section class="bg-white rounded-3xl shadow-xl p-8">
+                  <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                      <thead class="bg-gray-50">
+                        <tr class="border-b-2 border-gray-200">
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">等级</th>
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">质押要求</th>
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">返现</th>
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">月费/年费</th>
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">充值费</th>
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">交易费</th>
+                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">外汇费</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {cardTiers.map(tier => (
+                          <tr class={`hover:bg-gray-50 border-b border-gray-100 ${tier.recommended ? 'bg-indigo-50' : ''}`}>
+                            <td class="px-6 py-4 font-semibold text-gray-800">{tier.name}</td>
+                            <td class="px-6 py-4">{tier.fees?.stakingRequired || '无'}</td>
+                            <td class="px-6 py-4 font-semibold text-green-600">{tier.rewards?.cashback || 'N/A'}</td>
+                            <td class="px-6 py-4">{tier.fees?.monthlyFee || (tier.fees?.annualFee ? `$${tier.fees.annualFee}/年` : '免费')}</td>
+                            <td class="px-6 py-4">{tier.fees?.depositFee || 'N/A'}</td>
+                            <td class="px-6 py-4">{tier.fees?.transactionFee || 'N/A'}</td>
+                            <td class="px-6 py-4">{tier.fees?.foreignExchangeFee || 'N/A'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              )}
 
-        <div class="space-y-8">
-          <div class="bg-white rounded-3xl shadow-xl p-8 sticky top-24">
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">基本信息</h3>
-            <div class="space-y-4">
-              <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                <span class="text-gray-600">发卡机构</span>
-                <span class="font-medium text-gray-900">{issuer}</span>
+              {limits && (
+                  <section class="bg-white rounded-3xl shadow-xl p-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {Object.entries(limits).map(([key, value]) => {
+                        const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' };
+                        return value ? (
+                          <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <p class="text-sm text-gray-600">{limitLabels[key] || key}</p>
+                            <p class="text-lg font-bold text-indigo-600">{value}</p>
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                  </section>
+                )}
+
+              <GiscusComments title={`${name} 用户评论`} />
+            </div>
+
+            <div class="space-y-8">
+              <div class="bg-white rounded-3xl shadow-xl p-8 sticky top-24">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">基本信息</h3>
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="text-gray-600">发卡机构</span>
+                    <span class="font-medium text-gray-900">{issuer}</span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="text-gray-600">卡片网络</span>
+                    <span class={`px-3 py-1 rounded-full text-xs font-medium ${
+                      network === CARD_NETWORKS.VISA ? 'bg-blue-100 text-blue-800' :
+                      network === CARD_NETWORKS.MASTERCARD ? 'bg-red-100 text-red-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {network?.toUpperCase()}
+                    </span>
+                  </div>
+                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span class="text-gray-600">申请证件</span>
+                    <span class="font-medium text-gray-900">{applicationDocuments && applicationDocuments.length > 0 ? applicationDocuments.join(' / ') : 'N/A'}</span>
+                  </div>
+                  {rewards && rewards.cashback && (
+                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                      <span class="text-gray-600">返现比例</span>
+                      <span class="font-medium text-green-600">{rewards.cashback}</span>
+                    </div>
+                  )}
+                  <div class="flex justify-between items-center py-2">
+                    <span class="text-gray-600">年费</span>
+                    <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span>
+                  </div>
+                </div>
+                {affiliateLink && (
+                  <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105">
+                    立即申请
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                  </a>
+                )}
+                {invitationCode && (
+                  <div class="mt-6 pt-6 border-t border-gray-100">
+                    <label for="invite-code" class="block text-sm font-medium text-gray-700 mb-2">邀请码</label>
+                    <div class="relative">
+                      <input id="invite-code" type="text" readonly value={invitationCode} class="w-full pl-4 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                      <button id="copy-button" class="absolute inset-y-0 right-0 flex items-center px-4 bg-gray-200 text-gray-700 font-semibold text-sm rounded-r-xl hover:bg-gray-300 transition-colors">复制</button>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                <span class="text-gray-600">卡片网络</span>
-                <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                  network === 'visa' ? 'bg-blue-100 text-blue-800' :
-                  network === 'mastercard' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
-                  {network?.toUpperCase()}
-                </span>
-              </div>
-              <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                <span class="text-gray-600">申请证件</span>
-                <span class="font-medium text-gray-900">{applicationDocuments && applicationDocuments.length > 0 ? applicationDocuments.join(' / ') : 'N/A'}</span>
-              </div>
-              {rewards && rewards.cashback && (
-                <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span class="text-gray-600">返现比例</span>
-                  <span class="font-medium text-green-600">{rewards.cashback}</span>
+
+              {relatedCards && relatedCards.length > 0 && (
+                <div class="bg-white rounded-3xl shadow-xl p-8">
+                  <h3 class="text-2xl font-bold text-gray-900 mb-6">相关U卡推荐</h3>
+                  <div class="space-y-4">
+                    {relatedCards.map((relatedCard) => (
+                      <a href={`/cards/${relatedCard.slug}`} class="block p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition-colors">
+                        <div class="flex items-center justify-between">
+                          <div>
+                            <h4 class="font-semibold text-gray-900">{relatedCard.data.name}</h4>
+                            <p class="text-sm text-gray-600 mt-1">{relatedCard.data.network?.toUpperCase()}</p>
+                          </div>
+                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
-              <div class="flex justify-between items-center py-2">
-                <span class="text-gray-600">年费</span>
-                <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span>
-              </div>
             </div>
-            {affiliateLink && (
-              <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105">
-                立即申请
-                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-              </a>
-            )}
-            {invitationCode && (
-              <div class="mt-6 pt-6 border-t border-gray-100">
-                <label for="invite-code" class="block text-sm font-medium text-gray-700 mb-2">邀请码</label>
-                <div class="relative">
-                  <input id="invite-code" type="text" readonly value={invitationCode} class="w-full pl-4 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                  <button id="copy-button" class="absolute inset-y-0 right-0 flex items-center px-4 bg-gray-200 text-gray-700 font-semibold text-sm rounded-r-xl hover:bg-gray-300 transition-colors">复制</button>
-                </div>
-              </div>
-            )}
           </div>
-
-          {relatedCards && relatedCards.length > 0 && (
-            <div class="bg-white rounded-3xl shadow-xl p-8">
-              <h3 class="text-2xl font-bold text-gray-900 mb-6">相关U卡推荐</h3>
-              <div class="space-y-4">
-                {relatedCards.map((relatedCard) => (
-                  <a href={`/cards/${relatedCard.slug}`} class="block p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition-colors">
-                    <div class="flex items-center justify-between">
-                      <div>
-                        <h4 class="font-semibold text-gray-900">{relatedCard.data.name}</h4>
-                        <p class="text-sm text-gray-600 mt-1">{relatedCard.data.network?.toUpperCase()}</p>
-                      </div>
-                      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
-    </div>
-  </div>
+    </>
+  )}
 </Layout>
 
 <script>

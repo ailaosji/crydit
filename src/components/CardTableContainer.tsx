@@ -4,91 +4,12 @@ import CardTable from './CardTable';
 import CardFilters from './CardFilters';
 import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
+import { Globe } from 'lucide-react';
+import TableSkeleton from './ui/TableSkeleton';
 
-// Define the Card interface based on the new data structure
-interface CardTier {
-  name: string;
-  color?: string;
-  price?: string;
-  priceUnit?: string;
-  recommended?: boolean;
-  isVirtual?: boolean;
-  isPhysical?: boolean;
-  network?: 'visa' | 'mastercard' | 'unionpay';
-  fees?: {
-    stakingRequired?: string;
-    monthlyFee?: string | boolean | number;
-    annualFee?: any;
-    virtualCardPrice?: number;
-    physicalCardPrice?: number | null;
-    depositFee?: string;
-    transactionFee?: string;
-    foreignExchangeFee?: string;
-    withdrawalFee?: string;
-  };
-  rewards?: {
-    cashback?: string | null;
-    welcomeBonus?: string;
-    loyaltyProgram?: string;
-    points?: boolean | string;
-  };
-  limits?: {
-    singleTransaction?: string;
-    dailySpending?: string;
-    monthlySpending?: string;
-    monthlyAtmWithdrawal?: string;
-  };
-}
+import type { Card } from '../types';
 
-interface Card {
-  slug: string;
-  data: {
-    name: string;
-    title: string;
-    description: string;
-    shortDescription?: string;
-    issuer: string;
-    cardTiers: CardTier[];
-    supportedRegions: string[];
-    supportedCurrencies: string[];
-    supportedPaymentMethods?: string[];
-    applicationDocuments?: string[];
-    pros: string[];
-    cons: string[];
-    features?: string[];
-    featureTags?: string[];
-    featured?: boolean;
-    importantReminders?: string[];
-    kycRequired: boolean;
-    minimumAge: number;
-    affiliateLink?: string;
-    invitationCode?: string;
-    status: 'active' | 'discontinued' | 'coming-soon';
-    publishDate?: Date;
-    updateDate?: Date;
-    lastReviewed?: Date;
-    logo?: string;
-    commentCount?: number;
-
-    // Promoted fields from the representative tier for list view filtering
-    network?: 'visa' | 'mastercard' | 'unionpay';
-    isVirtual?: boolean;
-    isPhysical?: boolean;
-    depositFee?: string;
-    transactionFee?: string;
-    annualFee?: any;
-    monthlyFee?: string | boolean | number;
-    cashback?: string | null;
-    virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
-    physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
-    physicalAnnualFee?: number;
-    virtualAnnualFee?: number;
-  };
-  commentCount?: number;
-}
-
-
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 20;
 
 const CardTableContainer: React.FC = () => {
   const [allCards, setAllCards] = useState<Card[]>([]);
@@ -105,6 +26,7 @@ const CardTableContainer: React.FC = () => {
     annualFee: '',
     fee: '',
     search: '',
+    filterMainland: false,
   });
 
   // Fetch initial card data
@@ -133,6 +55,10 @@ const CardTableContainer: React.FC = () => {
   // Apply filters and search
   useEffect(() => {
     let tempCards = allCards;
+
+    if (filters.filterMainland) {
+      tempCards = tempCards.filter(card => card.data.supportMainland);
+    }
 
     // Filter by card type
     if (filters.cardType) {
@@ -210,6 +136,7 @@ const CardTableContainer: React.FC = () => {
       annualFee: '',
       fee: '',
       search: '',
+      filterMainland: false,
     });
   };
 
@@ -217,30 +144,58 @@ const CardTableContainer: React.FC = () => {
     setFilters(prev => ({ ...prev, search: value }));
   };
 
+  const toggleFilterMainland = () => {
+    setFilters(prev => ({ ...prev, filterMainland: !prev.filterMainland }));
+  }
+
   return (
     <div>
-        <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-            <div className="flex flex-wrap items-center gap-4">
-                <CardFilters
-                  filters={filters}
-                  onFilterChange={handleFilterChange}
-                  onResetFilters={handleResetFilters}
-                />
-                <div className="flex items-center space-x-2 ml-auto">
-                    <CardSearch searchTerm={filters.search} onSearchChange={handleSearchChange} />
-                </div>
-            </div>
-            <div className="mt-4 flex items-center justify-between">
-                <div className="text-sm text-gray-600">
-                  共找到 <span className="font-medium text-indigo-600">{filteredCards.length}</span> 张卡片
-                </div>
-                <div className="text-sm text-gray-500">
-                  已显示 <span className="font-medium text-green-600">{displayedCards.length}</span> 张卡片
-                </div>
-              </div>
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white mb-8">
+        <h1 className="text-2xl font-bold mb-4">🌟 2024年最佳加密货币卡片推荐</h1>
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={toggleFilterMainland}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              filters.filterMainland
+                ? 'bg-white text-indigo-600'
+                : 'bg-white/20 text-white hover:bg-white/30'
+            }`}
+          >
+            <Globe className="inline-block w-4 h-4 mr-1" />
+            仅显示支持大陆
+          </button>
+          <div className="ml-auto text-sm opacity-90">
+            共找到 {filteredCards.length} 张卡片
+          </div>
         </div>
+      </div>
 
-      <CardTable cards={displayedCards} />
+      <div className="bg-gray-50 rounded-2xl p-6 mb-8">
+          <div className="flex flex-wrap items-center gap-4">
+              <CardFilters
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onResetFilters={handleResetFilters}
+              />
+              <div className="flex items-center space-x-2 ml-auto">
+                  <CardSearch searchTerm={filters.search} onSearchChange={handleSearchChange} />
+              </div>
+          </div>
+          <div className="mt-4 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                共找到 <span className="font-medium text-indigo-600">{filteredCards.length}</span> 张卡片
+              </div>
+              <div className="text-sm text-gray-500">
+                已显示 <span className="font-medium text-green-600">{displayedCards.length}</span> 张卡片
+              </div>
+            </div>
+      </div>
+
+      {isLoading && displayedCards.length === 0 ? (
+        <TableSkeleton />
+      ) : (
+        <CardTable cards={displayedCards} />
+      )}
 
       <LoadMoreIndicator
         isLoading={isLoading}
