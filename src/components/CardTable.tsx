@@ -18,7 +18,6 @@ const NetworkBadge: React.FC<{ network: CardNetwork }> = ({ network }) => (
 
 const FeeDisplay: React.FC<{ card: { network: CardNetwork | undefined, openingFee: number | null | undefined, annualFee: number | boolean | undefined } | null }> = ({ card }) => {
   if (!card || !card.network) return <span className="text-gray-400 text-sm">不支持</span>;
-
   return (
     <div className="space-y-1">
       <NetworkBadge network={card.network} />
@@ -79,6 +78,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 </div>
               </div>
 
+
               {/* 卡片信息 */}
               <div className="col-span-3">
                 <div className="flex items-start space-x-3">
@@ -132,6 +132,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 {card.data.supportMainland ? (
                   <div className="inline-flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
                     <Check className="w-5 h-5 text-green-600" />
+
                   </div>
                 ) : (
                   <div className="inline-flex items-center justify-center w-8 h-8 bg-red-50 rounded-full">
