@@ -24,6 +24,7 @@ const FeeDisplay: React.FC<{ card: { network: CardNetwork | undefined, openingFe
     if (fee === 0) return '免费';
     return `$${fee}`;
   };
+
   return (
     <div className="space-y-1">
       <NetworkBadge network={card.network} />
@@ -142,7 +143,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                   <div className="inline-flex items-center justify-center w-8 h-8 bg-red-50 rounded-full">
                     <X className="w-5 h-5 text-red-400" />
                   </div>
-
                 )}
               </div>
 
