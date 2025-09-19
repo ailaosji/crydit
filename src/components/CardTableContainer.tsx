@@ -5,6 +5,7 @@ import CardFilters from './CardFilters';
 import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
 import { Globe } from 'lucide-react';
+import TableSkeleton from './ui/TableSkeleton';
 
 import type { Card } from '../types';
 
@@ -190,7 +191,11 @@ const CardTableContainer: React.FC = () => {
             </div>
       </div>
 
-      <CardTable cards={displayedCards} />
+      {isLoading && displayedCards.length === 0 ? (
+        <TableSkeleton />
+      ) : (
+        <CardTable cards={displayedCards} />
+      )}
 
       <LoadMoreIndicator
         isLoading={isLoading}

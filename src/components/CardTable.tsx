@@ -65,7 +65,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
       {/* 表格内容 */}
       <div className="divide-y divide-gray-100">
         {cards.map((card) => (
-          <div key={card.slug} className="hover:bg-gray-50/50 transition-all duration-200">
+          <div key={card.slug} className="transition-all duration-200 ease-in-out hover:shadow-md hover:translate-x-0.5 hover:bg-gradient-to-r from-gray-50 to-white">
             <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
               {/* 排名 */}
               <div className="col-span-1">
@@ -147,7 +147,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                     <MessageCircle className="w-4 h-4" />
                     <span className="text-xs">{card.commentCount || 0}</span>
                   </button>
-                  <a href={card.data.affiliateLink} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg hover:shadow-lg transition-all transform hover:scale-105">
+                  <a href={card.data.affiliateLink} target="_blank" rel="noopener noreferrer" className="apply-btn px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg transition-all transform hover:scale-105">
                     立即申请
                   </a>
                 </div>
