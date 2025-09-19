@@ -34,7 +34,7 @@ const cardTierSchema = z.object({
   fees: z.object({
     stakingRequired: z.string().optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
-    annualFee: z.any().optional(),
+    annualFee: z.union([z.number(), z.boolean()]).optional(),
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
@@ -107,9 +107,9 @@ const cardsCollection = defineCollection({
     foreignExchangeFee: z.string().optional(),
     withdrawalFee: z.string().optional(),
     exchangeRate: z.string().optional(),
-    annualFee: z.any().optional(),
-    virtualAnnualFee: z.any().optional(),
-    physicalAnnualFee: z.any().optional(),
+    annualFee: z.union([z.number(), z.boolean()]).optional(),
+    virtualAnnualFee: z.union([z.number(), z.boolean()]).optional(),
+    physicalAnnualFee: z.union([z.number(), z.boolean()]).optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
     rewards: z.object({
       cashback: z.string().nullable().optional(),
