@@ -18,20 +18,27 @@ const NetworkBadge: React.FC<{ network: CardNetwork }> = ({ network }) => (
 
 const FeeDisplay: React.FC<{ card: { network: CardNetwork | undefined, openingFee: number | null | undefined, annualFee: number | boolean | undefined } | null }> = ({ card }) => {
   if (!card || !card.network) return <span className="text-gray-400 text-sm">不支持</span>;
+
+  const displayFee = (fee: number | boolean | null | undefined) => {
+    if (fee === undefined || fee === null || fee === false) return '免费';
+    if (fee === 0) return '免费';
+    return `$${fee}`;
+  };
+
   return (
     <div className="space-y-1">
       <NetworkBadge network={card.network} />
       <div className="text-xs space-y-0.5">
         <div className="flex items-center">
           <span className="text-gray-500">开卡:</span>
-          <span className={`ml-1 font-medium ${card.openingFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
-            {card.openingFee === 0 ? '免费' : `$${card.openingFee}`}
+          <span className={`ml-1 font-medium ${!card.openingFee || card.openingFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
+            {displayFee(card.openingFee)}
           </span>
         </div>
         <div className="flex items-center">
           <span className="text-gray-500">年费:</span>
-          <span className={`ml-1 font-medium ${card.annualFee === 0 || card.annualFee === false ? 'text-green-600' : 'text-gray-900'}`}>
-            {card.annualFee === 0 || card.annualFee === false ? '免费' : `$${card.annualFee}`}
+          <span className={`ml-1 font-medium ${!card.annualFee || card.annualFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
+            {displayFee(card.annualFee)}
           </span>
         </div>
       </div>
@@ -77,7 +84,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                   )}
                 </div>
               </div>
-
 
               {/* 卡片信息 */}
               <div className="col-span-3">
@@ -132,7 +138,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 {card.data.supportMainland ? (
                   <div className="inline-flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
                     <Check className="w-5 h-5 text-green-600" />
-
                   </div>
                 ) : (
                   <div className="inline-flex items-center justify-center w-8 h-8 bg-red-50 rounded-full">

@@ -8,6 +8,7 @@ import { Globe } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
 
 import type { Card } from '../types';
+
 const ITEMS_PER_PAGE = 20;
 
 const CardTableContainer: React.FC = () => {
@@ -26,6 +27,7 @@ const CardTableContainer: React.FC = () => {
     fee: '',
     search: '',
     filterMainland: false,
+    sortBy: 'updateDate', // Default sort
   });
 
   // Fetch initial card data
@@ -53,7 +55,7 @@ const CardTableContainer: React.FC = () => {
 
   // Apply filters and search
   useEffect(() => {
-    let tempCards = allCards;
+    let tempCards = [...allCards];
 
     if (filters.filterMainland) {
       tempCards = tempCards.filter(card => card.data.supportMainland);
@@ -104,6 +106,13 @@ const CardTableContainer: React.FC = () => {
       );
     }
 
+    // Sorting
+    if (filters.sortBy === 'updateDate') {
+      tempCards.sort((a, b) => new Date(b.data.updateDate || 0).getTime() - new Date(a.data.updateDate || 0).getTime());
+    } else if (filters.sortBy === 'rank') {
+      tempCards.sort((a, b) => (a.data.rank || 999) - (b.data.rank || 999));
+    }
+
     setFilteredCards(tempCards);
     setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
     setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
@@ -125,7 +134,7 @@ const CardTableContainer: React.FC = () => {
   }, [page, filteredCards, hasMoreData, isLoading]);
 
   const handleFilterChange = (filterName: string, value: string) => {
-    setFilters(prev => ({ ...prev, [filterName]: value, search: filterName === 'search' ? value : prev.search }));
+    setFilters(prev => ({ ...prev, [filterName]: value }));
   };
 
   const handleResetFilters = () => {
@@ -136,6 +145,7 @@ const CardTableContainer: React.FC = () => {
       fee: '',
       search: '',
       filterMainland: false,
+      sortBy: 'updateDate',
     });
   };
 
