@@ -8,7 +8,6 @@ import { Globe } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
 
 import type { Card } from '../types';
-
 const ITEMS_PER_PAGE = 20;
 
 const CardTableContainer: React.FC = () => {
