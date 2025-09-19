@@ -67,6 +67,10 @@ export interface Card {
     lastReviewed?: Date;
     logo?: string;
     commentCount?: number;
+    rank?: number;
+    trending?: boolean;
+    supportMainland?: boolean;
+    recommended?: boolean;
 
     // Promoted fields from the representative tier for list view filtering
     network?: CardNetwork;
