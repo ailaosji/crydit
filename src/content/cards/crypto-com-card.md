@@ -58,7 +58,7 @@ cardTiers:
     fees:
       stakingRequired: "$400"
       monthlyFee: "$0"
-      annualFee: "免费"
+      annualFee: false
       virtualCardPrice: 0
       physicalCardPrice: 0
       depositFee: "1%"
@@ -79,7 +79,7 @@ cardTiers:
     fees:
       stakingRequired: "$4,000"
       monthlyFee: "$0"
-      annualFee: "免费"
+      annualFee: false
       virtualCardPrice: 0
       physicalCardPrice: 0
       depositFee: "1%"
@@ -100,7 +100,7 @@ cardTiers:
     fees:
       stakingRequired: "$400,000"
       monthlyFee: "$0"
-      annualFee: "免费"
+      annualFee: false
       virtualCardPrice: 0
       physicalCardPrice: 0
       depositFee: "1%"
