@@ -24,15 +24,6 @@ interface ArticleListProps {
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) => {
   const displayArticles = showAll ? articles : articles.slice(0, 6);
-
-  const categoryStyles: Record<ArticleCategory, string> = {
-    news: 'bg-red-100 text-red-800',
-    guide: 'bg-blue-100 text-blue-800',
-    review: 'bg-green-100 text-green-800',
-    analysis: 'bg-purple-100 text-purple-800',
-    tutorial: 'bg-teal-100 text-teal-800',
-  };
-
   const getCategoryInfo = (categoryValue: ArticleCategory) => {
     const category = Object.values(CARD_CATEGORIES).find(c => c.value === categoryValue);
     if (!category) {
@@ -43,7 +34,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) 
     }
     return {
       label: category.label,
-      className: categoryStyles[category.value] || 'bg-gray-100 text-gray-800',
+      className: category.className,
     };
   };
 

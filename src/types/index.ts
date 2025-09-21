@@ -83,8 +83,8 @@ export interface Card {
     cashback?: string | null;
     virtualNetwork?: CardNetwork;
     physicalNetwork?: CardNetwork;
-    physicalAnnualFee?: number;
-    virtualAnnualFee?: number;
+    physicalAnnualFee?: number | boolean;
+    virtualAnnualFee?: number | boolean;
   };
   commentCount?: number;
 }

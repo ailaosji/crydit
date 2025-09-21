@@ -4,12 +4,20 @@ import CardTable from './CardTable';
 import CardFilters from './CardFilters';
 import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
-import { Globe } from 'lucide-react';
+import { Globe, Frown } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
 
 import type { Card } from '../types';
 
 const ITEMS_PER_PAGE = 20;
+
+const isFeeFree = (fee: number | boolean | null | undefined | string) => {
+  if (typeof fee === 'string') {
+    const lowerFee = fee.toLowerCase();
+    return lowerFee === '0' || lowerFee === '€0' || lowerFee === '免费' || lowerFee === 'free' || lowerFee === '0%';
+  }
+  return fee === undefined || fee === null || fee === false || fee === 0;
+};
 
 const CardTableContainer: React.FC = () => {
   const [allCards, setAllCards] = useState<Card[]>([]);
@@ -33,6 +41,7 @@ const CardTableContainer: React.FC = () => {
   // Fetch initial card data
   useEffect(() => {
     const fetchCards = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch('/api/cards.json');
         if (!response.ok) {
@@ -40,12 +49,8 @@ const CardTableContainer: React.FC = () => {
         }
         const data = await response.json();
         setAllCards(data);
-        setFilteredCards(data);
-        setDisplayedCards(data.slice(0, ITEMS_PER_PAGE));
-        setHasMoreData(data.length > ITEMS_PER_PAGE);
       } catch (error) {
         console.error("Could not fetch card data:", error);
-      } finally {
         setIsLoading(false);
       }
     };
@@ -55,68 +60,78 @@ const CardTableContainer: React.FC = () => {
 
   // Apply filters and search
   useEffect(() => {
-    let tempCards = [...allCards];
+    // Wait for the initial data to be loaded
+    if (allCards.length === 0 && isLoading) return;
+    const applyFilters = () => {
+      let tempCards = [...allCards];
 
-    if (filters.filterMainland) {
-      tempCards = tempCards.filter(card => card.data.supportMainland);
-    }
+      if (filters.filterMainland) {
+        tempCards = tempCards.filter(card => card.data.supportMainland);
+      }
 
-    // Filter by card type
-    if (filters.cardType) {
-      tempCards = tempCards.filter(card => card.data.network === filters.cardType);
-    }
+      if (filters.cardType) {
+        tempCards = tempCards.filter(card => card.data.network === filters.cardType);
+      }
 
-    // Filter by card form
-    if (filters.cardForm) {
-        if (filters.cardForm === 'virtual') {
-            tempCards = tempCards.filter(card => card.data.isVirtual && !card.data.isPhysical);
-        } else if (filters.cardForm === 'physical') {
-            tempCards = tempCards.filter(card => card.data.isPhysical && !card.data.isVirtual);
-        } else if (filters.cardForm === 'both') {
-            tempCards = tempCards.filter(card => card.data.isVirtual && card.data.isPhysical);
+      if (filters.cardForm) {
+          if (filters.cardForm === 'virtual') {
+              tempCards = tempCards.filter(card => card.data.isVirtual && !card.data.isPhysical);
+          } else if (filters.cardForm === 'physical') {
+              tempCards = tempCards.filter(card => card.data.isPhysical && !card.data.isVirtual);
+          } else if (filters.cardForm === 'both') {
+              tempCards = tempCards.filter(card => card.data.isVirtual && card.data.isPhysical);
+          }
+      }
+
+      if (filters.annualFee) {
+        const hasFee = (card: Card) => {
+          return !isFeeFree(card.data.annualFee) ||
+                 !isFeeFree(card.data.physicalAnnualFee) ||
+                 !isFeeFree(card.data.virtualAnnualFee) ||
+                 !isFeeFree(card.data.monthlyFee);
         }
-    }
-
-    // Filter by annual fee
-    if (filters.annualFee) {
-        const hasFee = (card: Card) => (card.data.physicalAnnualFee ?? 0) > 0 || (card.data.virtualAnnualFee ?? 0) > 0 || (card.data.monthlyFee ?? 0) > 0 || card.data.annualFee;
         if (filters.annualFee === 'free') {
             tempCards = tempCards.filter(card => !hasFee(card));
         } else if (filters.annualFee === 'paid') {
             tempCards = tempCards.filter(card => hasFee(card));
         }
-    }
-
-    // Filter by fees
-    if (filters.fee) {
-      const hasFees = (card: Card) => (card.data.depositFee && card.data.depositFee !== '0%' && card.data.depositFee !== '免费') || (card.data.transactionFee && card.data.transactionFee !== '0%' && card.data.transactionFee !== '免费' && card.data.transactionFee !== '0% (with limits)');
-      if (filters.fee === 'has_fees') {
-        tempCards = tempCards.filter(card => hasFees(card));
-      } else if (filters.fee === 'no_fees') {
-        tempCards = tempCards.filter(card => !hasFees(card));
       }
-    }
 
-    // Filter by search term
-    if (filters.search) {
-      const searchTerm = filters.search.toLowerCase();
-      tempCards = tempCards.filter(card =>
-        card.data.name.toLowerCase().includes(searchTerm) ||
-        (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
-      );
-    }
+      if (filters.fee) {
+        const hasOtherFees = (card: Card) => !isFeeFree(card.data.depositFee) || !isFeeFree(card.data.transactionFee);
+        if (filters.fee === 'has_fees') {
+          tempCards = tempCards.filter(card => hasOtherFees(card));
+        } else if (filters.fee === 'no_fees') {
+          tempCards = tempCards.filter(card => !hasOtherFees(card));
+        }
+      }
 
-    // Sorting
-    if (filters.sortBy === 'updateDate') {
-      tempCards.sort((a, b) => new Date(b.data.updateDate || 0).getTime() - new Date(a.data.updateDate || 0).getTime());
-    } else if (filters.sortBy === 'rank') {
-      tempCards.sort((a, b) => (a.data.rank || 999) - (b.data.rank || 999));
-    }
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase();
+        tempCards = tempCards.filter(card =>
+          card.data.name.toLowerCase().includes(searchTerm) ||
+          (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
+        );
+      }
 
-    setFilteredCards(tempCards);
-    setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
-    setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
-    setPage(1);
+      if (filters.sortBy === 'updateDate') {
+        tempCards.sort((a, b) => new Date(b.data.updateDate || 0).getTime() - new Date(a.data.updateDate || 0).getTime());
+      } else if (filters.sortBy === 'rank') {
+        tempCards.sort((a, b) => (a.data.rank || 999) - (b.data.rank || 999));
+      }
+
+      setFilteredCards(tempCards);
+      setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
+      setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
+      setPage(1);
+      setIsLoading(false);
+    };
+
+    // Set loading state and simulate a delay for better UX
+    setIsLoading(true);
+    const timer = setTimeout(applyFilters, 300);
+
+    return () => clearTimeout(timer);
   }, [filters, allCards]);
 
   const loadMore = useCallback(() => {
@@ -157,6 +172,28 @@ const CardTableContainer: React.FC = () => {
     setFilters(prev => ({ ...prev, filterMainland: !prev.filterMainland }));
   }
 
+  const renderContent = () => {
+    if (isLoading) {
+      return <TableSkeleton />;
+    }
+    if (displayedCards.length === 0) {
+      return (
+        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
+          <Frown className="mx-auto w-12 h-12 text-gray-400" />
+          <h3 className="mt-4 text-xl font-semibold text-gray-700">没有找到匹配的卡片</h3>
+          <p className="text-gray-500 mt-2">请尝试调整您的筛选条件或重置。</p>
+          <button
+            onClick={handleResetFilters}
+            className="mt-6 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            重置筛选
+          </button>
+        </div>
+      );
+    }
+    return <CardTable cards={displayedCards} />;
+  }
+
   return (
     <div>
       <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white mb-8">
@@ -173,9 +210,6 @@ const CardTableContainer: React.FC = () => {
             <Globe className="inline-block w-4 h-4 mr-1" />
             仅显示支持大陆
           </button>
-          <div className="ml-auto text-sm opacity-90">
-            共找到 {filteredCards.length} 张卡片
-          </div>
         </div>
       </div>
 
@@ -200,14 +234,9 @@ const CardTableContainer: React.FC = () => {
             </div>
       </div>
 
-      {isLoading && displayedCards.length === 0 ? (
-        <TableSkeleton />
-      ) : (
-        <CardTable cards={displayedCards} />
-      )}
-
+      {renderContent()}
       <LoadMoreIndicator
-        isLoading={isLoading}
+        isLoading={isLoading && displayedCards.length > 0}
         hasMoreData={hasMoreData}
         onLoadMore={loadMore}
       />

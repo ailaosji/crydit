@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Check, X, MessageCircle, TrendingUp } from 'lucide-react';
 import type { Card, CardNetwork } from '../types';
 
-// Network type styles
+// --- Helper Functions & Components ---
+
 const networkStyles: Record<string, string> = {
   VISA: "bg-blue-100 text-blue-700 border-blue-200",
   MASTERCARD: "bg-orange-100 text-orange-700 border-orange-200",
@@ -16,28 +17,36 @@ const NetworkBadge: React.FC<{ network: CardNetwork }> = ({ network }) => (
   </span>
 );
 
-const FeeDisplay: React.FC<{ card: { network: CardNetwork | undefined, openingFee: number | null | undefined, annualFee: number | boolean | undefined } | null }> = ({ card }) => {
+interface FeeDisplayProps {
+  network: CardNetwork | undefined;
+  openingFee: number | null | undefined;
+  annualFee: number | boolean | undefined;
+}
+
+const isFeeFree = (fee: number | boolean | null | undefined) => {
+  return fee === undefined || fee === null || fee === false || fee === 0;
+};
+
+const displayFee = (fee: number | boolean | null | undefined) => {
+  if (isFeeFree(fee)) return '免费';
+  return `$${fee}`;
+};
+
+const FeeDisplay: React.FC<{ card: FeeDisplayProps | null }> = ({ card }) => {
   if (!card || !card.network) return <span className="text-gray-400 text-sm">不支持</span>;
-
-  const displayFee = (fee: number | boolean | null | undefined) => {
-    if (fee === undefined || fee === null || fee === false) return '免费';
-    if (fee === 0) return '免费';
-    return `$${fee}`;
-  };
-
   return (
     <div className="space-y-1">
       <NetworkBadge network={card.network} />
       <div className="text-xs space-y-0.5">
         <div className="flex items-center">
           <span className="text-gray-500">开卡:</span>
-          <span className={`ml-1 font-medium ${!card.openingFee || card.openingFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
+          <span className={`ml-1 font-medium ${isFeeFree(card.openingFee) ? 'text-green-600' : 'text-gray-900'}`}>
             {displayFee(card.openingFee)}
           </span>
         </div>
         <div className="flex items-center">
           <span className="text-gray-500">年费:</span>
-          <span className={`ml-1 font-medium ${!card.annualFee || card.annualFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
+          <span className={`ml-1 font-medium ${isFeeFree(card.annualFee) ? 'text-green-600' : 'text-gray-900'}`}>
             {displayFee(card.annualFee)}
           </span>
         </div>
@@ -46,20 +55,26 @@ const FeeDisplay: React.FC<{ card: { network: CardNetwork | undefined, openingFe
   );
 };
 
+// --- Main Table Component ---
+
 interface CardTableProps {
   cards: Card[];
 }
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const toggleRowExpansion = (index: number) => {
+    setExpandedRow(expandedRow === index ? null : index);
+  };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
       {/* 表头 */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-semibold text-gray-700">
+          <div className="col-span-1">序号</div>
           <div className="col-span-1">排名</div>
-          <div className="col-span-3">卡片信息</div>
+          <div className="col-span-2">卡片信息</div>
           <div className="col-span-2 text-center">虚拟卡</div>
           <div className="col-span-2 text-center">实体卡</div>
           <div className="col-span-2">特色功能</div>
@@ -70,9 +85,14 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
 
       {/* 表格内容 */}
       <div className="divide-y divide-gray-100">
-        {cards.map((card) => (
+        {cards.map((card, index) => (
           <div key={card.slug} className="transition-all duration-200 ease-in-out hover:shadow-md hover:translate-x-0.5 hover:bg-gradient-to-r from-gray-50 to-white">
-            <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
+            <div
+              className="grid grid-cols-12 gap-4 px-6 py-4 items-center cursor-pointer"
+              onClick={() => toggleRowExpansion(index)}
+            >
+              {/* 序号 */}
+              <div className="col-span-1 text-center text-gray-500">{index + 1}</div>
               {/* 排名 */}
               <div className="col-span-1">
                 <div className="flex items-center">
@@ -86,10 +106,22 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               </div>
 
               {/* 卡片信息 */}
-              <div className="col-span-3">
+              <div className="col-span-2">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <img src={card.data.logo} alt={card.data.name} className="w-full h-full object-contain" loading="lazy" decoding="async" width="40" height="40" />
+                    {card.data.logo ? (
+                      <img
+                        src={card.data.logo}
+                        alt={card.data.name}
+                        className="w-full h-full object-contain"
+                        loading="lazy"
+                        decoding="async"
+                        width="40"
+                        height="40"
+                      />
+                    ) : (
+                      <span className="text-gray-400 text-xs">{card.data.name.charAt(0)}</span>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-gray-900 mb-1 flex items-center">
@@ -116,7 +148,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               <div className="col-span-2 text-center">
                 <FeeDisplay card={{ network: card.data.physicalNetwork, openingFee: card.data.physicalCardPrice, annualFee: card.data.physicalAnnualFee }} />
               </div>
-
               {/* 特色标签 */}
               <div className="col-span-2">
                 <div className="flex flex-wrap gap-1">
@@ -159,6 +190,31 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                 </div>
               </div>
             </div>
+            {/* Expanded Row Content */}
+            {expandedRow === index && (
+              <div className="p-6 bg-gray-50 border-t border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">特色功能</h4>
+                    <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                      {card.data.features?.map((feature, i) => <li key={i}>{feature}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">优点</h4>
+                    <ul className="list-disc list-inside text-sm text-green-700 space-y-1">
+                      {card.data.pros?.map((pro, i) => <li key={i}>{pro}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2">缺点</h4>
+                    <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                      {card.data.cons?.map((con, i) => <li key={i}>{con}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
