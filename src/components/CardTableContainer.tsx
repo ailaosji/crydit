@@ -62,7 +62,6 @@ const CardTableContainer: React.FC = () => {
   useEffect(() => {
     // Wait for the initial data to be loaded
     if (allCards.length === 0 && isLoading) return;
-
     const applyFilters = () => {
       let tempCards = [...allCards];
 
@@ -236,7 +235,6 @@ const CardTableContainer: React.FC = () => {
       </div>
 
       {renderContent()}
-
       <LoadMoreIndicator
         isLoading={isLoading && displayedCards.length > 0}
         hasMoreData={hasMoreData}

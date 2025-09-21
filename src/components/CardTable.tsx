@@ -34,7 +34,6 @@ const displayFee = (fee: number | boolean | null | undefined) => {
 
 const FeeDisplay: React.FC<{ card: FeeDisplayProps | null }> = ({ card }) => {
   if (!card || !card.network) return <span className="text-gray-400 text-sm">不支持</span>;
-
   return (
     <div className="space-y-1">
       <NetworkBadge network={card.network} />
@@ -64,7 +63,6 @@ interface CardTableProps {
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
-
   const toggleRowExpansion = (index: number) => {
     setExpandedRow(expandedRow === index ? null : index);
   };
@@ -150,7 +148,6 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               <div className="col-span-2 text-center">
                 <FeeDisplay card={{ network: card.data.physicalNetwork, openingFee: card.data.physicalCardPrice, annualFee: card.data.physicalAnnualFee }} />
               </div>
-
               {/* 特色标签 */}
               <div className="col-span-2">
                 <div className="flex flex-wrap gap-1">

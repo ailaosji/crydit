@@ -24,7 +24,6 @@ interface ArticleListProps {
 
 const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) => {
   const displayArticles = showAll ? articles : articles.slice(0, 6);
-
   const getCategoryInfo = (categoryValue: ArticleCategory) => {
     const category = Object.values(CARD_CATEGORIES).find(c => c.value === categoryValue);
     if (!category) {
