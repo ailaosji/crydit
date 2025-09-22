@@ -35,7 +35,6 @@ const CardTableContainer: React.FC = () => {
     fee: '',
     search: '',
     filterMainland: false,
-    sortBy: 'updateDate', // Default sort
   });
 
   // Fetch initial card data
@@ -114,11 +113,8 @@ const CardTableContainer: React.FC = () => {
         );
       }
 
-      if (filters.sortBy === 'updateDate') {
-        tempCards.sort((a, b) => new Date(b.data.updateDate || 0).getTime() - new Date(a.data.updateDate || 0).getTime());
-      } else if (filters.sortBy === 'rank') {
-        tempCards.sort((a, b) => (a.data.rank || 999) - (b.data.rank || 999));
-      }
+      // Default sort by updateDate
+      tempCards.sort((a, b) => new Date(b.data.updateDate || 0).getTime() - new Date(a.data.updateDate || 0).getTime());
 
       setFilteredCards(tempCards);
       setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
@@ -126,6 +122,7 @@ const CardTableContainer: React.FC = () => {
       setPage(1);
       setIsLoading(false);
     };
+
 
     // Set loading state and simulate a delay for better UX
     setIsLoading(true);
@@ -160,7 +157,6 @@ const CardTableContainer: React.FC = () => {
       fee: '',
       search: '',
       filterMainland: false,
-      sortBy: 'updateDate',
     });
   };
 
@@ -235,6 +231,7 @@ const CardTableContainer: React.FC = () => {
       </div>
 
       {renderContent()}
+
       <LoadMoreIndicator
         isLoading={isLoading && displayedCards.length > 0}
         hasMoreData={hasMoreData}

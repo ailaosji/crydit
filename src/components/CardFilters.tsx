@@ -20,7 +20,6 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
     [CARD_NETWORKS.MASTERCARD]: 'MasterCard',
     [CARD_NETWORKS.UNIONPAY]: '银联',
   };
-
   return (
     <div className="flex flex-wrap items-center gap-4">
       {/* Card Type Filter */}
@@ -80,19 +79,7 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
           <option value="">全部</option>
           <option value="has_fees">有手续费</option>
           <option value="no_fees">无手续费</option>
-        </select>
-      </div>
 
-      {/* Sort By Filter */}
-      <div className="flex items-center space-x-2">
-        <label className="text-sm font-medium text-gray-700">排序:</label>
-        <select
-          value={filters.sortBy}
-          onChange={(e) => onFilterChange('sortBy', e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="updateDate">最新</option>
-          <option value="rank">排名</option>
         </select>
       </div>
 

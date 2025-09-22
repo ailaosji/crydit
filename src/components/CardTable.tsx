@@ -1,6 +1,6 @@
 // src/components/CardTable.tsx
 import React, { useState } from 'react';
-import { Check, X, MessageCircle, TrendingUp } from 'lucide-react';
+import { Check, X, MessageCircle } from 'lucide-react';
 import type { Card, CardNetwork } from '../types';
 
 // --- Helper Functions & Components ---
@@ -63,6 +63,7 @@ interface CardTableProps {
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
+
   const toggleRowExpansion = (index: number) => {
     setExpandedRow(expandedRow === index ? null : index);
   };
@@ -73,8 +74,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-semibold text-gray-700">
           <div className="col-span-1">序号</div>
-          <div className="col-span-1">排名</div>
-          <div className="col-span-2">卡片信息</div>
+          <div className="col-span-3">卡片信息</div>
           <div className="col-span-2 text-center">虚拟卡</div>
           <div className="col-span-2 text-center">实体卡</div>
           <div className="col-span-2">特色功能</div>
@@ -93,20 +93,9 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
             >
               {/* 序号 */}
               <div className="col-span-1 text-center text-gray-500">{index + 1}</div>
-              {/* 排名 */}
-              <div className="col-span-1">
-                <div className="flex items-center">
-                  <span className="text-lg font-bold text-gray-600">
-                    {card.data.rank}
-                  </span>
-                  {card.data.trending && (
-                    <TrendingUp className="w-4 h-4 text-red-500 ml-1" />
-                  )}
-                </div>
-              </div>
 
               {/* 卡片信息 */}
-              <div className="col-span-2">
+              <div className="col-span-3">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     {card.data.logo ? (
@@ -148,6 +137,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               <div className="col-span-2 text-center">
                 <FeeDisplay card={{ network: card.data.physicalNetwork, openingFee: card.data.physicalCardPrice, annualFee: card.data.physicalAnnualFee }} />
               </div>
+
               {/* 特色标签 */}
               <div className="col-span-2">
                 <div className="flex flex-wrap gap-1">
