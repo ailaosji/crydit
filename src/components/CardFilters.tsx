@@ -83,19 +83,6 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
         </select>
       </div>
 
-      {/* Sort By Filter */}
-      <div className="flex items-center space-x-2">
-        <label className="text-sm font-medium text-gray-700">排序:</label>
-        <select
-          value={filters.sortBy}
-          onChange={(e) => onFilterChange('sortBy', e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          <option value="updateDate">最新</option>
-          <option value="rank">排名</option>
-        </select>
-      </div>
-
       <button
         onClick={onResetFilters}
         className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors"
