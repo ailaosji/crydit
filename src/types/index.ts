@@ -83,6 +83,8 @@ export interface CardData {
   physicalNetwork?: CardNetwork;
   physicalAnnualFee?: number | boolean;
   virtualAnnualFee?: number | boolean;
+  virtualCardPrice?: number;
+  physicalCardPrice?: number | null;
 }
 
 export interface Card {

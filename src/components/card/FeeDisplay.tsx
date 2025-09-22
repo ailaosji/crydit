@@ -29,7 +29,7 @@ export const FeeDisplay: React.FC<{ card: FeeDisplayProps | null }> = ({ card })
       isAnnualFeeFree: isFeeFree(card.annualFee),
       annualFeeText: displayFee(card.annualFee),
     };
-  }, [card]);
+  }, [card?.network, card?.openingFee, card?.annualFee]);
 
   if (!displayData) return <span className="text-gray-400 text-sm">不支持</span>;
 
