@@ -34,7 +34,6 @@ const displayFee = (fee: number | boolean | null | undefined) => {
 
 const FeeDisplay: React.FC<{ card: FeeDisplayProps | null }> = ({ card }) => {
   if (!card || !card.network) return <span className="text-gray-400 text-sm">不支持</span>;
-
   return (
     <div className="space-y-1">
       <NetworkBadge network={card.network} />

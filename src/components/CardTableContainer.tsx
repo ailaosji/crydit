@@ -61,7 +61,6 @@ const CardTableContainer: React.FC = () => {
   useEffect(() => {
     // Wait for the initial data to be loaded
     if (allCards.length === 0 && isLoading) return;
-
     const applyFilters = () => {
       let tempCards = [...allCards];
 
@@ -123,6 +122,7 @@ const CardTableContainer: React.FC = () => {
       setPage(1);
       setIsLoading(false);
     };
+
 
     // Set loading state and simulate a delay for better UX
     setIsLoading(true);
