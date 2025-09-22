@@ -1,59 +1,8 @@
 // src/components/CardTable.tsx
 import React, { useState } from 'react';
 import { Check, X, MessageCircle } from 'lucide-react';
-import type { Card, CardNetwork } from '../types';
-
-// --- Helper Functions & Components ---
-
-const networkStyles: Record<string, string> = {
-  VISA: "bg-blue-100 text-blue-700 border-blue-200",
-  MASTERCARD: "bg-orange-100 text-orange-700 border-orange-200",
-  UNIONPAY: "bg-purple-100 text-purple-700 border-purple-200",
-};
-
-const NetworkBadge: React.FC<{ network: CardNetwork }> = ({ network }) => (
-  <span className={`inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-full border ${networkStyles[network.toUpperCase()]}`}>
-    {network.toUpperCase()}
-  </span>
-);
-
-interface FeeDisplayProps {
-  network: CardNetwork | undefined;
-  openingFee: number | null | undefined;
-  annualFee: number | boolean | undefined;
-}
-
-const isFeeFree = (fee: number | boolean | null | undefined) => {
-  return fee === undefined || fee === null || fee === false || fee === 0;
-};
-
-const displayFee = (fee: number | boolean | null | undefined) => {
-  if (isFeeFree(fee)) return '免费';
-  return `$${fee}`;
-};
-
-const FeeDisplay: React.FC<{ card: FeeDisplayProps | null }> = ({ card }) => {
-  if (!card || !card.network) return <span className="text-gray-400 text-sm">不支持</span>;
-  return (
-    <div className="space-y-1">
-      <NetworkBadge network={card.network} />
-      <div className="text-xs space-y-0.5">
-        <div className="flex items-center">
-          <span className="text-gray-500">开卡:</span>
-          <span className={`ml-1 font-medium ${isFeeFree(card.openingFee) ? 'text-green-600' : 'text-gray-900'}`}>
-            {displayFee(card.openingFee)}
-          </span>
-        </div>
-        <div className="flex items-center">
-          <span className="text-gray-500">年费:</span>
-          <span className={`ml-1 font-medium ${isFeeFree(card.annualFee) ? 'text-green-600' : 'text-gray-900'}`}>
-            {displayFee(card.annualFee)}
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
+import type { Card } from '../types';
+import { FeeDisplay } from './card/FeeDisplay';
 
 // --- Main Table Component ---
 
