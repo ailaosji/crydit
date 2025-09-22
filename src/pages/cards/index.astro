@@ -2,6 +2,7 @@
 // src/pages/cards/index.astro
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import { CARD_NETWORKS } from '../../constants';
 
 let allCardsRaw = [];
 try {
@@ -93,9 +94,9 @@ allCards.sort((a, b) =>
           <div class="relative">
             <select id="networkFilter" class="appearance-none bg-gray-50 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded-lg focus:outline-none focus:bg-white focus:border-indigo-500">
               <option value="">所有网络</option>
-              <option value="visa">Visa</option>
-              <option value="mastercard">Mastercard</option>
-              <option value="unionpay">UnionPay</option>
+              {Object.entries(CARD_NETWORKS).map(([key, value]) => (
+                <option value={value}>{key.charAt(0) + key.slice(1).toLowerCase()}</option>
+              ))}
             </select>
             <svg class="absolute right-2 top-3 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
@@ -141,8 +142,8 @@ allCards.sort((a, b) =>
                 </div>
                 <div class="flex gap-2">
                   {card.data.network && <span class={`px-3 py-1 text-xs font-medium rounded-full ${
-                    card.data.network === 'visa' ? 'bg-blue-100 text-blue-700' :
-                    card.data.network === 'mastercard' ? 'bg-purple-100 text-purple-700' :
+                    card.data.network === CARD_NETWORKS.VISA ? 'bg-blue-100 text-blue-700' :
+                    card.data.network === CARD_NETWORKS.MASTERCARD ? 'bg-purple-100 text-purple-700' :
                     'bg-gray-100 text-gray-700'
                   }`}>
                     {card.data.network.toUpperCase()}
