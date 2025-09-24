@@ -4,7 +4,20 @@ name: "MetaMask Card"
 logo: "https://images.ctfassets.net/clixtyxoaeas/4rnpEzy1ATWRKVBOLxZ1Fm/a74dc1eed36d23d7ea6030383a4d5163/MetaMask-icon-fox.svg"
 description: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
 shortDescription: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
+cardType: "both"
+network: "mastercard"
 issuer: "MetaMask"
+virtualCard:
+  isAvailable: true
+  price: 0
+  network: "mastercard"
+  annualFee: false
+physicalCard:
+  isAvailable: true
+  price: 0
+  network: "mastercard"
+  annualFee: 199
+monthlyFee: false
 supportedRegions:
   - "阿根廷"
   - "巴西"
