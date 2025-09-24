@@ -24,17 +24,15 @@ export async function GET() {
     const commentCounts = await batchGetCommentCounts(cardIdentifiers);
 
     // Minimize the data sent - REMOVE the body and rendered fields
-    const cardsWithCommentCounts = allCards.map(card => {
+    const minimalCards = allCards.map(card => {
       const commentCount = commentCounts.get(card.slug) || 0;
 
-      // Extract only essential data for the list view
-      const minimalCard = {
+      return {
         id: card.id,
         slug: card.slug,
         collection: card.collection,
         commentCount,
         data: {
-          // Only include fields actually needed for the card list
           name: card.data.name,
           title: card.data.title,
           shortDescription: card.data.shortDescription,
@@ -48,45 +46,19 @@ export async function GET() {
           kycRequired: card.data.kycRequired,
           affiliateLink: card.data.affiliateLink,
           cardTiers: card.data.cardTiers,
-          commentCount,
+          // The component will derive the display tier, so we don't promote fields here.
+          // This keeps the API clean and the component logic self-contained.
         },
-        // DON'T include body or rendered - these are large and not needed
-      };
-
-      return minimalCard;
-    });
-
-    // Process tier data
-    const cardsWithPromotedTier = cardsWithCommentCounts.map(card => {
-      const tiers = card.data.cardTiers;
-      if (!tiers || tiers.length === 0) {
-        return card;
-      }
-
-      const representativeTier = tiers.find(t => t.recommended) || tiers[0];
-      const promotedData = {
-        virtualNetwork: representativeTier.virtualNetwork,
-        physicalNetwork: representativeTier.physicalNetwork,
-        isVirtual: representativeTier.isVirtual,
-        isPhysical: representativeTier.isPhysical,
-        ...(representativeTier.fees),
-        ...(representativeTier.rewards),
-      };
-
-      return {
-        ...card,
-        data: {
-          ...card.data,
-          ...promotedData,
-        }
       };
     });
 
-    const sortedCards = cardsWithPromotedTier.sort((a, b) => {
-      const commentsA = a.commentCount || 0;
-      const commentsB = b.commentCount || 0;
-      return commentsB - commentsA;
-    });
+    // The client will handle sorting after filtering.
+    // We can do a preliminary sort here if desired.
+    const sortedCards = minimalCards.sort((a, b) => {
+        const commentsA = a.commentCount || 0;
+        const commentsB = b.commentCount || 0;
+        return commentsB - commentsA;
+      });
 
     return new Response(JSON.stringify(sortedCards), {
       status: 200,
