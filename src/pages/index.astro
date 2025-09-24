@@ -2,19 +2,60 @@
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 
-// ... (rest of the frontmatter from my last successful read_file) ...
-const { getCollection } = await import('astro:content');
+// 安全地获取内容集合，添加错误处理
 let allArticles = [];
 let allCards = [];
 let allExchanges = [];
+
 try {
-  allArticles = await getCollection('articles');
-  allCards = await getCollection('cards');
-  allExchanges = await getCollection('exchanges');
-  if (allArticles.length > 0) { allArticles.sort((a, b) => new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()); }
-  if (allCards.length > 0) { allCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0)); }
-  if (allExchanges.length > 0) { allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999)); }
-} catch (error) { console.error('Error loading content collections:', error); }
+  // 动态导入，避免构建时错误
+  const { getCollection } = await import('astro:content');
+
+  // 尝试获取各个集合，如果失败则使用空数组
+  try {
+    allArticles = await getCollection('articles');
+    console.log('Articles loaded:', allArticles.length);
+  } catch (error) {
+    console.warn('Articles collection not found:', error.message);
+    allArticles = [];
+  }
+
+  try {
+    allCards = await getCollection('cards');
+    console.log('Cards loaded:', allCards.length);
+  } catch (error) {
+    console.warn('Cards collection not found:', error.message);
+    allCards = [];
+  }
+
+  try {
+    allExchanges = await getCollection('exchanges');
+    console.log('Exchanges loaded:', allExchanges.length);
+  } catch (error) {
+    console.warn('Exchanges collection not found:', error.message);
+    allExchanges = [];
+  }
+
+  // 只有在数据存在时才进行排序
+  if (allArticles.length > 0) {
+    allArticles = allArticles.sort((a, b) =>
+      new Date(b.data.publishDate || new Date()).getTime() - new Date(a.data.publishDate || new Date()).getTime()
+    );
+  }
+
+  if (allCards.length > 0) {
+    allCards = allCards.sort((a, b) => (b.data.rating || 0) - (a.data.rating || 0));
+  }
+
+  if (allExchanges.length > 0) {
+    allExchanges = allExchanges.sort((a, b) => (a.data.ranking || 999) - (b.data.ranking || 999));
+  }
+
+} catch (error) {
+  console.error('Error loading content collections:', error);
+}
+
+// 获取最新文章和热门文章
 const latestArticle = allArticles[0];
 const popularArticles = allArticles.slice(1, 6);
 ---
@@ -30,26 +71,55 @@ const popularArticles = allArticles.slice(1, 6);
       <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
       <div class="relative max-w-7xl mx-auto px-6 lg:px-8">
         <div class="flex min-h-[50vh] py-16">
+          <!-- 左侧浮动图标 -->
           <div class="hidden lg:block lg:w-1/4">
             <div class="relative h-full">
+              <!-- Apple Pay -->
               <div class="absolute" style="top: 15%; left: 10%; animation: float-up-down 6s ease-in-out infinite;">
-                <div class="icon-card"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.35-1.09-.54-2.08-.52-3.25 0-1.43.65-2.18.53-3.04-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg><span class="icon-label">Apple Pay</span></div>
+                <div class="icon-card">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.05 20.28c-.98.95-2.05.88-3.08.35-1.09-.54-2.08-.52-3.25 0-1.43.65-2.18.53-3.04-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                  </svg>
+                  <span class="icon-label">Apple Pay</span>
+                </div>
               </div>
+
+              <!-- Netflix -->
               <div class="absolute" style="top: 45%; left: 25%; animation: float-up-down 6s ease-in-out infinite; animation-delay: 1s;">
-                <div class="icon-card netflix"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 2v19.5c2.75.15 5.5.15 8.25 0V2M6.5 2L14.75 21.5"/></svg><span class="icon-label">Netflix</span></div>
+                <div class="icon-card netflix">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.5 2v19.5c2.75.15 5.5.15 8.25 0V2M6.5 2L14.75 21.5"/>
+                  </svg>
+                  <span class="icon-label">Netflix</span>
+                </div>
               </div>
               <div class="absolute" style="top: 75%; left: 5%; animation: float-up-down 6s ease-in-out infinite; animation-delay: 2s;">
                 <div class="icon-card spotify"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg><span class="icon-label">Spotify</span></div>
 
+              <!-- Spotify -->
+              <div class="absolute" style="top: 75%; left: 5%; animation: float-up-down 6s ease-in-out infinite; animation-delay: 2s;">
+                <div class="icon-card spotify">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                  </svg>
+                  <span class="icon-label">Spotify</span>
+                </div>
               </div>
             </div>
           </div>
           <div class="flex-1 flex items-center justify-center">
             <div class="text-center max-w-4xl mx-auto">
               <div class="mb-8">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">让数字货币<span class="bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">走进现实生活</span></h1>
-                <p class="text-lg md:text-xl text-white/90 mb-2 max-w-2xl mx-auto">数字货币U卡评测平台，好用的都在这。</p>
-                <p class="text-sm md:text-base text-white/70">专业测评 · 安全可靠 · 简单易用</p>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                  让数字货币<span class="bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">走进现实生活</span>
+                </h1>
+
+                <p class="text-lg md:text-xl text-white/90 mb-2 max-w-2xl mx-auto">
+                  数字货币U卡评测平台，好用的都在这。
+                </p>
+                <p class="text-sm md:text-base text-white/70">
+                  专业测评 · 安全可靠 · 简单易用
+                </p>
               </div>
               <div class="flex flex-wrap justify-center gap-2">
                 <span class="px-3 py-1.5 bg-white/15 backdrop-blur-sm rounded-full text-white/90 text-xs border border-white/20">Apple Pay</span>
@@ -61,37 +131,779 @@ const popularArticles = allArticles.slice(1, 6);
               </div>
             </div>
           </div>
+
+          <!-- 右侧浮动图标 -->
           <div class="hidden lg:block lg:w-1/4">
             <div class="relative h-full">
+              <!-- Google Pay -->
               <div class="absolute" style="top: 20%; right: 15%; animation: float-up-down 6s ease-in-out infinite; animation-delay: 0.5s;">
-                <div class="icon-card"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg><span class="icon-label">Google Pay</span></div>
+                <div class="icon-card">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+                  </svg>
+                  <span class="icon-label">Google Pay</span>
+                </div>
               </div>
+
+              <!-- ChatGPT -->
               <div class="absolute" style="top: 50%; right: 5%; animation: float-up-down 6s ease-in-out infinite; animation-delay: 1.5s;">
-                <div class="icon-card chatgpt"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg><span class="icon-label">ChatGPT</span></div>
+                <div class="icon-card chatgpt">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/>
+                  </svg>
+                  <span class="icon-label">ChatGPT</span>
+                </div>
               </div>
+
+              <!-- YouTube -->
               <div class="absolute" style="top: 80%; right: 20%; animation: float-up-down 6s ease-in-out infinite; animation-delay: 2.5s;">
-                <div class="icon-card youtube"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span class="icon-label">YouTube</span></div>
+                <div class="icon-card youtube">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                  <span class="icon-label">YouTube</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-    <!-- ... (rest of HTML) ... -->
+    <!-- 推荐U卡部分 -->
     <section class="py-16 px-6 lg:px-8 bg-white">
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-12">
           <h2 class="text-4xl font-bold text-gray-900 mb-4">推荐U卡</h2>
-          <p class="text-xl text-gray-600 max-w-3xl mx-auto">精选市场上最优质的数字货币借记卡，助您轻松实现加密资产的日常消费</p>
+          <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+            精选市场上最优质的数字货币借记卡，助您轻松实现加密资产的日常消费
+          </p>
         </div>
-        <!-- ... -->
+
+        {allCards.length > 0 ? (
+          <div>
+            <!-- 筛选控件 -->
+            <div class="bg-gray-50 rounded-2xl p-6 mb-8">
+              <div class="flex flex-wrap items-center gap-4">
+                <!-- 卡片类型筛选 -->
+                <div class="flex items-center space-x-2">
+                  <label class="text-sm font-medium text-gray-700">卡片类型:</label>
+                  <select id="card-type-filter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">全部类型</option>
+                    <option value="visa">VISA</option>
+                    <option value="mastercard">MasterCard</option>
+                    <option value="unionpay">银联</option>
+                  </select>
+                </div>
+
+                <!-- 卡片形态筛选 -->
+                <div class="flex items-center space-x-2">
+                  <label class="text-sm font-medium text-gray-700">卡片形态:</label>
+                  <select id="card-form-filter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">全部形态</option>
+                    <option value="virtual">仅虚拟卡</option>
+                    <option value="physical">仅实体卡</option>
+                    <option value="both">虚拟+实体</option>
+                  </select>
+                </div>
+
+                <!-- 年费筛选 -->
+                <div class="flex items-center space-x-2">
+                  <label class="text-sm font-medium text-gray-700">年费:</label>
+                  <select id="annual-fee-filter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="">全部</option>
+                    <option value="free">免年费</option>
+                    <option value="paid">收年费</option>
+                  </select>
+                </div>
+
+                <!-- 重置按钮 -->
+                <button id="reset-filters" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors">
+                  重置筛选
+                </button>
+
+                <!-- 搜索框 -->
+                <div class="flex items-center space-x-2 ml-auto">
+                  <input
+                    id="search-input"
+                    type="text"
+                    placeholder="搜索卡片名称..."
+                    class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
+                  >
+                  <button id="search-btn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
+                    搜索
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 筛选结果统计 -->
+              <div class="mt-4 flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                  共找到 <span id="filtered-count" class="font-medium text-indigo-600">{allCards.length}</span> 张卡片
+                </div>
+                <div class="text-sm text-gray-500">
+                  已显示 <span id="displayed-count" class="font-medium text-green-600">0</span> 张卡片
+                </div>
+              </div>
+            </div>
+
+            <!-- 优化后的卡片表格 -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <!-- 表头 -->
+                  <thead>
+                    <tr class="border-b border-gray-200">
+                      <th class="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                        # 卡片信息
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        虚拟卡
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        实体卡
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        手续费
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[120px]">
+                        年/月费
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        讨论
+                      </th>
+                      <th class="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                        操作
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="card-table-body" class="divide-y divide-gray-100">
+                    <!-- 表格内容将通过JavaScript动态生成 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 加载更多指示器 -->
+            <div id="loading-indicator" class="hidden text-center py-8">
+              <div class="inline-flex items-center gap-3">
+                <svg class="w-5 h-5 text-gray-400 animate-spin" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-sm text-gray-500">正在加载更多卡片...</span>
+              </div>
+            </div>
+
+            <!-- 加载完成提示 -->
+            <div id="end-indicator" class="hidden text-center py-8">
+              <div class="text-sm text-gray-500">
+                <svg class="w-5 h-5 text-gray-400 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                所有卡片已加载完毕
+              </div>
+            </div>
+          </div>
+        ) : (
+          <!-- U卡数据为空时的友好提示 -->
+          <div class="text-center py-16">
+            <div class="max-w-md mx-auto">
+              <svg class="mx-auto h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              <h3 class="text-lg font-medium text-gray-900 mb-2">暂无U卡数据</h3>
+              <p class="text-gray-500">我们正在收集和整理优质的U卡信息，请稍后再来查看。</p>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   </div>
   <style>
-    /* ... (rest of style) ... */
+    /* 浮动图标动画 */
+    @keyframes float-up-down {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      33% {
+        transform: translateY(-15px) rotate(2deg);
+      }
+      66% {
+        transform: translateY(-5px) rotate(-2deg);
+      }
+    }
+
+    .icon-card {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      transition: all 0.4s ease;
+      cursor: default;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    }
+
+    .icon-card:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05) translateY(-3px);
+      box-shadow: 0 16px 32px rgba(31, 38, 135, 0.25);
+    }
+
+    .icon-label {
+      margin-top: 0.375rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      opacity: 0.95;
+      letter-spacing: 0.025em;
+    }
+
+    /* 特定品牌颜色 */
+    .icon-card.netflix:hover {
+      background: linear-gradient(135deg, rgba(229, 9, 20, 0.3), rgba(229, 9, 20, 0.4));
+      box-shadow: 0 20px 40px rgba(229, 9, 20, 0.3);
+    }
+
+    .icon-card.spotify:hover {
+      background: linear-gradient(135deg, rgba(30, 215, 96, 0.3), rgba(30, 215, 96, 0.4));
+      box-shadow: 0 20px 40px rgba(30, 215, 96, 0.3);
+    }
+
+    .icon-card.youtube:hover {
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.3), rgba(255, 0, 0, 0.4));
+      box-shadow: 0 20px 40px rgba(255, 0, 0, 0.3);
+    }
+
+    .icon-card.chatgpt:hover {
+      background: linear-gradient(135deg, rgba(16, 163, 127, 0.3), rgba(16, 163, 127, 0.4));
+      box-shadow: 0 20px 40px rgba(16, 163, 127, 0.3);
+    }
+
+    /* 表格样式优化 */
+    tbody tr {
+      animation: fadeIn 0.3s ease-out;
+      transition: background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(249, 250, 251, 0.5);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 新增行加载动画 */
+    .new-row {
+      animation: slideInFromBottom 0.5s ease-out;
+    }
+
+    @keyframes slideInFromBottom {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .line-clamp-1 {
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 响应式优化 */
+    @media (max-width: 1024px) {
+      .floating-icon {
+        display: none;
+      }
+    }
   </style>
+  
   <script>
-    // ... (This is where the new script with all fixes will go)
+    // 配置
+    const itemsPerPage = 5; // 每次加载5条
+    let currentDisplayCount = 0;
+    let allCards = [];
+    let filteredCards = [];
+    let isLoading = false;
+    let hasMoreData = true;
+
+    // 筛选状态
+    let filters = {
+      cardType: '',
+      cardForm: '',
+      annualFee: '',
+      search: ''
+    };
+
+    // 获取卡片类型显示
+    function getCardTypeDisplay(network) {
+      const typeStyles = {
+        'visa': '<span class="inline-block px-2 py-0.5 bg-blue-600 text-white text-xs rounded">VISA</span>',
+        'mastercard': '<span class="inline-block px-2 py-0.5 bg-orange-500 text-white text-xs rounded">MASTERCARD</span>',
+        'unionpay': '<span class="inline-block px-2 py-0.5 bg-purple-600 text-white text-xs rounded">银联</span>'
+      };
+      return typeStyles[network] || '';
+    }
+
+    // 计算总手续费
+    function calculateTotalFees(card) {
+      const fees = [card.data.depositFee, card.data.transactionFee, card.data.foreignExchangeFee];
+      let total = 0;
+      let hasNumericFee = false;
+
+      for (const fee of fees) {
+        // If a fee is a non-numeric string (like "浮动"), return it immediately.
+        if (typeof fee === 'string' && isNaN(parseFloat(fee))) {
+          if (fee.toLowerCase() !== 'free' && fee !== '免费') {
+            return fee;
+          }
+        }
+
+        // Otherwise, parse it as a percentage.
+        if (typeof fee === 'string' || typeof fee === 'number') {
+            const cleanValue = fee.toString().replace(/[^0-9.]/g, '');
+            const parsed = parseFloat(cleanValue);
+            if (!isNaN(parsed)) {
+                total += parsed;
+                hasNumericFee = true;
+            }
+        }
+      }
+
+      if (!hasNumericFee) return '免费';
+      return total.toFixed(1) + '%';
+    }
+
+    // 获取卡片Logo背景色
+    function getCardLogoBg(index) {
+      const colors = [
+        'bg-purple-500',
+        'bg-pink-500',
+        'bg-blue-500',
+        'bg-green-500',
+        'bg-orange-500'
+      ];
+      return colors[index % colors.length];
+    }
+
+    // 渲染表格行
+    function renderTableRow(card, index) {
+      const rank = index + 1;
+      const logoText = card.data.name.substring(0, 2).toUpperCase();
+      const logoBgColor = getCardLogoBg(index);
+
+      let row = `<tr class="hover:bg-gray-50/50 transition-colors new-row">
+        <td class="py-4 px-6">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3">
+              <span class="text-gray-500 font-medium text-sm">${rank}</span>
+              <div class="w-10 h-10 ${logoBgColor} rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-sm">${logoText}</span>
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <a href="/cards/${card.slug}" class="font-medium text-gray-900 hover:text-blue-600 transition-colors">
+                  ${card.data.name}
+                </a>
+              </div>
+              <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">${card.data.shortDescription || card.data.description || ''}</p>
+            </div>
+          </div>
+        </td>`;
+
+      // 虚拟卡列
+      row += '<td class="py-4 px-4 text-center">';
+      if (card.data.isVirtual) {
+        const price = card.data.virtualCardPrice;
+        row += '<div class="flex flex-col items-center">';
+        row += '<svg class="w-5 h-5 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+
+        row += getCardTypeDisplay(card.data.virtualNetwork);
+
+        if (price && price > 0) {
+          row += `<div class="text-xs text-gray-500 mt-1">$${price.toFixed(2)}</div>`;
+        } else {
+          row += '<div class="text-xs text-gray-500 mt-1">免费</div>';
+        }
+        row += '</div>';
+      } else {
+        row += '<div class="flex flex-col items-center">';
+        row += '<svg class="w-5 h-5 text-gray-300 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+        row += '<span class="text-xs text-gray-400">不支持</span>';
+        row += '</div>';
+      }
+      row += '</td>';
+
+      // 实体卡列
+      row += '<td class="py-4 px-4 text-center">';
+      if (card.data.isPhysical) {
+        const price = card.data.physicalCardPrice;
+        row += '<div class="flex flex-col items-center">';
+        row += '<svg class="w-5 h-5 text-green-500 mb-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+
+        row += getCardTypeDisplay(card.data.physicalNetwork);
+
+        if (price && price > 0) {
+          row += `<div class="text-xs text-gray-500 mt-1">$${price.toFixed(2)}</div>`;
+        } else {
+          row += '<div class="text-xs text-gray-500 mt-1">免费</div>';
+        }
+        row += '</div>';
+      } else {
+        row += '<div class="flex flex-col items-center">';
+        row += '<svg class="w-5 h-5 text-gray-300 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>';
+        row += '<span class="text-xs text-gray-400">不支持</span>';
+        row += '</div>';
+      }
+      row += '</td>';
+
+      // 手续费列
+      const totalFees = calculateTotalFees(card);
+      row += '<td class="py-4 px-4 text-center">';
+      if (totalFees === '免费') {
+        row += '<span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">免费</span>';
+      } else {
+        row += `<span class="text-sm text-gray-700">${totalFees}</span>`;
+      }
+      row += '</td>';
+
+      // 年/月费列
+      row += '<td class="py-4 px-4 text-center">';
+      const physicalFee = card.data.physicalAnnualFee;
+      const virtualFee = card.data.virtualAnnualFee;
+      let feeDisplay = '<span class="text-sm text-gray-700">无</span>';
+      if (physicalFee) {
+        feeDisplay = `<span class="text-sm text-red-600">$${physicalFee}/年</span>`;
+      } else if (virtualFee) {
+        feeDisplay = `<span class="text-sm text-orange-600">$${virtualFee}/年</span>`;
+      }
+      row += feeDisplay;
+      row += '</td>';
+
+      // 讨论列
+      row += '<td class="py-4 px-4 text-center">';
+      if (card.data.commentCount > 0) {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center px-2.5 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full hover:bg-gray-300 transition-colors" title="查看评论">
+                  ${card.data.commentCount}
+                </a>`;
+      } else {
+        row += `<a href="/cards/${card.slug}#giscus-comments" class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors" title="参与讨论">
+                  <svg class="w-5 h-5 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                  </svg>
+                </a>`;
+      }
+      row += '</td>';
+
+      // 操作按钮列
+      row += `<td class="py-4 px-4 text-center">
+          <button onclick="window.location.href='/cards/${card.slug}'"
+                  class="inline-flex items-center justify-center gap-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            立即申请
+          </button>
+        </td>
+      </tr>`;
+
+      return row;
+    }
+
+    // 应用筛选
+    function applyFilters() {
+      filteredCards = allCards.filter(card => {
+        if (filters.cardType && card.data.cardType !== filters.cardType) return false;
+        if (filters.cardForm) {
+          if (filters.cardForm === 'virtual' && !card.data.isVirtual) return false;
+          if (filters.cardForm === 'physical' && !card.data.isPhysical) return false;
+          if (filters.cardForm === 'both' && (!card.data.isVirtual || !card.data.isPhysical)) return false;
+        }
+        if (filters.annualFee) {
+          if (filters.annualFee === 'free' && card.data.annualFee !== false) return false;
+          if (filters.annualFee === 'paid' && card.data.annualFee === false) return false;
+        }
+        if (filters.search) {
+          const searchTerm = filters.search.toLowerCase();
+          const cardName = card.data.name.toLowerCase();
+          const cardDescription = (card.data.shortDescription || card.data.description || '').toLowerCase();
+          if (!cardName.includes(searchTerm) && !cardDescription.includes(searchTerm)) return false;
+        }
+        return true;
+      });
+
+      // 重置显示状态
+      currentDisplayCount = 0;
+      hasMoreData = filteredCards.length > 0;
+
+      updateFilteredCount();
+      clearTable();
+      loadMore(); // 自动加载第一批数据
+    }
+
+    // 更新筛选结果统计
+    function updateFilteredCount() {
+      const countEl = document.getElementById('filtered-count');
+      const displayedCountEl = document.getElementById('displayed-count');
+
+      if (countEl) {
+        countEl.textContent = filteredCards.length;
+      }
+      if (displayedCountEl) {
+        displayedCountEl.textContent = currentDisplayCount;
+      }
+    }
+
+    // 清空表格
+    function clearTable() {
+      const tableBody = document.getElementById('card-table-body');
+      if (tableBody) {
+        tableBody.innerHTML = '';
+      }
+    }
+
+    // 加载更多数据
+    function loadMore() {
+      if (isLoading || !hasMoreData) return;
+
+      isLoading = true;
+      showLoadingIndicator();
+
+      // 模拟加载延迟
+      setTimeout(() => {
+        const startIndex = currentDisplayCount;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredCards.length);
+        const nextBatch = filteredCards.slice(startIndex, endIndex);
+
+        if (nextBatch.length === 0) {
+          hasMoreData = false;
+          hideLoadingIndicator();
+          showEndIndicator();
+        } else {
+          appendRows(nextBatch, startIndex);
+          currentDisplayCount = endIndex;
+
+          if (currentDisplayCount >= filteredCards.length) {
+            hasMoreData = false;
+            hideLoadingIndicator();
+            showEndIndicator();
+          }
+        }
+
+        updateFilteredCount();
+        isLoading = false;
+      }, 500); // 500ms 延迟模拟加载过程
+    }
+
+    // 添加行到表格
+    function appendRows(cards, startIndex) {
+      const tableBody = document.getElementById('card-table-body');
+      if (!tableBody) return;
+
+      if (cards.length === 0 && startIndex === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-12 text-center">
+              <div class="text-gray-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">未找到匹配的卡片</h3>
+                <p class="mt-1 text-sm text-gray-500">请尝试调整筛选条件或搜索关键词。</p>
+              </div>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      cards.forEach((card, index) => {
+        const globalIndex = startIndex + index;
+        tableBody.innerHTML += renderTableRow(card, globalIndex);
+      });
+
+      // 为新添加的行添加动画效果
+      const newRows = tableBody.querySelectorAll('.new-row');
+      newRows.forEach((row, index) => {
+        setTimeout(() => {
+          row.classList.remove('new-row');
+        }, (index + 1) * 100);
+      });
+    }
+
+    // 显示加载指示器
+    function showLoadingIndicator() {
+      const indicator = document.getElementById('loading-indicator');
+      const endIndicator = document.getElementById('end-indicator');
+      if (indicator) indicator.classList.remove('hidden');
+      if (endIndicator) endIndicator.classList.add('hidden');
+    }
+
+    // 隐藏加载指示器
+    function hideLoadingIndicator() {
+      const indicator = document.getElementById('loading-indicator');
+      if (indicator) indicator.classList.add('hidden');
+    }
+
+    // 显示结束指示器
+    function showEndIndicator() {
+      const indicator = document.getElementById('end-indicator');
+      if (indicator && !hasMoreData && currentDisplayCount > 0) {
+        indicator.classList.remove('hidden');
+      }
+    }
+
+    // 隐藏结束指示器
+    function hideEndIndicator() {
+      const indicator = document.getElementById('end-indicator');
+      if (indicator) indicator.classList.add('hidden');
+    }
+
+    // 无限滚动监听
+    function setupInfiniteScroll() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !isLoading && hasMoreData) {
+            loadMore();
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '100px',
+        threshold: 0.1
+      });
+
+      // 观察加载指示器
+      const loadingIndicator = document.getElementById('loading-indicator');
+      if (loadingIndicator) {
+        observer.observe(loadingIndicator);
+      }
+    }
+
+    // 初始化事件监听器
+    function initializeEventListeners() {
+      const cardTypeFilter = document.getElementById('card-type-filter');
+      const cardFormFilter = document.getElementById('card-form-filter');
+      const annualFeeFilter = document.getElementById('annual-fee-filter');
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
+      const resetBtn = document.getElementById('reset-filters');
+
+      if (cardTypeFilter) {
+        cardTypeFilter.addEventListener('change', (e) => {
+          filters.cardType = e.target.value;
+          hideEndIndicator();
+          applyFilters();
+        });
+      }
+
+      if (cardFormFilter) {
+        cardFormFilter.addEventListener('change', (e) => {
+          filters.cardForm = e.target.value;
+          hideEndIndicator();
+          applyFilters();
+        });
+      }
+
+      if (annualFeeFilter) {
+        annualFeeFilter.addEventListener('change', (e) => {
+          filters.annualFee = e.target.value;
+          hideEndIndicator();
+          applyFilters();
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            filters.search = e.target.value.trim();
+            hideEndIndicator();
+            applyFilters();
+          }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+          clearTimeout(searchInput.searchTimeout);
+          searchInput.searchTimeout = setTimeout(() => {
+            filters.search = e.target.value.trim();
+            hideEndIndicator();
+            applyFilters();
+          }, 300);
+        });
+      }
+
+      if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+          if (searchInput) {
+            filters.search = searchInput.value.trim();
+            hideEndIndicator();
+            applyFilters();
+          }
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          filters = {
+            cardType: '',
+            cardForm: '',
+            annualFee: '',
+            search: ''
+          };
+
+          if (cardTypeFilter) cardTypeFilter.value = '';
+          if (cardFormFilter) cardFormFilter.value = '';
+          if (annualFeeFilter) annualFeeFilter.value = '';
+          if (searchInput) searchInput.value = '';
+
+          hideEndIndicator();
+          applyFilters();
+        });
+      }
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeEventListeners();
+      setupInfiniteScroll();
+
+      fetch('/api/cards.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(cardData => {
+          allCards = cardData;
+          filteredCards = [...allCards];
+
+          updateFilteredCount();
+          loadMore(); // Initial load
+        })
+        .catch(error => {
+          console.error("Could not fetch card data:", error);
+          // 如果没有数据，显示空状态
+          clearTable();
+          appendRows([], 0);
+        });
+    });
   </script>
 </Layout>
