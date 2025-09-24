@@ -54,40 +54,10 @@ tags:
 featureTags: ["低费率"]
 importantReminders:
   - "<strong>开卡费约 $6:</strong> 创建卡片时收取（基于官方数据）"
-  - "<strong>外币交易费 2.5%:</strong> 非本国货币交易时收取"
   - "<strong>休眠费 $3.95/月:</strong> 13个月不活跃后开始收取"
   - "<strong>汇率优势:</strong> 使用官方万事达汇率，无额外加价"
-
-cardTiers:
-  - name: "Standard"
-    recommended: true
-    isVirtual: true
-    isPhysical: true
-    virtualNetwork: "mastercard"
-    physicalNetwork: "mastercard"
-    fees:
-      monthlyFee: false
-      annualFee: false
-      virtualCardPrice: 6
-      physicalCardPrice: 6
-      depositFee: "0%"
-      transactionFee: "0%"
-      foreignExchangeFee: "2.5%"
-  - name: "Metal"
-    isVirtual: true
-    isPhysical: true
-    virtualNetwork: "mastercard"
-    physicalNetwork: "mastercard"
-    fees:
-      monthlyFee: false
-      annualFee: 120
-      virtualCardPrice: 6
-      physicalCardPrice: 6
-      depositFee: "0%"
-      transactionFee: "0%"
-      foreignExchangeFee: "2.5%"
-    rewards:
-      cashback: "高达10%"
+depositFee: "0%"
+transactionFee: "0%"
 ---
 
 

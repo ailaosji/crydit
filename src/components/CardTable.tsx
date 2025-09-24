@@ -5,166 +5,164 @@ import type { Card } from '../types';
 import { getDisplayTier } from '../utils/cardHelpers';
 import TableTierDisplay from './card/TableTierDisplay';
 
-// --- Main Table Component ---
+interface Card {
+  slug: string;
+  data: {
+    name: string;
+    logo?: string;
+    cardType: 'visa' | 'mastercard';
+    isVirtual: boolean;
+    isPhysical: boolean;
+    virtualCardPrice?: number;
+    physicalCardPrice?: number;
+    depositFee: string;
+    transactionFee: string;
+    annualFee: boolean;
+    supportedCurrencies: string[];
+    affiliateLink: string;
+    shortDescription?: string;
+    description?: string;
+    virtualNetwork?: 'visa' | 'mastercard' | 'unionpay';
+    physicalNetwork?: 'visa' | 'mastercard' | 'unionpay';
+    physicalAnnualFee?: number;
+    virtualAnnualFee?: number;
+    monthlyFee?: number;
+    commentCount?: number;
+  };
+  commentCount?: number;
+}
+
 
 interface CardTableProps {
   cards: Card[];
 }
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
-  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+  const getCardTypeTag = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
+    if (!type) return null;
 
-  const toggleRowExpansion = (index: number) => {
-    setExpandedRow(expandedRow === index ? null : index);
+    const styles = {
+      visa: 'bg-blue-600 text-white',
+      mastercard: 'bg-orange-500 text-white',
+      unionpay: 'bg-purple-600 text-white',
+    };
+
+    return (
+      <span className={`inline-block px-1.5 py-0.5 text-[10px] rounded ${styles[type]}`}>
+        {type.toUpperCase()}
+      </span>
+    );
   };
 
-  return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden card-table">
-      {/* 表头 */}
-      <div className="bg-gray-50 border-b border-gray-200">
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-semibold text-gray-700">
-          <div className="col-span-1 table-cell">序号</div>
-          <div className="col-span-3 table-cell">卡片信息</div>
-          <div className="col-span-2 text-center table-cell">虚拟卡</div>
-          <div className="col-span-2 text-center table-cell">实体卡</div>
-          <div className="col-span-2 table-cell">特色功能</div>
-          <div className="col-span-1 text-center table-cell">支持大陆</div>
-          <div className="col-span-1 text-center table-cell">操作</div>
-        </div>
+  const renderFee = (price: number | undefined | null, annualFee: number | undefined | null) => {
+    const priceText = (price === 0 || !price) ? <span className="text-green-600">免费</span> : `$${price}`;
+    const annualFeeText = (annualFee === 0 || !annualFee) ? <span className="text-green-600">免费</span> : `$${annualFee}`;
+
+    return (
+      <div className="text-xs">
+        <div>开卡: {priceText}</div>
+        <div>年费: {annualFeeText}</div>
       </div>
+    );
+  }
 
-      {/* 表格内容 */}
-      <div className="divide-y divide-gray-100">
-        {cards.map((card, index) => (
-          <div key={card.slug} className="table-row transition-all duration-200 ease-in-out">
-            <div
-              className="grid grid-cols-12 gap-4 px-6 py-4 items-center cursor-pointer"
-              onClick={() => toggleRowExpansion(index)}
-            >
-              {/* 序号 */}
-              <div className="col-span-1 text-center text-gray-500 table-cell">{index + 1}</div>
-
-              {/* 卡片信息 */}
-              <div className="col-span-3 table-cell">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    {card.data.logo ? (
-                      <img
-                        src={card.data.logo}
-                        alt={card.data.name}
-                        className="w-full h-full object-contain"
-                        loading="lazy"
-                        decoding="async"
-                        width="40"
-                        height="40"
-                      />
-                    ) : (
-                      <span className="text-gray-400 text-xs">{card.data.name.charAt(0)}</span>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 mb-1 flex items-center">
-                      <a href={`/cards/${card.slug}`} className="hover:text-indigo-600">{card.data.name}</a>
-                      {card.data.recommended && (
-                        <span className="ml-2 px-2 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs rounded-full">
-                          推荐
-                        </span>
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                序号
+              </th>
+              <th className="px-6 py-4 text-left text-sm font-medium text-gray-700">
+                卡片名称
+              </th>
+              <th className="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                虚拟卡
+              </th>
+               <th className="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                实体卡
+              </th>
+              <th className="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                手续费
+              </th>
+              <th className="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                讨论
+              </th>
+              <th className="px-4 py-4 text-center text-sm font-medium text-gray-700 min-w-[100px]">
+                操作
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {cards.map((card, index) => (
+              <tr key={card.slug} className="hover:bg-gray-50/50 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {index + 1}
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                      {card.data.logo ? (
+                        <img src={card.data.logo} alt={`${card.data.name} logo`} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-gray-500 font-bold text-sm">{card.data.name.substring(0, 2).toUpperCase()}</span>
                       )}
-                    </h3>
-                    <p className="text-xs text-gray-500 line-clamp-2">
-                      {card.data.shortDescription || card.data.description}
-                    </p>
+                    </div>
+                    <div>
+                      <a 
+                        href={`/cards/${card.slug}`}
+                        className="font-medium text-gray-900 hover:text-blue-600 transition-colors"
+                      >
+                        {card.data.name}
+                      </a>
+                      <p className="text-xs text-gray-500 mt-0.5">{card.data.shortDescription}</p>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* 虚拟卡 */}
-              <div className="col-span-2 text-center table-cell">
-                <TableTierDisplay
-                  tier={getDisplayTier(card.data)}
-                  type="virtual"
-                  tierCount={card.data.cardTiers?.length || 0}
-                />
-              </div>
-
-              {/* 实体卡 */}
-              <div className="col-span-2 text-center table-cell">
-                <TableTierDisplay
-                  tier={getDisplayTier(card.data)}
-                  type="physical"
-                  tierCount={card.data.cardTiers?.length || 0}
-                />
-              </div>
-
-              {/* 特色标签 */}
-              <div className="col-span-2 table-cell">
-                <div className="flex flex-wrap gap-1">
-                  {card.data.featureTags?.slice(0, 2).map((feature, idx) => (
-                    <span key={idx} className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full font-medium">
-                      {feature}
-                    </span>
-                  ))}
-                  {card.data.featureTags && card.data.featureTags.length > 2 && (
-                    <span className="px-2 py-1 bg-gray-50 text-gray-500 text-xs rounded-full">
-                      +{card.data.featureTags.length - 2}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* 支持大陆 */}
-              <div className="col-span-1 text-center table-cell">
-                {card.data.supportMainland ? (
-                  <div className="inline-flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
-                    <Check className="w-5 h-5 text-green-600" />
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">
+                  {card.data.isVirtual ? (
+                    <div className="flex flex-col items-center gap-1">
+                      {getCardTypeTag(card.data.virtualNetwork)}
+                      {renderFee(card.data.virtualCardPrice, card.data.virtualAnnualFee)}
+                    </div>
+                  ) : <span className="text-xs text-gray-400">不支持</span>}
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">
+                  {card.data.isPhysical ? (
+                    <div className="flex flex-col items-center gap-1">
+                      {getCardTypeTag(card.data.physicalNetwork)}
+                      {renderFee(card.data.physicalCardPrice, card.data.physicalAnnualFee)}
+                    </div>
+                  ) : <span className="text-xs text-gray-400">不支持</span>}
+                </td>
+                <td className="px-4 py-4 text-center text-sm text-gray-900">
+                  <div className="text-xs">
+                    <div>充值: {card.data.depositFee || 'N/A'}</div>
+                    <div>刷卡: {card.data.transactionFee || 'N/A'}</div>
                   </div>
-                ) : (
-                  <div className="inline-flex items-center justify-center w-8 h-8 bg-red-50 rounded-full">
-                    <X className="w-5 h-5 text-red-400" />
-                  </div>
-                )}
-              </div>
-
-              {/* 操作按钮 */}
-              <div className="col-span-1 table-cell">
-                <div className="flex items-center justify-center space-x-2">
-                  <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                    <MessageCircle className="w-4 h-4" />
-                    <span className="text-xs">{card.commentCount || 0}</span>
-                  </button>
-                  <a href={`/cards/${card.slug}`} className="apply-btn px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg transition-all transform hover:scale-105">
-                    查看详情
+                </td>
+                <td className="px-4 py-4 text-center">
+                  <a href={`/cards/${card.slug}#giscus-comments`} className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-50 hover:bg-indigo-50 transition-all duration-200 group" title="参与讨论">
+                    <svg className="w-5 h-5 text-gray-400 group-hover:text-indigo-500" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+                    <span className="text-xs text-gray-500 ml-1">{card.commentCount || 0}</span>
                   </a>
-                </div>
-              </div>
-            </div>
-            {/* Expanded Row Content */}
-            {expandedRow === index && (
-              <div className="p-6 bg-gray-50 border-t border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">特色功能</h4>
-                    <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                      {card.data.features?.map((feature, i) => <li key={i}>{feature}</li>)}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">优点</h4>
-                    <ul className="list-disc list-inside text-sm text-green-700 space-y-1">
-                      {card.data.pros?.map((pro, i) => <li key={i}>{pro}</li>)}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">缺点</h4>
-                    <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
-                      {card.data.cons?.map((con, i) => <li key={i}>{con}</li>)}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
+                </td>
+                <td className="px-4 py-4 text-center">
+                  <a
+                    href={card.data.affiliateLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
+                  >
+                    立即申请
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

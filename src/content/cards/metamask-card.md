@@ -1,7 +1,7 @@
 ---
 title: "MetaMask Card - 随时随地消费加密货币"
 name: "MetaMask Card"
-logo: "https://images.ctfassets.net/clixtyxoaeas/4rnpEzy1ATWRKVBOLxZ1Fm/a74dc1eed36d23d7ea6030383a4d5163/MetaMask-icon-fox.svg"
+logo: "https://metamask.io/favicons/default/favicon.ico"
 description: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
 shortDescription: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
 cardType: "both"
@@ -59,34 +59,8 @@ tags:
   - "Mastercard"
   - "自托管"
   - "Linea"
-featureTags: []
-
-
-cardTiers:
-  - name: "免费等级"
-    recommended: true
-    isVirtual: true
-    isPhysical: false
-    virtualNetwork: "mastercard"
-    fees:
-      monthlyFee: false
-      annualFee: false
-      virtualCardPrice: 0
-      depositFee: "0%"
-      transactionFee: "0.875%"
-  - name: "金属等级"
-    isVirtual: true
-    isPhysical: true
-    virtualNetwork: "mastercard"
-    physicalNetwork: "mastercard"
-    fees:
-      monthlyFee: false
-      annualFee: 199
-      virtualCardPrice: 0
-      physicalCardPrice: 0 # Included in annual fee
-      depositFee: "0%"
-      transactionFee: "0.875%"
-      foreignExchangeFee: "0%"
+depositFee: "0%"
+transactionFee: "0.875%"
 ---
 
 
