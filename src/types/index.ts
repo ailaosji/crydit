@@ -86,3 +86,9 @@ export interface Card {
   data: CardData;
   commentCount?: number;
 }
+
+export interface FeeDisplayProps {
+  network: CardNetwork | undefined;
+  openingFee: number | null | undefined;
+  annualFee: number | boolean | undefined;
+}
