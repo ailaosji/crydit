@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Check, X, MessageCircle } from 'lucide-react';
 import type { Card } from '../types';
-import { FeeDisplay } from './card/FeeDisplay';
+import { getDisplayTier } from '../utils/cardHelpers';
+import TableTierDisplay from './card/TableTierDisplay';
 
 // --- Main Table Component ---
 
@@ -18,33 +19,33 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden card-table">
       {/* 表头 */}
       <div className="bg-gray-50 border-b border-gray-200">
         <div className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-semibold text-gray-700">
-          <div className="col-span-1">序号</div>
-          <div className="col-span-3">卡片信息</div>
-          <div className="col-span-2 text-center">虚拟卡</div>
-          <div className="col-span-2 text-center">实体卡</div>
-          <div className="col-span-2">特色功能</div>
-          <div className="col-span-1 text-center">支持大陆</div>
-          <div className="col-span-1 text-center">操作</div>
+          <div className="col-span-1 table-cell">序号</div>
+          <div className="col-span-3 table-cell">卡片信息</div>
+          <div className="col-span-2 text-center table-cell">虚拟卡</div>
+          <div className="col-span-2 text-center table-cell">实体卡</div>
+          <div className="col-span-2 table-cell">特色功能</div>
+          <div className="col-span-1 text-center table-cell">支持大陆</div>
+          <div className="col-span-1 text-center table-cell">操作</div>
         </div>
       </div>
 
       {/* 表格内容 */}
       <div className="divide-y divide-gray-100">
         {cards.map((card, index) => (
-          <div key={card.slug} className="transition-all duration-200 ease-in-out hover:shadow-md hover:translate-x-0.5 hover:bg-gradient-to-r from-gray-50 to-white">
+          <div key={card.slug} className="table-row transition-all duration-200 ease-in-out">
             <div
               className="grid grid-cols-12 gap-4 px-6 py-4 items-center cursor-pointer"
               onClick={() => toggleRowExpansion(index)}
             >
               {/* 序号 */}
-              <div className="col-span-1 text-center text-gray-500">{index + 1}</div>
+              <div className="col-span-1 text-center text-gray-500 table-cell">{index + 1}</div>
 
               {/* 卡片信息 */}
-              <div className="col-span-3">
+              <div className="col-span-3 table-cell">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     {card.data.logo ? (
@@ -78,17 +79,25 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               </div>
 
               {/* 虚拟卡 */}
-              <div className="col-span-2 text-center">
-                <FeeDisplay card={{ network: card.data.virtualNetwork, openingFee: card.data.virtualCardPrice, annualFee: card.data.virtualAnnualFee }} />
+              <div className="col-span-2 text-center table-cell">
+                <TableTierDisplay
+                  tier={getDisplayTier(card.data)}
+                  type="virtual"
+                  tierCount={card.data.cardTiers?.length || 0}
+                />
               </div>
 
               {/* 实体卡 */}
-              <div className="col-span-2 text-center">
-                <FeeDisplay card={{ network: card.data.physicalNetwork, openingFee: card.data.physicalCardPrice, annualFee: card.data.physicalAnnualFee }} />
+              <div className="col-span-2 text-center table-cell">
+                <TableTierDisplay
+                  tier={getDisplayTier(card.data)}
+                  type="physical"
+                  tierCount={card.data.cardTiers?.length || 0}
+                />
               </div>
 
               {/* 特色标签 */}
-              <div className="col-span-2">
+              <div className="col-span-2 table-cell">
                 <div className="flex flex-wrap gap-1">
                   {card.data.featureTags?.slice(0, 2).map((feature, idx) => (
                     <span key={idx} className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded-full font-medium">
@@ -104,7 +113,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               </div>
 
               {/* 支持大陆 */}
-              <div className="col-span-1 text-center">
+              <div className="col-span-1 text-center table-cell">
                 {card.data.supportMainland ? (
                   <div className="inline-flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
                     <Check className="w-5 h-5 text-green-600" />
@@ -117,14 +126,14 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
               </div>
 
               {/* 操作按钮 */}
-              <div className="col-span-1">
+              <div className="col-span-1 table-cell">
                 <div className="flex items-center justify-center space-x-2">
                   <button className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                     <MessageCircle className="w-4 h-4" />
                     <span className="text-xs">{card.commentCount || 0}</span>
                   </button>
-                  <a href={card.data.affiliateLink} target="_blank" rel="noopener noreferrer" className="apply-btn px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg transition-all transform hover:scale-105">
-                    立即申请
+                  <a href={`/cards/${card.slug}`} className="apply-btn px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg transition-all transform hover:scale-105">
+                    查看详情
                   </a>
                 </div>
               </div>
