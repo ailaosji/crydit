@@ -1,5 +1,9 @@
 // src/components/CardTable.tsx
-import React from 'react';
+import React, { useState } from 'react';
+import { Check, X, MessageCircle } from 'lucide-react';
+import type { Card } from '../types';
+import { getDisplayTier } from '../utils/cardHelpers';
+import TableTierDisplay from './card/TableTierDisplay';
 
 interface Card {
   slug: string;
@@ -34,7 +38,6 @@ interface CardTableProps {
 }
 
 const CardTable: React.FC<CardTableProps> = ({ cards }) => {
-
   const getCardTypeTag = (type: 'visa' | 'mastercard' | 'unionpay' | undefined) => {
     if (!type) return null;
 

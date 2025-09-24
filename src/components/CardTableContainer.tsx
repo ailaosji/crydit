@@ -74,7 +74,6 @@ const CardTableContainer: React.FC = () => {
 
     fetchCards();
   }, []);
-
   // Fetch comment counts when allCards is populated
   useEffect(() => {
     if (allCards.length === 0) return;
@@ -167,7 +166,6 @@ const CardTableContainer: React.FC = () => {
 
   const loadMore = useCallback(() => {
     if (isLoading || !hasMoreData) return;
-
     setIsLoading(true);
     setTimeout(() => {
       const nextPage = page + 1;
@@ -224,6 +222,7 @@ const CardTableContainer: React.FC = () => {
 
       <LoadMoreIndicator
         isLoading={isLoading}
+
         hasMoreData={hasMoreData}
         onLoadMore={loadMore}
       />

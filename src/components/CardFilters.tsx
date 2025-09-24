@@ -1,6 +1,5 @@
 // src/components/CardFilters.tsx
 import React from 'react';
-
 interface CardFiltersProps {
   filters: {
     cardType: string;
