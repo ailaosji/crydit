@@ -14,6 +14,20 @@ export interface CardFees {
   withdrawalFee?: string;
 }
 
+export interface CardRewards {
+  cashback?: string | null;
+  welcomeBonus?: string;
+  loyaltyProgram?: string;
+  points?: boolean | string;
+}
+
+export interface CardLimits {
+  singleTransaction?: string;
+  dailySpending?: string;
+  monthlySpending?: string;
+  monthlyAtmWithdrawal?: string;
+}
+
 export interface CardTier {
   name: string;
   color?: string;
@@ -22,20 +36,11 @@ export interface CardTier {
   recommended?: boolean;
   isVirtual?: boolean;
   isPhysical?: boolean;
-  network?: CardNetwork;
+  virtualNetwork?: CardNetwork;
+  physicalNetwork?: CardNetwork;
   fees?: CardFees;
-  rewards?: {
-    cashback?: string | null;
-    welcomeBonus?: string;
-    loyaltyProgram?: string;
-    points?: boolean | string;
-  };
-  limits?: {
-    singleTransaction?: string;
-    dailySpending?: string;
-    monthlySpending?: string;
-    monthlyAtmWithdrawal?: string;
-  };
+  rewards?: CardRewards;
+  limits?: CardLimits;
 }
 
 export interface CardData {
@@ -44,7 +49,7 @@ export interface CardData {
   description: string;
   shortDescription?: string;
   issuer: string;
-  cardTiers: CardTier[];
+  cardTiers?: CardTier[]; // Note: optional for single-tier cards defined at top-level
   supportedRegions: string[];
   supportedCurrencies: string[];
   supportedPaymentMethods?: string[];
@@ -67,34 +72,17 @@ export interface CardData {
   commentCount?: number;
   rank?: number;
   trending?: boolean;
-  supportMainland?: boolean;
-  recommended?: boolean;
 
-  // Promoted fields from the representative tier for list view filtering
+  // Fields for single-tier cards or as a fallback
+  fees?: CardFees;
+  rewards?: CardRewards;
   network?: CardNetwork;
   isVirtual?: boolean;
   isPhysical?: boolean;
-  depositFee?: string;
-  transactionFee?: string;
-  annualFee?: number | boolean;
-  monthlyFee?: string | boolean | number;
-  cashback?: string | null;
-  virtualNetwork?: CardNetwork;
-  physicalNetwork?: CardNetwork;
-  physicalAnnualFee?: number | boolean;
-  virtualAnnualFee?: number | boolean;
-  virtualCardPrice?: number;
-  physicalCardPrice?: number | null;
 }
 
 export interface Card {
   slug: string;
   data: CardData;
   commentCount?: number;
-}
-
-export interface FeeDisplayProps {
-  network: CardNetwork | undefined;
-  openingFee: number | null | undefined;
-  annualFee: number | boolean | undefined;
 }

@@ -96,11 +96,10 @@ const finalImage = ogImage || image || "/og-image.jpg";
     .navbar-hidden{transform:translateY(-100%);}
   </style>
   
-  <!-- Custom CSS Files -->
-  <link rel="preload" href="/styles/global.css" as="style" />
-  <link rel="preload" href="/styles/table.css" as="style" />
-  <link rel="stylesheet" href="/styles/global.css" />
-  <link rel="stylesheet" href="/styles/table.css" />
+  <!--
+    The following CSS files are now imported directly into the script below
+    to allow Astro's bundler to process and optimize them.
+  -->
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>

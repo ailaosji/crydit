@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { Check, X, MessageCircle } from 'lucide-react';
 import type { Card } from '../types';
-import { FeeDisplay } from './card/FeeDisplay';
+import { getDisplayTier } from '../utils/cardHelpers';
+import TableTierDisplay from './card/TableTierDisplay';
 
 // --- Main Table Component ---
 
@@ -79,12 +80,20 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
 
               {/* 虚拟卡 */}
               <div className="col-span-2 text-center table-cell">
-                <FeeDisplay card={{ network: card.data.virtualNetwork, openingFee: card.data.virtualCardPrice, annualFee: card.data.virtualAnnualFee }} />
+                <TableTierDisplay
+                  tier={getDisplayTier(card.data)}
+                  type="virtual"
+                  tierCount={card.data.cardTiers?.length || 0}
+                />
               </div>
 
               {/* 实体卡 */}
               <div className="col-span-2 text-center table-cell">
-                <FeeDisplay card={{ network: card.data.physicalNetwork, openingFee: card.data.physicalCardPrice, annualFee: card.data.physicalAnnualFee }} />
+                <TableTierDisplay
+                  tier={getDisplayTier(card.data)}
+                  type="physical"
+                  tierCount={card.data.cardTiers?.length || 0}
+                />
               </div>
 
               {/* 特色标签 */}
@@ -123,8 +132,8 @@ const CardTable: React.FC<CardTableProps> = ({ cards }) => {
                     <MessageCircle className="w-4 h-4" />
                     <span className="text-xs">{card.commentCount || 0}</span>
                   </button>
-                  <a href={card.data.affiliateLink} target="_blank" rel="noopener noreferrer" className="apply-btn px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg transition-all transform hover:scale-105">
-                    立即申请
+                  <a href={`/cards/${card.slug}`} className="apply-btn px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium rounded-lg transition-all transform hover:scale-105">
+                    查看详情
                   </a>
                 </div>
               </div>
