@@ -201,6 +201,7 @@ function getMockCommentCount(identifier) {
     'revolut-card': 92,
     'plutus-card': 31,
     'bybit-card': 28,
+    'stables-card': 0, // Explicitly set to 0 for testing
     'blockchain-com-card': 34,
     'uphold-card': 41,
     'bitpay-card': 53,
@@ -210,7 +211,7 @@ function getMockCommentCount(identifier) {
     'monolith-card': 25
   };
   
-  return mockData[identifier] || Math.floor(Math.random() * 30 + 5);
+  return identifier in mockData ? mockData[identifier] : Math.floor(Math.random() * 30 + 5);
 }
 
 /**

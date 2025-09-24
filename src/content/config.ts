@@ -1,5 +1,6 @@
 // src/content/config.ts
 import { defineCollection, z } from 'astro:content';
+import { CARD_NETWORKS, CARD_CATEGORIES } from '../constants';
 
 // --- Reusable Schemas ---
 
@@ -18,6 +19,45 @@ const relatedContentSchema = z.object({
     relatedGuides: z.array(z.string()).optional(),
 });
 
+const cardTierSchema = z.object({
+  name: z.string(),
+  color: z.string().optional(),
+  price: z.string().optional(),
+  priceUnit: z.string().optional(),
+  recommended: z.boolean().optional(),
+
+  isVirtual: z.boolean().optional(),
+  isPhysical: z.boolean().optional(),
+  virtualNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+  physicalNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+
+  fees: z.object({
+    stakingRequired: z.string().optional(),
+    monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
+    annualFee: z.union([z.number(), z.boolean()]).optional(),
+    virtualCardPrice: z.number().optional(),
+    physicalCardPrice: z.number().nullable().optional(),
+    depositFee: z.string().optional(),
+    transactionFee: z.string().optional(),
+    foreignExchangeFee: z.string().optional(),
+    withdrawalFee: z.string().optional(),
+  }).optional(),
+
+  rewards: z.object({
+    cashback: z.string().nullable().optional(),
+    welcomeBonus: z.string().optional(),
+    loyaltyProgram: z.string().optional(),
+    points: z.union([z.boolean(), z.string()]).optional(),
+  }).optional(),
+
+  limits: z.object({
+    singleTransaction: z.string().optional(),
+    dailySpending: z.string().optional(),
+    monthlySpending: z.string().optional(),
+    monthlyAtmWithdrawal: z.string().optional(),
+  }).optional(),
+});
+
 
 // --- Collection Definitions ---
 
@@ -30,7 +70,7 @@ const articlesCollection = defineCollection({
     description: z.string(),
     publishDate: z.coerce.date(),
     updateDate: z.coerce.date().optional(),
-    category: z.enum(['news', 'guide', 'review', 'analysis', 'tutorial']),
+    category: z.enum(Object.values(CARD_CATEGORIES).map(c => c.value) as [string, ...string[]]),
     tags: z.array(z.string()).optional(),
     image: z.string().optional(),
     featured: z.boolean().default(false),
@@ -48,18 +88,18 @@ const cardsCollection = defineCollection({
     title: z.string(),
     description: z.string(),
     shortDescription: z.string().optional(),
-    // Card Type and Network
-    cardType: z.enum(['virtual', 'physical', 'both']),
-    network: z.enum(['visa', 'mastercard', 'unionpay']),
     issuer: z.string(),
 
-    // Region and Currency Support
-    supportedRegions: z.array(z.string()),
-    supportedCurrencies: z.array(z.string()),
-    supportedPaymentMethods: z.array(z.string()).optional(),
-    applicationDocuments: z.array(z.string()).optional(),
+    // Tiers - New Structure
+    cardTiers: z.array(cardTierSchema).optional(),
 
-    // Fees
+    // --- Legacy Fields for backward compatibility during migration ---
+    cardType: z.enum(['virtual', 'physical', 'both']).optional(),
+    isVirtual: z.boolean().optional(),
+    isPhysical: z.boolean().optional(),
+    network: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+    virtualNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
+    physicalNetwork: z.enum([CARD_NETWORKS.VISA, CARD_NETWORKS.MASTERCARD, CARD_NETWORKS.UNIONPAY]).optional(),
     virtualCardPrice: z.number().optional(),
     physicalCardPrice: z.number().nullable().optional(),
     depositFee: z.string().optional(),
@@ -67,23 +107,28 @@ const cardsCollection = defineCollection({
     foreignExchangeFee: z.string().optional(),
     withdrawalFee: z.string().optional(),
     exchangeRate: z.string().optional(),
-    annualFee: z.boolean().optional(),
+    annualFee: z.union([z.number(), z.boolean()]).optional(),
+    virtualAnnualFee: z.union([z.number(), z.boolean()]).optional(),
+    physicalAnnualFee: z.union([z.number(), z.boolean()]).optional(),
     monthlyFee: z.union([z.string(), z.boolean(), z.number()]).optional(),
-
-    // Limits
+    rewards: z.object({
+      cashback: z.string().nullable().optional(),
+      loyaltyProgram: z.string().optional(),
+      points: z.union([z.boolean(), z.string()]).optional(),
+    }).optional(),
     limits: z.object({
       singleTransaction: z.string().optional(),
       dailySpending: z.string().optional(),
       monthlySpending: z.string().optional(),
       monthlyAtmWithdrawal: z.string().optional(),
     }).optional(),
+    // --- End of Legacy Fields ---
 
-    // Rewards
-    rewards: z.object({
-      cashback: z.string().nullable().optional(),
-      loyaltyProgram: z.string().optional(),
-      points: z.union([z.boolean(), z.string()]).optional(),
-    }).optional(),
+    // Common properties for all tiers
+    supportedRegions: z.array(z.string()),
+    supportedCurrencies: z.array(z.string()),
+    supportedPaymentMethods: z.array(z.string()).optional(),
+    applicationDocuments: z.array(z.string()).optional(),
 
     // Ratings and Features
     pros: z.array(z.string()),
@@ -111,10 +156,12 @@ const cardsCollection = defineCollection({
 
     // Media
     image: image().optional(),
+    logo: z.string().optional(),
     gallery: z.array(image()).optional(),
 
     // Taxonomy
     tags: z.array(z.string()).optional(),
+    featureTags: z.array(z.string()).optional(),
   }).merge(relatedContentSchema.pick({ relatedCards: true, relatedArticles: true })),
 });
 

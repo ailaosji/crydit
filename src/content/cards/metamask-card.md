@@ -59,6 +59,34 @@ tags:
   - "Mastercard"
   - "自托管"
   - "Linea"
+featureTags: []
+
+
+cardTiers:
+  - name: "免费等级"
+    recommended: true
+    isVirtual: true
+    isPhysical: false
+    virtualNetwork: "mastercard"
+    fees:
+      monthlyFee: false
+      annualFee: false
+      virtualCardPrice: 0
+      depositFee: "0%"
+      transactionFee: "0.875%"
+  - name: "金属等级"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "mastercard"
+    physicalNetwork: "mastercard"
+    fees:
+      monthlyFee: false
+      annualFee: 199
+      virtualCardPrice: 0
+      physicalCardPrice: 0 # Included in annual fee
+      depositFee: "0%"
+      transactionFee: "0.875%"
+      foreignExchangeFee: "0%"
 ---
 
 

@@ -55,6 +55,7 @@ depositFee: "浮动"
 transactionFee: "浮动"
 foreignExchangeFee: "1%"
 withdrawalFee: "浮动"
+
 ---
 
 ## Avalanche Card 评测

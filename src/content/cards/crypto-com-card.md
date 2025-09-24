@@ -58,6 +58,72 @@ tags:
   - "返现"
   - "金属卡"
   - "U卡"
+featureTags: []
+
+cardTiers:
+  - name: "Ruby Steel"
+    color: "Red"
+    price: "免费"
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    isVirtual: true
+    isPhysical: true
+    fees:
+      stakingRequired: "$400"
+      monthlyFee: "$0"
+      annualFee: false
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "1%"
+      transactionFee: "3%"
+      atmWithdrawal: "$400/月 免费"
+      foreignExchangeFee: "0%"
+    rewards:
+      cashback: "1%"
+      welcomeBonus: "Spotify (前6个月)"
+  - name: "Royal Indigo / Jade Green"
+    color: "Purple"
+    price: "免费"
+    recommended: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    isVirtual: true
+    isPhysical: true
+    fees:
+      stakingRequired: "$4,000"
+      monthlyFee: "$0"
+      annualFee: false
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "1%"
+      transactionFee: "3%"
+      atmWithdrawal: "$800/月 免费"
+      foreignExchangeFee: "0%"
+    rewards:
+      cashback: "2%"
+      welcomeBonus: "Spotify, Netflix"
+      loyaltyProgram: "机场贵宾厅 (LoungeKey)"
+  - name: "Obsidian"
+    color: "Black"
+    price: "免费"
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    isVirtual: true
+    isPhysical: true
+    fees:
+      stakingRequired: "$400,000"
+      monthlyFee: "$0"
+      annualFee: false
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      depositFee: "1%"
+      transactionFee: "3%"
+      atmWithdrawal: "$1000/月 免费"
+      foreignExchangeFee: "0%"
+    rewards:
+      cashback: "5%"
+      welcomeBonus: "Spotify, Netflix, Prime, etc."
+      loyaltyProgram: "机场贵宾厅 (LoungeKey) + 1位客人"
 ---
 
 ## Crypto.com Visa 卡评测

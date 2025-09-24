@@ -43,7 +43,20 @@ tags:
   - "Trustee"
   - "Visa"
   - "不可用"
+featureTags: []
 status: "discontinued"
+
+cardTiers:
+  - name: "Standard"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      monthlyFee: false
+      annualFee: false
+      virtualCardPrice: 0
+      physicalCardPrice: 0
 ---
 
 

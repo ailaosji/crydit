@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Card } from '../content/config';
+import { FEE_TYPES } from '../constants';
 
 // A more robust way to get the tier type
 type Tiers = NonNullable<Card['data']['tiers']>;
@@ -11,10 +12,10 @@ interface FeeTableProps {
 }
 
 const feeNameMapping: { [key: string]: string } = {
-  deposit: '充值手续费',
-  transaction: '交易手续费',
-  foreignExchange: '外汇手续费',
-  withdrawal: '提现/ATM手续费',
+  [FEE_TYPES.DEPOSIT]: '充值手续费',
+  [FEE_TYPES.TRANSACTION]: '交易手续费',
+  [FEE_TYPES.FOREIGN_EXCHANGE]: '外汇手续费',
+  [FEE_TYPES.WITHDRAWAL]: '提现/ATM手续费',
   annual: '年费',
   exchangeRate: '兑换汇率',
 };

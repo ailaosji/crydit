@@ -1,7 +1,7 @@
 ---
 title: "Stables Card - 消费您的稳定币"
 name: "Stables Card"
-logo: ""
+logo: "https://cdn.prod.website-files.com/647fe94790c03420770215ff/648ffd5cf8719a50eb3647ba_webclip.png"
 description: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
 shortDescription: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
 cardType: "both"
