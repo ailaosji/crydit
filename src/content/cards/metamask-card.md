@@ -6,16 +6,18 @@ description: "MetaMask卡是一款加密借记卡，让您可以直接从您的M
 shortDescription: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
 cardType: "both"
 network: "mastercard"
-isVirtual: true
-isPhysical: true
-virtualCardPrice: 0
-virtualNetwork: "mastercard"
-virtualAnnualFee: false
-physicalCardPrice: 0
-physicalNetwork: "mastercard"
-physicalAnnualFee: 199
-monthlyFee: false
 issuer: "MetaMask"
+virtualCard:
+  isAvailable: true
+  price: 0
+  network: "mastercard"
+  annualFee: false
+physicalCard:
+  isAvailable: true
+  price: 0
+  network: "mastercard"
+  annualFee: 199
+monthlyFee: false
 supportedRegions:
   - "阿根廷"
   - "巴西"
@@ -57,6 +59,34 @@ tags:
   - "Mastercard"
   - "自托管"
   - "Linea"
+featureTags: []
+
+
+cardTiers:
+  - name: "免费等级"
+    recommended: true
+    isVirtual: true
+    isPhysical: false
+    virtualNetwork: "mastercard"
+    fees:
+      monthlyFee: false
+      annualFee: false
+      virtualCardPrice: 0
+      depositFee: "0%"
+      transactionFee: "0.875%"
+  - name: "金属等级"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "mastercard"
+    physicalNetwork: "mastercard"
+    fees:
+      monthlyFee: false
+      annualFee: 199
+      virtualCardPrice: 0
+      physicalCardPrice: 0 # Included in annual fee
+      depositFee: "0%"
+      transactionFee: "0.875%"
+      foreignExchangeFee: "0%"
 ---
 
 
