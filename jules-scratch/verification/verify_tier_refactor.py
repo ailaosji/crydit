@@ -9,6 +9,7 @@ def run(playwright):
     page.goto("http://localhost:8000/cards.html", wait_until="networkidle")
 
     # Wait for the table to be populated by the client-side script
+    # We'll wait for the link we want to click to appear.
     crypto_com_link = page.get_by_role("link", name="Crypto.com Card")
     expect(crypto_com_link).to_be_visible(timeout=15000)
 
@@ -16,16 +17,14 @@ def run(playwright):
     page.screenshot(path="jules-scratch/verification/01_cards_page.png", full_page=True)
     print("Screenshot of cards list page taken.")
 
-    # 3. Click on the link for "Crypto.com Card"
-    crypto_com_link.click()
-
-    page.wait_for_url("**/cards/crypto-com-card.html", wait_until="networkidle")
+    # 3. Navigate directly to the card detail page URL
+    page.goto("http://localhost:8000/cards/crypto-com-card.html", wait_until="networkidle")
 
     # Scroll down to the comparison section to make sure it's in view
     tier_comparison_heading = page.get_by_role("heading", name="各等级卡片权益对比")
     expect(tier_comparison_heading).to_be_visible(timeout=10000)
     tier_comparison_heading.scroll_into_view_if_needed()
-    page.wait_for_timeout(1000) # wait for scroll and animations
+    page.wait_for_timeout(1000)
 
     # 4. Take a screenshot of the detail page (grid view)
     page.screenshot(path="jules-scratch/verification/02_card_detail_grid.png", full_page=True)

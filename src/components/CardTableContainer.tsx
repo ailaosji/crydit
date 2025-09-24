@@ -6,8 +6,8 @@ import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
 import { Globe, Frown } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
-
-import type { Card } from '../types';
+import type { Card, CardTier } from '../types';
+import { getDisplayTier } from '../utils/cardHelpers';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -27,18 +27,15 @@ const CardTableContainer: React.FC = () => {
   const [hasMoreData, setHasMoreData] = useState(true);
   const [page, setPage] = useState(1);
 
-  // Filters state
   const [filters, setFilters] = useState({
-    cardType: '',
+    network: '',
     cardForm: '',
     annualFee: '',
-    fee: '',
     search: '',
-    filterMainland: false,
   });
 
-  // Fetch initial card data
   useEffect(() => {
+    console.log("CardTableContainer: Mounting and fetching cards.");
     const fetchCards = async () => {
       setIsLoading(true);
       try {
@@ -47,102 +44,84 @@ const CardTableContainer: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log("CardTableContainer: Fetched cards data:", data.length);
         setAllCards(data);
       } catch (error) {
         console.error("Could not fetch card data:", error);
-        setIsLoading(false);
+      } finally {
+        // We will set loading to false in the filtering effect
       }
     };
 
     fetchCards();
   }, []);
 
-  // Apply filters and search
   useEffect(() => {
-    // Wait for the initial data to be loaded
-    if (allCards.length === 0 && isLoading) return;
-    const applyFilters = () => {
-      let tempCards = [...allCards];
-
-      if (filters.filterMainland) {
-        tempCards = tempCards.filter(card => card.data.supportMainland);
-      }
-
-      if (filters.cardType) {
-        tempCards = tempCards.filter(card => card.data.network === filters.cardType);
-      }
-
-      if (filters.cardForm) {
-          if (filters.cardForm === 'virtual') {
-              tempCards = tempCards.filter(card => card.data.isVirtual && !card.data.isPhysical);
-          } else if (filters.cardForm === 'physical') {
-              tempCards = tempCards.filter(card => card.data.isPhysical && !card.data.isVirtual);
-          } else if (filters.cardForm === 'both') {
-              tempCards = tempCards.filter(card => card.data.isVirtual && card.data.isPhysical);
-          }
-      }
-
-      if (filters.annualFee) {
-        const hasFee = (card: Card) => {
-          return !isFeeFree(card.data.annualFee) ||
-                 !isFeeFree(card.data.physicalAnnualFee) ||
-                 !isFeeFree(card.data.virtualAnnualFee) ||
-                 !isFeeFree(card.data.monthlyFee);
-        }
-        if (filters.annualFee === 'free') {
-            tempCards = tempCards.filter(card => !hasFee(card));
-        } else if (filters.annualFee === 'paid') {
-            tempCards = tempCards.filter(card => hasFee(card));
-        }
-      }
-
-      if (filters.fee) {
-        const hasOtherFees = (card: Card) => !isFeeFree(card.data.depositFee) || !isFeeFree(card.data.transactionFee);
-        if (filters.fee === 'has_fees') {
-          tempCards = tempCards.filter(card => hasOtherFees(card));
-        } else if (filters.fee === 'no_fees') {
-          tempCards = tempCards.filter(card => !hasOtherFees(card));
-        }
-      }
-
-      if (filters.search) {
-        const searchTerm = filters.search.toLowerCase();
-        tempCards = tempCards.filter(card =>
-          card.data.name.toLowerCase().includes(searchTerm) ||
-          (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
-        );
-      }
-
-      // Default sort by updateDate
-      tempCards.sort((a, b) => new Date(b.data.updateDate || 0).getTime() - new Date(a.data.updateDate || 0).getTime());
-
-      setFilteredCards(tempCards);
-      setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
-      setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
-      setPage(1);
-      setIsLoading(false);
+    if (allCards.length === 0) {
+        if (!isLoading) setIsLoading(true);
+        return;
     };
 
+    console.log("CardTableContainer: Applying filters...", filters);
+    let tempCards = [...allCards];
 
-    // Set loading state and simulate a delay for better UX
-    setIsLoading(true);
-    const timer = setTimeout(applyFilters, 300);
+    // Filter by network
+    if (filters.network) {
+      tempCards = tempCards.filter(card => {
+        const displayTier = getDisplayTier(card.data);
+        return displayTier.virtualNetwork === filters.network || displayTier.physicalNetwork === filters.network;
+      });
+    }
 
-    return () => clearTimeout(timer);
+    // Filter by card form (virtual/physical)
+    if (filters.cardForm) {
+      tempCards = tempCards.filter(card => {
+        const displayTier = getDisplayTier(card.data);
+        if (filters.cardForm === 'virtual') return displayTier.isVirtual;
+        if (filters.cardForm === 'physical') return displayTier.isPhysical;
+        if (filters.cardForm === 'both') return displayTier.isVirtual && displayTier.isPhysical;
+        return true;
+      });
+    }
+
+    // Filter by annual fee
+    if (filters.annualFee) {
+      tempCards = tempCards.filter(card => {
+        const displayTier = getDisplayTier(card.data);
+        const fee = displayTier.fees?.annualFee;
+        if (filters.annualFee === 'free') return isFeeFree(fee);
+        if (filters.annualFee === 'paid') return !isFeeFree(fee);
+        return true;
+      });
+    }
+
+    // Filter by search term
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      tempCards = tempCards.filter(card =>
+        card.data.name.toLowerCase().includes(searchTerm) ||
+        (card.data.issuer || '').toLowerCase().includes(searchTerm) ||
+        (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
+      );
+    }
+
+    setFilteredCards(tempCards);
+    setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
+    setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
+    setPage(1);
+    setIsLoading(false);
+    console.log("CardTableContainer: Filtering complete.", tempCards.length, "cards found.");
+
   }, [filters, allCards]);
 
   const loadMore = useCallback(() => {
     if (isLoading || !hasMoreData) return;
 
-    setIsLoading(true);
-    setTimeout(() => {
-      const nextPage = page + 1;
-      const nextCards = filteredCards.slice(0, nextPage * ITEMS_PER_PAGE);
-      setDisplayedCards(nextCards);
-      setPage(nextPage);
-      setHasMoreData(nextCards.length < filteredCards.length);
-      setIsLoading(false);
-    }, 300);
+    const nextPage = page + 1;
+    const nextCards = filteredCards.slice(0, nextPage * ITEMS_PER_PAGE);
+    setDisplayedCards(nextCards);
+    setPage(nextPage);
+    setHasMoreData(nextCards.length < filteredCards.length);
   }, [page, filteredCards, hasMoreData, isLoading]);
 
   const handleFilterChange = (filterName: string, value: string) => {
@@ -151,12 +130,10 @@ const CardTableContainer: React.FC = () => {
 
   const handleResetFilters = () => {
     setFilters({
-      cardType: '',
+      network: '',
       cardForm: '',
       annualFee: '',
-      fee: '',
       search: '',
-      filterMainland: false,
     });
   };
 
@@ -164,51 +141,12 @@ const CardTableContainer: React.FC = () => {
     setFilters(prev => ({ ...prev, search: value }));
   };
 
-  const toggleFilterMainland = () => {
-    setFilters(prev => ({ ...prev, filterMainland: !prev.filterMainland }));
-  }
-
-  const renderContent = () => {
-    if (isLoading) {
-      return <TableSkeleton />;
-    }
-    if (displayedCards.length === 0) {
-      return (
-        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
-          <Frown className="mx-auto w-12 h-12 text-gray-400" />
-          <h3 className="mt-4 text-xl font-semibold text-gray-700">没有找到匹配的卡片</h3>
-          <p className="text-gray-500 mt-2">请尝试调整您的筛选条件或重置。</p>
-          <button
-            onClick={handleResetFilters}
-            className="mt-6 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            重置筛选
-          </button>
-        </div>
-      );
-    }
-    return <CardTable cards={displayedCards} />;
+  if (isLoading && allCards.length === 0) {
+    return <TableSkeleton />;
   }
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white mb-8">
-        <h1 className="text-2xl font-bold mb-4">🌟 2024年最佳加密货币卡片推荐</h1>
-        <div className="flex flex-wrap gap-4">
-          <button
-            onClick={toggleFilterMainland}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
-              filters.filterMainland
-                ? 'bg-white text-indigo-600'
-                : 'bg-white/20 text-white hover:bg-white/30'
-            }`}
-          >
-            <Globe className="inline-block w-4 h-4 mr-1" />
-            仅显示支持大陆
-          </button>
-        </div>
-      </div>
-
       <div className="bg-gray-50 rounded-2xl p-6 mb-8">
           <div className="flex flex-wrap items-center gap-4">
               <CardFilters
@@ -224,13 +162,24 @@ const CardTableContainer: React.FC = () => {
               <div className="text-sm text-gray-600">
                 共找到 <span className="font-medium text-indigo-600">{filteredCards.length}</span> 张卡片
               </div>
-              <div className="text-sm text-gray-500">
-                已显示 <span className="font-medium text-green-600">{displayedCards.length}</span> 张卡片
-              </div>
-            </div>
+          </div>
       </div>
 
-      {renderContent()}
+      {filteredCards.length > 0 ? (
+        <CardTable cards={displayedCards} />
+      ) : (
+        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
+          <Frown className="mx-auto w-12 h-12 text-gray-400" />
+          <h3 className="mt-4 text-xl font-semibold text-gray-700">没有找到匹配的卡片</h3>
+          <p className="text-gray-500 mt-2">请尝试调整您的筛选条件或重置。</p>
+          <button
+            onClick={handleResetFilters}
+            className="mt-6 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            重置筛选
+          </button>
+        </div>
+      )}
 
       <LoadMoreIndicator
         isLoading={isLoading && displayedCards.length > 0}
