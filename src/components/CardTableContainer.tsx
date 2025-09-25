@@ -6,7 +6,7 @@ import LoadMoreIndicator from './LoadMoreIndicator';
 import { Globe, Frown } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
 import type { Card } from '../types';
-import { getVirtualCardInfo, getPhysicalCardInfo } from '../utils/cardInfo';
+import { getDisplayTier } from '../utils/cardHelpers';
 
 const ITEMS_PER_PAGE = 20;
 
@@ -77,11 +77,11 @@ const CardTableContainer: React.FC = () => {
         tempCards.sort((a, b) => {
             let aValue, bValue;
             if (sortConfig.key === 'virtualCard') {
-                aValue = a.data.virtualCardPrice ?? Infinity;
-                bValue = b.data.virtualCardPrice ?? Infinity;
+                aValue = getDisplayTier(a)?.fees?.openingFee ?? Infinity;
+                bValue = getDisplayTier(b)?.fees?.openingFee ?? Infinity;
             } else if (sortConfig.key === 'physicalCard') {
-                aValue = a.data.physicalCardPrice ?? Infinity;
-                bValue = b.data.physicalCardPrice ?? Infinity;
+                aValue = getDisplayTier(a)?.fees?.openingFee ?? Infinity;
+                bValue = getDisplayTier(b)?.fees?.openingFee ?? Infinity;
             } else {
                 aValue = a.data[sortConfig.key];
                 bValue = b.data[sortConfig.key];
@@ -102,12 +102,33 @@ const CardTableContainer: React.FC = () => {
 
   }, [filters, allCards, sortConfig]);
 
-  const handleSort = (key: string) => {
-    let direction: 'ascending' | 'descending' = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
+  const handleSort = (sortKey: string) => {
+    const sorted = [...filteredCards].sort((a, b) => {
+      switch(sortKey) {
+        case 'virtualCard':
+          // 虚拟卡排序逻辑
+          const aVirtual = getDisplayTier(a)?.isVirtual ? 1 : 0;
+          const bVirtual = getDisplayTier(b)?.isVirtual ? 1 : 0;
+          return bVirtual - aVirtual;
+
+        case 'physicalCard':
+          // 实体卡排序逻辑
+          const aPhysical = getDisplayTier(a)?.isPhysical ? 1 : 0;
+          const bPhysical = getDisplayTier(b)?.isPhysical ? 1 : 0;
+          return bPhysical - aPhysical;
+
+        case 'commentCount':
+          // 讨论数排序逻辑
+          const aComments = a.commentCount || a.data.commentCount || 0;
+          const bComments = b.commentCount || b.data.commentCount || 0;
+          return bComments - aComments; // 降序排列，讨论多的在前
+
+        default:
+          return 0;
+      }
+    });
+
+    setFilteredCards(sorted);
   };
 
   const loadMore = useCallback(() => {
