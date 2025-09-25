@@ -1,9 +1,9 @@
 ---
-title: "MetaMask Card - 随时随地消费加密货币"
+title: "MetaMask Card - 加密支付卡"
 name: "MetaMask Card"
-logo: "https://metamask.io/favicons/default/favicon.ico"
-description: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
-shortDescription: "MetaMask卡是一款加密借记卡，让您可以直接从您的MetaMask钱包中在任何接受万事达卡的地方消费您的加密货币。"
+logo: "https://metamask.io/favicon.ico"
+description: "MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。"
+shortDescription: "MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。"
 issuer: "MetaMask"
 supportedRegions:
   - "阿根廷"
@@ -13,7 +13,7 @@ supportedRegions:
   - "欧盟"
   - "墨西哥"
   - "英国"
-applicationDocuments: ["身份验证"]
+applicationDocuments: ["身份验证 (KYC)"]
 supportedCurrencies:
   - "wETH"
   - "EURe"
@@ -22,48 +22,56 @@ supportedCurrencies:
   - "USDC"
   - "USDT"
 supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
+  - "Mastercard"
 affiliateLink: "https://metamask.io/card/"
-publishDate: "2025-08-18"
+publishDate: "2024-05-01"
+updateDate: "2025-09-24"
 kycRequired: true
 pros:
-  - "直接从您的自托管钱包消费"
-  - "无需将资金转移到银行"
-  - "赚取链上奖励和现金返还"
-  - "即将推出实体金属卡"
+  - "直接从MetaMask钱包消费"
+  - "无需银行账户"
+  - "即时结算"
+  - "丰富的链上奖励"
 cons:
-  - "目前仅支持Linea网络"
-  - "仅限于少数稳定币和wETH"
-  - "并非在所有国家/地区都可用"
+  - "支持的代币和网络有限"
+  - "需要KYC验证"
+  - "实体卡即将推出，目前仅限虚拟卡"
 features:
   - "无缝消费"
+  - "用户控制"
   - "即时结算"
   - "链上奖励"
-  - "用户控制的托管"
 tags:
   - "MetaMask"
   - "Mastercard"
-  - "自托管"
-  - "Linea"
-depositFee: "0%"
-transactionFee: "0.875%"
+  - "加密卡"
+cardTiers:
+  - name: "Free"
+    isVirtual: true
+    isPhysical: false
+    virtualNetwork: "mastercard"
+    fees:
+      virtualCardPrice: 0
+      annualFee: 0
+      fxFee: 0.01
+    rewards:
+      cashback: null
+  - name: "Metal"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "mastercard"
+    physicalNetwork: "mastercard"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 99
+      annualFee: 199
+      fxFee: 0
+    rewards:
+      cashback: null
 ---
-
 
 ## MetaMask Card 评测
 
-MetaMask，作为最受欢迎的自托管钱包之一，推出了自己的加密借记卡。MetaMask卡由万事达卡提供支持，让您可以在全球数百万个地点直接从您的钱包中消费您的加密货币。
+MetaMask Card是MetaMask推出的一款革命性的加密支付卡，它允许用户直接从他们的MetaMask钱包中使用加密货币进行日常消费。这款卡支持多种代币，并通过Linea网络实现即时、低成本的交易。
 
-### 工作原理
-
-该卡连接到您的MetaMask钱包，允许您在Linea网络上消费一系列稳定币（USDC、USDT等）和wETH。当您进行购买时，该卡会实时将您的加密货币转换为法定货币。这意味着您在交易发生前一直完全控制您的资产。
-
-### 等级和费用
-
-MetaMask卡有两个等级：
-
-*   **免费等级**：一张虚拟卡，无年费。它有标准的交易和取款费用。
-*   **金属等级**：一张高级实体卡，年费为199美元。它提供无跨境费用和在一定限额内免费ATM取款等优惠。
-
-该卡目前在美国、英国以及欧洲和拉丁美洲的几个国家/地区提供。虽然目前仅支持Linea网络，但MetaMask计划将来增加对更多网络的支持。
+MetaMask Card的核心优势在于其“无银行”的特性，用户可以完全掌控自己的加密资产，直到消费的那一刻。此外，该卡还提供丰富的链上奖励和与商家的合作优惠。虽然目前实体卡尚未推出，但虚拟卡已经可以在全球接受Mastercard的数百万商户处使用。

@@ -1,82 +1,53 @@
 ---
-title: "Payy Card - 无账号密码的隐私安全U卡"
+title: "Payy Card - 全球货币应用"
 name: "Payy Card"
-logo: "https://payy.link/icon.png?275bbc13b8529e23"
-description: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-shortDescription: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-issuer: "Payy (Polybase Labs)"
+logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/0f/4b/d3/0f4bd3a1-5a9a-05a9-335c-348e655b0849/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/460x0w.webp"
+description: "Payy是一款全球货币应用，旨在使数字货币变得简单和私密。Payy卡（可用性有限）支持在线或在商店中消费稳定币，并具有无与伦"
+shortDescription: "Payy是一款全球货币应用，旨在使数字货币变得简单和私密。Payy卡（可用性有限）支持在线或在商店中消费稳定币，并具有无与伦"
+issuer: "Polybase Labs"
 supportedRegions:
-  - "全球大部分地区"
-applicationDocuments: ["护照", "身份证"]
+  - "全球"
+applicationDocuments: ["身份验证 (KYC)"]
 supportedCurrencies:
-  - "USDC"
+  - "稳定币"
 supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
-affiliateLink: "https://payy.link/invite/8UFBN7"
-invitationCode: '8UFBN7'
-publishDate: "2025-08-09"
-updateDate: "2025-08-09"
+  - "Visa"
+  - "Mastercard"
+affiliateLink: "https://apps.apple.com/il/app/payy/id6474760518"
+publishDate: "2024-06-01"
+updateDate: "2025-09-24"
 kycRequired: true
 pros:
-  - "无账户密码设计，私钥自持，安全性高"
-  - "零知识证明技术，保护交易隐私"
-  - "无申请、充值、交易、月费"
-  - "支持中国大陆身份证/护照KYC"
-  - "实体卡会发光，设计独特"
+  - "无手续费、无限制、无延迟"
+  - "账户不会被冻结或暂停"
+  - "资金由用户控制"
 cons:
-  - "非银行机构，不受存款保险保护"
-  - "申请实体卡有门槛（需10000 Point）"
-  - "ATM取现功能仍在私测阶段"
-  - "新平台，长期可靠性待观察"
+  - "可用性有限"
+  - "信息有限"
 features:
-  - "自托管钱包"
-  - "隐私支付 (ZK)"
-  - "发光实体卡"
-  - "全球Visa网络"
-relatedArticles: []
+  - "神奇的支付链接"
+  - "自我托管"
+  - "隐私保护"
 tags:
   - "Payy"
-  - "U卡"
+  - "稳定币"
   - "隐私"
-  - "零知识证明"
-  - "无密码"
-featureTags: ["支持大陆", "低费率", "零损耗"]
-
 cardTiers:
-  - name: "Standard"
+  - name: "Payy Card"
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    physicalNetwork: "mastercard"
     fees:
-      monthlyFee: false
-      annualFee: false
-      virtualCardPrice: 0
+      virtualCardPrice: null
       physicalCardPrice: null
-      depositFee: "免费"
-      transactionFee: "免费"
-      foreignExchangeFee: "免费"
-      withdrawalFee: "不适用 (ATM功能私测中)"
+      annualFee: null
     rewards:
-      cashback: "转$10送$10 (活动详情请以官方为准)"
+      cashback: null
 ---
-
 
 ## Payy Card 评测
 
-Payy Card 是一款由 Polybase Labs 推出的创新型加密货币Visa卡，其核心特点是**无账户密码设计**和**零知识证明（ZK）隐私技术**。这旨在通过将私钥完全存储在用户自己的设备上，实现真正的资产自托管，从而提供更高级别的安全性。
+Payy是一款旨在简化和保护数字货币交易的全球货币应用。它的核心理念是消除传统金融系统中的费用、限制和延迟。Payy卡作为其生态系统的一部分，允许用户在接受Visa或Mastercard的任何地方使用稳定币进行消费。
 
-### 主要亮点
-
-- **安全性与隐私**: Payy认为将私钥存储在用户手机中是最安全的方式，平台不托管用户资产。所有交易通过零知识证明在链上结算，保护了用户的财务隐私。
-- **发送方式**: 与传统钱包的地址转账不同，Payy通过生成唯一的链接来发送数字货币，只有链接的接收者才能认领资产。
-- **费用结构**: 该卡申请免费，且无充值费、交易费或月费，仅收取1%的外汇转换费。
-- **实体卡**: Payy的实体卡是一张会发光的卡（Light up card），在刷卡时会亮起Payy标志，设计感十足。但申请实体卡需要获得10000 Payy Point，可以通过存入USDC（1 USDC = 2 Point）或邀请好友获得。
-- **合规声明**: Payy明确声明自己是一家金融科技公司而非银行，不受FDIC等存款保险的保障，这一点在行业内算是比较透明和合规的。
-
-### 申请与使用
-
-Payy支持中国大陆身份证和护照进行KYC验证，无需地址证明。验证后，虚拟卡会即时发放，可添加至Apple Pay或Google Pay使用。根据用户分享，现在可能有“存$10送$10”的活动，具体请以官方信息为准。
-
-**邀请链接**: [点击这里申请Payy Card](https://payy.link/invite/8UFBN7) (邀请码: `8UFBN7`)
+Payy最引人注目的特点是其对用户资金的完全控制和隐私保护。用户的账户不会被冻结，资金完全由自己掌控。尽管目前关于Payy卡的详细信息有限，且可用性受限，但它所展示的“无银行”金融服务的潜力是巨大的。

@@ -45,8 +45,67 @@ tags:
   - "返现"
   - "金属卡"
   - "U卡"
-depositFee: "1%"
-transactionFee: "3%"
+cardTiers:
+  - name: "Midnight Blue"
+    recommended: false
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0
+  - name: "Ruby Steel"
+    recommended: true
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.02
+  - name: "Jade Green / Royal Indigo"
+    recommended: false
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.03
+  - name: "Icy White / Rose Gold"
+    recommended: false
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.04
+  - name: "Obsidian"
+    recommended: false
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.05
 ---
 
 ## Crypto.com Visa 卡评测
