@@ -1,4 +1,3 @@
-// src/components/CardTableContainer.tsx
 import React, { useState, useEffect, useCallback } from 'react';
 import CardTable from './CardTable';
 import CardFilters from './CardFilters';
@@ -6,17 +5,17 @@ import CardSearch from './CardSearch';
 import LoadMoreIndicator from './LoadMoreIndicator';
 import { Globe, Frown } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
-import type { Card, CardTier } from '../types';
-import { getDisplayTier } from '../utils/cardHelpers';
+import type { Card } from '../types';
+import { getVirtualCardInfo, getPhysicalCardInfo } from '../utils/cardInfo';
 
 const ITEMS_PER_PAGE = 20;
 
-const isFeeFree = (fee: number | boolean | null | undefined | string) => {
-  if (typeof fee === 'string') {
-    const lowerFee = fee.toLowerCase();
-    return lowerFee === '0' || lowerFee === '€0' || lowerFee === '免费' || lowerFee === 'free' || lowerFee === '0%';
-  }
-  return fee === undefined || fee === null || fee === false || fee === 0;
+const isFeeFree = (fee: number | boolean | null | undefined | string): boolean => {
+    if (typeof fee === 'string') {
+        const lowerFee = fee.toLowerCase();
+        return lowerFee === '0' || lowerFee === '€0' || lowerFee === '免费' || lowerFee === 'free' || lowerFee === '0%';
+    }
+    return fee === undefined || fee === null || fee === false || fee === 0;
 };
 
 const CardTableContainer: React.FC = () => {
@@ -28,81 +27,72 @@ const CardTableContainer: React.FC = () => {
   const [page, setPage] = useState(1);
 
   const [filters, setFilters] = useState({
-    network: '',
+    cardType: '',
     cardForm: '',
     annualFee: '',
     search: '',
+    filterMainland: false,
   });
+
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' }>({ key: 'default', direction: 'ascending' });
 
   useEffect(() => {
     const fetchCards = async () => {
       setIsLoading(true);
       try {
         const response = await fetch('/api/cards.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setAllCards(data);
       } catch (error) {
         console.error("Could not fetch card data:", error);
-        setAllCards([]); // Ensure it's an empty array on error
+        setAllCards([]);
       }
     };
-
     fetchCards();
   }, []);
 
   useEffect(() => {
-    if (allCards.length === 0 && !isLoading) {
-        // This case happens if the initial fetch failed.
-        setFilteredCards([]);
-        setDisplayedCards([]);
-        return;
-    }
+    if (allCards.length === 0) {
+      if(isLoading) setIsLoading(false);
+      return;
+    };
 
     let tempCards = [...allCards];
 
-    // Filter by network
-    if (filters.network) {
-      tempCards = tempCards.filter(card => {
-        const displayTier = getDisplayTier(card.data);
-        const network = displayTier.physicalNetwork || displayTier.virtualNetwork;
-        return network?.toLowerCase() === filters.network;
-      });
-    }
-
-    // Filter by card form (virtual/physical)
-    if (filters.cardForm) {
-      tempCards = tempCards.filter(card => {
-        const displayTier = getDisplayTier(card.data);
-        if (filters.cardForm === 'virtual') return displayTier.isVirtual;
-        if (filters.cardForm === 'physical') return displayTier.isPhysical;
-        if (filters.cardForm === 'both') return displayTier.isVirtual && displayTier.isPhysical;
-        return true;
-      });
-    }
-
-    // Filter by annual fee
-    if (filters.annualFee) {
-      tempCards = tempCards.filter(card => {
-        const displayTier = getDisplayTier(card.data);
-        const fee = displayTier.fees?.annualFee;
-        if (filters.annualFee === 'free') return isFeeFree(fee);
-        if (filters.annualFee === 'paid') return !isFeeFree(fee);
-        return true;
-      });
-    }
-
-    // Filter by search term
+    // Filtering logic
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
       tempCards = tempCards.filter(card =>
         card.data.name.toLowerCase().includes(searchTerm) ||
-        (card.data.issuer || '').toLowerCase().includes(searchTerm) ||
-        (card.data.shortDescription || '').toLowerCase().includes(searchTerm)
+        (card.data.issuer || '').toLowerCase().includes(searchTerm)
       );
     }
+    if (filters.filterMainland) {
+        tempCards = tempCards.filter(card => card.data.supportMainland);
+    }
+
+    // Sorting logic
+    if (sortConfig.key !== 'default') {
+        tempCards.sort((a, b) => {
+            let aValue, bValue;
+            if (sortConfig.key === 'virtualCard') {
+                aValue = getVirtualCardInfo(a)?.openingFee ?? Infinity;
+                bValue = getVirtualCardInfo(b)?.openingFee ?? Infinity;
+            } else if (sortConfig.key === 'physicalCard') {
+                aValue = getPhysicalCardInfo(a)?.openingFee ?? Infinity;
+                bValue = getPhysicalCardInfo(b)?.openingFee ?? Infinity;
+            } else {
+                aValue = a.data[sortConfig.key];
+                bValue = b.data[sortConfig.key];
+            }
+
+            if (aValue < bValue) return sortConfig.direction === 'ascending' ? -1 : 1;
+            if (aValue > bValue) return sortConfig.direction === 'ascending' ? 1 : -1;
+            return 0;
+        });
+    }
+
 
     setFilteredCards(tempCards);
     setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
@@ -110,11 +100,18 @@ const CardTableContainer: React.FC = () => {
     setPage(1);
     setIsLoading(false);
 
-  }, [filters, allCards]);
+  }, [filters, allCards, sortConfig]);
+
+  const handleSort = (key: string) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
 
   const loadMore = useCallback(() => {
     if (isLoading || !hasMoreData) return;
-
     const nextPage = page + 1;
     const nextCards = filteredCards.slice(0, nextPage * ITEMS_PER_PAGE);
     setDisplayedCards(nextCards);
@@ -127,16 +124,16 @@ const CardTableContainer: React.FC = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({
-      network: '',
-      cardForm: '',
-      annualFee: '',
-      search: '',
-    });
+    setFilters({ cardType: '', cardForm: '', annualFee: '', search: '', filterMainland: false });
+    setSortConfig({ key: 'default', direction: 'ascending' });
   };
 
   const handleSearchChange = (value: string) => {
     setFilters(prev => ({ ...prev, search: value }));
+  };
+
+  const toggleFilterMainland = () => {
+    setFilters(prev => ({ ...prev, filterMainland: !prev.filterMainland }));
   };
 
   if (isLoading && allCards.length === 0) {
@@ -145,6 +142,23 @@ const CardTableContainer: React.FC = () => {
 
   return (
     <div>
+      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white mb-8">
+        <h1 className="text-2xl font-bold mb-4">🌟 2024年最佳加密货币卡片推荐</h1>
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={toggleFilterMainland}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              filters.filterMainland
+                ? 'bg-white text-indigo-600'
+                : 'bg-white/20 text-white hover:bg-white/30'
+            }`}
+          >
+            <Globe className="inline-block w-4 h-4 mr-1" />
+            仅显示支持大陆
+          </button>
+        </div>
+      </div>
+
       <div className="bg-gray-50 rounded-2xl p-6 mb-8">
           <div className="flex flex-wrap items-center gap-4">
               <CardFilters
@@ -164,7 +178,7 @@ const CardTableContainer: React.FC = () => {
       </div>
 
       {filteredCards.length > 0 ? (
-        <CardTable cards={displayedCards} />
+        <CardTable cards={displayedCards} handleSort={handleSort} />
       ) : (
         <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
           <Frown className="mx-auto w-12 h-12 text-gray-400" />
