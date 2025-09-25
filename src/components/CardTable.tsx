@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Card } from '../types';
-import { getVirtualCardInfo, getPhysicalCardInfo } from '../utils/cardInfo';
-import CardTypeDisplay from './card/CardTypeDisplay';
+import TableTierDisplay from './card/TableTierDisplay';
 import FeatureTags from './card/FeatureTags';
+import { getDisplayTier } from '../utils/cardHelpers';
 
 interface CardTableProps {
   cards: Card[];
@@ -47,90 +47,73 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
 
       {/* 表格内容 */}
       <div className="divide-y divide-gray-100">
-        {cards.map((card, index) => {
-          const hasTiers = card.data.cardTiers && card.data.cardTiers.length > 0;
-          const tiers = hasTiers ? card.data.cardTiers : [{}]; // Create a dummy tier for cards without tiers
+        {cards.map((card, index) => (
+          <div key={card.slug} className="table-row transition-all duration-200 ease-in-out hover:bg-gray-50">
+            <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
 
-          return (
-            <div key={card.slug} className="table-row-group">
-              {tiers.map((tier, tierIndex) => (
-                <div key={tierIndex} className={`table-row transition-all duration-200 ease-in-out ${tierIndex > 0 ? 'bg-gray-50' : ''}`}>
-                  <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
+              {/* 序号 */}
+              <div className="col-span-1 text-center text-gray-500">
+                {index + 1}
+              </div>
 
-                    {/* 序号 & 卡片信息 - only show for the first tier */}
-                    {tierIndex === 0 ? (
-                      <>
-                        <div className="col-span-1 text-center text-gray-500 table-cell">
-                          {index + 1}
-                        </div>
-                        <div className="col-span-3 table-cell">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                              {card.data.logo ? (
-                                <img
-                                  src={card.data.logo}
-                                  alt={card.data.name}
-                                  className="w-10 h-10 object-contain"
-                                  loading="lazy"
-                                />
-                              ) : (
-                                <span className="text-xl">💳</span>
-                              )}
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-gray-900">{card.data.name}</h3>
-                              <p className="text-xs text-gray-500">{card.data.issuer}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="col-span-4" /> // Placeholder for alignment
-                    )}
-
-                    {/* Tier-specific data */}
-                    <div className="col-span-2 table-cell">
-                      <CardTypeDisplay
-                        card={getVirtualCardInfo(tier)}
-                        align="center"
+              {/* 卡片信息 */}
+              <div className="col-span-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    {card.data.logo ? (
+                      <img
+                        src={card.data.logo}
+                        alt={card.data.name}
+                        className="w-10 h-10 object-contain"
+                        loading="lazy"
                       />
-                    </div>
-                    <div className="col-span-2 table-cell">
-                      <CardTypeDisplay
-                        card={getPhysicalCardInfo(tier)}
-                        align="center"
-                      />
-                    </div>
-                    <div className="col-span-2 text-center table-cell">
-                      <FeatureTags features={tier.featureTags} />
-                    </div>
-                    <div className="col-span-1 text-center table-cell">
-                      {card.data.supportMainland ? (
-                        <span className="text-green-600">✓</span>
-                      ) : (
-                        <span className="text-gray-400">✗</span>
-                      )}
-                    </div>
-
-                    {/* 操作 - only show for the first tier */}
-                    {tierIndex === 0 ? (
-                      <div className="col-span-1 text-center table-cell">
-                        <a
-                          href={`/cards/${card.slug}`}
-                          className="inline-flex items-center justify-center px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                        >
-                          立即申请
-                        </a>
-                      </div>
                     ) : (
-                      <div className="col-span-1" /> // Placeholder for alignment
+                      <span className="text-xl">💳</span>
                     )}
                   </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">{card.data.name}</h3>
+                    <p className="text-xs text-gray-500">{card.data.issuer}</p>
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              {/* 虚拟卡 */}
+              <div className="col-span-2">
+                <TableTierDisplay card={card} type="virtual" />
+              </div>
+
+              {/* 实体卡 */}
+              <div className="col-span-2">
+                <TableTierDisplay card={card} type="physical" />
+              </div>
+
+              {/* 特色功能 */}
+              <div className="col-span-2 text-center">
+                <FeatureTags features={getDisplayTier(card)?.featureTags || card.data.featureTags} />
+              </div>
+
+              {/* 支持大陆 */}
+              <div className="col-span-1 text-center">
+                {card.data.supportMainland ? (
+                  <span className="text-green-600">✓</span>
+                ) : (
+                  <span className="text-gray-400">✗</span>
+                )}
+              </div>
+
+              {/* 操作 */}
+              <div className="col-span-1 text-center">
+                <a
+                  href={`/cards/${card.slug}`}
+                  className="inline-flex items-center justify-center px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  查看详情
+                </a>
+              </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import GiscusComments from '../../components/GiscusComments.astro';
+import TierComparison from '../../components/card/TierComparison.tsx';
 import { CARD_NETWORKS } from '../../constants';
 
 // Ensure this function is correctly exported
@@ -234,36 +235,8 @@ const structuredData = {
               </section>
 
               {cardTiers && cardTiers.length > 0 && (
-                <section class="bg-white rounded-3xl shadow-xl p-8">
-                  <h2 class="text-3xl font-bold text-gray-900 mb-8">费用详情</h2>
-                  <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                      <thead class="bg-gray-50">
-                        <tr class="border-b-2 border-gray-200">
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">等级</th>
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">质押要求</th>
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">返现</th>
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">月费/年费</th>
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">充值费</th>
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">交易费</th>
-                          <th class="px-6 py-4 font-bold uppercase text-sm text-gray-600">外汇费</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {cardTiers.map(tier => (
-                          <tr class={`hover:bg-gray-50 border-b border-gray-100 ${tier.recommended ? 'bg-indigo-50' : ''}`}>
-                            <td class="px-6 py-4 font-semibold text-gray-800">{tier.name}</td>
-                            <td class="px-6 py-4">{tier.fees?.stakingRequired || '无'}</td>
-                            <td class="px-6 py-4 font-semibold text-green-600">{tier.rewards?.cashback || 'N/A'}</td>
-                            <td class="px-6 py-4">{tier.fees?.monthlyFee || (tier.fees?.annualFee ? `$${tier.fees.annualFee}/年` : '免费')}</td>
-                            <td class="px-6 py-4">{tier.fees?.depositFee || 'N/A'}</td>
-                            <td class="px-6 py-4">{tier.fees?.transactionFee || 'N/A'}</td>
-                            <td class="px-6 py-4">{tier.fees?.foreignExchangeFee || 'N/A'}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                <section class="mt-12">
+                  <TierComparison tiers={cardTiers} client:load />
                 </section>
               )}
 

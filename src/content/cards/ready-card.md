@@ -5,7 +5,6 @@ logo: "https://www.readycreditcorp.com/wp-content/uploads/2023/07/cropped-3-1-32
 description: "ReadyCARD®是一种预付借记卡，可将现金转换为可在店内或网上使用的安全预付卡，无需银行账户。"
 shortDescription: "ReadyCARD®是一种预付借记卡，可将现金转换为可在店内或网上使用的安全预付卡，无需银行账户。"
 issuer: "Ready Credit"
-status: "active"
 supportedRegions:
   - "美国"
 applicationDocuments: ["无"]

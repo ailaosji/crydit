@@ -5,7 +5,6 @@ logo: "https://crypto.com/favicon.ico"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 issuer: "Crypto.com"
-status: "active"
 supportedRegions:
   - "美国"
   - "加拿大"
@@ -24,7 +23,7 @@ supportedPaymentMethods:
   - "Google Pay"
 affiliateLink: "https://crypto.com/app/"
 publishDate: "2024-01-05"
-updateDate: "2025-09-24"
+updateDate: "2025-08-11"
 kycRequired: true
 pros:
   - "高额消费返现"
@@ -48,6 +47,7 @@ tags:
   - "U卡"
 cardTiers:
   - name: "Midnight Blue"
+    recommended: false
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"
@@ -59,6 +59,7 @@ cardTiers:
     rewards:
       cashback: 0
   - name: "Ruby Steel"
+    recommended: true
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"
@@ -70,6 +71,7 @@ cardTiers:
     rewards:
       cashback: 0.02
   - name: "Jade Green / Royal Indigo"
+    recommended: false
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"
@@ -81,6 +83,7 @@ cardTiers:
     rewards:
       cashback: 0.03
   - name: "Icy White / Rose Gold"
+    recommended: false
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"
@@ -92,6 +95,7 @@ cardTiers:
     rewards:
       cashback: 0.04
   - name: "Obsidian"
+    recommended: false
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"

@@ -5,7 +5,6 @@ logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/0f/4b/d3/0f4bd3a1-5
 description: "Payy是一款全球货币应用，旨在使数字货币变得简单和私密。Payy卡（可用性有限）支持在线或在商店中消费稳定币，并具有无与伦"
 shortDescription: "Payy是一款全球货币应用，旨在使数字货币变得简单和私密。Payy卡（可用性有限）支持在线或在商店中消费稳定币，并具有无与伦"
 issuer: "Polybase Labs"
-status: "active"
 supportedRegions:
   - "全球"
 applicationDocuments: ["身份验证 (KYC)"]

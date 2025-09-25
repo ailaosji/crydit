@@ -5,7 +5,6 @@ logo: "https://wirexapp.com/favicon.ico"
 description: "Wirex提供多币种支付卡，支持在全球范围内消费加密货币和法定货币，并提供高达8%的Cryptoback™返现奖励。"
 shortDescription: "Wirex提供多币种支付卡，支持在全球范围内消费加密货币和法定货币，并提供高达8%的Cryptoback™返现奖励。"
 issuer: "Wirex"
-status: "active"
 supportedRegions:
   - "全球超过130个国家"
 applicationDocuments: ["身份验证 (KYC)"]
@@ -45,6 +44,7 @@ tags:
   - "U卡"
 cardTiers:
   - name: "Standard"
+    recommended: true
     isVirtual: true
     isPhysical: true
     virtualNetwork: "mastercard"
@@ -56,6 +56,7 @@ cardTiers:
     rewards:
       cashback: 0.01
   - name: "Premium"
+    recommended: false
     isVirtual: true
     isPhysical: true
     virtualNetwork: "mastercard"
@@ -67,6 +68,7 @@ cardTiers:
     rewards:
       cashback: 0.03
   - name: "Elite"
+    recommended: false
     isVirtual: true
     isPhysical: true
     virtualNetwork: "mastercard"

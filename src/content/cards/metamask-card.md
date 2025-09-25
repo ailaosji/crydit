@@ -5,7 +5,6 @@ logo: "https://metamask.io/favicon.ico"
 description: "MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。"
 shortDescription: "MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。"
 issuer: "MetaMask"
-status: "active"
 supportedRegions:
   - "阿根廷"
   - "巴西"
