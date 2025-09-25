@@ -97,17 +97,17 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 </div>
 
                 {/* 虚拟卡 - col-span-2 */}
-                <div className="col-span-2">
+                <div className="col-span-2 text-center">
                   <TableTierDisplay card={card} type="virtual" />
                 </div>
 
                 {/* 实体卡 - col-span-2 */}
-                <div className="col-span-2">
+                <div className="col-span-2 text-center">
                   <TableTierDisplay card={card} type="physical" />
                 </div>
 
                 {/* 特色功能 - col-span-2 */}
-                <div className="col-span-2">
+                <div className="col-span-2 text-center">
                   <FeatureTags features={getDisplayTier(card)?.featureTags || card.data.featureTags} />
                 </div>
 
