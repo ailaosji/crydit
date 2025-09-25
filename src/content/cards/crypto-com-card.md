@@ -5,6 +5,7 @@ logo: "https://crypto.com/favicon.ico"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 issuer: "Crypto.com"
+status: "active"
 supportedRegions:
   - "美国"
   - "加拿大"
@@ -23,7 +24,7 @@ supportedPaymentMethods:
   - "Google Pay"
 affiliateLink: "https://crypto.com/app/"
 publishDate: "2024-01-05"
-updateDate: "2025-08-11"
+updateDate: "2025-09-24"
 kycRequired: true
 pros:
   - "高额消费返现"
@@ -45,8 +46,62 @@ tags:
   - "返现"
   - "金属卡"
   - "U卡"
-depositFee: "1%"
-transactionFee: "3%"
+cardTiers:
+  - name: "Midnight Blue"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0
+  - name: "Ruby Steel"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.02
+  - name: "Jade Green / Royal Indigo"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.03
+  - name: "Icy White / Rose Gold"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.04
+  - name: "Obsidian"
+    isVirtual: true
+    isPhysical: true
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
+    fees:
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
+    rewards:
+      cashback: 0.05
 ---
 
 ## Crypto.com Visa 卡评测

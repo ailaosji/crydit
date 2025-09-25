@@ -1,75 +1,58 @@
 ---
-title: "雪崩卡（Avalanche Card）- 随时随地消费您的加密货币"
+title: "Avalanche Card - 加密支持的Visa卡"
 name: "Avalanche Card"
-logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/6708797d923ea1afb7204ac1_635153472587c97c19234198_Webclip.jpg"
-description: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
-shortDescription: "一款由加密货币支持的Visa卡，让您可以在任何接受Visa的地方无缝消费USDC和AVAX。"
+logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg"
+description: "Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。"
+shortDescription: "Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。"
 issuer: "Rain Liquidity"
+status: "active"
 supportedRegions:
-  - "美国"
+  - "美国多个州"
   - "拉丁美洲"
   - "加勒比地区"
-applicationDocuments: ["身份证/护照", "SSN/国民身份证"]
+applicationDocuments: ["身份验证 (KYC)"]
 supportedCurrencies:
   - "AVAX"
   - "USDC"
   - "sAVAX"
 supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
+  - "Visa"
 affiliateLink: "https://www.avalanchecard.com/"
-publishDate: "2025-08-18"
+publishDate: "2024-04-20"
+updateDate: "2025-09-24"
 kycRequired: true
 pros:
-  - "Avalanche Card不收取Gas费或转换费"
-  - "全球任何接受Visa的地方都可以使用"
+  - "无gas费或转换费"
+  - "全球接受Visa的地方均可使用"
   - "无需信用检查"
-  - "虚拟卡和实体卡均免费"
 cons:
-  - "并非在所有国家/地区都可用"
-  - "支持的加密货币数量有限"
+  - "支持的国家和地区有限"
+  - "需要KYC验证"
 features:
-  - "即时访问加密资产"
-  - "消费提醒"
-  - "冻结卡片和更改PIN码"
-  - "24/7专属支持"
+  - "加密支持"
+  - "无gas费"
+  - "全球接受"
 tags:
   - "Avalanche"
   - "Visa"
-  - "加密货币支持"
-  - "全球通用"
-featureTags: ["支持大陆"]
-
+  - "加密卡"
 cardTiers:
-  - name: "Standard"
+  - name: "Avalanche Card"
     isVirtual: true
     isPhysical: true
     virtualNetwork: "visa"
     physicalNetwork: "visa"
     fees:
-      monthlyFee: false
-      annualFee: false
       virtualCardPrice: 0
       physicalCardPrice: 0
-      depositFee: "浮动"
-      transactionFee: "浮动"
-      foreignExchangeFee: "1%"
-      withdrawalFee: "浮动"
+      annualFee: 0
+      fxFee: 0.01
+    rewards:
+      cashback: null
 ---
 
 ## Avalanche Card 评测
 
-Avalanche Card是一款由加密货币支持的Visa卡，允许您在任何接受Visa的商户处使用您的加密资产，如AVAX和USDC。该卡由Rain Liquidity发行，提供虚拟卡和实体卡两种形式。
+Avalanche Card是一款创新的加密支持Visa卡，它允许用户直接使用其持有的USDC和AVAX等加密资产进行日常消费。该卡由Rain Liquidity提供，旨在为用户提供一种无缝、低成本的方式来使用他们的数字财富。
 
-### 主要特点：
-
-*   **全球通用**：在任何接受Visa的地方使用您的卡，无论是在线还是实体店。
-*   **无隐藏费用**：该卡没有月度账户费，虚拟卡和实体卡的发行都是免费的。
-*   **安全**：该应用程序提供即时冻结卡片和更改PIN码等功能，让您完全掌控卡片安全。
-*   **使用便捷**：该卡可以添加到Apple Pay和Google Wallet，方便进行非接触式支付。
-
-### 费用和可用性：
-
-Avalanche Card目前在美国许多州、拉丁美洲和加勒比地区提供。它有1%的外汇费，但网站上没有明确提及其他费用。用户应注意，转移加密货币时可能仍需支付网络Gas费。
-
-要获取该卡，您需要下载Avalanche Card应用程序并完成KYC验证过程，其中包括提供个人信息和有效的政府颁发身份证件。
+该卡的主要优势在于其零gas费和零转换费的承诺，以及在全球范围内Visa网络的广泛可用性。无论是在线购物还是实体店消费，用户都可以像使用传统银行卡一样方便地使用Avalanche Card。此外，申请该卡无需信用检查，降低了用户的准入门槛。

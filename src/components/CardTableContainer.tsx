@@ -77,11 +77,11 @@ const CardTableContainer: React.FC = () => {
         tempCards.sort((a, b) => {
             let aValue, bValue;
             if (sortConfig.key === 'virtualCard') {
-                aValue = getVirtualCardInfo(a)?.openingFee ?? Infinity;
-                bValue = getVirtualCardInfo(b)?.openingFee ?? Infinity;
+                aValue = getVirtualCardInfo(a.data.cardTiers?.[0])?.openingFee ?? Infinity;
+                bValue = getVirtualCardInfo(b.data.cardTiers?.[0])?.openingFee ?? Infinity;
             } else if (sortConfig.key === 'physicalCard') {
-                aValue = getPhysicalCardInfo(a)?.openingFee ?? Infinity;
-                bValue = getPhysicalCardInfo(b)?.openingFee ?? Infinity;
+                aValue = getPhysicalCardInfo(a.data.cardTiers?.[0])?.openingFee ?? Infinity;
+                bValue = getPhysicalCardInfo(b.data.cardTiers?.[0])?.openingFee ?? Infinity;
             } else {
                 aValue = a.data[sortConfig.key];
                 bValue = b.data[sortConfig.key];
