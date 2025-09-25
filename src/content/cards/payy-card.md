@@ -39,9 +39,9 @@ cardTiers:
     virtualNetwork: "visa"
     physicalNetwork: "mastercard"
     fees:
-      virtualCardPrice: null
-      physicalCardPrice: null
-      annualFee: null
+      virtualCardPrice: 0
+      physicalCardPrice: 0
+      annualFee: 0
     rewards:
       cashback: null
 ---

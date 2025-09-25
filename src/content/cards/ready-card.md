@@ -39,8 +39,8 @@ cardTiers:
     isPhysical: true
     physicalNetwork: "visa"
     fees:
-      physicalCardPrice: null
-      annualFee: null
+      physicalCardPrice: 0
+      annualFee: 0
     rewards:
       cashback: null
 ---

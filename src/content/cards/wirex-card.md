@@ -54,7 +54,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 0.01
+      cashback: "1%"
   - name: "Premium"
     recommended: false
     isVirtual: true
@@ -66,7 +66,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 9.99 # Monthly fee
     rewards:
-      cashback: 0.03
+      cashback: "3%"
   - name: "Elite"
     recommended: false
     isVirtual: true
@@ -78,7 +78,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 29.99 # Monthly fee
     rewards:
-      cashback: 0.08
+      cashback: "8%"
 ---
 
 ## Wirex Card 评测
