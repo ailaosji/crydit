@@ -11,7 +11,7 @@ const TierGrid: React.FC<{ tiers: CardTier[] }> = ({ tiers }) => {
           key={index}
           className={`
             relative bg-white rounded-2xl border-2 p-6
-            transition-all hover:shadow-lg hover:scale-105
+            transition-all hover:shadow-lg
             ${tier.recommended
               ? 'border-orange-300 bg-gradient-to-br from-orange-50 to-white'
               : 'border-gray-200'
@@ -34,7 +34,7 @@ const TierGrid: React.FC<{ tiers: CardTier[] }> = ({ tiers }) => {
           </h3>
 
           {/* 关键特性 */}
-          <div className="space-y-3 mb-6">
+          <div className="space-y-3">
             {/* 卡片类型 */}
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">卡片类型</span>
@@ -78,7 +78,7 @@ const TierGrid: React.FC<{ tiers: CardTier[] }> = ({ tiers }) => {
                     ? '免费'
                     : typeof tier.fees.annualFee === 'number'
                       ? `$${tier.fees.annualFee}`
-                      : '收费'
+                      : tier.fees.annualFee
                   }
                 </span>
               </div>
@@ -106,16 +106,7 @@ const TierGrid: React.FC<{ tiers: CardTier[] }> = ({ tiers }) => {
             )}
           </div>
 
-          {/* 申请按钮 */}
-          <button className={`
-            w-full py-3 rounded-xl font-medium transition-all
-            ${tier.recommended
-              ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }
-          `}>
-            {tier.recommended ? '立即申请（推荐）' : '查看详情'}
-          </button>
+          {/* 去掉了申请按钮部分 */}
         </div>
       ))}
     </div>
