@@ -4,20 +4,7 @@ name: "Wirex Card"
 logo: "https://wirexapp.com/assets/images/favicon/apple-icon-180x180.png"
 description: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
 shortDescription: "Wirex卡是消费加密货币和稳定币的终极解决方案，提供高达8%的返现奖励，并让您掌控自己的资金安全。"
-cardType: "both"
-network: "visa"
 issuer: "Wirex"
-virtualCard:
-  isAvailable: true
-  price: 0
-  network: "visa"
-  annualFee: false
-physicalCard:
-  isAvailable: true
-  price: 0
-  network: "visa"
-  annualFee: false
-monthlyFee: "€0 - €29.99"
 supportedRegions:
   - "全球多个地区"
 applicationDocuments: ["身份证明", "地址证明"]

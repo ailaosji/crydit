@@ -35,7 +35,6 @@ const CardTableContainer: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log("CardTableContainer: Mounting and fetching cards.");
     const fetchCards = async () => {
       setIsLoading(true);
       try {
@@ -44,12 +43,10 @@ const CardTableContainer: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log("CardTableContainer: Fetched cards data:", data.length);
         setAllCards(data);
       } catch (error) {
         console.error("Could not fetch card data:", error);
-      } finally {
-        // We will set loading to false in the filtering effect
+        setAllCards([]); // Ensure it's an empty array on error
       }
     };
 
@@ -57,19 +54,21 @@ const CardTableContainer: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (allCards.length === 0) {
-        if (!isLoading) setIsLoading(true);
+    if (allCards.length === 0 && !isLoading) {
+        // This case happens if the initial fetch failed.
+        setFilteredCards([]);
+        setDisplayedCards([]);
         return;
-    };
+    }
 
-    console.log("CardTableContainer: Applying filters...", filters);
     let tempCards = [...allCards];
 
     // Filter by network
     if (filters.network) {
       tempCards = tempCards.filter(card => {
         const displayTier = getDisplayTier(card.data);
-        return displayTier.virtualNetwork === filters.network || displayTier.physicalNetwork === filters.network;
+        const network = displayTier.physicalNetwork || displayTier.virtualNetwork;
+        return network?.toLowerCase() === filters.network;
       });
     }
 
@@ -110,7 +109,6 @@ const CardTableContainer: React.FC = () => {
     setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
     setPage(1);
     setIsLoading(false);
-    console.log("CardTableContainer: Filtering complete.", tempCards.length, "cards found.");
 
   }, [filters, allCards]);
 

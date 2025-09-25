@@ -49,7 +49,7 @@ export interface CardData {
   description: string;
   shortDescription?: string;
   issuer: string;
-  cardTiers?: CardTier[]; // Note: optional for single-tier cards defined at top-level
+  cardTiers?: CardTier[];
   supportedRegions: string[];
   supportedCurrencies: string[];
   supportedPaymentMethods?: string[];
@@ -72,8 +72,9 @@ export interface CardData {
   commentCount?: number;
   rank?: number;
   trending?: boolean;
+  supportMainland?: boolean; // Added this field for filtering
 
-  // Fields for single-tier cards or as a fallback
+  // Fallback fields for single-tier cards, to be phased out
   fees?: CardFees;
   rewards?: CardRewards;
   network?: CardNetwork;
@@ -85,10 +86,4 @@ export interface Card {
   slug: string;
   data: CardData;
   commentCount?: number;
-}
-
-export interface FeeDisplayProps {
-  network: CardNetwork | undefined;
-  openingFee: number | null | undefined;
-  annualFee: number | boolean | undefined;
 }
