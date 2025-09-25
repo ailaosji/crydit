@@ -1,36 +1,23 @@
 /* src/styles/table.css */
 
-.card-table {
-  border-spacing: 0;
-  width: 100%;
-}
-
-.table-row {
-  border-bottom: 1px solid #e5e7eb; /* gray-200 */
-}
-
-.table-row:last-child {
-  border-bottom: none;
-}
-
-.table-cell {
-  padding: 1rem; /* p-4 */
-  vertical-align: middle;
+/* Vertical separators */
+.card-table .table-cell {
   position: relative;
 }
 
-/* Vertical separators */
-.table-cell:not(:last-child)::after {
+.card-table .table-cell:not(:last-child)::after {
   content: '';
   position: absolute;
-  top: 25%;
   right: 0;
-  height: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
   width: 1px;
-  background-color: #f3f4f6; /* gray-100 */
+  background-color: #e5e7eb; /* gray-200 */
 }
 
 /* Hover effect */
-.table-row:hover {
-  background-color: #f9fafb; /* gray-50 */
+.card-table .table-row:hover {
+  background: linear-gradient(90deg, #f9fafb 0%, #ffffff 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
