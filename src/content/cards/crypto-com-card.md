@@ -4,20 +4,7 @@ name: "Crypto.com Card"
 logo: "https://crypto.com/favicon.ico"
 description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
 shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
-cardType: "both"
-network: "visa"
 issuer: "Crypto.com"
-virtualCard:
-  isAvailable: true
-  price: 0
-  network: "visa"
-  annualFee: false
-physicalCard:
-  isAvailable: true
-  price: 4.99
-  network: "visa"
-  annualFee: false
-monthlyFee: false
 supportedRegions:
   - "美国"
   - "加拿大"

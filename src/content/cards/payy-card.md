@@ -4,20 +4,7 @@ name: "Payy Card"
 logo: "https://payy.link/icon.png?275bbc13b8529e23"
 description: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
 shortDescription: "Payy Card是一款自托管Visa卡，使用零知识证明技术保护用户隐私，允许用户在全球范围内私密地消费USDC。"
-cardType: "both"
-network: "visa"
 issuer: "Payy (Polybase Labs)"
-virtualCard:
-  isAvailable: true
-  price: 0
-  network: "visa"
-  annualFee: false
-physicalCard:
-  isAvailable: true
-  price: null
-  network: "visa"
-  annualFee: false
-monthlyFee: false
 supportedRegions:
   - "全球大部分地区"
 applicationDocuments: ["护照", "身份证"]
@@ -26,12 +13,11 @@ supportedCurrencies:
 supportedPaymentMethods:
   - "Apple Pay"
   - "Google Pay"
-depositFee: "免费"
-transactionFee: "免费"
-foreignExchangeFee: "免费"
-withdrawalFee: "不适用 (ATM功能私测中)"
-rewards:
-  cashback: "转$10送$10 (活动详情请以官方为准)"
+affiliateLink: "https://payy.link/invite/8UFBN7"
+invitationCode: '8UFBN7'
+publishDate: "2025-08-09"
+updateDate: "2025-08-09"
+kycRequired: true
 pros:
   - "无账户密码设计，私钥自持，安全性高"
   - "零知识证明技术，保护交易隐私"

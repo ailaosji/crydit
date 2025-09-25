@@ -44,8 +44,6 @@ export function getDisplayTier(cardData: CardData): CardTier {
     name: 'Standard', // Default name for single-tier cards
     isVirtual: cardData.isVirtual,
     isPhysical: cardData.isPhysical,
-    // Note: The new types have virtual/physical network on the tier.
-    // The old `network` property on CardData is ambiguous. We handle it gracefully.
     virtualNetwork: cardData.network,
     physicalNetwork: cardData.network,
     fees: cardData.fees,
