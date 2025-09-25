@@ -57,7 +57,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 0
+      cashback: "0"
   - name: "Ruby Steel"
     recommended: true
     isVirtual: true
@@ -69,7 +69,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 0.02
+      cashback: "2%"
   - name: "Jade Green / Royal Indigo"
     recommended: false
     isVirtual: true
@@ -81,7 +81,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 0.03
+      cashback: "3%"
   - name: "Icy White / Rose Gold"
     recommended: false
     isVirtual: true
@@ -93,7 +93,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 0.04
+      cashback: "4%"
   - name: "Obsidian"
     recommended: false
     isVirtual: true
@@ -105,7 +105,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 0.05
+      cashback: "5%"
 ---
 
 ## Crypto.com Visa 卡评测
