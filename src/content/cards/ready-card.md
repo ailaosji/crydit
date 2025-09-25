@@ -42,7 +42,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: null
+      cashback: "0%"
 ---
 
 ## Ready Card 评测

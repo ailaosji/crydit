@@ -53,9 +53,9 @@ cardTiers:
     fees:
       virtualCardPrice: 0
       annualFee: 0
-      fxFee: 0.01
+      fxFee: "1%"
     rewards:
-      cashback: null
+      cashback: "0%"
   - name: "Metal"
     isVirtual: true
     isPhysical: true
@@ -65,9 +65,9 @@ cardTiers:
       virtualCardPrice: 0
       physicalCardPrice: 99
       annualFee: 199
-      fxFee: 0
+      fxFee: "0%"
     rewards:
-      cashback: null
+      cashback: "0%"
 ---
 
 ## MetaMask Card 评测

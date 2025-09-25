@@ -57,7 +57,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: "0"
+      cashback: "0%"
   - name: "Ruby Steel"
     recommended: true
     isVirtual: true

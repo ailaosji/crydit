@@ -64,7 +64,7 @@ const renderFeatureValue = (tier: CardTier, feature: any) => {
       );
 
     case 'network':
-      return <NetworkBadge network={value as string} size="small" />;
+      return <NetworkBadge network={String(value)} size="small" />;
 
     case 'fee':
       return (
@@ -83,7 +83,10 @@ const renderFeatureValue = (tier: CardTier, feature: any) => {
       );
 
     default:
-      return <span className="text-gray-700">{String(value)}</span>;
+        if (typeof value === 'object' && value !== null) {
+            return <span className="text-gray-700">{JSON.stringify(value)}</span>;
+        }
+        return <span className="text-gray-700">{String(value)}</span>;
   }
 };
 

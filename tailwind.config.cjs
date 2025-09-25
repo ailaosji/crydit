@@ -3,9 +3,8 @@ module.exports = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
-      // 添加自定义的文本对齐工具类
-      textAlign: {
-        'center': 'center',
+      gridTemplateColumns: {
+        '13': 'repeat(13, minmax(0, 1fr))',
       }
     },
   },

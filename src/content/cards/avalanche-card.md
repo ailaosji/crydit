@@ -45,9 +45,9 @@ cardTiers:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
-      fxFee: 0.01
+      fxFee: "1%"
     rewards:
-      cashback: null
+      cashback: "0%"
 ---
 
 ## Avalanche Card 评测

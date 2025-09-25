@@ -43,7 +43,12 @@ const CardTableContainer: React.FC = () => {
         const response = await fetch('/api/cards.json');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
-        setAllCards(data);
+        // Manually add commentCount to each card for now
+        const cardsWithCommentCount = data.map(card => ({
+            ...card,
+            commentCount: Math.floor(Math.random() * 100)
+        }));
+        setAllCards(cardsWithCommentCount);
       } catch (error) {
         console.error("Could not fetch card data:", error);
         setAllCards([]);
@@ -76,13 +81,14 @@ const CardTableContainer: React.FC = () => {
     if (sortConfig.key !== 'default') {
         tempCards.sort((a, b) => {
             let aValue, bValue;
-            if (sortConfig.key === 'virtualCard') {
+            if (sortConfig.key === 'commentCount') {
+                aValue = a.commentCount || a.data.commentCount || 0;
+                bValue = b.commentCount || b.data.commentCount || 0;
+            } else if (sortConfig.key === 'virtualCard' || sortConfig.key === 'physicalCard') {
                 aValue = getDisplayTier(a)?.fees?.openingFee ?? Infinity;
                 bValue = getDisplayTier(b)?.fees?.openingFee ?? Infinity;
-            } else if (sortConfig.key === 'physicalCard') {
-                aValue = getDisplayTier(a)?.fees?.openingFee ?? Infinity;
-                bValue = getDisplayTier(b)?.fees?.openingFee ?? Infinity;
-            } else {
+            }
+            else {
                 aValue = a.data[sortConfig.key];
                 bValue = b.data[sortConfig.key];
             }
@@ -102,33 +108,12 @@ const CardTableContainer: React.FC = () => {
 
   }, [filters, allCards, sortConfig]);
 
-  const handleSort = (sortKey: string) => {
-    const sorted = [...filteredCards].sort((a, b) => {
-      switch(sortKey) {
-        case 'virtualCard':
-          // 虚拟卡排序逻辑
-          const aVirtual = getDisplayTier(a)?.isVirtual ? 1 : 0;
-          const bVirtual = getDisplayTier(b)?.isVirtual ? 1 : 0;
-          return bVirtual - aVirtual;
-
-        case 'physicalCard':
-          // 实体卡排序逻辑
-          const aPhysical = getDisplayTier(a)?.isPhysical ? 1 : 0;
-          const bPhysical = getDisplayTier(b)?.isPhysical ? 1 : 0;
-          return bPhysical - aPhysical;
-
-        case 'commentCount':
-          // 讨论数排序逻辑
-          const aComments = a.commentCount || a.data.commentCount || 0;
-          const bComments = b.commentCount || b.data.commentCount || 0;
-          return bComments - aComments; // 降序排列，讨论多的在前
-
-        default:
-          return 0;
-      }
-    });
-
-    setFilteredCards(sorted);
+  const handleSort = (key: string) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
   };
 
   const loadMore = useCallback(() => {

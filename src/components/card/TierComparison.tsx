@@ -3,19 +3,11 @@ import type { CardTier } from '../../types';
 import { Check, X, Star, TrendingUp, Award } from 'lucide-react';
 import TierGrid from './TierGrid';
 import TierTable from './TierTable';
+import SingleTierDetail from './SingleTierDetail';
 
 interface TierComparisonProps {
   tiers: CardTier[];
 }
-
-const SingleTierDetail = ({ tier }: { tier: CardTier }) => (
-    <div className="bg-white rounded-3xl shadow-xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            {tier.name}
-        </h2>
-        <TierGrid tiers={[tier]} />
-    </div>
-);
 
 
 export const TierComparison: React.FC<TierComparisonProps> = ({ tiers }) => {

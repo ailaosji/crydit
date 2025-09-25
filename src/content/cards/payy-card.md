@@ -43,7 +43,7 @@ cardTiers:
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: null
+      cashback: "0%"
 ---
 
 ## Payy Card 评测
