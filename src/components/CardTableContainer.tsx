@@ -82,6 +82,9 @@ const CardTableContainer: React.FC = () => {
             } else if (sortConfig.key === 'physicalCard') {
                 aValue = a.data.physicalCardPrice ?? Infinity;
                 bValue = b.data.physicalCardPrice ?? Infinity;
+            } else if (sortConfig.key === 'commentCount') {
+                aValue = a.commentCount ?? a.data?.commentCount ?? 0;
+                bValue = b.commentCount ?? b.data?.commentCount ?? 0;
             } else {
                 aValue = a.data[sortConfig.key];
                 bValue = b.data[sortConfig.key];
