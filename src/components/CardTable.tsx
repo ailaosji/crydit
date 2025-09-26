@@ -67,7 +67,20 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
             const commentCount = card.commentCount ?? card.data?.commentCount ?? 0;
 
             return (
-              <tr key={card.slug} className="hover:bg-gray-50 transition-colors">
+              <tr
+                key={card.slug}
+                className="hover:bg-gray-50 transition-colors cursor-pointer relative group"
+                onClick={(e) => {
+                  // 检查是否点击了链接或按钮
+                  const target = e.target as HTMLElement;
+                  const isLink = target.tagName === 'A' || target.closest('a');
+                  const isButton = target.tagName === 'BUTTON' || target.closest('button');
+
+                  if (!isLink && !isButton) {
+                    window.location.href = `/cards/${card.slug}`;
+                  }
+                }}
+              >
                 {/* 序号 */}
                 <td className="px-3 py-4 text-center text-gray-500 text-sm">
                   {index + 1}
@@ -89,7 +102,9 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-sm truncate">{card.data.name}</h3>
+                      <h3 className="font-semibold text-gray-900 text-sm truncate group-hover:text-indigo-600 transition-colors">
+                        {card.data.name}
+                      </h3>
                       <p className="text-xs text-gray-500 truncate">{card.data.issuer}</p>
                     </div>
                   </div>
@@ -129,11 +144,12 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 <td className="px-3 py-4 text-center">
                   <a
                     href={`/cards/${card.slug}#giscus-comments`}
-                    className="inline-flex items-center justify-center group hover:scale-110 transition-transform"
+                    className="inline-flex items-center justify-center group/discussion hover:scale-110 transition-transform z-10"
                     title={`${commentCount} 条讨论`}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     {commentCount > 0 ? (
-                      <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium group-hover:bg-indigo-200 transition-colors">
+                      <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium group-hover/discussion:bg-indigo-200 transition-colors">
                         {commentCount}
                       </span>
                     ) : (
@@ -146,12 +162,15 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
 
                 {/* 操作 */}
                 <td className="px-3 py-4 text-center">
-                  <a
-                    href={`/cards/${card.slug}`}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.location.href = `/cards/${card.slug}`;
+                    }}
                     className="inline-block px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                   >
                     查看详情
-                  </a>
+                  </button>
                 </td>
               </tr>
             );

@@ -120,3 +120,108 @@ table {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
+
+/* 表格行悬停和点击样式 */
+tbody tr {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* 鼠标悬停时的样式 */
+tbody tr:hover {
+  background-color: rgba(249, 250, 251, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+/* 光标样式 */
+tbody tr.cursor-pointer {
+  cursor: pointer;
+}
+
+/* 鼠标悬停时卡片名称高亮 */
+tbody tr.group:hover .group-hover\:text-indigo-600 {
+  color: rgb(79 70 229);
+}
+
+/* 点击时的动画反馈 */
+tbody tr:active {
+  transform: translateY(0);
+  background-color: rgba(239, 246, 255, 0.9);
+}
+
+/* 整行悬停时显示一个细微的左边框 */
+tbody tr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:hover::before {
+  background-color: rgb(99 102 241);
+}
+
+/* 防止链接和按钮的点击事件冒泡视觉效果 */
+tbody tr a,
+tbody tr button {
+  position: relative;
+  z-index: 1;
+}
+
+/* 讨论气泡的特殊悬停效果 */
+.group\/discussion:hover {
+  z-index: 10;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  /* 移动端点击反馈 */
+  tbody tr:active {
+    background-color: rgba(239, 246, 255, 1);
+  }
+
+  /* 移动端不显示左边框 */
+  tbody tr::before {
+    display: none;
+  }
+}
+
+/* 禁用文本选择以改善点击体验 */
+tbody tr {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* 允许选择卡片名称和发行商文本 */
+tbody tr h3,
+tbody tr p {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* 添加过渡动画 */
+@keyframes rowHighlight {
+  0% {
+    background-color: rgba(239, 246, 255, 0);
+  }
+  50% {
+    background-color: rgba(239, 246, 255, 0.5);
+  }
+  100% {
+    background-color: rgba(239, 246, 255, 0);
+  }
+}
+
+/* 点击行时的快速高亮动画 */
+tbody tr:active {
+  animation: rowHighlight 0.3s ease;
+}
