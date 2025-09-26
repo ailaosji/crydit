@@ -13,11 +13,11 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden card-table">
       {/* 表头 */}
-      <div className="bg-gray-50 border-b border-gray-200">
+      <div className="bg-gray-50 border-b border-gray-200 card-table__header">
         <div className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-semibold text-gray-700">
-          <div className="col-span-1 text-center">序号</div>
-          <div className="col-span-3">卡片信息</div>
-          <div className="col-span-2 text-center">
+          <div className="col-span-1 text-center card-table__header-cell">序号</div>
+          <div className="col-span-3 card-table__header-cell">卡片信息</div>
+          <div className="col-span-2 text-center card-table__header-cell">
             <button
               className="inline-flex items-center justify-center space-x-1 hover:text-indigo-600 transition-colors"
               onClick={() => handleSort('virtualCard')}
@@ -28,7 +28,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
               </svg>
             </button>
           </div>
-          <div className="col-span-2 text-center">
+          <div className="col-span-2 text-center card-table__header-cell">
             <button
                 className="inline-flex items-center justify-center space-x-1 hover:text-indigo-600 transition-colors"
                 onClick={() => handleSort('physicalCard')}
@@ -39,25 +39,25 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 </svg>
             </button>
           </div>
-          <div className="col-span-2 text-center">特色功能</div>
-          <div className="col-span-1 text-center">支持大陆</div>
-          <div className="col-span-1 text-center">操作</div>
+          <div className="col-span-2 text-center card-table__header-cell">特色功能</div>
+          <div className="col-span-1 text-center card-table__header-cell">支持大陆</div>
+          <div className="col-span-1 text-center card-table__header-cell">操作</div>
         </div>
       </div>
 
       {/* 表格内容 */}
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 card-table__body">
         {cards.map((card, index) => (
-          <div key={card.slug} className="table-row transition-all duration-200 ease-in-out hover:bg-gray-50">
+          <div key={card.slug} className="table-row transition-all duration-200 ease-in-out hover:bg-gray-50 card-table__row">
             <div className="grid grid-cols-12 gap-4 px-6 py-4 items-center">
 
               {/* 序号 */}
-              <div className="col-span-1 text-center text-gray-500">
+              <div className="col-span-1 text-center text-gray-500 card-table__cell card-table__cell--index">
                 {index + 1}
               </div>
 
               {/* 卡片信息 */}
-              <div className="col-span-3">
+              <div className="col-span-3 card-table__cell card-table__cell--card-info">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
                     {card.data.logo ? (
@@ -79,22 +79,22 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
               </div>
 
               {/* 虚拟卡 */}
-              <div className="col-span-2">
+              <div className="col-span-2 card-table__cell card-table__cell--tier">
                 <TableTierDisplay card={card} type="virtual" />
               </div>
 
               {/* 实体卡 */}
-              <div className="col-span-2">
+              <div className="col-span-2 card-table__cell card-table__cell--tier">
                 <TableTierDisplay card={card} type="physical" />
               </div>
 
               {/* 特色功能 */}
-              <div className="col-span-2 text-center">
+              <div className="col-span-2 text-center card-table__cell card-table__cell--features">
                 <FeatureTags features={getDisplayTier(card)?.featureTags || card.data.featureTags} />
               </div>
 
               {/* 支持大陆 */}
-              <div className="col-span-1 text-center">
+              <div className="col-span-1 text-center card-table__cell card-table__cell--support">
                 {card.data.supportMainland ? (
                   <span className="text-green-600">✓</span>
                 ) : (
@@ -103,7 +103,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
               </div>
 
               {/* 操作 */}
-              <div className="col-span-1 text-center">
+              <div className="col-span-1 text-center card-table__cell card-table__cell--actions">
                 <a
                   href={`/cards/${card.slug}`}
                   className="inline-flex items-center justify-center px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"

@@ -58,7 +58,7 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
         <div className="text-xs">
           <span className="text-gray-500">年费:</span>
           <span className={`ml-1 font-medium ${!annualFee ? 'text-green-600' : 'text-gray-900'}`}>
-            {!annualFee ? '免费' : typeof annualFee === 'number' ? `$${annualFee}` : '收费'}
+            {!annualFee ? '免费' : annualFee === 'charged' ? '收费' : `$${annualFee}`}
           </span>
         </div>
       </div>

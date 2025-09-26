@@ -1,0 +1,81 @@
+/* src/styles/table-alignment.css */
+
+/* Base styles for the card table */
+.card-table {
+  overflow-x: auto;
+}
+
+.card-table table {
+  min-width: 768px;
+}
+
+/* Row and cell alignment */
+.card-table__row,
+.card-table__header .grid {
+  align-items: center; /* Vertically center all items in the row */
+}
+
+.card-table__cell,
+.card-table__header-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Default to center alignment */
+}
+
+/* Specific cell alignment */
+.card-table__cell--card-info,
+.card-table__header-cell:nth-child(2) {
+  justify-content: flex-start; /* Align card info to the left */
+}
+
+.card-table__cell--tier {
+  min-height: 100px; /* Ensure consistent height for tier cells */
+  flex-direction: column;
+}
+
+/* Ensure card info container takes full width */
+.card-table__cell--card-info > div {
+  width: 100%;
+}
+
+/* Button alignment */
+.card-table__cell--actions a.inline-flex {
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .card-table .grid {
+    gap: 0.5rem;
+  }
+
+  .card-table .px-6 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Switch to a vertical layout on mobile */
+  .card-table .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch; /* Stretch items to full width */
+  }
+
+  .card-table__cell,
+  .card-table__header-cell {
+    width: 100%;
+    justify-content: flex-start; /* Align all content to the left */
+    padding: 0.5rem 0; /* Add some vertical padding */
+  }
+
+  .card-table__header {
+    display: none; /* Hide header on mobile, as it's less useful */
+  }
+
+  .card-table__cell--tier {
+    min-height: auto; /* Reset min-height for mobile */
+  }
+}
