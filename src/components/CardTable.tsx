@@ -105,7 +105,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                       <h3 className="font-semibold text-gray-900 text-sm truncate group-hover:text-indigo-600 transition-colors">
                         {card.data.name}
                       </h3>
-                      <p className="text-xs text-gray-500 truncate">{card.data.issuer}</p>
+                      <p className="text-xs text-gray-500 line-clamp-2">{card.data.shortDescription || card.data.description}</p>
                     </div>
                   </div>
                 </td>
