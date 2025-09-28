@@ -5,8 +5,8 @@ module.exports = {
     extend: {
       // 添加自定义的文本对齐工具类
       textAlign: {
-        'center': 'center',
-      }
+        center: 'center',
+      },
     },
   },
   // 确保动态类名可以被正确识别
@@ -21,7 +21,5 @@ module.exports = {
     'justify-center',
     'justify-end',
   ],
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
+  plugins: [require('@tailwindcss/typography')],
+};

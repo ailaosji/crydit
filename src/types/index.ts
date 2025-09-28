@@ -1,6 +1,6 @@
 import type { CARD_NETWORKS } from '../constants';
 
-export type CardNetwork = typeof CARD_NETWORKS[keyof typeof CARD_NETWORKS];
+export type CardNetwork = (typeof CARD_NETWORKS)[keyof typeof CARD_NETWORKS];
 
 export interface CardFees {
   stakingRequired?: string;

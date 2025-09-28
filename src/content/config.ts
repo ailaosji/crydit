@@ -461,24 +461,24 @@ const configCollection = defineCollection({
 export const collections = {
   articles: articlesCollection,
   cards: cardsCollection,
-  exchanges: exchangesCollection,
-  guides: guidesCollection,
-  authors: authorsCollection,
-  pages: pagesCollection,
-  faq: faqCollection,
-  announcements: announcementsCollection,
-  reviews: reviewsCollection,
-  partners: partnersCollection,
-  config: configCollection,
+  // exchanges: exchangesCollection,
+  // guides: guidesCollection,
+  // authors: authorsCollection,
+  // pages: pagesCollection,
+  // faq: faqCollection,
+  // announcements: announcementsCollection,
+  // reviews: reviewsCollection,
+  // partners: partnersCollection,
+  // config: configCollection,
 };
 
 // 导出类型定义供其他文件使用
 export type Article = z.infer<typeof articlesCollection.schema>;
 export type Card = z.infer<typeof cardsCollection.schema>;
-export type Exchange = z.infer<typeof exchangesCollection.schema>;
-export type Guide = z.infer<typeof guidesCollection.schema>;
-export type Author = z.infer<typeof authorsCollection.schema>;
-export type FAQ = z.infer<typeof faqCollection.schema>;
-export type Review = z.infer<typeof reviewsCollection.schema>;
-export type Partner = z.infer<typeof partnersCollection.schema>;
-export type SiteConfig = z.infer<typeof configCollection.schema>;
+// export type Exchange = z.infer<typeof exchangesCollection.schema>;
+// export type Guide = z.infer<typeof guidesCollection.schema>;
+// export type Author = z.infer<typeof authorsCollection.schema>;
+// export type FAQ = z.infer<typeof faqCollection.schema>;
+// export type Review = z.infer<typeof reviewsCollection.schema>;
+// export type Partner = z.infer<typeof partnersCollection.schema>;
+// export type SiteConfig = z.infer<typeof configCollection.schema>;

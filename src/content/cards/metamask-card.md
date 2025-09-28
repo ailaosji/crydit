@@ -1,66 +1,66 @@
 ---
-title: "MetaMask Card - 加密支付卡"
-name: "MetaMask Card"
-logo: "https://metamask.io/favicon.ico"
-description: "MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。"
-shortDescription: "MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。"
-issuer: "MetaMask"
+title: 'MetaMask Card - 加密支付卡'
+name: 'MetaMask Card'
+logo: 'https://metamask.io/favicon.ico'
+description: 'MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。'
+shortDescription: 'MetaMask Card是一款直接与您的MetaMask钱包关联的借记卡，让您可以使用加密货币进行支付，无需额外的步骤、银行或不必要的费用。'
+issuer: 'MetaMask'
 supportedRegions:
-  - "阿根廷"
-  - "巴西"
-  - "加拿大"
-  - "哥伦比亚"
-  - "欧盟"
-  - "墨西哥"
-  - "英国"
-applicationDocuments: ["身份验证 (KYC)"]
+  - '阿根廷'
+  - '巴西'
+  - '加拿大'
+  - '哥伦比亚'
+  - '欧盟'
+  - '墨西哥'
+  - '英国'
+applicationDocuments: ['身份验证 (KYC)']
 supportedCurrencies:
-  - "wETH"
-  - "EURe"
-  - "GBPe"
-  - "aUSDC"
-  - "USDC"
-  - "USDT"
+  - 'wETH'
+  - 'EURe'
+  - 'GBPe'
+  - 'aUSDC'
+  - 'USDC'
+  - 'USDT'
 supportedPaymentMethods:
-  - "Mastercard"
-affiliateLink: "https://metamask.io/card/"
-publishDate: "2024-05-01"
-updateDate: "2025-09-24"
+  - 'Mastercard'
+affiliateLink: 'https://metamask.io/card/'
+publishDate: '2024-05-01'
+updateDate: '2025-09-24'
 kycRequired: true
 pros:
-  - "直接从MetaMask钱包消费"
-  - "无需银行账户"
-  - "即时结算"
-  - "丰富的链上奖励"
+  - '直接从MetaMask钱包消费'
+  - '无需银行账户'
+  - '即时结算'
+  - '丰富的链上奖励'
 cons:
-  - "支持的代币和网络有限"
-  - "需要KYC验证"
-  - "实体卡即将推出，目前仅限虚拟卡"
+  - '支持的代币和网络有限'
+  - '需要KYC验证'
+  - '实体卡即将推出，目前仅限虚拟卡'
 features:
-  - "无缝消费"
-  - "用户控制"
-  - "即时结算"
-  - "链上奖励"
+  - '无缝消费'
+  - '用户控制'
+  - '即时结算'
+  - '链上奖励'
 tags:
-  - "MetaMask"
-  - "Mastercard"
-  - "加密卡"
+  - 'MetaMask'
+  - 'Mastercard'
+  - '加密卡'
 cardTiers:
-  - name: "Free"
+  - name: 'Free'
     isVirtual: true
     isPhysical: false
-    virtualNetwork: "mastercard"
+    virtualNetwork: 'mastercard'
     fees:
       virtualCardPrice: 0
       annualFee: 0
       fxFee: 0.01
     rewards:
       cashback: null
-  - name: "Metal"
+  - name: 'Metal'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "mastercard"
-    physicalNetwork: "mastercard"
+    virtualNetwork: 'mastercard'
+    physicalNetwork: 'mastercard'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 99

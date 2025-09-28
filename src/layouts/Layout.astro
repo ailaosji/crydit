@@ -11,453 +11,666 @@ export interface Props {
 
 const {
   title,
-  description = "专业的数字货币U卡评测社区，提供最新的U卡评测、交易所排行和行业资讯",
+  description = '专业的数字货币U卡评测社区，提供最新的U卡评测、交易所排行和行业资讯',
   image,
   ogImage,
   noIndex = false,
-  canonicalURL
+  canonicalURL,
 } = Astro.props;
 
 // 获取当前页面URL
 const currentURL = new URL(Astro.request.url);
 const canonical = canonicalURL || currentURL.href;
-const finalImage = ogImage || image || "/og-image.jpg";
+const finalImage = ogImage || image || '/og-image.jpg';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN" class="scroll-smooth">
-<head>
-  <!-- 基础Meta标签 -->
-  <meta charset="UTF-8" />
-  <meta name="description" content={description} />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="generator" content={Astro.generator} />
-  
-  <!-- SEO优化 -->
-  <title>{title}</title>
-  <link rel="canonical" href={canonical} />
-  {noIndex && <meta name="robots" content="noindex,nofollow" />}
-  
-  <!-- Favicon和应用图标 -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={canonical} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={new URL(finalImage, currentURL.origin).href} />
-  <meta property="og:site_name" content="Ucards" />
-  <meta property="og:locale" content="zh_CN" />
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={canonical} />
-  <meta property="twitter:title" content={title} />
-  <meta property="twitter:description" content={description} />
-  <meta property="twitter:image" content={new URL(finalImage, currentURL.origin).href} />
-  
-  <!-- DNS预取和预连接 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
-  
-  <!-- Google Fonts - Inter for modern design -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <!-- 关键CSS内联 -->
-  <style>
-    /* 内联关键CSS以提升首屏渲染速度 */
-    *,::before,::after{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
-    ::before,::after{--tw-content:''}
-    html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-feature-settings:normal}
-    body{margin:0;line-height:inherit;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;}
-    
-    /* 防止Flash of Unstyled Content */
-    body{visibility:hidden;}
-    body.loaded{visibility:visible;}
-    
-    /* 加载指示器 */
-    .loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;}
-    .loading-spinner{width:40px;height:40px;border:4px solid #f3f4f6;border-top:4px solid #3b82f6;border-radius:50%;animation:spin 1s linear infinite;}
-    @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-    
-    /* 无障碍访问跳过链接 */
-    .skip-link{position:absolute;top:-40px;left:6px;background:#000;color:#fff;padding:8px 12px;text-decoration:none;border-radius:4px;z-index:1000;font-size:14px;}
-    .skip-link:focus{top:6px;}
-    
-    /* 导航栏过渡效果 */
-    .navbar-hidden{transform:translateY(-100%);}
-  </style>
-  
-  <!-- Custom CSS Files -->
-  <link rel="preload" href="/styles/global.css" as="style" />
-  <link rel="preload" href="/styles/card-table.css" as="style" />
-  <link rel="stylesheet" href="/styles/global.css">
-  <link rel="stylesheet" href="/styles/card-table.css">
-  
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            'sans': ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
-          },
-          colors: {
-            primary: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              200: '#bfdbfe',
-              300: '#93c5fd',
-              400: '#60a5fa',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a',
-            }
-          },
-          animation: {
-            'fade-in': 'fadeIn 0.5s ease-in-out',
-            'slide-up': 'slideUp 0.5s ease-out',
-            'scale-in': 'scaleIn 0.3s ease-out',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
-            },
-            slideUp: {
-              '0%': { transform: 'translateY(20px)', opacity: '0' },
-              '100%': { transform: 'translateY(0)', opacity: '1' },
-            },
-            scaleIn: {
-              '0%': { transform: 'scale(0.95)', opacity: '0' },
-              '100%': { transform: 'scale(1)', opacity: '1' },
-            },
-          }
+  <head>
+    <!-- 基础Meta标签 -->
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO优化 -->
+    <title>{title}</title>
+    <link rel="canonical" href={canonical} />
+    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+
+    <!-- Favicon和应用图标 -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(finalImage, currentURL.origin).href} />
+    <meta property="og:site_name" content="Ucards" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonical} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(finalImage, currentURL.origin).href} />
+
+    <!-- DNS预取和预连接 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
+
+    <!-- Google Fonts - Inter for modern design -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- 关键CSS内联 -->
+    <style>
+      /* 内联关键CSS以提升首屏渲染速度 */
+      *,
+      ::before,
+      ::after {
+        box-sizing: border-box;
+        border-width: 0;
+        border-style: solid;
+        border-color: #e5e7eb;
+      }
+      ::before,
+      ::after {
+        --tw-content: '';
+      }
+      html {
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+        -moz-tab-size: 4;
+        tab-size: 4;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          'Helvetica Neue',
+          Arial,
+          'Noto Sans',
+          sans-serif,
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+          'Segoe UI Symbol',
+          'Noto Color Emoji';
+        font-feature-settings: normal;
+      }
+      body {
+        margin: 0;
+        line-height: inherit;
+        font-family: Inter, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* 防止Flash of Unstyled Content */
+      body {
+        visibility: hidden;
+      }
+      body.loaded {
+        visibility: visible;
+      }
+
+      /* 加载指示器 */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
         }
       }
-    }
-  </script>
-  
-  <!-- 结构化数据 -->
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Ucards",
-      "url": "https://yourdomain.com",
-      "description": "专业的数字货币U卡评测社区，提供最新的U卡评测、交易所排行和行业资讯",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://yourdomain.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-  </script>
-  
-  <!-- 性能监控脚本 -->
-  <script>
-    // 页面加载性能监控
-    window.addEventListener('load', function() {
-      if ('performance' in window) {
-        setTimeout(() => {
-          const timing = performance.timing;
-          const loadTime = timing.loadEventEnd - timing.navigationStart;
-          console.log('页面加载时间:', loadTime + 'ms');
-        }, 0);
-      }
-    });
-    
-    // 移除加载指示器并显示页面内容
-    document.addEventListener('DOMContentLoaded', function() {
-      document.body.classList.add('loaded');
-      const loadingOverlay = document.querySelector('.loading-overlay');
-      if (loadingOverlay) {
-        setTimeout(() => {
-          loadingOverlay.style.display = 'none';
-        }, 300);
-      }
-    });
-  </script>
-</head>
 
-<body class="font-sans antialiased bg-white">
-  <!-- 加载指示器 -->
-  <div class="loading-overlay">
-    <div class="loading-spinner"></div>
-  </div>
-  
-  <!-- 无障碍访问跳过链接 -->
-  <a href="#main-content" class="skip-link">跳至主要内容</a>
-  
-  <!-- Navigation -->
-  <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/50 transition-all duration-300" id="navbar">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <!-- Logo -->
-        <div class="flex items-center">
-          <a href="/" class="flex items-center space-x-3 group">
-            <div class="w-8 h-8 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+      /* 无障碍访问跳过链接 */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 6px;
+        background: #000;
+        color: #fff;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        z-index: 1000;
+        font-size: 14px;
+      }
+      .skip-link:focus {
+        top: 6px;
+      }
+
+      /* 导航栏过渡效果 */
+      .navbar-hidden {
+        transform: translateY(-100%);
+      }
+    </style>
+
+    <!-- Custom CSS Files -->
+    <link rel="preload" href="/styles/global.css" as="style" />
+    <link rel="preload" href="/styles/card-table.css" as="style" />
+    <link rel="stylesheet" href="/styles/global.css" />
+    <link rel="stylesheet" href="/styles/card-table.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                'Inter',
+                'ui-sans-serif',
+                'system-ui',
+                '-apple-system',
+                'BlinkMacSystemFont',
+                'Segoe UI',
+                'Roboto',
+                'Helvetica Neue',
+                'Arial',
+                'Noto Sans',
+                'sans-serif',
+              ],
+            },
+            colors: {
+              primary: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                200: '#bfdbfe',
+                300: '#93c5fd',
+                400: '#60a5fa',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                800: '#1e40af',
+                900: '#1e3a8a',
+              },
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+              'slide-up': 'slideUp 0.5s ease-out',
+              'scale-in': 'scaleIn 0.3s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.95)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Ucards",
+        "url": "https://yourdomain.com",
+        "description": "专业的数字货币U卡评测社区，提供最新的U卡评测、交易所排行和行业资讯",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://yourdomain.com/search?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- 性能监控脚本 -->
+    <script>
+      // 移除加载指示器并显示页面内容
+      document.addEventListener('DOMContentLoaded', function () {
+        document.body.classList.add('loaded');
+        const loadingOverlay = document.querySelector('.loading-overlay');
+        if (loadingOverlay) {
+          setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+          }, 300);
+        }
+      });
+    </script>
+  </head>
+
+  <body class="bg-white font-sans antialiased">
+    <!-- 加载指示器 -->
+    <div class="loading-overlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <!-- 无障碍访问跳过链接 -->
+    <a href="#main-content" class="skip-link">跳至主要内容</a>
+
+    <!-- Navigation -->
+    <nav
+      class="fixed top-0 z-50 w-full border-b border-gray-200/50 bg-white/80 backdrop-blur-lg transition-all duration-300"
+      id="navbar"
+    >
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <!-- Logo -->
+          <div class="flex items-center">
+            <a href="/" class="group flex items-center space-x-3">
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600"
+              >
+                <svg
+                  class="h-5 w-5 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                  ></path>
+                </svg>
+              </div>
+              <span
+                class="text-xl font-bold text-gray-900 transition-colors group-hover:text-indigo-600"
+                >Ucards</span
+              >
+            </a>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <div class="hidden items-center space-x-8 md:flex">
+            <a href="/" class="font-medium text-gray-700 transition-colors hover:text-indigo-600"
+              >首页</a
+            >
+            <a
+              href="/articles"
+              class="font-medium text-gray-700 transition-colors hover:text-indigo-600">最新攻略</a
+            >
+            <a
+              href="/cards"
+              class="font-medium text-gray-700 transition-colors hover:text-indigo-600">U卡推荐</a
+            >
+            <a
+              href="/exchanges"
+              class="font-medium text-gray-700 transition-colors hover:text-indigo-600"
+              >交易所排行</a
+            >
+            <a
+              href="/about"
+              class="font-medium text-gray-700 transition-colors hover:text-indigo-600">关于我们</a
+            >
+            <a
+              href="/contact"
+              class="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition-colors hover:bg-indigo-700"
+              >联系我们</a
+            >
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="md:hidden">
+            <button
+              type="button"
+              class="text-gray-700 hover:text-indigo-600 focus:text-indigo-600 focus:outline-none"
+              id="mobile-menu-button"
+            >
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div
+        class="border-t border-gray-200 bg-white/95 backdrop-blur-lg md:hidden"
+        id="mobile-menu"
+        style="display: none;"
+      >
+        <div class="space-y-3 px-6 py-4">
+          <a
+            href="/"
+            class="block py-2 font-medium text-gray-700 transition-colors hover:text-indigo-600"
+            >首页</a
+          >
+          <a
+            href="/articles"
+            class="block py-2 font-medium text-gray-700 transition-colors hover:text-indigo-600"
+            >最新攻略</a
+          >
+          <a
+            href="/cards"
+            class="block py-2 font-medium text-gray-700 transition-colors hover:text-indigo-600"
+            >U卡推荐</a
+          >
+          <a
+            href="/exchanges"
+            class="block py-2 font-medium text-gray-700 transition-colors hover:text-indigo-600"
+            >交易所排行</a
+          >
+          <a
+            href="/about"
+            class="block py-2 font-medium text-gray-700 transition-colors hover:text-indigo-600"
+            >关于我们</a
+          >
+          <a
+            href="/contact"
+            class="mt-4 block rounded-lg bg-indigo-600 px-4 py-2 text-center font-medium text-white transition-colors hover:bg-indigo-700"
+            >联系我们</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="min-h-screen pt-16">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white">
+      <div class="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+        <div class="grid gap-8 md:grid-cols-4">
+          <!-- Company Info -->
+          <div class="md:col-span-2">
+            <div class="mb-6 flex items-center space-x-3">
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600"
+              >
+                <svg
+                  class="h-6 w-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                  ></path>
+                </svg>
+              </div>
+              <span class="text-2xl font-bold">Ucards</span>
             </div>
-            <span class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">Ucards</span>
-          </a>
-        </div>
-        
-        <!-- Desktop Navigation -->
-        <div class="hidden md:flex items-center space-x-8">
-          <a href="/" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">首页</a>
-          <a href="/articles" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">最新攻略</a>
-          <a href="/cards" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">U卡推荐</a>
-          <a href="/exchanges" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">交易所排行</a>
-          <a href="/about" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors">关于我们</a>
-          <a href="/contact" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium">联系我们</a>
-        </div>
-        
-        <!-- Mobile menu button -->
-        <div class="md:hidden">
-          <button type="button" class="text-gray-700 hover:text-indigo-600 focus:outline-none focus:text-indigo-600" id="mobile-menu-button">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Mobile Navigation -->
-    <div class="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-lg" id="mobile-menu" style="display: none;">
-      <div class="px-6 py-4 space-y-3">
-        <a href="/" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">首页</a>
-        <a href="/articles" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">最新攻略</a>
-        <a href="/cards" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">U卡推荐</a>
-        <a href="/exchanges" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">交易所排行</a>
-        <a href="/about" class="block text-gray-700 hover:text-indigo-600 font-medium py-2 transition-colors">关于我们</a>
-        <a href="/contact" class="block bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors font-medium text-center mt-4">联系我们</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Content -->
-  <main id="main-content" class="pt-16 min-h-screen">
-    <slot />
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
-      <div class="grid md:grid-cols-4 gap-8">
-        <!-- Company Info -->
-        <div class="md:col-span-2">
-          <div class="flex items-center space-x-3 mb-6">
-            <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-              </svg>
+            <p class="mb-6 max-w-md leading-relaxed text-gray-300">
+              专业的数字货币U卡评测社区，为您提供最新、最全面的U卡评测和交易所排行，助您做出明智的投资选择。
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors hover:bg-indigo-600"
+                aria-label="微信"
+              >
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 6.131-1.98v-.295c0-4.054-3.89-7.342-8.691-7.342zm-2.44 5.513a.919.919 0 0 1 .925-.919.919.919 0 0 1 .925.919.919.919 0 0 1-.925.919.919.919 0 0 1-.925-.919zm5.289 0a.919.919 0 0 1 .925-.919.919.919 0 0 1 .925.919.919.919 0 0 1-.925.919.919.919 0 0 1-.925-.919z"
+                  ></path>
+                  <path
+                    d="M23.999 14.441c0-3.252-2.895-5.882-6.479-5.882-3.585 0-6.479 2.63-6.479 5.882 0 3.253 2.894 5.882 6.479 5.882a7.596 7.596 0 0 0 2.36-.376.515.515 0 0 1 .535.073l1.479.808a.25.25 0 0 0 .039.025.236.236 0 0 0 .132.041.284.284 0 0 0 .284-.284c0-.05-.016-.109-.032-.156l-.308-1.181a.436.436 0 0 1 .156-.498 4.49 4.49 0 0 0 2.834-4.334zM18.406 11.606a.68.68 0 0 1 .684-.684.68.68 0 0 1 .684.684.68.68 0 0 1-.684.684.68.68 0 0 1-.684-.684zm3.854 0a.68.68 0 0 1 .684-.684.68.68 0 0 1 .684.684.68.68 0 0 1-.684.684.68.68 0 0 1-.684-.684z"
+                  ></path>
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors hover:bg-indigo-600"
+                aria-label="微博"
+              >
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M9.31 8.17c-2.77-.68-5.48.35-6.07 2.28-.42 1.39.17 2.84 1.54 3.84.05.04.1.08.16.11 2.78 1.74 6.36 1.74 9.14 0 .06-.03.11-.07.16-.11 1.37-1 1.96-2.45 1.54-3.84-.59-1.93-3.3-2.96-6.07-2.28zm-2.84 5.42c-1.09 0-1.98-.89-1.98-1.98s.89-1.98 1.98-1.98 1.98.89 1.98 1.98-.89 1.98-1.98 1.98zm5.68 0c-1.09 0-1.98-.89-1.98-1.98s.89-1.98 1.98-1.98 1.98.89 1.98 1.98-.89 1.98-1.98 1.98z"
+                  ></path>
+                  <path
+                    d="M20.84 3.16C18.32.64 14.7-.4 11.36.28 9.85.61 8.54 1.3 7.5 2.24c-.52.47-.48 1.28.09 1.69.48.34 1.14.25 1.54-.22.68-.8 1.54-1.4 2.52-1.63 2.38-.55 4.88.11 6.68 1.91 1.8 1.8 2.46 4.3 1.91 6.68-.23.98-.83 1.84-1.63 2.52-.47.4-.56 1.06-.22 1.54.41.57 1.22.61 1.69.09.94-1.04 1.63-2.35 1.96-3.86.78-3.34-.24-6.96-2.76-9.48z"
+                  ></path>
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-800 transition-colors hover:bg-indigo-600"
+                aria-label="邮箱"
+              >
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                  ></path>
+                </svg>
+              </a>
             </div>
-            <span class="text-2xl font-bold">Ucards</span>
           </div>
-          <p class="text-gray-300 mb-6 leading-relaxed max-w-md">
-            专业的数字货币U卡评测社区，为您提供最新、最全面的U卡评测和交易所排行，助您做出明智的投资选择。
-          </p>
-          <div class="flex space-x-4">
-            <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-indigo-600 transition-colors" aria-label="微信">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 6.131-1.98v-.295c0-4.054-3.89-7.342-8.691-7.342zm-2.44 5.513a.919.919 0 0 1 .925-.919.919.919 0 0 1 .925.919.919.919 0 0 1-.925.919.919.919 0 0 1-.925-.919zm5.289 0a.919.919 0 0 1 .925-.919.919.919 0 0 1 .925.919.919.919 0 0 1-.925.919.919.919 0 0 1-.925-.919z"/>
-                <path d="M23.999 14.441c0-3.252-2.895-5.882-6.479-5.882-3.585 0-6.479 2.63-6.479 5.882 0 3.253 2.894 5.882 6.479 5.882a7.596 7.596 0 0 0 2.36-.376.515.515 0 0 1 .535.073l1.479.808a.25.25 0 0 0 .039.025.236.236 0 0 0 .132.041.284.284 0 0 0 .284-.284c0-.05-.016-.109-.032-.156l-.308-1.181a.436.436 0 0 1 .156-.498 4.49 4.49 0 0 0 2.834-4.334zM18.406 11.606a.68.68 0 0 1 .684-.684.68.68 0 0 1 .684.684.68.68 0 0 1-.684.684.68.68 0 0 1-.684-.684zm3.854 0a.68.68 0 0 1 .684-.684.68.68 0 0 1 .684.684.68.68 0 0 1-.684.684.68.68 0 0 1-.684-.684z"/>
-              </svg>
-            </a>
-            <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-indigo-600 transition-colors" aria-label="微博">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M9.31 8.17c-2.77-.68-5.48.35-6.07 2.28-.42 1.39.17 2.84 1.54 3.84.05.04.1.08.16.11 2.78 1.74 6.36 1.74 9.14 0 .06-.03.11-.07.16-.11 1.37-1 1.96-2.45 1.54-3.84-.59-1.93-3.3-2.96-6.07-2.28zm-2.84 5.42c-1.09 0-1.98-.89-1.98-1.98s.89-1.98 1.98-1.98 1.98.89 1.98 1.98-.89 1.98-1.98 1.98zm5.68 0c-1.09 0-1.98-.89-1.98-1.98s.89-1.98 1.98-1.98 1.98.89 1.98 1.98-.89 1.98-1.98 1.98z"/>
-                <path d="M20.84 3.16C18.32.64 14.7-.4 11.36.28 9.85.61 8.54 1.3 7.5 2.24c-.52.47-.48 1.28.09 1.69.48.34 1.14.25 1.54-.22.68-.8 1.54-1.4 2.52-1.63 2.38-.55 4.88.11 6.68 1.91 1.8 1.8 2.46 4.3 1.91 6.68-.23.98-.83 1.84-1.63 2.52-.47.4-.56 1.06-.22 1.54.41.57 1.22.61 1.69.09.94-1.04 1.63-2.35 1.96-3.86.78-3.34-.24-6.96-2.76-9.48z"/>
-              </svg>
-            </a>
-            <a href="#" class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-indigo-600 transition-colors" aria-label="邮箱">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-              </svg>
-            </a>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="mb-6 text-lg font-semibold">快速链接</h3>
+            <ul class="space-y-4">
+              <li>
+                <a href="/cards" class="text-gray-300 transition-colors hover:text-white">U卡推荐</a
+                >
+              </li>
+              <li>
+                <a href="/exchanges" class="text-gray-300 transition-colors hover:text-white"
+                  >交易所排行</a
+                >
+              </li>
+              <li>
+                <a href="/articles" class="text-gray-300 transition-colors hover:text-white"
+                  >最新资讯</a
+                >
+              </li>
+              <li>
+                <a href="/guides" class="text-gray-300 transition-colors hover:text-white"
+                  >新手指南</a
+                >
+              </li>
+              <li>
+                <a href="/faq" class="text-gray-300 transition-colors hover:text-white">常见问题</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div>
+            <h3 class="mb-6 text-lg font-semibold">支持与帮助</h3>
+            <ul class="space-y-4">
+              <li>
+                <a href="/contact" class="text-gray-300 transition-colors hover:text-white"
+                  >联系我们</a
+                >
+              </li>
+              <li>
+                <a href="/about" class="text-gray-300 transition-colors hover:text-white"
+                  >关于我们</a
+                >
+              </li>
+              <li>
+                <a href="/privacy" class="text-gray-300 transition-colors hover:text-white"
+                  >隐私政策</a
+                >
+              </li>
+              <li>
+                <a href="/terms" class="text-gray-300 transition-colors hover:text-white"
+                  >服务条款</a
+                >
+              </li>
+              <li>
+                <a href="/sitemap" class="text-gray-300 transition-colors hover:text-white"
+                  >网站地图</a
+                >
+              </li>
+            </ul>
           </div>
         </div>
 
-        <!-- Quick Links -->
-        <div>
-          <h3 class="text-lg font-semibold mb-6">快速链接</h3>
-          <ul class="space-y-4">
-            <li><a href="/cards" class="text-gray-300 hover:text-white transition-colors">U卡推荐</a></li>
-            <li><a href="/exchanges" class="text-gray-300 hover:text-white transition-colors">交易所排行</a></li>
-            <li><a href="/articles" class="text-gray-300 hover:text-white transition-colors">最新资讯</a></li>
-            <li><a href="/guides" class="text-gray-300 hover:text-white transition-colors">新手指南</a></li>
-            <li><a href="/faq" class="text-gray-300 hover:text-white transition-colors">常见问题</a></li>
-          </ul>
-        </div>
-
-        <!-- Support -->
-        <div>
-          <h3 class="text-lg font-semibold mb-6">支持与帮助</h3>
-          <ul class="space-y-4">
-            <li><a href="/contact" class="text-gray-300 hover:text-white transition-colors">联系我们</a></li>
-            <li><a href="/about" class="text-gray-300 hover:text-white transition-colors">关于我们</a></li>
-            <li><a href="/privacy" class="text-gray-300 hover:text-white transition-colors">隐私政策</a></li>
-            <li><a href="/terms" class="text-gray-300 hover:text-white transition-colors">服务条款</a></li>
-            <li><a href="/sitemap" class="text-gray-300 hover:text-white transition-colors">网站地图</a></li>
-          </ul>
+        <!-- Bottom Bar -->
+        <div class="mt-12 border-t border-gray-800 pt-8">
+          <div class="flex flex-col items-center justify-between md:flex-row">
+            <p class="text-sm text-gray-400">
+              © {new Date().getFullYear()} Ucards. 保留所有权利.
+            </p>
+            <div class="mt-4 flex items-center space-x-6 md:mt-0">
+              <span class="text-sm text-gray-400">友情链接:</span>
+              <a href="#" class="text-sm text-gray-400 transition-colors hover:text-white">币安</a>
+              <a href="#" class="text-sm text-gray-400 transition-colors hover:text-white">欧易</a>
+              <a href="#" class="text-sm text-gray-400 transition-colors hover:text-white">火币</a>
+            </div>
+          </div>
         </div>
       </div>
+    </footer>
 
-      <!-- Bottom Bar -->
-      <div class="border-t border-gray-800 mt-12 pt-8">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-          <p class="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Ucards. 保留所有权利.
-          </p>
-          <div class="flex items-center space-x-6 mt-4 md:mt-0">
-            <span class="text-gray-400 text-sm">友情链接:</span>
-            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">币安</a>
-            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">欧易</a>
-            <a href="#" class="text-gray-400 hover:text-white text-sm transition-colors">火币</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
+    <!-- JavaScript -->
+    <script>
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById('mobile-menu-button');
+      const mobileMenu = document.getElementById('mobile-menu');
 
-  <!-- JavaScript -->
-  <script>
-    // Mobile menu toggle
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton?.addEventListener('click', () => {
-      const isHidden = mobileMenu.style.display === 'none' || !mobileMenu.style.display;
-      mobileMenu.style.display = isHidden ? 'block' : 'none';
-    });
+      mobileMenuButton?.addEventListener('click', () => {
+        const isHidden = mobileMenu.style.display === 'none' || !mobileMenu.style.display;
+        mobileMenu.style.display = isHidden ? 'block' : 'none';
+      });
 
-    // Navbar scroll effect with improved performance
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-    const navbar = document.getElementById('navbar');
-    
-    function updateNavbar() {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > 100) {
-        navbar.classList.add('shadow-lg');
-        navbar.classList.remove('border-b');
-      } else {
-        navbar.classList.remove('shadow-lg');
-        navbar.classList.add('border-b');
-      }
-      
-      // Hide/show navbar on scroll
-      if (currentScrollY > lastScrollY && currentScrollY > 200) {
-        navbar.classList.add('navbar-hidden');
-      } else {
-        navbar.classList.remove('navbar-hidden');
-      }
-      
-      lastScrollY = currentScrollY;
-      ticking = false;
-    }
-    
-    function requestTick() {
-      if (!ticking) {
-        requestAnimationFrame(updateNavbar);
-        ticking = true;
-      }
-    }
-    
-    window.addEventListener('scroll', requestTick);
+      // Navbar scroll effect with improved performance
+      let lastScrollY = window.scrollY;
+      let ticking = false;
+      const navbar = document.getElementById('navbar');
 
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
+      function updateNavbar() {
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > 100) {
+          navbar.classList.add('shadow-lg');
+          navbar.classList.remove('border-b');
+        } else {
+          navbar.classList.remove('shadow-lg');
+          navbar.classList.add('border-b');
         }
-      });
-    });
 
-    // Animation on scroll with better performance
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fade-in');
+        // Hide/show navbar on scroll
+        if (currentScrollY > lastScrollY && currentScrollY > 200) {
+          navbar.classList.add('navbar-hidden');
+        } else {
+          navbar.classList.remove('navbar-hidden');
         }
-      });
-    }, observerOptions);
 
-    // Observe elements with animation classes
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        observer.observe(el);
-      });
-    });
-
-    // Close mobile menu when clicking outside or on links
-    document.addEventListener('click', (e) => {
-      if (!mobileMenuButton?.contains(e.target) && !mobileMenu?.contains(e.target)) {
-        mobileMenu.style.display = 'none';
+        lastScrollY = currentScrollY;
+        ticking = false;
       }
-    });
-    
-    // Close mobile menu when clicking on links
-    mobileMenu?.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenu.style.display = 'none';
-      });
-    });
 
-    // Service Worker registration for caching (optional)
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(registration => {
-            console.log('SW registered: ', registration);
-          })
-          .catch(registrationError => {
-            console.log('SW registration failed: ', registrationError);
-          });
-      });
-    }
+      function requestTick() {
+        if (!ticking) {
+          requestAnimationFrame(updateNavbar);
+          ticking = true;
+        }
+      }
 
-    // Performance monitoring
-    window.addEventListener('load', () => {
-      if ('performance' in window) {
-        const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-        console.log(`页面加载时间: ${loadTime}ms`);
-        
-        // Report Core Web Vitals
-        if ('PerformanceObserver' in window) {
-          new PerformanceObserver((list) => {
-            list.getEntries().forEach((entry) => {
-              console.log(`${entry.name}: ${entry.value}ms`);
+      window.addEventListener('scroll', requestTick);
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
             });
-          }).observe({ entryTypes: ['paint', 'largest-contentful-paint'] });
+          }
+        });
+      });
+
+      // Animation on scroll with better performance
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px',
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+          }
+        });
+      }, observerOptions);
+
+      // Observe elements with animation classes
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+          observer.observe(el);
+        });
+      });
+
+      // Close mobile menu when clicking outside or on links
+      document.addEventListener('click', (e) => {
+        if (!mobileMenuButton?.contains(e.target) && !mobileMenu?.contains(e.target)) {
+          mobileMenu.style.display = 'none';
         }
+      });
+
+      // Close mobile menu when clicking on links
+      mobileMenu?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.style.display = 'none';
+        });
+      });
+
+      // Service Worker registration for caching (optional)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {
+              // SW registered.
+            })
+            .catch((registrationError) => {
+              // SW registration failed.
+            });
+        });
       }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>

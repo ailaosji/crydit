@@ -34,12 +34,16 @@ table {
 
 /* 卡片悬停效果 */
 .card-hover {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .card-hover:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* 添加到 global.css 文件中的修复样式 */
@@ -68,11 +72,11 @@ table {
 }
 
 /* 修复可能的样式冲突 */
-.exchange-row[style*="display: none"] {
+.exchange-row[style*='display: none'] {
   display: none !important;
 }
 
-.exchange-card[style*="display: none"] {
+.exchange-card[style*='display: none'] {
   display: none !important;
 }
 
@@ -97,7 +101,7 @@ table {
   #topThreeContainer {
     grid-template-columns: 1fr;
   }
-  
+
   .exchange-card {
     min-width: auto;
   }
@@ -109,7 +113,7 @@ table {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
-  
+
   table {
     min-width: 700px;
   }

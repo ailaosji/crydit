@@ -1,46 +1,46 @@
 ---
-title: "Avalanche Card - 加密支持的Visa卡"
-name: "Avalanche Card"
-logo: "https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg"
-description: "Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。"
-shortDescription: "Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。"
-issuer: "Rain Liquidity"
+title: 'Avalanche Card - 加密支持的Visa卡'
+name: 'Avalanche Card'
+logo: 'https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg'
+description: 'Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。'
+shortDescription: 'Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。'
+issuer: 'Rain Liquidity'
 supportedRegions:
-  - "美国多个州"
-  - "拉丁美洲"
-  - "加勒比地区"
-applicationDocuments: ["身份验证 (KYC)"]
+  - '美国多个州'
+  - '拉丁美洲'
+  - '加勒比地区'
+applicationDocuments: ['身份验证 (KYC)']
 supportedCurrencies:
-  - "AVAX"
-  - "USDC"
-  - "sAVAX"
+  - 'AVAX'
+  - 'USDC'
+  - 'sAVAX'
 supportedPaymentMethods:
-  - "Visa"
-affiliateLink: "https://www.avalanchecard.com/"
-publishDate: "2024-04-20"
-updateDate: "2025-09-24"
+  - 'Visa'
+affiliateLink: 'https://www.avalanchecard.com/'
+publishDate: '2024-04-20'
+updateDate: '2025-09-24'
 kycRequired: true
 pros:
-  - "无gas费或转换费"
-  - "全球接受Visa的地方均可使用"
-  - "无需信用检查"
+  - '无gas费或转换费'
+  - '全球接受Visa的地方均可使用'
+  - '无需信用检查'
 cons:
-  - "支持的国家和地区有限"
-  - "需要KYC验证"
+  - '支持的国家和地区有限'
+  - '需要KYC验证'
 features:
-  - "加密支持"
-  - "无gas费"
-  - "全球接受"
+  - '加密支持'
+  - '无gas费'
+  - '全球接受'
 tags:
-  - "Avalanche"
-  - "Visa"
-  - "加密卡"
+  - 'Avalanche'
+  - 'Visa'
+  - '加密卡'
 cardTiers:
-  - name: "Avalanche Card"
+  - name: 'Avalanche Card'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0

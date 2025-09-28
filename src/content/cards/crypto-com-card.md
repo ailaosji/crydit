@@ -1,111 +1,111 @@
 ---
-title: "Crypto.com Visa卡 - 高返现金属U卡"
-name: "Crypto.com Card"
-logo: "https://crypto.com/favicon.ico"
-description: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
-shortDescription: "Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。"
-issuer: "Crypto.com"
+title: 'Crypto.com Visa卡 - 高返现金属U卡'
+name: 'Crypto.com Card'
+logo: 'https://crypto.com/favicon.ico'
+description: 'Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。'
+shortDescription: 'Crypto.com提供一系列等级分明的金属Visa卡，质押CRO代币可享受高额返现和多种福利。'
+issuer: 'Crypto.com'
 supportedRegions:
-  - "美国"
-  - "加拿大"
-  - "欧洲"
-  - "亚太地区"
-applicationDocuments: ["身份验证 (KYC)"]
+  - '美国'
+  - '加拿大'
+  - '欧洲'
+  - '亚太地区'
+applicationDocuments: ['身份验证 (KYC)']
 supportedCurrencies:
-  - "BTC"
-  - "ETH"
-  - "CRO"
-  - "USDT"
-  - "EUR"
-  - "GBP"
+  - 'BTC'
+  - 'ETH'
+  - 'CRO'
+  - 'USDT'
+  - 'EUR'
+  - 'GBP'
 supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
-affiliateLink: "https://crypto.com/app/"
-publishDate: "2024-01-05"
-updateDate: "2025-08-11"
+  - 'Apple Pay'
+  - 'Google Pay'
+affiliateLink: 'https://crypto.com/app/'
+publishDate: '2024-01-05'
+updateDate: '2025-08-11'
 kycRequired: true
 pros:
-  - "高额消费返现"
-  - "金属卡片，质感好"
-  - "提供机场贵宾厅、Netflix、Spotify报销等多种福利"
-  - "全球广泛支持"
+  - '高额消费返现'
+  - '金属卡片，质感好'
+  - '提供机场贵宾厅、Netflix、Spotify报销等多种福利'
+  - '全球广泛支持'
 cons:
-  - "需要质押大量CRO代币才能获得高级别卡片"
-  - "返现以CRO代币形式发放，价格会波动"
-  - "福利和返现政策可能会调整"
+  - '需要质押大量CRO代币才能获得高级别卡片'
+  - '返现以CRO代币形式发放，价格会波动'
+  - '福利和返现政策可能会调整'
 features:
-  - "CRO质押奖励"
-  - "机场贵宾厅"
-  - "订阅服务报销"
-  - "金属卡"
+  - 'CRO质押奖励'
+  - '机场贵宾厅'
+  - '订阅服务报销'
+  - '金属卡'
 tags:
-  - "Crypto.com"
-  - "CRO"
-  - "返现"
-  - "金属卡"
-  - "U卡"
+  - 'Crypto.com'
+  - 'CRO'
+  - '返现'
+  - '金属卡'
+  - 'U卡'
 cardTiers:
-  - name: "Midnight Blue"
+  - name: 'Midnight Blue'
     recommended: false
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: "0"
-  - name: "Ruby Steel"
+      cashback: '0'
+  - name: 'Ruby Steel'
     recommended: true
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: "2%"
-  - name: "Jade Green / Royal Indigo"
+      cashback: '2%'
+  - name: 'Jade Green / Royal Indigo'
     recommended: false
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: "3%"
-  - name: "Icy White / Rose Gold"
+      cashback: '3%'
+  - name: 'Icy White / Rose Gold'
     recommended: false
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: "4%"
-  - name: "Obsidian"
+      cashback: '4%'
+  - name: 'Obsidian'
     recommended: false
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "visa"
-    physicalNetwork: "visa"
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: "5%"
+      cashback: '5%'
 ---
 
 ## Crypto.com Visa 卡评测

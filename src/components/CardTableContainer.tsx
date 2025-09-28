@@ -6,16 +6,21 @@ import LoadMoreIndicator from './LoadMoreIndicator';
 import { Globe, Frown } from 'lucide-react';
 import TableSkeleton from './ui/TableSkeleton';
 import type { Card } from '../types';
-import { getVirtualCardInfo, getPhysicalCardInfo } from '../utils/cardInfo';
 
 const ITEMS_PER_PAGE = 20;
 
 const isFeeFree = (fee: number | boolean | null | undefined | string): boolean => {
-    if (typeof fee === 'string') {
-        const lowerFee = fee.toLowerCase();
-        return lowerFee === '0' || lowerFee === '€0' || lowerFee === '免费' || lowerFee === 'free' || lowerFee === '0%';
-    }
-    return fee === undefined || fee === null || fee === false || fee === 0;
+  if (typeof fee === 'string') {
+    const lowerFee = fee.toLowerCase();
+    return (
+      lowerFee === '0' ||
+      lowerFee === '€0' ||
+      lowerFee === '免费' ||
+      lowerFee === 'free' ||
+      lowerFee === '0%'
+    );
+  }
+  return fee === undefined || fee === null || fee === false || fee === 0;
 };
 
 const CardTableContainer: React.FC = () => {
@@ -34,7 +39,10 @@ const CardTableContainer: React.FC = () => {
     filterMainland: false,
   });
 
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'ascending' | 'descending' }>({ key: 'default', direction: 'ascending' });
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: 'ascending' | 'descending';
+  }>({ key: 'default', direction: 'ascending' });
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -45,7 +53,7 @@ const CardTableContainer: React.FC = () => {
         const data = await response.json();
         setAllCards(data);
       } catch (error) {
-        console.error("Could not fetch card data:", error);
+        console.error('Could not fetch card data:', error);
         setAllCards([]);
       }
     };
@@ -54,55 +62,54 @@ const CardTableContainer: React.FC = () => {
 
   useEffect(() => {
     if (allCards.length === 0) {
-      if(isLoading) setIsLoading(false);
+      if (isLoading) setIsLoading(false);
       return;
-    };
+    }
 
     let tempCards = [...allCards];
 
     // Filtering logic
     if (filters.search) {
       const searchTerm = filters.search.toLowerCase();
-      tempCards = tempCards.filter(card =>
-        card.data.name.toLowerCase().includes(searchTerm) ||
-        (card.data.issuer || '').toLowerCase().includes(searchTerm)
+      tempCards = tempCards.filter(
+        (card) =>
+          card.data.name.toLowerCase().includes(searchTerm) ||
+          (card.data.issuer || '').toLowerCase().includes(searchTerm)
       );
     }
     if (filters.filterMainland) {
-        tempCards = tempCards.filter(card => card.data.supportMainland);
+      tempCards = tempCards.filter((card) => card.data.supportMainland);
     }
 
     // Sorting logic
     if (sortConfig.key !== 'default') {
-        tempCards.sort((a, b) => {
-            let aValue, bValue;
-            if (sortConfig.key === 'virtualCard') {
-                aValue = a.data.virtualCardPrice ?? Infinity;
-                bValue = b.data.virtualCardPrice ?? Infinity;
-            } else if (sortConfig.key === 'physicalCard') {
-                aValue = a.data.physicalCardPrice ?? Infinity;
-                bValue = b.data.physicalCardPrice ?? Infinity;
-            } else if (sortConfig.key === 'commentCount') {
-                aValue = a.commentCount ?? a.data?.commentCount ?? 0;
-                bValue = b.commentCount ?? b.data?.commentCount ?? 0;
-            } else {
-                aValue = a.data[sortConfig.key];
-                bValue = b.data[sortConfig.key];
-            }
+      tempCards.sort((a, b) => {
+        let aValue, bValue;
+        if (sortConfig.key === 'virtualCard') {
+          aValue = a.data.virtualCardPrice ?? Infinity;
+          bValue = b.data.virtualCardPrice ?? Infinity;
+        } else if (sortConfig.key === 'physicalCard') {
+          aValue = a.data.physicalCardPrice ?? Infinity;
+          bValue = b.data.physicalCardPrice ?? Infinity;
+        } else if (sortConfig.key === 'commentCount') {
+          aValue = a.commentCount ?? a.data?.commentCount ?? 0;
+          bValue = b.commentCount ?? b.data?.commentCount ?? 0;
+        } else {
+          aValue = a.data[sortConfig.key];
+          bValue = b.data[sortConfig.key];
+        }
 
-            if (aValue < bValue) return sortConfig.direction === 'ascending' ? -1 : 1;
-            if (aValue > bValue) return sortConfig.direction === 'ascending' ? 1 : -1;
-            return 0;
-        });
+        if (aValue < bValue) return sortConfig.direction === 'ascending' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'ascending' ? 1 : -1;
+        return 0;
+      });
     }
-
 
     setFilteredCards(tempCards);
     setDisplayedCards(tempCards.slice(0, ITEMS_PER_PAGE));
     setHasMoreData(tempCards.length > ITEMS_PER_PAGE);
     setPage(1);
     setIsLoading(false);
-
   }, [filters, allCards, sortConfig]);
 
   const handleSort = (key: string) => {
@@ -123,7 +130,7 @@ const CardTableContainer: React.FC = () => {
   }, [page, filteredCards, hasMoreData, isLoading]);
 
   const handleFilterChange = (filterName: string, value: string) => {
-    setFilters(prev => ({ ...prev, [filterName]: value }));
+    setFilters((prev) => ({ ...prev, [filterName]: value }));
   };
 
   const handleResetFilters = () => {
@@ -132,11 +139,11 @@ const CardTableContainer: React.FC = () => {
   };
 
   const handleSearchChange = (value: string) => {
-    setFilters(prev => ({ ...prev, search: value }));
+    setFilters((prev) => ({ ...prev, search: value }));
   };
 
   const toggleFilterMainland = () => {
-    setFilters(prev => ({ ...prev, filterMainland: !prev.filterMainland }));
+    setFilters((prev) => ({ ...prev, filterMainland: !prev.filterMainland }));
   };
 
   if (isLoading && allCards.length === 0) {
@@ -145,51 +152,52 @@ const CardTableContainer: React.FC = () => {
 
   return (
     <div>
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white mb-8">
-        <h1 className="text-2xl font-bold mb-4">🌟 2024年最佳加密货币卡片推荐</h1>
+      <div className="mb-8 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white">
+        <h1 className="mb-4 text-2xl font-bold">🌟 2024年最佳加密货币卡片推荐</h1>
         <div className="flex flex-wrap gap-4">
           <button
             onClick={toggleFilterMainland}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+            className={`rounded-lg px-4 py-2 font-medium transition-all ${
               filters.filterMainland
                 ? 'bg-white text-indigo-600'
                 : 'bg-white/20 text-white hover:bg-white/30'
             }`}
           >
-            <Globe className="inline-block w-4 h-4 mr-1" />
+            <Globe className="mr-1 inline-block h-4 w-4" />
             仅显示支持大陆
           </button>
         </div>
       </div>
 
-      <div className="bg-gray-50 rounded-2xl p-6 mb-8">
-          <div className="flex flex-wrap items-center gap-4">
-              <CardFilters
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                onResetFilters={handleResetFilters}
-              />
-              <div className="flex items-center space-x-2 ml-auto">
-                  <CardSearch searchTerm={filters.search} onSearchChange={handleSearchChange} />
-              </div>
+      <div className="mb-8 rounded-2xl bg-gray-50 p-6">
+        <div className="flex flex-wrap items-center gap-4">
+          <CardFilters
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onResetFilters={handleResetFilters}
+          />
+          <div className="ml-auto flex items-center space-x-2">
+            <CardSearch searchTerm={filters.search} onSearchChange={handleSearchChange} />
           </div>
-          <div className="mt-4 flex items-center justify-between">
-              <div className="text-sm text-gray-600">
-                共找到 <span className="font-medium text-indigo-600">{filteredCards.length}</span> 张卡片
-              </div>
+        </div>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            共找到 <span className="font-medium text-indigo-600">{filteredCards.length}</span>{' '}
+            张卡片
           </div>
+        </div>
       </div>
 
       {filteredCards.length > 0 ? (
         <CardTable cards={displayedCards} handleSort={handleSort} />
       ) : (
-        <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
-          <Frown className="mx-auto w-12 h-12 text-gray-400" />
+        <div className="rounded-2xl bg-white p-8 text-center shadow-xl">
+          <Frown className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-4 text-xl font-semibold text-gray-700">没有找到匹配的卡片</h3>
-          <p className="text-gray-500 mt-2">请尝试调整您的筛选条件或重置。</p>
+          <p className="mt-2 text-gray-500">请尝试调整您的筛选条件或重置。</p>
           <button
             onClick={handleResetFilters}
-            className="mt-6 px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            className="mt-6 rounded-lg bg-indigo-600 px-5 py-2 text-white transition-colors hover:bg-indigo-700"
           >
             重置筛选
           </button>

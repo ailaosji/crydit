@@ -7,7 +7,7 @@ export const giscusConfig = {
   repoId: 'R_kgDOPUb-ng', // 仓库 ID
   category: 'General', // 讨论分类
   categoryId: 'DIC_kwDOPUb-ns4Cty_B', // 分类 ID
-  
+
   // 功能配置
   mapping: 'pathname', // 评论映射方式：使用页面路径
   strict: '0', // 严格模式：关闭

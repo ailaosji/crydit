@@ -11,7 +11,7 @@ export async function POST({ request }) {
       });
     }
 
-    const cardIdentifiers = slugs.map(slug => ({ slug, title: slug }));
+    const cardIdentifiers = slugs.map((slug) => ({ slug, title: slug }));
     const commentCounts = await batchGetCommentCounts(cardIdentifiers);
 
     const countsObject = Object.fromEntries(commentCounts);

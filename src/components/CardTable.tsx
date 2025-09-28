@@ -12,51 +12,47 @@ interface CardTableProps {
 
 const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-x-auto">
+    <div className="overflow-x-auto rounded-2xl bg-white shadow-xl">
       <table className="w-full min-w-[900px]">
         {/* 表头 */}
-        <thead className="bg-gray-50 border-b border-gray-200">
+        <thead className="border-b border-gray-200 bg-gray-50">
           <tr>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-12">
-              序号
-            </th>
-            <th className="px-4 py-4 text-left text-sm font-semibold text-gray-700 w-48">
+            <th className="w-12 px-3 py-4 text-center text-sm font-semibold text-gray-700">序号</th>
+            <th className="w-48 px-4 py-4 text-left text-sm font-semibold text-gray-700">
               卡片信息
             </th>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-32">
+            <th className="w-32 px-3 py-4 text-center text-sm font-semibold text-gray-700">
               <button
-                className="inline-flex items-center justify-center space-x-1 hover:text-indigo-600 transition-colors"
+                className="inline-flex items-center justify-center space-x-1 transition-colors hover:text-indigo-600"
                 onClick={() => handleSort('virtualCard')}
               >
                 <span>虚拟卡 ↑</span>
               </button>
             </th>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-32">
+            <th className="w-32 px-3 py-4 text-center text-sm font-semibold text-gray-700">
               <button
-                className="inline-flex items-center justify-center space-x-1 hover:text-indigo-600 transition-colors"
+                className="inline-flex items-center justify-center space-x-1 transition-colors hover:text-indigo-600"
                 onClick={() => handleSort('physicalCard')}
               >
                 <span>实体卡 ↑</span>
               </button>
             </th>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-36">
+            <th className="w-36 px-3 py-4 text-center text-sm font-semibold text-gray-700">
               特色功能
             </th>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-20">
+            <th className="w-20 px-3 py-4 text-center text-sm font-semibold text-gray-700">
               支持大陆
             </th>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-20">
+            <th className="w-20 px-3 py-4 text-center text-sm font-semibold text-gray-700">
               <button
-                className="inline-flex items-center justify-center space-x-1 hover:text-indigo-600 transition-colors"
+                className="inline-flex items-center justify-center space-x-1 transition-colors hover:text-indigo-600"
                 onClick={() => handleSort('commentCount')}
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle className="h-4 w-4" />
                 <span>讨论</span>
               </button>
             </th>
-            <th className="px-3 py-4 text-center text-sm font-semibold text-gray-700 w-24">
-              操作
-            </th>
+            <th className="w-24 px-3 py-4 text-center text-sm font-semibold text-gray-700">操作</th>
           </tr>
         </thead>
 
@@ -69,7 +65,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
             return (
               <tr
                 key={card.slug}
-                className="hover:bg-gray-50 transition-colors cursor-pointer relative group"
+                className="group relative cursor-pointer transition-colors hover:bg-gray-50"
                 onClick={(e) => {
                   // 检查是否点击了链接或按钮
                   const target = e.target as HTMLElement;
@@ -82,19 +78,17 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 }}
               >
                 {/* 序号 */}
-                <td className="px-3 py-4 text-center text-gray-500 text-sm">
-                  {index + 1}
-                </td>
+                <td className="px-3 py-4 text-center text-sm text-gray-500">{index + 1}</td>
 
                 {/* 卡片信息 */}
                 <td className="px-4 py-4">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-gray-100">
                       {card.data.logo ? (
                         <img
                           src={card.data.logo}
                           alt={card.data.name}
-                          className="w-8 h-8 object-contain"
+                          className="h-8 w-8 object-contain"
                           loading="lazy"
                         />
                       ) : (
@@ -102,10 +96,12 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-gray-900 text-sm truncate group-hover:text-indigo-600 transition-colors">
+                      <h3 className="truncate text-sm font-semibold text-gray-900 transition-colors group-hover:text-indigo-600">
                         {card.data.name}
                       </h3>
-                      <p className="text-xs text-gray-500 line-clamp-2">{card.data.shortDescription || card.data.description}</p>
+                      <p className="line-clamp-2 text-xs text-gray-500">
+                        {card.data.shortDescription || card.data.description}
+                      </p>
                     </div>
                   </div>
                 </td>
@@ -134,9 +130,9 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 {/* 支持大陆 */}
                 <td className="px-3 py-4 text-center">
                   {card.data.supportMainland ? (
-                    <span className="text-green-600 text-lg">✓</span>
+                    <span className="text-lg text-green-600">✓</span>
                   ) : (
-                    <span className="text-gray-400 text-lg">✗</span>
+                    <span className="text-lg text-gray-400">✗</span>
                   )}
                 </td>
 
@@ -144,17 +140,17 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 <td className="px-3 py-4 text-center">
                   <a
                     href={`/cards/${card.slug}#giscus-comments`}
-                    className="inline-flex items-center justify-center group/discussion hover:scale-110 transition-transform z-10"
+                    className="group/discussion z-10 inline-flex items-center justify-center transition-transform hover:scale-110"
                     title={`${commentCount} 条讨论`}
                     onClick={(e) => e.stopPropagation()}
                   >
                     {commentCount > 0 ? (
-                      <span className="inline-flex items-center justify-center min-w-[32px] h-8 px-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium group-hover/discussion:bg-indigo-200 transition-colors">
+                      <span className="inline-flex h-8 min-w-[32px] items-center justify-center rounded-full bg-indigo-100 px-2 text-sm font-medium text-indigo-700 transition-colors group-hover/discussion:bg-indigo-200">
                         {commentCount}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-indigo-600 transition-colors">
-                        <MessageCircle className="w-5 h-5" />
+                      <span className="inline-flex h-8 w-8 items-center justify-center text-gray-400 transition-colors hover:text-indigo-600">
+                        <MessageCircle className="h-5 w-5" />
                       </span>
                     )}
                   </a>
@@ -167,7 +163,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                       e.stopPropagation();
                       window.location.href = `/cards/${card.slug}`;
                     }}
-                    className="inline-block px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                    className="inline-block rounded-lg bg-indigo-600 px-3 py-1.5 text-xs text-white transition-colors hover:bg-indigo-700"
                   >
                     查看详情
                   </button>
@@ -179,7 +175,9 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
       </table>
 
       {/* 结束指示器 - 用于无限滚动 */}
-      <div id="end-indicator" className="sr-only">End of table</div>
+      <div id="end-indicator" className="sr-only">
+        End of table
+      </div>
     </div>
   );
 };
