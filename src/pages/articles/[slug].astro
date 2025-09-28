@@ -29,32 +29,37 @@ const {
   category,
   tags,
   author,
-  readingTime
+  readingTime,
 } = article.data;
 
 // 获取相关文章
 const allArticles = await getCollection('articles');
 const relatedArticles = allArticles
-  .filter(a => a.slug !== article.slug)
-  .filter(a => {
+  .filter((a) => a.slug !== article.slug)
+  .filter((a) => {
     // 基于分类或标签的相关性
     const sameCategory = a.data.category === category;
-    const commonTags = tags?.some(tag => a.data.tags?.includes(tag));
+    const commonTags = tags?.some((tag) => a.data.tags?.includes(tag));
     return sameCategory || commonTags;
   })
   .slice(0, 3);
 
 // 获取更多同分类文章
 const categoryArticles = allArticles
-  .filter(a => a.slug !== article.slug && a.data.category === category)
+  .filter((a) => a.slug !== article.slug && a.data.category === category)
   .slice(0, 5);
 
 // 分类配置
 const categoryConfig = Object.fromEntries(
-  Object.values(CARD_CATEGORIES).map(cat => [cat.value, cat])
+  Object.values(CARD_CATEGORIES).map((cat) => [cat.value, cat])
 );
 
-const defaultCategory = { label: '文章', color: 'gray', icon: '📄', bgColor: 'from-gray-500 to-gray-600' };
+const defaultCategory = {
+  label: '文章',
+  color: 'gray',
+  icon: '📄',
+  bgColor: 'from-gray-500 to-gray-600',
+};
 const currentCategory = categoryConfig[category] || defaultCategory;
 ---
 
@@ -64,20 +69,42 @@ const currentCategory = categoryConfig[category] || defaultCategory;
     <header class="relative overflow-hidden">
       <!-- 背景渐变 -->
       <div class={`absolute inset-0 bg-gradient-to-br ${currentCategory.bgColor} opacity-90`}></div>
-      
+
       <!-- 装饰性图案 -->
-      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
-      
-      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div
+        class="bg-[url('data:image/svg+xml,%3Csvg width= absolute inset-0"
+        60"
+        height="60"
+        viewBox="0 0 60 60"
+        xmlns="http://www.w3.org/2000/svg"
+        %3E%3Cg
+        fill="none"
+        fill-rule="evenodd"
+        %3E%3Cg
+        fill="%23ffffff"
+        fill-opacity="0.05"
+        %3E%3Cpath
+        d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"
+        %3E%3C
+        g%3E%3C
+        g%3E%3C
+        svg%3E')]
+        opacity-20"
+      >
+      </div>
+
+      <div class="relative mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
         <!-- 面包屑导航 -->
-        <nav class="flex items-center space-x-2 text-white/80 text-sm mb-8">
-          <a href="/" class="hover:text-white transition-colors">首页</a>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        <nav class="mb-8 flex items-center space-x-2 text-sm text-white/80">
+          <a href="/" class="transition-colors hover:text-white">首页</a>
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+            ></path>
           </svg>
-          <a href="/articles" class="hover:text-white transition-colors">最新文章</a>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          <a href="/articles" class="transition-colors hover:text-white">最新文章</a>
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
+            ></path>
           </svg>
           <span class="text-white">{currentCategory.label}</span>
         </nav>
@@ -86,78 +113,107 @@ const currentCategory = categoryConfig[category] || defaultCategory;
         <div class="space-y-6">
           <!-- 分类标签 -->
           <div class="flex items-center space-x-3">
-            <span class="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-medium">
+            <span
+              class="inline-flex items-center rounded-full bg-white/20 px-4 py-2 text-sm font-medium text-white backdrop-blur-md"
+            >
               <span class="mr-2 text-lg">{currentCategory.icon}</span>
               {currentCategory.label}
             </span>
-            {tags && tags.slice(0, 2).map(tag => (
-              <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-white/90 text-xs">
-                #{tag}
-              </span>
-            ))}
+            {
+              tags &&
+                tags
+                  .slice(0, 2)
+                  .map((tag) => (
+                    <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs text-white/90 backdrop-blur-md">
+                      #{tag}
+                    </span>
+                  ))
+            }
           </div>
 
           <!-- 标题 -->
-          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+          <h1 class="text-4xl font-bold leading-tight text-white md:text-5xl lg:text-6xl">
             {title}
           </h1>
 
           <!-- 描述 -->
-          <p class="text-xl text-white/90 leading-relaxed max-w-4xl">
+          <p class="max-w-4xl text-xl leading-relaxed text-white/90">
             {description}
           </p>
 
           <!-- 元信息 -->
-          <div class="flex flex-wrap items-center gap-6 text-white/80 text-sm">
+          <div class="flex flex-wrap items-center gap-6 text-sm text-white/80">
             <div class="flex items-center">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
               </svg>
               <span>{author || 'U卡评测团队'}</span>
             </div>
             <div class="flex items-center">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                ></path>
               </svg>
               <time datetime={publishDate.toISOString()}>
-                {new Date(publishDate).toLocaleDateString('zh-CN', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
+                {
+                  new Date(publishDate).toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                }
               </time>
             </div>
             <div class="flex items-center">
-              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <span>{readingTime || '5'} 分钟阅读</span>
             </div>
-            {updateDate && (
-              <div class="flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                </svg>
-                <span>更新于 {new Date(updateDate).toLocaleDateString('zh-CN')}</span>
-              </div>
-            )}
+            {
+              updateDate && (
+                <div class="flex items-center">
+                  <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  <span>更新于 {new Date(updateDate).toLocaleDateString('zh-CN')}</span>
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
     </header>
 
     <!-- Main Content Area -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid lg:grid-cols-3 gap-12">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-3">
         <!-- Article Content -->
-        <div class="lg:col-span-2 space-y-12">
+        <div class="space-y-12 lg:col-span-2">
           <!-- 文章正文 -->
-          <div class="bg-white rounded-3xl shadow-xl p-8 lg:p-12">
+          <div class="rounded-3xl bg-white p-8 shadow-xl lg:p-12">
             <div class="prose prose-lg max-w-none">
               <Content />
             </div>
           </div>
-          
+
           <!-- 评论区 -->
           <GiscusComments title="文章评论" showInstructions={true} />
         </div>
@@ -165,101 +221,148 @@ const currentCategory = categoryConfig[category] || defaultCategory;
         <!-- Sidebar -->
         <aside class="space-y-8">
           <!-- 相关文章推荐 -->
-          {relatedArticles.length > 0 && (
-            <div class="bg-white rounded-3xl shadow-xl p-6 sticky top-24">
-              <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                </svg>
-                推荐阅读
-              </h3>
-              
-              <div class="space-y-4">
-                {relatedArticles.map((relatedArticle) => (
-                  <a href={`/articles/${relatedArticle.slug}`} class="group block">
-                    <article class="p-4 rounded-2xl bg-gradient-to-r from-gray-50 to-indigo-50/30 hover:from-indigo-50 hover:to-purple-50 transition-all duration-300">
-                      <div class="flex items-start space-x-3">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold group-hover:scale-110 transition-transform">
-                          {categoryConfig[relatedArticle.data.category]?.icon || '📄'}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                          <h4 class="text-sm font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-2">
-                            {relatedArticle.data.title}
-                          </h4>
-                          <p class="text-xs text-gray-500 mt-1">
-                            {new Date(relatedArticle.data.publishDate).toLocaleDateString('zh-CN')}
-                          </p>
-                        </div>
-                      </div>
-                    </article>
-                  </a>
-                ))}
-              </div>
+          {
+            relatedArticles.length > 0 && (
+              <div class="sticky top-24 rounded-3xl bg-white p-6 shadow-xl">
+                <h3 class="mb-6 flex items-center text-xl font-bold text-gray-900">
+                  <svg
+                    class="mr-2 h-5 w-5 text-indigo-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    />
+                  </svg>
+                  推荐阅读
+                </h3>
 
-              <!-- 相关标签 -->
-              {tags && tags.length > 0 && (
-                <div class="mt-8 pt-6 border-t border-gray-100">
-                  <h4 class="text-sm font-bold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-4 h-4 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                    </svg>
-                    相关标签
-                  </h4>
-                  <div class="flex flex-wrap gap-2">
-                    {tags.map(tag => (
-                      <a 
-                        href={`/tags/${tag}`} 
-                        class="inline-flex items-center px-3 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 text-xs font-medium hover:from-indigo-100 hover:to-purple-100 transition-all duration-300 hover:scale-105"
-                      >
-                        #{tag}
-                      </a>
-                    ))}
-                  </div>
+                <div class="space-y-4">
+                  {relatedArticles.map((relatedArticle) => (
+                    <a href={`/articles/${relatedArticle.slug}`} class="group block">
+                      <article class="rounded-2xl bg-gradient-to-r from-gray-50 to-indigo-50/30 p-4 transition-all duration-300 hover:from-indigo-50 hover:to-purple-50">
+                        <div class="flex items-start space-x-3">
+                          <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-sm font-bold text-white transition-transform group-hover:scale-110">
+                            {categoryConfig[relatedArticle.data.category]?.icon || '📄'}
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <h4 class="line-clamp-2 text-sm font-semibold text-gray-900 transition-colors group-hover:text-indigo-600">
+                              {relatedArticle.data.title}
+                            </h4>
+                            <p class="mt-1 text-xs text-gray-500">
+                              {new Date(relatedArticle.data.publishDate).toLocaleDateString(
+                                'zh-CN'
+                              )}
+                            </p>
+                          </div>
+                        </div>
+                      </article>
+                    </a>
+                  ))}
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* 相关标签 */}
+                {tags && tags.length > 0 && (
+                  <div class="mt-8 border-t border-gray-100 pt-6">
+                    <h4 class="mb-4 flex items-center text-sm font-bold text-gray-900">
+                      <svg
+                        class="mr-2 h-4 w-4 text-indigo-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                        />
+                      </svg>
+                      相关标签
+                    </h4>
+                    <div class="flex flex-wrap gap-2">
+                      {tags.map((tag) => (
+                        <a
+                          href={`/tags/${tag}`}
+                          class="inline-flex items-center rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 px-3 py-1.5 text-xs font-medium text-indigo-700 transition-all duration-300 hover:scale-105 hover:from-indigo-100 hover:to-purple-100"
+                        >
+                          #{tag}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          }
 
           <!-- 分类文章列表 -->
-          {categoryArticles.length > 0 && (
-            <div class="bg-white rounded-3xl shadow-xl p-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <span class="text-2xl mr-2">{currentCategory.icon}</span>
-                更多{currentCategory.label}
-              </h3>
-              
-              <div class="space-y-3">
-                {categoryArticles.map((catArticle, index) => (
-                  <a href={`/articles/${catArticle.slug}`} class="group flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors">
-                    <span class={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold
-                      ${index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
-                        index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white' :
-                        index === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white' :
-                        'bg-gray-100 text-gray-600'}`}>
-                      {index + 1}
-                    </span>
-                    <span class="flex-1 text-sm text-gray-700 group-hover:text-indigo-600 transition-colors line-clamp-2">
-                      {catArticle.data.title}
-                    </span>
-                  </a>
-                ))}
-              </div>
+          {
+            categoryArticles.length > 0 && (
+              <div class="rounded-3xl bg-white p-6 shadow-xl">
+                <h3 class="mb-6 flex items-center text-xl font-bold text-gray-900">
+                  <span class="mr-2 text-2xl">{currentCategory.icon}</span>
+                  更多{currentCategory.label}
+                </h3>
 
-              <a href={`/categories/${category}`} class="mt-6 block text-center py-3 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-600 rounded-xl hover:from-indigo-100 hover:to-purple-100 transition-all duration-300 text-sm font-medium">
-                查看全部{currentCategory.label}
-              </a>
-            </div>
-          )}
+                <div class="space-y-3">
+                  {categoryArticles.map((catArticle, index) => (
+                    <a
+                      href={`/articles/${catArticle.slug}`}
+                      class="group flex items-center space-x-3 rounded-xl p-3 transition-colors hover:bg-gray-50"
+                    >
+                      <span
+                        class={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                          index === 0
+                            ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white'
+                            : index === 1
+                              ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white'
+                              : index === 2
+                                ? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white'
+                                : 'bg-gray-100 text-gray-600'
+                        }`}
+                      >
+                        {index + 1}
+                      </span>
+                      <span class="line-clamp-2 flex-1 text-sm text-gray-700 transition-colors group-hover:text-indigo-600">
+                        {catArticle.data.title}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <a
+                  href={`/categories/${category}`}
+                  class="mt-6 block rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 py-3 text-center text-sm font-medium text-indigo-600 transition-all duration-300 hover:from-indigo-100 hover:to-purple-100"
+                >
+                  查看全部{currentCategory.label}
+                </a>
+              </div>
+            )
+          }
 
           <!-- 目录导航 (TOC) -->
-          <div class="bg-white rounded-3xl shadow-xl p-6 hidden lg:block" id="toc-container">
-            <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          <div class="hidden rounded-3xl bg-white p-6 shadow-xl lg:block" id="toc-container">
+            <h3 class="mb-6 flex items-center text-xl font-bold text-gray-900">
+              <svg
+                class="mr-2 h-5 w-5 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"></path>
               </svg>
               文章目录
             </h3>
-            <nav class="space-y-2 max-h-96 overflow-y-auto" id="toc-nav">
+            <nav class="max-h-96 space-y-2 overflow-y-auto" id="toc-nav">
               <!-- 目录将通过JavaScript动态生成 -->
             </nav>
           </div>
@@ -268,49 +371,89 @@ const currentCategory = categoryConfig[category] || defaultCategory;
     </div>
 
     <!-- 相关推荐底部区域 -->
-    <section class="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">继续探索</h2>
+    <section
+      class="bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 px-4 py-16 sm:px-6 lg:px-8"
+    >
+      <div class="mx-auto max-w-7xl">
+        <div class="mb-12 text-center">
+          <h2 class="mb-4 text-3xl font-bold text-gray-900">继续探索</h2>
           <p class="text-gray-600">发现更多精彩内容，深入了解U卡世界</p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="grid gap-8 md:grid-cols-3">
           <!-- 最新文章 -->
-          <div class="bg-white rounded-3xl shadow-lg p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          <div class="rounded-3xl bg-white p-6 shadow-lg">
+            <h3 class="mb-4 flex items-center text-lg font-bold text-gray-900">
+              <svg
+                class="mr-2 h-5 w-5 text-indigo-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               最新发布
             </h3>
-            <a href="/articles" class="block text-center py-4 bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-600 rounded-xl hover:from-indigo-100 hover:to-purple-100 transition-all duration-300">
+            <a
+              href="/articles"
+              class="block rounded-xl bg-gradient-to-r from-indigo-50 to-purple-50 py-4 text-center text-indigo-600 transition-all duration-300 hover:from-indigo-100 hover:to-purple-100"
+            >
               查看所有文章 →
             </a>
           </div>
 
           <!-- U卡推荐 -->
-          <div class="bg-white rounded-3xl shadow-lg p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+          <div class="rounded-3xl bg-white p-6 shadow-lg">
+            <h3 class="mb-4 flex items-center text-lg font-bold text-gray-900">
+              <svg
+                class="mr-2 h-5 w-5 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                ></path>
               </svg>
               热门U卡
             </h3>
-            <a href="/cards" class="block text-center py-4 bg-gradient-to-r from-green-50 to-emerald-50 text-green-600 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300">
+            <a
+              href="/cards"
+              class="block rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 py-4 text-center text-green-600 transition-all duration-300 hover:from-green-100 hover:to-emerald-100"
+            >
               探索U卡排行 →
             </a>
           </div>
 
           <!-- 交易所 -->
-          <div class="bg-white rounded-3xl shadow-lg p-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          <div class="rounded-3xl bg-white p-6 shadow-lg">
+            <h3 class="mb-4 flex items-center text-lg font-bold text-gray-900">
+              <svg
+                class="mr-2 h-5 w-5 text-purple-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
               交易所评测
             </h3>
-            <a href="/exchanges" class="block text-center py-4 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-600 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300">
+            <a
+              href="/exchanges"
+              class="block rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 py-4 text-center text-purple-600 transition-all duration-300 hover:from-purple-100 hover:to-pink-100"
+            >
               查看交易所排名 →
             </a>
           </div>
@@ -321,68 +464,73 @@ const currentCategory = categoryConfig[category] || defaultCategory;
 
   <!-- 生成目录的JavaScript -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const tocNav = document.getElementById('toc-nav');
       const tocContainer = document.getElementById('toc-container');
-      
+
       if (!tocNav || !tocContainer) return;
-      
+
       // 获取文章内容中的所有标题
       const headings = document.querySelectorAll('.prose h2, .prose h3');
-      
+
       if (headings.length === 0) {
         tocContainer.style.display = 'none';
         return;
       }
-      
+
       // 生成目录
       headings.forEach((heading, index) => {
         // 为标题添加ID
         if (!heading.id) {
           heading.id = `heading-${index}`;
         }
-        
+
         // 创建目录项
         const link = document.createElement('a');
         link.href = `#${heading.id}`;
-        link.className = heading.tagName === 'H2' 
-          ? 'block py-2 px-3 text-sm text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors font-medium'
-          : 'block py-1.5 px-3 pl-6 text-xs text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors';
+        link.className =
+          heading.tagName === 'H2'
+            ? 'block py-2 px-3 text-sm text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors font-medium'
+            : 'block py-1.5 px-3 pl-6 text-xs text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors';
         link.textContent = heading.textContent;
-        
+
         // 平滑滚动
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
           e.preventDefault();
           heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          
+
           // 更新激活状态
-          tocNav.querySelectorAll('a').forEach(a => a.classList.remove('bg-indigo-50', 'text-indigo-600'));
+          tocNav
+            .querySelectorAll('a')
+            .forEach((a) => a.classList.remove('bg-indigo-50', 'text-indigo-600'));
           link.classList.add('bg-indigo-50', 'text-indigo-600');
         });
-        
+
         tocNav.appendChild(link);
       });
-      
+
       // 滚动监听，高亮当前章节
       const observerOptions = {
-        rootMargin: '-20% 0px -70% 0px'
+        rootMargin: '-20% 0px -70% 0px',
       };
-      
+
       const observerCallback = (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.id;
             const activeLink = tocNav.querySelector(`a[href="#${id}"]`);
             if (activeLink) {
-              tocNav.querySelectorAll('a').forEach(a => a.classList.remove('bg-indigo-50', 'text-indigo-600'));
+              tocNav
+                .querySelectorAll('a')
+                .forEach((a) => a.classList.remove('bg-indigo-50', 'text-indigo-600'));
               activeLink.classList.add('bg-indigo-50', 'text-indigo-600');
             }
           }
         });
       };
-      
+
       const observer = new IntersectionObserver(observerCallback, observerOptions);
-      headings.forEach(heading => observer.observe(heading));
+      headings.forEach((heading) => observer.observe(heading));
     });
   </script>
 </Layout>

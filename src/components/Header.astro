@@ -1,17 +1,22 @@
 ---
 // 获取当前路径用于高亮导航
-const currentPath = Astro.url.pathname
+const currentPath = Astro.url.pathname;
 ---
 
-<header class="bg-white shadow-sm sticky top-0 z-50">
+<header class="sticky top-0 z-50 bg-white shadow-sm">
   <nav class="container mx-auto px-4 py-4">
     <div class="flex items-center justify-between">
       <!-- Logo -->
       <div class="flex items-center space-x-2">
         <a href="/" class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+            <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+              ></path>
             </svg>
           </div>
           <span class="text-xl font-bold text-gray-900">U卡推荐</span>
@@ -19,43 +24,37 @@ const currentPath = Astro.url.pathname
       </div>
 
       <!-- 桌面端导航菜单 -->
-      <div class="hidden md:flex items-center space-x-8">
-        <a 
-          href="/" 
+      <div class="hidden items-center space-x-8 md:flex">
+        <a
+          href="/"
           class={`font-medium transition-colors ${
-            currentPath === '/' 
-              ? 'text-blue-600' 
-              : 'text-gray-700 hover:text-blue-600'
+            currentPath === '/' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
           }`}
         >
           首页
         </a>
-        <a 
+        <a
           href="/articles"
           class={`font-medium transition-colors ${
             currentPath.startsWith('/articles')
-              ? 'text-blue-600' 
+              ? 'text-blue-600'
               : 'text-gray-700 hover:text-blue-600'
           }`}
         >
           最新攻略
         </a>
-        <a 
-          href="/cards" 
+        <a
+          href="/cards"
           class={`font-medium transition-colors ${
-            currentPath.startsWith('/cards') 
-              ? 'text-blue-600' 
-              : 'text-gray-700 hover:text-blue-600'
+            currentPath.startsWith('/cards') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
           }`}
         >
           U卡对比
         </a>
-        <a 
-          href="/about" 
+        <a
+          href="/about"
           class={`font-medium transition-colors ${
-            currentPath === '/about' 
-              ? 'text-blue-600' 
-              : 'text-gray-700 hover:text-blue-600'
+            currentPath === '/about' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
           }`}
         >
           关于我们
@@ -63,17 +62,26 @@ const currentPath = Astro.url.pathname
       </div>
 
       <!-- 搜索框 -->
-      <div class="hidden lg:flex items-center">
+      <div class="hidden items-center lg:flex">
         <div class="relative">
           <input
             type="text"
             id="searchInput"
             placeholder="搜索卡片或资讯..."
-            class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            class="w-64 rounded-lg border border-gray-300 py-2 pl-10 pr-4 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
           </div>
         </div>
@@ -83,77 +91,106 @@ const currentPath = Astro.url.pathname
       <div class="md:hidden">
         <button
           id="mobileMenuButton"
-          class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+          class="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
           aria-expanded="false"
         >
           <span class="sr-only">打开主菜单</span>
           <!-- 汉堡菜单图标 -->
-          <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            class="block h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
           <!-- 关闭图标 (隐藏状态) -->
-          <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            class="hidden h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
     </div>
 
     <!-- 移动端菜单 -->
-    <div id="mobileMenu" class="md:hidden hidden">
-      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 mt-4">
-        <a 
-          href="/" 
+    <div id="mobileMenu" class="hidden md:hidden">
+      <div class="mt-4 space-y-1 border-t border-gray-200 px-2 pb-3 pt-2 sm:px-3">
+        <a
+          href="/"
           class={`block px-3 py-2 rounded-md text-base font-medium ${
-            currentPath === '/' 
-              ? 'text-blue-600 bg-blue-50' 
+            currentPath === '/'
+              ? 'text-blue-600 bg-blue-50'
               : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
           }`}
         >
           首页
         </a>
-        <a 
+        <a
           href="/articles"
           class={`block px-3 py-2 rounded-md text-base font-medium ${
             currentPath.startsWith('/articles')
-              ? 'text-blue-600 bg-blue-50' 
+              ? 'text-blue-600 bg-blue-50'
               : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
           }`}
         >
           最新攻略
         </a>
-        <a 
-          href="/cards" 
+        <a
+          href="/cards"
           class={`block px-3 py-2 rounded-md text-base font-medium ${
-            currentPath.startsWith('/cards') 
-              ? 'text-blue-600 bg-blue-50' 
+            currentPath.startsWith('/cards')
+              ? 'text-blue-600 bg-blue-50'
               : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
           }`}
         >
           U卡对比
         </a>
-        <a 
-          href="/about" 
+        <a
+          href="/about"
           class={`block px-3 py-2 rounded-md text-base font-medium ${
-            currentPath === '/about' 
-              ? 'text-blue-600 bg-blue-50' 
+            currentPath === '/about'
+              ? 'text-blue-600 bg-blue-50'
               : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
           }`}
         >
           关于我们
         </a>
-        
+
         <!-- 移动端搜索 -->
         <div class="px-3 py-2">
           <div class="relative">
             <input
               type="text"
               placeholder="搜索卡片或资讯..."
-              class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full rounded-lg border border-gray-300 py-2 pl-10 pr-4 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <svg
+                class="h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
               </svg>
             </div>
           </div>
@@ -171,7 +208,7 @@ const currentPath = Astro.url.pathname
 
   mobileMenuButton.addEventListener('click', () => {
     const isOpen = !mobileMenu.classList.contains('hidden');
-    
+
     if (isOpen) {
       mobileMenu.classList.add('hidden');
       menuIcons[0].classList.remove('hidden');
@@ -187,8 +224,8 @@ const currentPath = Astro.url.pathname
 
   // 搜索功能 (基础版本)
   const searchInputs = document.querySelectorAll('input[type="text"][placeholder*="搜索"]');
-  
-  searchInputs.forEach(input => {
+
+  searchInputs.forEach((input) => {
     input.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const query = e.target.value.trim();
