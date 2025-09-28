@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Mail, MessageCircle, FileText, CheckCircle, ArrowRight, Star } from 'lucide-react';
+import { Mail, MessageCircle, FileText, CheckCircle, ArrowRight, Star, Send } from 'lucide-react';
 ---
 
 <Layout title="申请评测 - U卡评测网">
@@ -31,56 +31,6 @@ import { Mail, MessageCircle, FileText, CheckCircle, ArrowRight, Star } from 'lu
       </div>
     </section>
 
-    <!-- 为什么选择我们 -->
-    <section class="py-20 relative -mt-20 z-10">
-      <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 lg:p-16">
-          <div class="text-center mb-12">
-            <h2 class="text-4xl font-bold text-gray-900 mb-4">为什么选择我们的评测？</h2>
-            <p class="text-xl text-gray-600">专业、客观、影响力广泛的评测平台</p>
-          </div>
-
-          <div class="grid gap-8 lg:grid-cols-3">
-            <div class="text-center group">
-              <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">精准流量</h3>
-              <p class="text-gray-600">
-                每月超过10,000+精准用户访问，都是对数字货币卡片有真实需求的潜在客户
-              </p>
-            </div>
-
-            <div class="text-center group">
-              <div class="w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">专业评测</h3>
-              <p class="text-gray-600">
-                资深团队从费用、功能、安全性等多维度进行专业评测，提供详尽的产品分析
-              </p>
-            </div>
-
-            <div class="text-center group">
-              <div class="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">持续曝光</h3>
-              <p class="text-gray-600">
-                评测内容长期展示，搜索引擎优化，持续为您的产品带来曝光和转化
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- 评测流程 -->
     <section class="py-20">
       <div class="max-w-7xl mx-auto px-6 lg:px-8">
@@ -91,10 +41,10 @@ import { Mail, MessageCircle, FileText, CheckCircle, ArrowRight, Star } from 'lu
 
         <div class="grid gap-8 lg:grid-cols-4">
           {[
-            { step: "01", title: "提交申请", desc: "通过邮件或Telegram联系我们，提供产品基本信息" },
-            { step: "02", title: "初步沟通", desc: "我们会在24小时内回复，了解产品详情和评测需求" },
-            { step: "03", title: "专业评测", desc: "团队进行全面测试，撰写专业评测报告" },
-            { step: "04", title: "发布推广", desc: "评测内容发布上线，多渠道推广您的产品" }
+            { step: "01", title: "提交申请", desc: "通过邮件或Telegram联系我们" },
+            { step: "02", title: "初步沟通", desc: "24小时内回复，了解产品详情" },
+            { step: "03", title: "专业评测", desc: "全面测试，撰写评测报告" },
+            { step: "04", title: "发布推广", desc: "评测内容发布，多渠道推广" }
           ].map((item, index) => (
             <div class="relative">
               <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
@@ -115,110 +65,86 @@ import { Mail, MessageCircle, FileText, CheckCircle, ArrowRight, Star } from 'lu
       </div>
     </section>
 
-    <!-- 联系方式 -->
+    <!-- 立即申请评测 - 简化版 -->
     <section class="py-20">
-      <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-3xl shadow-2xl overflow-hidden">
-          <div class="grid lg:grid-cols-2">
-            <!-- 左侧：联系信息 -->
-            <div class="p-12 text-white">
-              <h2 class="text-4xl font-bold mb-6">立即申请评测</h2>
-              <p class="text-xl text-white/90 mb-8">
-                让您的产品获得专业评测，触达更多目标用户
-              </p>
+      <div class="max-w-4xl mx-auto px-6 lg:px-8">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+          <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6">
+            <h2 class="text-3xl font-bold text-white text-center">立即申请评测</h2>
+          </div>
 
-              <div class="space-y-6">
-                <!-- 邮箱 -->
-                <div class="flex items-start gap-4">
-                  <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <Mail class="w-6 h-6 text-white" />
+          <div class="p-8 lg:p-12">
+            <p class="text-center text-gray-600 mb-10">
+              如需申请产品评测，请通过以下方式联系我们
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+              <!-- 邮箱 -->
+              <a
+                href="mailto:laosji.net@gmail.com"
+                class="group block"
+              >
+                <div class="bg-gradient-to-br from-gray-50 to-indigo-50 rounded-2xl p-6 hover:shadow-lg transition-all hover:scale-105">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                      <Mail class="w-7 h-7 text-indigo-600" />
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-lg text-gray-900">邮箱联系</h3>
+                      <p class="text-sm text-gray-500">24小时内回复</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 class="font-semibold text-lg mb-2">邮箱联系</h3>
-                    <a
-                      href="mailto:review@ucards.com"
-                      class="text-xl font-medium hover:text-yellow-300 transition-colors"
-                    >
-                      review@ucards.com
-                    </a>
-                    <p class="text-white/70 text-sm mt-1">
-                      工作时间24小时内回复
-                    </p>
+                  <div class="text-lg font-medium text-indigo-600 group-hover:text-indigo-700 break-all">
+                    laosji.net@gmail.com
                   </div>
                 </div>
+              </a>
 
-                <!-- Telegram -->
-                <div class="flex items-start gap-4">
-                  <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <MessageCircle class="w-6 h-6 text-white" />
+              <!-- Telegram -->
+              <a
+                href="https://t.me/laosjinet"
+                target="_blank"
+                class="group block"
+              >
+                <div class="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 hover:shadow-lg transition-all hover:scale-105">
+                  <div class="flex items-center gap-4 mb-4">
+                    <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                      <Send class="w-7 h-7 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 class="font-semibold text-lg text-gray-900">Telegram</h3>
+                      <p class="text-sm text-gray-500">即时沟通</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 class="font-semibold text-lg mb-2">Telegram</h3>
-                    <a
-                      href="https://t.me/ucardsreview"
-                      target="_blank"
-                      class="text-xl font-medium hover:text-yellow-300 transition-colors"
-                    >
-                      @ucardsreview
-                    </a>
-                    <p class="text-white/70 text-sm mt-1">
-                      实时在线沟通
-                    </p>
+                  <div class="text-lg font-medium text-blue-600 group-hover:text-blue-700">
+                    @laosjinet
                   </div>
                 </div>
-              </div>
-
-              <!-- 附加信息 -->
-              <div class="mt-10 pt-8 border-t border-white/20">
-                <h4 class="font-semibold mb-3">请准备以下信息：</h4>
-                <ul class="space-y-2 text-white/90">
-                  <li class="flex items-center gap-2">
-                    <CheckCircle class="w-4 h-4 text-green-300" />
-                    <span>产品名称和官方网站</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <CheckCircle class="w-4 h-4 text-green-300" />
-                    <span>主要功能和特色</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <CheckCircle class="w-4 h-4 text-green-300" />
-                    <span>费用结构说明</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <CheckCircle class="w-4 h-4 text-green-300" />
-                    <span>测试账号（如需要）</span>
-                  </li>
-                </ul>
-              </div>
+              </a>
             </div>
 
-            <!-- 右侧：表单或图片 -->
-            <div class="bg-white p-12 flex flex-col justify-center">
-              <div class="text-center">
-                <div class="w-32 h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <FileText class="w-16 h-16 text-indigo-600" />
+            <!-- 申请须知 -->
+            <div class="mt-10 p-6 bg-amber-50 border border-amber-200 rounded-2xl">
+              <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <FileText class="w-5 h-5 text-amber-600" />
+                申请时请提供以下信息
+              </h4>
+              <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+                <div class="flex items-start gap-2">
+                  <CheckCircle class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>产品名称和官方网站</span>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">
-                  快速响应，专业服务
-                </h3>
-                <p class="text-gray-600 mb-8">
-                  我们承诺在收到申请后24小时内回复，并提供专业的评测建议
-                </p>
-
-                <!-- 数据展示 -->
-                <div class="grid grid-cols-3 gap-4">
-                  <div class="text-center">
-                    <div class="text-3xl font-bold text-indigo-600">50+</div>
-                    <div class="text-sm text-gray-600">已评测产品</div>
-                  </div>
-                  <div class="text-center">
-                    <div class="text-3xl font-bold text-purple-600">95%</div>
-                    <div class="text-sm text-gray-600">客户满意度</div>
-                  </div>
-                  <div class="text-center">
-                    <div class="text-3xl font-bold text-pink-600">24h</div>
-                    <div class="text-sm text-gray-600">响应时间</div>
-                  </div>
+                <div class="flex items-start gap-2">
+                  <CheckCircle class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>主要功能和特色</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <CheckCircle class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>费用结构说明</span>
+                </div>
+                <div class="flex items-start gap-2">
+                  <CheckCircle class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>测试账号（如需要）</span>
                 </div>
               </div>
             </div>
@@ -234,61 +160,59 @@ import { Mail, MessageCircle, FileText, CheckCircle, ArrowRight, Star } from 'lu
           <h2 class="text-3xl font-bold text-gray-900 mb-4">常见问题</h2>
         </div>
 
-        <div class="space-y-6">
+        <div class="space-y-4">
           {[
             {
               q: "评测是否收费？",
-              a: "我们提供免费的基础评测服务。如需深度评测报告或定制化推广方案，可联系我们了解详情。"
+              a: "基础评测服务免费。深度评测报告或定制推广方案请联系了解详情。"
             },
             {
               q: "评测需要多长时间？",
-              a: "一般情况下，从收到完整资料到发布评测报告需要3-7个工作日。"
+              a: "收到完整资料后，3-7个工作日完成评测并发布。"
             },
             {
-              q: "评测内容是否可以修改？",
-              a: "我们保证评测的客观性和独立性。产品方可以提供事实性纠正，但不能影响评测结论。"
-            },
-            {
-              q: "如何提升产品排名？",
-              a: "排名基于产品的综合表现，包括功能、费用、用户体验等多个维度。持续优化产品是提升排名的最佳方式。"
+              q: "评测内容可以修改吗？",
+              a: "我们保证评测的客观性。产品方可提供事实性纠正，但不影响评测结论。"
             }
           ].map((item) => (
-            <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <h3 class="font-bold text-lg text-gray-900 mb-3">{item.q}</h3>
-              <p class="text-gray-600">{item.a}</p>
-            </div>
+            <details class="group bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow">
+              <summary class="cursor-pointer list-none p-6 font-semibold text-gray-900 flex items-center justify-between">
+                {item.q}
+                <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </summary>
+              <div class="px-6 pb-6 text-gray-600">
+                {item.a}
+              </div>
+            </details>
           ))}
         </div>
       </div>
     </section>
 
-    <!-- CTA底部 -->
-    <section class="py-20">
-      <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-3xl p-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">
-            准备好让更多用户了解您的产品了吗？
-          </h2>
-          <p class="text-xl text-gray-600 mb-8">
-            立即联系我们，开启专业评测之旅
-          </p>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a
-              href="mailto:review@ucards.com"
-              class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors shadow-lg"
-            >
-              <Mail class="w-5 h-5" />
-              发送邮件
-            </a>
-            <a
-              href="https://t.me/ucardsreview"
-              target="_blank"
-              class="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors shadow-lg"
-            >
-              <MessageCircle class="w-5 h-5" />
-              Telegram联系
-            </a>
-          </div>
+    <!-- 底部CTA - 更简洁 -->
+    <section class="py-16 px-6">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">
+          准备好让更多用户了解您的产品了吗？
+        </h2>
+        <div class="flex flex-wrap gap-4 justify-center">
+          <a
+            href="mailto:laosji.net@gmail.com"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            <Mail class="w-5 h-5" />
+            发送邮件申请
+          </a>
+          <a
+            href="https://t.me/laosjinet"
+            target="_blank"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
+          >
+            <Send class="w-5 h-5" />
+            Telegram联系
+          </a>
         </div>
       </div>
     </section>
