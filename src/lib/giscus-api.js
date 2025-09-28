@@ -35,8 +35,8 @@ export async function getDiscussionCommentCount(discussionTitle) {
   const token = getGitHubToken();
   
   if (!token) {
-    console.warn('GitHub token not configured, returning mock data');
-    return getMockCommentCount(discussionTitle);
+    console.error('GitHub token not configured. Cannot fetch discussion count.');
+    return 0;
   }
   
   const [owner, name] = GISCUS_CONFIG.repo.split('/');
@@ -90,7 +90,7 @@ export async function getDiscussionCommentCount(discussionTitle) {
     
   } catch (error) {
     console.error('Error fetching discussion comments:', error);
-    return getMockCommentCount(discussionTitle);
+    return 0;
   }
 }
 
@@ -103,12 +103,8 @@ export async function batchGetCommentCounts(cards) {
   const token = getGitHubToken();
   
   if (!token) {
-    console.warn('GitHub token not configured, returning mock data');
-    const mockData = new Map();
-    cards.forEach(card => {
-      mockData.set(card.slug, getMockCommentCount(card.slug));
-    });
-    return mockData;
+    console.error('GitHub token not configured. Cannot batch fetch counts.');
+    return new Map();
   }
   
   const [owner, name] = GISCUS_CONFIG.repo.split('/');
@@ -177,42 +173,11 @@ export async function batchGetCommentCounts(cards) {
     
   } catch (error) {
     console.error('Error batch fetching comment counts:', error);
-    
-    // 返回模拟数据作为降级方案
-    const mockData = new Map();
-    cards.forEach(card => {
-      mockData.set(card.slug, getMockCommentCount(card.slug));
-    });
-    return mockData;
+    // Return an empty map as a fallback
+    return new Map();
   }
 }
 
-/**
- * 获取模拟的评论数（用于开发或API失败时的降级）
- * @param {string} identifier - 卡片标识符
- * @returns {number} 模拟的评论数
- */
-function getMockCommentCount(identifier) {
-  const mockData = {
-    'crypto-com-card': 89,
-    'coinbase-card': 67,
-    'nexo-card': 45,
-    'wirex-card': 38,
-    'revolut-card': 92,
-    'plutus-card': 31,
-    'bybit-card': 28,
-    'stables-card': 0, // Explicitly set to 0 for testing
-    'blockchain-com-card': 34,
-    'uphold-card': 41,
-    'bitpay-card': 53,
-    'paycent-card': 19,
-    'spectrocoin-card': 22,
-    'cryptopay-card': 36,
-    'monolith-card': 25
-  };
-  
-  return identifier in mockData ? mockData[identifier] : Math.floor(Math.random() * 30 + 5);
-}
 
 /**
  * 创建或更新GitHub Discussion
@@ -319,7 +284,7 @@ export const GiscusClient = {
       return data.count || 0;
     } catch (error) {
       console.error('Error fetching comment count:', error);
-      return getMockCommentCount(cardSlug);
+      return 0;
     }
   },
   
@@ -346,13 +311,7 @@ export const GiscusClient = {
       return new Map(Object.entries(data));
     } catch (error) {
       console.error('Error batch fetching comment counts:', error);
-      
-      // 降级到模拟数据
-      const mockData = new Map();
-      cardSlugs.forEach(slug => {
-        mockData.set(slug, getMockCommentCount(slug));
-      });
-      return mockData;
+      return new Map();
     }
   }
 };
