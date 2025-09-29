@@ -1,7 +1,7 @@
 ---
 title: 'Ready Card - 预付借记卡'
 name: 'Ready Card'
-logo: 'https://www.readycreditcorp.com/wp-content/uploads/2023/07/cropped-3-1-32x32.png'
+logo: 'https://cdn.prod.website-files.com/680f9220d4668b0e40862420/680f9220d4668b0e408624f8_favicon.png'
 description: 'ReadyCARD®是一种预付借记卡，可将现金转换为可在店内或网上使用的安全预付卡，无需银行账户。'
 shortDescription: 'ReadyCARD®是一种预付借记卡，可将现金转换为可在店内或网上使用的安全预付卡，无需银行账户。'
 issuer: 'Ready Credit'
