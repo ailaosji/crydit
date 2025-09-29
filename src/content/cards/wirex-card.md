@@ -1,7 +1,7 @@
 ---
 title: 'Wirex Card - 多币种支付卡'
 name: 'Wirex Card'
-logo: 'https://wirexapp.com/favicon.ico'
+logo: 'https://wirexapp.com/assets/images/favicon/ms-icon-144x144.png'
 description: 'Wirex提供多币种支付卡，支持在全球范围内消费加密货币和法定货币，并提供高达8%的Cryptoback™返现奖励。'
 shortDescription: 'Wirex提供多币种支付卡，支持在全球范围内消费加密货币和法定货币，并提供高达8%的Cryptoback™返现奖励。'
 issuer: 'Wirex'
