@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { CardTier } from '../../types';
-import { Check, X, Star, TrendingUp, Award } from 'lucide-react';
 import TierGrid from './TierGrid';
 import TierTable from './TierTable';
 
@@ -9,14 +8,11 @@ interface TierComparisonProps {
 }
 
 const SingleTierDetail = ({ tier }: { tier: CardTier }) => (
-    <div className="bg-white rounded-3xl shadow-xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            {tier.name}
-        </h2>
-        <TierGrid tiers={[tier]} />
-    </div>
+  <div className="rounded-3xl bg-white p-8 shadow-xl">
+    <h2 className="mb-8 text-2xl font-bold text-gray-900">{tier.name}</h2>
+    <TierGrid tiers={[tier]} />
+  </div>
 );
-
 
 export const TierComparison: React.FC<TierComparisonProps> = ({ tiers }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
@@ -29,20 +25,18 @@ export const TierComparison: React.FC<TierComparisonProps> = ({ tiers }) => {
   }
 
   return (
-    <div className="bg-white rounded-3xl shadow-xl p-8">
+    <div className="rounded-3xl bg-white p-8 shadow-xl">
       {/* 标题和视图切换 */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">
           等级对比
-          <span className="ml-2 text-sm font-normal text-gray-500">
-            ({tiers.length} 个等级)
-          </span>
+          <span className="ml-2 text-sm font-normal text-gray-500">({tiers.length} 个等级)</span>
         </h2>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode('grid')}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
+            className={`rounded-lg px-3 py-1.5 transition-colors ${
               viewMode === 'grid'
                 ? 'bg-indigo-100 text-indigo-700'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -52,7 +46,7 @@ export const TierComparison: React.FC<TierComparisonProps> = ({ tiers }) => {
           </button>
           <button
             onClick={() => setViewMode('table')}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
+            className={`rounded-lg px-3 py-1.5 transition-colors ${
               viewMode === 'table'
                 ? 'bg-indigo-100 text-indigo-700'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -63,11 +57,7 @@ export const TierComparison: React.FC<TierComparisonProps> = ({ tiers }) => {
         </div>
       </div>
 
-      {viewMode === 'grid' ? (
-        <TierGrid tiers={tiers} />
-      ) : (
-        <TierTable tiers={tiers} />
-      )}
+      {viewMode === 'grid' ? <TierGrid tiers={tiers} /> : <TierTable tiers={tiers} />}
     </div>
   );
 };
