@@ -33,14 +33,14 @@ function getGitHubToken() {
  */
 export async function getDiscussionCommentCount(discussionTitle) {
   const token = getGitHubToken();
-  
+
   if (!token) {
-    console.warn('GitHub token not configured, returning mock data');
-    return getMockCommentCount(discussionTitle);
+    console.error('GitHub token not configured. Cannot fetch discussion count.');
+    return 0;
   }
-  
+
   const [owner, name] = GISCUS_CONFIG.repo.split('/');
-  
+
   const query = `
     query GetDiscussionComments($owner: String!, $name: String!, $searchQuery: String!) {
       repository(owner: $owner, name: $name) {
@@ -55,12 +55,12 @@ export async function getDiscussionCommentCount(discussionTitle) {
       }
     }
   `;
-  
+
   try {
     const response = await fetch(GITHUB_GRAPHQL_API, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -68,29 +68,29 @@ export async function getDiscussionCommentCount(discussionTitle) {
         variables: {
           owner,
           name,
-          searchQuery: discussionTitle
-        }
-      })
+          searchQuery: discussionTitle,
+        },
+      }),
     });
-    
+
     if (!response.ok) {
       throw new Error(`GitHub API error: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     // 查找匹配的讨论
     const discussions = data.data?.repository?.discussions?.nodes || [];
-    const matchedDiscussion = discussions.find(d => 
-      d.title.toLowerCase().includes(discussionTitle.toLowerCase()) ||
-      discussionTitle.toLowerCase().includes(d.title.toLowerCase())
+    const matchedDiscussion = discussions.find(
+      (d) =>
+        d.title.toLowerCase().includes(discussionTitle.toLowerCase()) ||
+        discussionTitle.toLowerCase().includes(d.title.toLowerCase())
     );
-    
+
     return matchedDiscussion?.comments?.totalCount || 0;
-    
   } catch (error) {
     console.error('Error fetching discussion comments:', error);
-    return getMockCommentCount(discussionTitle);
+    return 0;
   }
 }
 
@@ -101,18 +101,14 @@ export async function getDiscussionCommentCount(discussionTitle) {
  */
 export async function batchGetCommentCounts(cards) {
   const token = getGitHubToken();
-  
+
   if (!token) {
-    console.warn('GitHub token not configured, returning mock data');
-    const mockData = new Map();
-    cards.forEach(card => {
-      mockData.set(card.slug, getMockCommentCount(card.slug));
-    });
-    return mockData;
+    console.error('GitHub token not configured. Cannot batch fetch counts.');
+    return new Map();
   }
-  
+
   const [owner, name] = GISCUS_CONFIG.repo.split('/');
-  
+
   // GraphQL查询获取所有讨论
   const query = `
     query GetAllDiscussions($owner: String!, $name: String!, $categoryId: ID!) {
@@ -129,12 +125,12 @@ export async function batchGetCommentCounts(cards) {
       }
     }
   `;
-  
+
   try {
     const response = await fetch(GITHUB_GRAPHQL_API, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -142,76 +138,45 @@ export async function batchGetCommentCounts(cards) {
         variables: {
           owner,
           name,
-          categoryId: GISCUS_CONFIG.categoryId
-        }
-      })
+          categoryId: GISCUS_CONFIG.categoryId,
+        },
+      }),
     });
-    
+
     if (!response.ok) {
       throw new Error(`GitHub API error: ${response.status}`);
     }
-    
+
     const data = await response.json();
     const discussions = data.data?.repository?.discussions?.nodes || [];
-    
+
     // 创建评论数映射
     const commentCounts = new Map();
-    
-    cards.forEach(card => {
+
+    cards.forEach((card) => {
       // 尝试通过标题或slug匹配讨论
-      const matchedDiscussion = discussions.find(d => {
+      const matchedDiscussion = discussions.find((d) => {
         const discussionTitle = d.title.toLowerCase();
         const cardTitle = card.title.toLowerCase();
         const cardSlug = card.slug.toLowerCase();
-        
-        return discussionTitle.includes(cardSlug) ||
-               discussionTitle.includes(cardTitle) ||
-               d.body?.toLowerCase().includes(`card-slug: ${cardSlug}`);
+
+        return (
+          discussionTitle.includes(cardSlug) ||
+          discussionTitle.includes(cardTitle) ||
+          d.body?.toLowerCase().includes(`card-slug: ${cardSlug}`)
+        );
       });
-      
+
       const count = matchedDiscussion?.comments?.totalCount || 0;
       commentCounts.set(card.slug, count);
     });
-    
+
     return commentCounts;
-    
   } catch (error) {
     console.error('Error batch fetching comment counts:', error);
-    
-    // 返回模拟数据作为降级方案
-    const mockData = new Map();
-    cards.forEach(card => {
-      mockData.set(card.slug, getMockCommentCount(card.slug));
-    });
-    return mockData;
+    // Return an empty map as a fallback
+    return new Map();
   }
-}
-
-/**
- * 获取模拟的评论数（用于开发或API失败时的降级）
- * @param {string} identifier - 卡片标识符
- * @returns {number} 模拟的评论数
- */
-function getMockCommentCount(identifier) {
-  const mockData = {
-    'crypto-com-card': 89,
-    'coinbase-card': 67,
-    'nexo-card': 45,
-    'wirex-card': 38,
-    'revolut-card': 92,
-    'plutus-card': 31,
-    'bybit-card': 28,
-    'stables-card': 0, // Explicitly set to 0 for testing
-    'blockchain-com-card': 34,
-    'uphold-card': 41,
-    'bitpay-card': 53,
-    'paycent-card': 19,
-    'spectrocoin-card': 22,
-    'cryptopay-card': 36,
-    'monolith-card': 25
-  };
-  
-  return identifier in mockData ? mockData[identifier] : Math.floor(Math.random() * 30 + 5);
 }
 
 /**
@@ -222,20 +187,20 @@ function getMockCommentCount(identifier) {
  */
 export async function ensureDiscussionExists(cardData) {
   const token = getGitHubToken();
-  
+
   if (!token) {
     console.warn('Cannot create discussion without GitHub token');
     return null;
   }
-  
+
   const [owner, name] = GISCUS_CONFIG.repo.split('/');
-  
+
   // 首先检查是否已存在讨论
   const existingCount = await getDiscussionCommentCount(cardData.title);
   if (existingCount > 0) {
     return; // 讨论已存在
   }
-  
+
   // 创建新讨论的mutation
   const mutation = `
     mutation CreateDiscussion($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
@@ -252,7 +217,7 @@ export async function ensureDiscussionExists(cardData) {
       }
     }
   `;
-  
+
   const discussionBody = `
 # ${cardData.title}
 
@@ -269,12 +234,12 @@ ${cardData.description}
 
 This is the official discussion thread for ${cardData.title}. Feel free to share your experiences and reviews!
   `;
-  
+
   try {
     const response = await fetch(GITHUB_GRAPHQL_API, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -283,18 +248,17 @@ This is the official discussion thread for ${cardData.title}. Feel free to share
           repositoryId: GISCUS_CONFIG.repoId,
           categoryId: GISCUS_CONFIG.categoryId,
           title: `${cardData.title} - 用户评论`,
-          body: discussionBody
-        }
-      })
+          body: discussionBody,
+        },
+      }),
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to create discussion: ${response.status}`);
     }
-    
+
     const data = await response.json();
     return data.data?.createDiscussion?.discussion?.id;
-    
   } catch (error) {
     console.error('Error creating discussion:', error);
     return null;
@@ -319,10 +283,10 @@ export const GiscusClient = {
       return data.count || 0;
     } catch (error) {
       console.error('Error fetching comment count:', error);
-      return getMockCommentCount(cardSlug);
+      return 0;
     }
   },
-  
+
   /**
    * 批量获取评论数
    * @param {string[]} cardSlugs - 卡片slug数组
@@ -335,26 +299,20 @@ export const GiscusClient = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ slugs: cardSlugs })
+        body: JSON.stringify({ slugs: cardSlugs }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch comment counts');
       }
-      
+
       const data = await response.json();
       return new Map(Object.entries(data));
     } catch (error) {
       console.error('Error batch fetching comment counts:', error);
-      
-      // 降级到模拟数据
-      const mockData = new Map();
-      cardSlugs.forEach(slug => {
-        mockData.set(slug, getMockCommentCount(slug));
-      });
-      return mockData;
+      return new Map();
     }
-  }
+  },
 };
 
 // The named exports above are sufficient for server-side usage.

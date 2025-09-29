@@ -6,13 +6,9 @@ interface FeatureTagsProps {
   compact?: boolean;
 }
 
-const FeatureTags: React.FC<FeatureTagsProps> = ({
-  features,
-  maxDisplay = 3,
-  compact = false
-}) => {
+const FeatureTags: React.FC<FeatureTagsProps> = ({ features, maxDisplay = 3, compact = false }) => {
   if (!features) {
-    return <span className="text-gray-400 text-xs">-</span>;
+    return <span className="text-xs text-gray-400">-</span>;
   }
 
   // 处理字符串或数组
@@ -23,7 +19,7 @@ const FeatureTags: React.FC<FeatureTagsProps> = ({
       : [];
 
   if (featureArray.length === 0) {
-    return <span className="text-gray-400 text-xs">-</span>;
+    return <span className="text-xs text-gray-400">-</span>;
   }
 
   // 标签颜色映射
@@ -45,9 +41,7 @@ const FeatureTags: React.FC<FeatureTagsProps> = ({
   };
 
   // 紧凑模式下只显示前几个标签
-  const displayFeatures = compact
-    ? featureArray.slice(0, maxDisplay)
-    : featureArray;
+  const displayFeatures = compact ? featureArray.slice(0, maxDisplay) : featureArray;
 
   const remainingCount = featureArray.length - displayFeatures.length;
 
@@ -56,19 +50,13 @@ const FeatureTags: React.FC<FeatureTagsProps> = ({
       {displayFeatures.map((feature, index) => (
         <span
           key={index}
-          className={`inline-block px-1.5 py-0.5 text-[10px] font-medium rounded ${getTagColor(feature)}`}
+          className={`inline-block rounded px-1.5 py-0.5 text-[10px] font-medium ${getTagColor(feature)}`}
           title={feature}
         >
-          {compact && feature.length > 8
-            ? feature.substring(0, 8) + '...'
-            : feature}
+          {compact && feature.length > 8 ? feature.substring(0, 8) + '...' : feature}
         </span>
       ))}
-      {remainingCount > 0 && (
-        <span className="text-[10px] text-gray-500">
-          +{remainingCount}
-        </span>
-      )}
+      {remainingCount > 0 && <span className="text-[10px] text-gray-500">+{remainingCount}</span>}
     </div>
   );
 };

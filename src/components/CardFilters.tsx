@@ -13,7 +13,7 @@ interface CardFiltersProps {
 
 const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onResetFilters }) => {
   return (
-    <div className="bg-gray-50 rounded-2xl p-6 mb-8">
+    <div className="mb-8 rounded-2xl bg-gray-50 p-6">
       <div className="flex flex-wrap items-center gap-4">
         {/* Card Type Filter */}
         <div className="flex items-center space-x-2">
@@ -21,7 +21,7 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
           <select
             value={filters.cardType}
             onChange={(e) => onFilterChange('cardType', e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">全部类型</option>
             <option value="visa">VISA</option>
@@ -36,7 +36,7 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
           <select
             value={filters.cardForm}
             onChange={(e) => onFilterChange('cardForm', e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">全部形态</option>
             <option value="virtual">仅虚拟卡</option>
@@ -51,7 +51,7 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
           <select
             value={filters.annualFee}
             onChange={(e) => onFilterChange('annualFee', e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">全部</option>
             <option value="free">免年费</option>
@@ -65,7 +65,7 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
           <select
             value={filters.fee}
             onChange={(e) => onFilterChange('fee', e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">全部</option>
             <option value="has_fees">有手续费</option>
@@ -75,7 +75,7 @@ const CardFilters: React.FC<CardFiltersProps> = ({ filters, onFilterChange, onRe
 
         <button
           onClick={onResetFilters}
-          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+          className="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-300"
         >
           重置筛选
         </button>

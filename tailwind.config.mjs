@@ -10,12 +10,12 @@ export default {
           500: '#3b82f6',
           600: '#2563eb',
           700: '#1d4ed8',
-        }
+        },
       },
       fontFamily: {
         // 自定义字体
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
-      }
+      },
     },
   },
   plugins: [
@@ -23,4 +23,4 @@ export default {
     require('@tailwindcss/typography'),
     // require('@tailwindcss/forms'),
   ],
-}
+};

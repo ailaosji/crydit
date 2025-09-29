@@ -20,10 +20,12 @@ export async function getStaticPaths() {
   } catch (error) {
     console.error('Error loading cards collection:', error);
     // 考虑返回一个默认的错误页面路由
-    return [{
-      params: { slug: 'error' },
-      props: { error: true }
-    }];
+    return [
+      {
+        params: { slug: 'error' },
+        props: { error: true },
+      },
+    ];
   }
 }
 
@@ -44,11 +46,17 @@ if (error) {
 // Process card to handle tiers and promote representative data
 let card = rawCard;
 if (rawCard.data.cardTiers && rawCard.data.cardTiers.length > 0) {
-  const representativeTier = rawCard.data.cardTiers.find(t => t.recommended) || rawCard.data.cardTiers[0];
+  const representativeTier =
+    rawCard.data.cardTiers.find((t) => t.recommended) || rawCard.data.cardTiers[0];
   if (representativeTier) {
     const promotedData = {
       network: representativeTier.virtualNetwork || representativeTier.physicalNetwork,
-      cardType: (representativeTier.isVirtual && representativeTier.isPhysical) ? 'both' : (representativeTier.isVirtual ? 'virtual' : 'physical'),
+      cardType:
+        representativeTier.isVirtual && representativeTier.isPhysical
+          ? 'both'
+          : representativeTier.isVirtual
+            ? 'virtual'
+            : 'physical',
       isVirtual: representativeTier.isVirtual,
       isPhysical: representativeTier.isPhysical,
       virtualNetwork: representativeTier.virtualNetwork,
@@ -60,46 +68,69 @@ if (rawCard.data.cardTiers && rawCard.data.cardTiers.length > 0) {
   }
 }
 
-
 // Check if card exists
 if (!card) {
   throw new Error('Card not found');
 }
 
-const { 
-  title, name, description, network, cardType,
-  pros, cons, features, limits, rewards, issuer, supportedRegions,
-  applicationDocuments, supportedCurrencies, supportedPaymentMethods,
-  virtualCardPrice, physicalCardPrice, depositFee, transactionFee,
-  foreignExchangeFee, withdrawalFee, annualFee, affiliateLink,
-  invitationCode, importantReminders, cardTiers
+const {
+  title,
+  name,
+  description,
+  network,
+  cardType,
+  pros,
+  cons,
+  features,
+  limits,
+  rewards,
+  issuer,
+  supportedRegions,
+  applicationDocuments,
+  supportedCurrencies,
+  supportedPaymentMethods,
+  virtualCardPrice,
+  physicalCardPrice,
+  depositFee,
+  transactionFee,
+  foreignExchangeFee,
+  withdrawalFee,
+  annualFee,
+  affiliateLink,
+  invitationCode,
+  importantReminders,
+  cardTiers,
 } = card.data;
 
 // Recommendation algorithm for related cards
 const allCards = await getCollection('cards');
 const relatedCards = allCards
-  .map(otherCard => {
+  .map((otherCard) => {
     if (otherCard.slug === card.slug) {
       return { card: otherCard, score: -1 };
     }
     let score = 0;
     if (otherCard.data.network === network) score += 3;
-    const commonTags = (card.data.tags || []).filter(tag => (otherCard.data.tags || []).includes(tag));
+    const commonTags = (card.data.tags || []).filter((tag) =>
+      (otherCard.data.tags || []).includes(tag)
+    );
     score += commonTags.length * 2;
-    const commonCurrencies = (card.data.supportedCurrencies || []).filter(currency => (otherCard.data.supportedCurrencies || []).includes(currency));
+    const commonCurrencies = (card.data.supportedCurrencies || []).filter((currency) =>
+      (otherCard.data.supportedCurrencies || []).includes(currency)
+    );
     score += commonCurrencies.length;
     if (otherCard.data.issuer === issuer) score -= 100;
     return { card: otherCard, score };
   })
-  .filter(item => item.score > 0)
+  .filter((item) => item.score > 0)
   .sort((a, b) => b.score - a.score)
-  .map(item => item.card)
+  .map((item) => item.card)
   .slice(0, 3);
 
 // Recommendation algorithm for related articles
 const allArticles = await getCollection('articles');
 const relatedArticles = allArticles
-  .map(article => {
+  .map((article) => {
     let score = 0;
     const articleTitle = article.data.title.toLowerCase();
     const cardName = name.toLowerCase();
@@ -107,13 +138,15 @@ const relatedArticles = allArticles
     if ((article.data.relatedCards || []).includes(card.slug)) score += 10;
     if (articleTitle.includes(cardName)) score += 5;
     if (articleTitle.includes(cardIssuer)) score += 3;
-    const commonTags = (card.data.tags || []).filter(tag => (article.data.tags || []).includes(tag));
+    const commonTags = (card.data.tags || []).filter((tag) =>
+      (article.data.tags || []).includes(tag)
+    );
     score += commonTags.length * 2;
     return { article, score };
   })
-  .filter(item => item.score > 0)
+  .filter((item) => item.score > 0)
   .sort((a, b) => b.score - a.score)
-  .map(item => item.article)
+  .map((item) => item.article)
   .slice(0, 4);
 
 // Render Markdown content
@@ -122,132 +155,212 @@ const { Content } = await card.render();
 import { getCurrencyInfo } from '../../config/site-data';
 function getPaymentMethodInfo(method) {
   const method_lower = method.toLowerCase().replace(/\s+/g, '');
-  switch(method_lower) {
-    case 'applepay': return { name: 'Apple Pay', bgGradient: 'from-gray-800 to-black', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800', icon: '/icons/methods/applepay.svg' };
-    case 'googlepay': return { name: 'Google Pay', bgGradient: 'from-blue-500 via-green-500 to-yellow-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/googlepay.svg' };
-    case 'alipay': return { name: 'Alipay', bgGradient: 'from-blue-500 to-cyan-500', bgLight: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-700', icon: '/icons/methods/alipay.svg' };
-    case 'wechatpay': case 'wechat pay': return { name: 'WeChat Pay', bgGradient: 'from-green-500 to-green-600', bgLight: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-700', icon: '/icons/methods/wechatpay.svg' };
-    default: return { name: method, bgGradient: 'from-gray-400 to-gray-500', bgLight: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-700', icon: '' };
+  switch (method_lower) {
+    case 'applepay':
+      return {
+        name: 'Apple Pay',
+        bgGradient: 'from-gray-800 to-black',
+        bgLight: 'bg-gray-50',
+        borderColor: 'border-gray-200',
+        textColor: 'text-gray-800',
+        icon: '/icons/methods/applepay.svg',
+      };
+    case 'googlepay':
+      return {
+        name: 'Google Pay',
+        bgGradient: 'from-blue-500 via-green-500 to-yellow-500',
+        bgLight: 'bg-blue-50',
+        borderColor: 'border-blue-200',
+        textColor: 'text-blue-700',
+        icon: '/icons/methods/googlepay.svg',
+      };
+    case 'alipay':
+      return {
+        name: 'Alipay',
+        bgGradient: 'from-blue-500 to-cyan-500',
+        bgLight: 'bg-blue-50',
+        borderColor: 'border-blue-200',
+        textColor: 'text-blue-700',
+        icon: '/icons/methods/alipay.svg',
+      };
+    case 'wechatpay':
+    case 'wechat pay':
+      return {
+        name: 'WeChat Pay',
+        bgGradient: 'from-green-500 to-green-600',
+        bgLight: 'bg-green-50',
+        borderColor: 'border-green-200',
+        textColor: 'text-green-700',
+        icon: '/icons/methods/wechatpay.svg',
+      };
+    default:
+      return {
+        name: method,
+        bgGradient: 'from-gray-400 to-gray-500',
+        bgLight: 'bg-gray-50',
+        borderColor: 'border-gray-200',
+        textColor: 'text-gray-700',
+        icon: '',
+      };
   }
 }
 
 // Generate structured data for SEO
 const structuredData = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": name,
-  "description": description,
-  "brand": { "@type": "Brand", "name": issuer },
-  "offers": {
-    "@type": "Offer",
-    "price": virtualCardPrice || physicalCardPrice || "0",
-    "priceCurrency": "USD",
-    "availability": "https://schema.org/InStock"
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: name,
+  description: description,
+  brand: { '@type': 'Brand', name: issuer },
+  offers: {
+    '@type': 'Offer',
+    price: virtualCardPrice || physicalCardPrice || '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
   },
-  "category": "Financial Services",
-  "additionalProperty": [
-    { "@type": "PropertyValue", "name": "Card Network", "value": network },
-    { "@type": "PropertyValue", "name": "Card Type", "value": cardType }
-  ]
+  category: 'Financial Services',
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'Card Network', value: network },
+    { '@type': 'PropertyValue', name: 'Card Type', value: cardType },
+  ],
 };
 ---
-<Layout title={error ? "Error" : (title || `${name} - 全球虚拟信用卡评测`)}>
-  {error ? (
-    <div class="container mx-auto my-12 text-center">
-      <h1 class="text-4xl font-bold mb-4">Error</h1>
-      <p class="text-lg">There was an error loading the card data. Please try again later.</p>
-    </div>
-  ) : (
-    <>
-      <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
 
-      <div class="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<Layout title={error ? 'Error' : title || `${name} - 全球虚拟信用卡评测`}>
+  {
+    error ? (
+      <div class="container mx-auto my-12 text-center">
+        <h1 class="mb-4 text-4xl font-bold">Error</h1>
+        <p class="text-lg">There was an error loading the card data. Please try again later.</p>
+      </div>
+    ) : (
+      <>
+        <script slot="head" type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-          <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-12">
-            <div class="relative">
-              <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500"></div>
-              <div class="relative p-8 lg:p-12">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                  <div class="text-white">
-                    <div class="flex flex-wrap items-center gap-3 mb-6">
-                      <span class={`px-4 py-2 rounded-full text-sm font-semibold ${
-                        network === CARD_NETWORKS.VISA ? 'bg-blue-500 text-white' :
-                        network === CARD_NETWORKS.MASTERCARD ? 'bg-red-500 text-white' :
-                        'bg-gray-500 text-white'
-                      }`}>
-                        {network?.toUpperCase()}
-                      </span>
-                      {(cardType === 'virtual' || cardType === 'both') && (
-                        <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">虚拟卡</span>
-                      )}
-                      {(cardType === 'physical' || cardType === 'both') && (
-                        <span class="px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">实体卡</span>
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-indigo-50 py-16">
+          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="mb-12 overflow-hidden rounded-3xl bg-white shadow-2xl">
+              <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500" />
+                <div class="relative p-8 lg:p-12">
+                  <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+                    <div class="text-white">
+                      <div class="mb-6 flex flex-wrap items-center gap-3">
+                        <span
+                          class={`rounded-full px-4 py-2 text-sm font-semibold ${
+                            network === CARD_NETWORKS.VISA
+                              ? 'bg-blue-500 text-white'
+                              : network === CARD_NETWORKS.MASTERCARD
+                                ? 'bg-red-500 text-white'
+                                : 'bg-gray-500 text-white'
+                          }`}
+                        >
+                          {network?.toUpperCase()}
+                        </span>
+                        {(cardType === 'virtual' || cardType === 'both') && (
+                          <span class="rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                            虚拟卡
+                          </span>
+                        )}
+                        {(cardType === 'physical' || cardType === 'both') && (
+                          <span class="rounded-full bg-white/20 px-4 py-2 text-sm font-medium backdrop-blur-sm">
+                            实体卡
+                          </span>
+                        )}
+                      </div>
+                      <h1 class="mb-4 text-4xl font-bold lg:text-5xl">{name}</h1>
+                      <p class="mb-8 text-xl leading-relaxed text-white/90">{description}</p>
+                      {affiliateLink && (
+                        <a
+                          href={affiliateLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="inline-flex transform items-center rounded-2xl bg-white px-8 py-4 font-bold text-indigo-600 shadow-lg transition-all hover:scale-105 hover:bg-gray-100"
+                        >
+                          立即申请
+                          <svg
+                            class="ml-2 h-5 w-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M13 7l5 5m0 0l-5 5m5-5H6"
+                            />
+                          </svg>
+                        </a>
                       )}
                     </div>
-                    <h1 class="text-4xl lg:text-5xl font-bold mb-4">{name}</h1>
-                    <p class="text-xl text-white/90 leading-relaxed mb-8">{description}</p>
-                    {affiliateLink && (
-                      <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-8 py-4 bg-white text-indigo-600 font-bold rounded-2xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
-                        立即申请
-                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-                      </a>
-                    )}
-                  </div>
 
-                  <div class="relative">
-                    <div class="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg z-10">推荐</div>
-                    <div class="relative w-96 h-60 rounded-2xl shadow-2xl transform rotate-3 hover:rotate-0 transition-all duration-300 hover:scale-105">
-                      <div class="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 rounded-2xl"></div>
-                      <div class="absolute top-8 right-8 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-transparent rounded-full"></div>
-                      <div class="absolute -bottom-4 -left-4 w-24 h-24 bg-gradient-to-br from-pink-400/10 to-transparent rounded-full"></div>
-                      <div class="relative z-10 p-8 h-full flex flex-col justify-between text-white">
-                        <div class="flex justify-between items-start">
-                          <div class="w-12 h-9 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-md shadow-inner"></div>
-                          <div class="text-2xl font-bold text-white/90 tracking-wider">{network?.toUpperCase()}</div>
-                        </div>
-                        <div class="space-y-6"><div class="font-mono text-2xl tracking-wider">•••• •••• •••• ••••</div></div>
-                        <div class="flex justify-between items-end">
-                          <div>
-                            <div class="text-xs text-gray-400 mb-1">CARD HOLDER</div>
-                            <div class="font-semibold text-lg">{name && name.length > 12 ? name.substring(0, 12) + '...' : name}</div>
-                          </div>
-                          <div>
-                            <div class="text-xs text-gray-400 mb-1">VALID THRU</div>
-                            <div class="font-mono text-lg">••/••</div>
-                          </div>
-                        </div>
+                    <div class="relative">
+                      <div class="absolute -right-4 -top-4 z-10 rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+                        推荐
                       </div>
-                      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl transform -skew-x-12 -translate-x-full animate-pulse"></div>
+                      <div class="relative h-60 w-96 rotate-3 transform rounded-2xl shadow-2xl transition-all duration-300 hover:rotate-0 hover:scale-105">
+                        <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900" />
+                        <div class="absolute right-8 top-8 h-32 w-32 rounded-full bg-gradient-to-br from-purple-400/20 to-transparent" />
+                        <div class="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-gradient-to-br from-pink-400/10 to-transparent" />
+                        <div class="relative z-10 flex h-full flex-col justify-between p-8 text-white">
+                          <div class="flex items-start justify-between">
+                            <div class="h-9 w-12 rounded-md bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-inner" />
+                            <div class="text-2xl font-bold tracking-wider text-white/90">
+                              {network?.toUpperCase()}
+                            </div>
+                          </div>
+                          <div class="space-y-6">
+                            <div class="font-mono text-2xl tracking-wider">•••• •••• •••• ••••</div>
+                          </div>
+                          <div class="flex items-end justify-between">
+                            <div>
+                              <div class="mb-1 text-xs text-gray-400">CARD HOLDER</div>
+                              <div class="text-lg font-semibold">
+                                {name && name.length > 12 ? name.substring(0, 12) + '...' : name}
+                              </div>
+                            </div>
+                            <div>
+                              <div class="mb-1 text-xs text-gray-400">VALID THRU</div>
+                              <div class="font-mono text-lg">••/••</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="absolute inset-0 -translate-x-full -skew-x-12 transform animate-pulse rounded-2xl bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-8">
-              <section class="bg-white rounded-3xl shadow-xl p-8">
-                <div class="prose prose-lg max-w-none">
-                  <Content />
-                </div>
-              </section>
-
-              {cardTiers && cardTiers.length > 0 && (
-                <section class="mt-12">
-                  <TierComparison tiers={cardTiers} client:load />
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              <div class="space-y-8 lg:col-span-2">
+                <section class="rounded-3xl bg-white p-8 shadow-xl">
+                  <div class="prose prose-lg max-w-none">
+                    <Content />
+                  </div>
                 </section>
-              )}
 
-              {limits && (
-                  <section class="bg-white rounded-3xl shadow-xl p-8">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-8">消费限额</h2>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cardTiers && cardTiers.length > 0 && (
+                  <section class="mt-12">
+                    <TierComparison tiers={cardTiers} client:load />
+                  </section>
+                )}
+
+                {limits && (
+                  <section class="rounded-3xl bg-white p-8 shadow-xl">
+                    <h2 class="mb-8 text-3xl font-bold text-gray-900">消费限额</h2>
+                    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                       {Object.entries(limits).map(([key, value]) => {
-                        const limitLabels = { dailySpending: '每日消费', monthlySpending: '每月消费', singleTransaction: '单笔交易', monthlyAtmWithdrawal: '每月ATM取款' };
+                        const limitLabels = {
+                          dailySpending: '每日消费',
+                          monthlySpending: '每月消费',
+                          singleTransaction: '单笔交易',
+                          monthlyAtmWithdrawal: '每月ATM取款',
+                        };
                         return value ? (
-                          <div class="p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                          <div class="rounded-xl border border-indigo-100 bg-indigo-50 p-4">
                             <p class="text-sm text-gray-600">{limitLabels[key] || key}</p>
                             <p class="text-lg font-bold text-indigo-600">{value}</p>
                           </div>
@@ -257,83 +370,141 @@ const structuredData = {
                   </section>
                 )}
 
-              <GiscusComments title={`${name} 用户评论`} />
-            </div>
+                <GiscusComments title={`${name} 用户评论`} />
+              </div>
 
-            <div class="space-y-8">
-              <div class="bg-white rounded-3xl shadow-xl p-8 sticky top-24">
-                <h3 class="text-2xl font-bold text-gray-900 mb-6">基本信息</h3>
-                <div class="space-y-4">
-                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span class="text-gray-600">发卡机构</span>
-                    <span class="font-medium text-gray-900">{issuer}</span>
+              <div class="space-y-8">
+                <div class="sticky top-24 rounded-3xl bg-white p-8 shadow-xl">
+                  <h3 class="mb-6 text-2xl font-bold text-gray-900">基本信息</h3>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                      <span class="text-gray-600">发卡机构</span>
+                      <span class="font-medium text-gray-900">{issuer}</span>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                      <span class="text-gray-600">卡片网络</span>
+                      <span
+                        class={`rounded-full px-3 py-1 text-xs font-medium ${
+                          network === CARD_NETWORKS.VISA
+                            ? 'bg-blue-100 text-blue-800'
+                            : network === CARD_NETWORKS.MASTERCARD
+                              ? 'bg-red-100 text-red-800'
+                              : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {network?.toUpperCase()}
+                      </span>
+                    </div>
+                    <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                      <span class="text-gray-600">申请证件</span>
+                      <span class="font-medium text-gray-900">
+                        {applicationDocuments && applicationDocuments.length > 0
+                          ? applicationDocuments.join(' / ')
+                          : 'N/A'}
+                      </span>
+                    </div>
+                    {rewards && rewards.cashback && (
+                      <div class="flex items-center justify-between border-b border-gray-100 py-2">
+                        <span class="text-gray-600">返现比例</span>
+                        <span class="font-medium text-green-600">{rewards.cashback}</span>
+                      </div>
+                    )}
+                    <div class="flex items-center justify-between py-2">
+                      <span class="text-gray-600">年费</span>
+                      <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>
+                        {annualFee ? '收费' : '免费'}
+                      </span>
+                    </div>
                   </div>
-                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span class="text-gray-600">卡片网络</span>
-                    <span class={`px-3 py-1 rounded-full text-xs font-medium ${
-                      network === CARD_NETWORKS.VISA ? 'bg-blue-100 text-blue-800' :
-                      network === CARD_NETWORKS.MASTERCARD ? 'bg-red-100 text-red-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {network?.toUpperCase()}
-                    </span>
-                  </div>
-                  <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span class="text-gray-600">申请证件</span>
-                    <span class="font-medium text-gray-900">{applicationDocuments && applicationDocuments.length > 0 ? applicationDocuments.join(' / ') : 'N/A'}</span>
-                  </div>
-                  {rewards && rewards.cashback && (
-                    <div class="flex justify-between items-center py-2 border-b border-gray-100">
-                      <span class="text-gray-600">返现比例</span>
-                      <span class="font-medium text-green-600">{rewards.cashback}</span>
+                  {affiliateLink && (
+                    <a
+                      href={affiliateLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="mt-6 inline-flex w-full transform items-center justify-center rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-3 font-medium text-white transition-all hover:scale-105 hover:from-indigo-700 hover:to-purple-700"
+                    >
+                      立即申请
+                      <svg
+                        class="ml-2 h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                      </svg>
+                    </a>
+                  )}
+                  {invitationCode && (
+                    <div class="mt-6 border-t border-gray-100 pt-6">
+                      <label for="invite-code" class="mb-2 block text-sm font-medium text-gray-700">
+                        邀请码
+                      </label>
+                      <div class="relative">
+                        <input
+                          id="invite-code"
+                          type="text"
+                          readonly
+                          value={invitationCode}
+                          class="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-4 pr-20 font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                        <button
+                          id="copy-button"
+                          class="absolute inset-y-0 right-0 flex items-center rounded-r-xl bg-gray-200 px-4 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-300"
+                        >
+                          复制
+                        </button>
+                      </div>
                     </div>
                   )}
-                  <div class="flex justify-between items-center py-2">
-                    <span class="text-gray-600">年费</span>
-                    <span class={`font-medium ${annualFee ? 'text-red-600' : 'text-green-600'}`}>{annualFee ? '收费' : '免费'}</span>
-                  </div>
                 </div>
-                {affiliateLink && (
-                  <a href={affiliateLink} target="_blank" rel="noopener noreferrer" class="mt-6 w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-2xl hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105">
-                    立即申请
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                  </a>
-                )}
-                {invitationCode && (
-                  <div class="mt-6 pt-6 border-t border-gray-100">
-                    <label for="invite-code" class="block text-sm font-medium text-gray-700 mb-2">邀请码</label>
-                    <div class="relative">
-                      <input id="invite-code" type="text" readonly value={invitationCode} class="w-full pl-4 pr-20 py-2.5 bg-gray-50 border border-gray-200 rounded-xl font-mono text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                      <button id="copy-button" class="absolute inset-y-0 right-0 flex items-center px-4 bg-gray-200 text-gray-700 font-semibold text-sm rounded-r-xl hover:bg-gray-300 transition-colors">复制</button>
+
+                {relatedCards && relatedCards.length > 0 && (
+                  <div class="rounded-3xl bg-white p-8 shadow-xl">
+                    <h3 class="mb-6 text-2xl font-bold text-gray-900">相关U卡推荐</h3>
+                    <div class="space-y-4">
+                      {relatedCards.map((relatedCard) => (
+                        <a
+                          href={`/cards/${relatedCard.slug}`}
+                          class="block rounded-xl bg-gray-50 p-4 transition-colors hover:bg-indigo-50"
+                        >
+                          <div class="flex items-center justify-between">
+                            <div>
+                              <h4 class="font-semibold text-gray-900">{relatedCard.data.name}</h4>
+                              <p class="mt-1 text-sm text-gray-600">
+                                {relatedCard.data.network?.toUpperCase()}
+                              </p>
+                            </div>
+                            <svg
+                              class="h-5 w-5 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </div>
+                        </a>
+                      ))}
                     </div>
                   </div>
                 )}
               </div>
-
-              {relatedCards && relatedCards.length > 0 && (
-                <div class="bg-white rounded-3xl shadow-xl p-8">
-                  <h3 class="text-2xl font-bold text-gray-900 mb-6">相关U卡推荐</h3>
-                  <div class="space-y-4">
-                    {relatedCards.map((relatedCard) => (
-                      <a href={`/cards/${relatedCard.slug}`} class="block p-4 bg-gray-50 rounded-xl hover:bg-indigo-50 transition-colors">
-                        <div class="flex items-center justify-between">
-                          <div>
-                            <h4 class="font-semibold text-gray-900">{relatedCard.data.name}</h4>
-                            <p class="text-sm text-gray-600 mt-1">{relatedCard.data.network?.toUpperCase()}</p>
-                          </div>
-                          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        </div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
-      </div>
-    </>
-  )}
+      </>
+    )
+  }
 </Layout>
 
 <script>
@@ -342,22 +513,25 @@ const structuredData = {
   if (copyButton && inviteCodeInput) {
     copyButton.addEventListener('click', () => {
       const codeToCopy = inviteCodeInput.value;
-      navigator.clipboard.writeText(codeToCopy).then(() => {
-        copyButton.textContent = '已复制!';
-        copyButton.classList.add('bg-green-500', 'text-white');
-        setTimeout(() => {
-          copyButton.textContent = '复制';
-          copyButton.classList.remove('bg-green-500', 'text-white');
-        }, 2000);
-      }).catch(err => {
-        console.error('Failed to copy: ', err);
-        copyButton.textContent = '失败';
-        copyButton.classList.add('bg-red-500', 'text-white');
-         setTimeout(() => {
-          copyButton.textContent = '复制';
-          copyButton.classList.remove('bg-red-500', 'text-white');
-        }, 2000);
-      });
+      navigator.clipboard
+        .writeText(codeToCopy)
+        .then(() => {
+          copyButton.textContent = '已复制!';
+          copyButton.classList.add('bg-green-500', 'text-white');
+          setTimeout(() => {
+            copyButton.textContent = '复制';
+            copyButton.classList.remove('bg-green-500', 'text-white');
+          }, 2000);
+        })
+        .catch((err) => {
+          console.error('Failed to copy: ', err);
+          copyButton.textContent = '失败';
+          copyButton.classList.add('bg-red-500', 'text-white');
+          setTimeout(() => {
+            copyButton.textContent = '复制';
+            copyButton.classList.remove('bg-red-500', 'text-white');
+          }, 2000);
+        });
     });
   }
 </script>

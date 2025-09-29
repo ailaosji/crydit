@@ -1,10 +1,10 @@
 ---
-title: "硬件钱包U卡：安全与便捷的完美结合？"
-description: "将资金安全放在首位的你，是否在寻找一款足够安全的U卡？硬件钱包推出的U卡可能是你的答案。本文将探讨硬件钱包U卡的优势与选择。"
-publishDate: "2024-04-05"
-category: "analysis"
-tags: ["硬件钱包", "U卡", "安全"]
-image: "/images/articles/hardware-wallet-cards.jpg"
+title: '硬件钱包U卡：安全与便捷的完美结合？'
+description: '将资金安全放在首位的你，是否在寻找一款足够安全的U卡？硬件钱包推出的U卡可能是你的答案。本文将探讨硬件钱包U卡的优势与选择。'
+publishDate: '2024-04-05'
+category: 'analysis'
+tags: ['硬件钱包', 'U卡', '安全']
+image: '/images/articles/hardware-wallet-cards.jpg'
 featured: false
 relatedCards: []
 ---
@@ -20,6 +20,7 @@ relatedCards: []
 硬件钱包U卡是由硬件钱包制造商推出的加密货币借记卡。其核心设计理念是，让用户可以在不将私钥暴露在互联网环境下的前提下，授权并完成日常消费。
 
 它的工作流程大致如下：
+
 1. 你在消费时，支付请求会发送到你的App。
 2. App会要求你使用硬件钱包进行签名授权。
 3. 只有在你物理确认并签名后，交易才会被执行。

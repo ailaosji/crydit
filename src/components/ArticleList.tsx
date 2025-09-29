@@ -2,7 +2,7 @@
 import React from 'react';
 import { CARD_CATEGORIES } from '../constants';
 
-type ArticleCategory = typeof CARD_CATEGORIES[keyof typeof CARD_CATEGORIES]['value'];
+type ArticleCategory = (typeof CARD_CATEGORIES)[keyof typeof CARD_CATEGORIES]['value'];
 
 interface Article {
   slug: string;
@@ -25,7 +25,7 @@ interface ArticleListProps {
 const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) => {
   const displayArticles = showAll ? articles : articles.slice(0, 6);
   const getCategoryInfo = (categoryValue: ArticleCategory) => {
-    const category = Object.values(CARD_CATEGORIES).find(c => c.value === categoryValue);
+    const category = Object.values(CARD_CATEGORIES).find((c) => c.value === categoryValue);
     if (!category) {
       return {
         label: categoryValue,
@@ -42,7 +42,7 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) 
     return new Intl.DateTimeFormat('zh-CN', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     }).format(new Date(date));
   };
 
@@ -53,11 +53,13 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) 
         return (
           <article
             key={article.slug}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+            className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
           >
             <div className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <span className={`px-3 py-1 text-sm font-medium rounded-full ${categoryInfo.className}`}>
+              <div className="mb-3 flex items-center justify-between">
+                <span
+                  className={`rounded-full px-3 py-1 text-sm font-medium ${categoryInfo.className}`}
+                >
                   {categoryInfo.label}
                 </span>
                 <time className="text-sm text-gray-500">
@@ -65,33 +67,26 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) 
                 </time>
               </div>
 
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="mb-3 text-xl font-semibold text-gray-900">
                 <a
                   href={`/articles/${article.slug}`}
-                  className="hover:text-blue-600 transition-colors"
+                  className="transition-colors hover:text-blue-600"
                 >
                   {article.data.title}
                 </a>
               </h3>
 
-              <p className="text-gray-600 mb-4 line-clamp-3">
-                {article.data.description}
-              </p>
+              <p className="mb-4 line-clamp-3 text-gray-600">{article.data.description}</p>
 
               {article.data.tags && article.data.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="mb-4 flex flex-wrap gap-2">
                   {article.data.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded"
-                    >
+                    <span key={tag} className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
                       #{tag}
                     </span>
                   ))}
                   {article.data.tags.length > 3 && (
-                    <span className="text-xs text-gray-500">
-                      +{article.data.tags.length - 3}
-                    </span>
+                    <span className="text-xs text-gray-500">+{article.data.tags.length - 3}</span>
                   )}
                 </div>
               )}
@@ -99,12 +94,12 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) 
               <div className="flex items-center justify-between">
                 <a
                   href={`/articles/${article.slug}`}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
+                  className="font-medium text-blue-600 hover:text-blue-800"
                 >
                   阅读更多 →
                 </a>
                 {article.data.featured && (
-                  <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                  <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
                     精选
                   </span>
                 )}
@@ -113,12 +108,12 @@ const ArticleList: React.FC<ArticleListProps> = ({ articles, showAll = false }) 
           </article>
         );
       })}
-      
+
       {!showAll && articles.length > 6 && (
-        <div className="text-center pt-6">
-          <a 
-            href="/articles" 
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+        <div className="pt-6 text-center">
+          <a
+            href="/articles"
+            className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-blue-700"
           >
             查看全部文章
           </a>

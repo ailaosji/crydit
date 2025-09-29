@@ -1,64 +1,63 @@
 ---
-title: "Stables Card - 消费您的稳定币"
-name: "Stables Card"
-logo: "https://cdn.prod.website-files.com/647fe94790c03420770215ff/648ffd5cf8719a50eb3647ba_webclip.png"
-description: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
-shortDescription: "Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。"
-issuer: "Stables"
+title: 'Stables Card - 消费您的稳定币'
+name: 'Stables Card'
+logo: 'https://cdn.prod.website-files.com/647fe94790c03420770215ff/648ffd5cf8719a50eb3647ba_webclip.png'
+description: 'Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
+shortDescription: 'Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
+issuer: 'Stables'
 supportedRegions:
-  - "全球"
-applicationDocuments: ["身份证/护照"]
+  - '全球'
+applicationDocuments: ['身份证/护照']
 supportedCurrencies:
-  - "USDT"
-  - "USDC"
-  - "DAI"
-  - "PYUSD"
-  - "HONEY"
+  - 'USDT'
+  - 'USDC'
+  - 'DAI'
+  - 'PYUSD'
+  - 'HONEY'
 supportedPaymentMethods:
-  - "Apple Pay"
-  - "Google Pay"
-  - "银行转账"
-affiliateLink: "https://stables.money/"
-publishDate: "2025-08-18"
+  - 'Apple Pay'
+  - 'Google Pay'
+  - '银行转账'
+affiliateLink: 'https://stables.money/'
+publishDate: '2025-08-18'
 kycRequired: true
 pros:
-  - "直接消费稳定币"
-  - "无激活费、月费或外汇费"
-  - "交易可赚取Stables积分"
-  - "支持超过20个加密网络进行充值"
+  - '直接消费稳定币'
+  - '无激活费、月费或外汇费'
+  - '交易可赚取Stables积分'
+  - '支持超过20个加密网络进行充值'
 cons:
-  - "充值和发送的费用结构可能很复杂"
-  - "地区可用性信息略有不清楚"
+  - '充值和发送的费用结构可能很复杂'
+  - '地区可用性信息略有不清楚'
 features:
-  - "链上余额"
-  - "MPC加密技术保障安全"
-  - "24/7支持"
+  - '链上余额'
+  - 'MPC加密技术保障安全'
+  - '24/7支持'
 tags:
-  - "Stables"
-  - "Mastercard"
-  - "稳定币"
-  - "全球"
-featureTags: ["支持大陆", "低费率", "零损耗"]
+  - 'Stables'
+  - 'Mastercard'
+  - '稳定币'
+  - '全球'
+featureTags: ['支持大陆', '低费率', '零损耗']
 
 cardTiers:
-  - name: "Standard"
+  - name: 'Standard'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: "mastercard"
-    physicalNetwork: "mastercard"
+    virtualNetwork: 'mastercard'
+    physicalNetwork: 'mastercard'
     fees:
       monthlyFee: false
       annualFee: false
       virtualCardPrice: 0
       physicalCardPrice: 0
-      depositFee: "0% (stablecoins)"
-      transactionFee: "0%"
-      foreignExchangeFee: "0美元"
-      withdrawalFee: "因方法而异"
+      depositFee: '0% (stablecoins)'
+      transactionFee: '0%'
+      foreignExchangeFee: '0美元'
+      withdrawalFee: '因方法而异'
     rewards:
       points: true
 ---
-
 
 ## Stables Card 评测
 
@@ -66,10 +65,10 @@ Stables Card专为希望像现金一样轻松消费稳定币的用户而设计�
 
 ### 主要特点：
 
-*   **直接消费稳定币**：使用USDT、USDC和DAI等稳定币进行日常购物，无需先将其转换为法定货币。
-*   **零消费费用**：Stables对本地或国际消费不收取任何费用，也没有外汇（FX）费用。
-*   **奖励计划**：每次交易均可赚取“Stables积分”。
-*   **灵活充值**：通过超过20个不同的区块链网络使用稳定币为您的账户充值，或通过银行转账或借记卡使用本地货币充值。
+- **直接消费稳定币**：使用USDT、USDC和DAI等稳定币进行日常购物，无需先将其转换为法定货币。
+- **零消费费用**：Stables对本地或国际消费不收取任何费用，也没有外汇（FX）费用。
+- **奖励计划**：每次交易均可赚取“Stables积分”。
+- **灵活充值**：通过超过20个不同的区块链网络使用稳定币为您的账户充值，或通过银行转账或借记卡使用本地货币充值。
 
 ### 费用：
 

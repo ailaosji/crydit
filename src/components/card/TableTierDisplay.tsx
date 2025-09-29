@@ -14,7 +14,7 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
 
   // 如果没有等级信息，显示旧版数据
   if (!tiers || tiers.length === 0) {
-    return <div className="text-center text-gray-400 text-sm">不支持</div>;
+    return <div className="text-center text-sm text-gray-400">不支持</div>;
   }
 
   // 获取显示等级
@@ -22,21 +22,13 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
   const hasMultipleTiers = tiers.length > 1;
 
   // 判断是否支持该类型
-  const isSupported = type === 'virtual'
-    ? displayTier?.isVirtual
-    : displayTier?.isPhysical;
+  const isSupported = type === 'virtual' ? displayTier?.isVirtual : displayTier?.isPhysical;
 
   if (!isSupported) {
-    return (
-      <div className="text-center text-gray-400 text-sm">
-        不支持
-      </div>
-    );
+    return <div className="text-center text-sm text-gray-400">不支持</div>;
   }
 
-  const network = type === 'virtual'
-    ? displayTier.virtualNetwork
-    : displayTier.physicalNetwork;
+  const network = type === 'virtual' ? displayTier.virtualNetwork : displayTier.physicalNetwork;
 
   const openingFee = displayTier.fees?.openingFee || 0;
   const annualFee = displayTier.fees?.annualFee;
@@ -47,10 +39,12 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
       <NetworkBadge network={network} />
 
       {/* 費用信息 */}
-      <div className="text-center space-y-1">
+      <div className="space-y-1 text-center">
         <div className="text-xs">
           <span className="text-gray-500">开卡:</span>
-          <span className={`ml-1 font-medium ${openingFee === 0 ? 'text-green-600' : 'text-gray-900'}`}>
+          <span
+            className={`ml-1 font-medium ${openingFee === 0 ? 'text-green-600' : 'text-gray-900'}`}
+          >
             {openingFee === 0 ? '免费' : `$${openingFee}`}
           </span>
         </div>
@@ -66,14 +60,14 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
       {/* 多等级提示 */}
       {hasMultipleTiers && (
         <div className="flex items-center gap-1 text-[10px] text-indigo-600">
-          <Info className="w-3 h-3" />
+          <Info className="h-3 w-3" />
           <span>{tiers.length} 个等级可选</span>
         </div>
       )}
 
       {/* 推荐标识（如果是推荐等级） */}
       {displayTier.recommended && (
-        <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] rounded-full font-medium">
+        <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-medium text-orange-600">
           推荐
         </span>
       )}

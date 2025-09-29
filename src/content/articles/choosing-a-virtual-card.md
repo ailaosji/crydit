@@ -1,10 +1,10 @@
 ---
-title: "如何选择适合你的虚拟U卡？"
-description: "虚拟U卡开卡快、使用方便，是许多人的首选。但市面上产品众多，如何选择？本文提供一个简单的框架，助你找到最适合自己的虚拟U卡。"
-publishDate: "2024-03-20"
-category: "guide"
-tags: ["U卡", "虚拟卡", "指南", "新手"]
-image: "/images/articles/choosing-virtual-card.jpg"
+title: '如何选择适合你的虚拟U卡？'
+description: '虚拟U卡开卡快、使用方便，是许多人的首选。但市面上产品众多，如何选择？本文提供一个简单的框架，助你找到最适合自己的虚拟U卡。'
+publishDate: '2024-03-20'
+category: 'guide'
+tags: ['U卡', '虚拟卡', '指南', '新手']
+image: '/images/articles/choosing-virtual-card.jpg'
 featured: false
 ---
 
@@ -21,6 +21,7 @@ featured: false
 ## 2. 评估费用结构
 
 U卡的费用通常包括：
+
 - **开卡费**：一次性费用，很多虚拟卡是免费或费用很低的。
 - **充值费**：将加密货币充值到卡片的手续费。
 - **交易费**：每次消费时收取的手续费。
