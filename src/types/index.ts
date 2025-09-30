@@ -36,6 +36,7 @@ export interface CardTier {
     monthlySpending?: string;
     monthlyAtmWithdrawal?: string;
   };
+  features?: string[];
 }
 
 export interface Card {
@@ -54,7 +55,6 @@ export interface Card {
     pros: string[];
     cons: string[];
     features?: string[];
-    featureTags?: string[];
     featured?: boolean;
     importantReminders?: string[];
     kycRequired: boolean;
