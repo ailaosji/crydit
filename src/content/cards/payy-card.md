@@ -13,7 +13,7 @@ supportedCurrencies:
 supportedPaymentMethods:
   - 'Visa'
   - 'Mastercard'
-affiliateLink: 'https://apps.apple.com/il/app/payy/id6474760518'
+affiliateLink: 'https://payy.link/invite/8UFBN7'
 publishDate: '2024-06-01'
 updateDate: '2025-09-24'
 kycRequired: true

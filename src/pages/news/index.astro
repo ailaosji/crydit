@@ -18,16 +18,6 @@ const otherArticles = allArticles
 // 头条新闻（最新的一条）
 const headlineNews = newsArticles[0];
 const regularNews = newsArticles.slice(1);
-
-// 新闻分类标签
-const newsTags = [
-  { label: '全部', value: 'all', active: true },
-  { label: '行业动态', value: 'industry' },
-  { label: '监管政策', value: 'regulation' },
-  { label: '市场分析', value: 'market' },
-  { label: '新品发布', value: 'product' },
-  { label: '平台公告', value: 'announcement' },
-];
 ---
 
 <Layout title="最新资讯 - U卡行业新闻与动态">
@@ -60,26 +50,6 @@ const newsTags = [
             <div class="text-3xl font-bold text-white">50+</div>
             <div class="text-blue-100 text-sm mt-1">信息源</div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 新闻分类标签 -->
-    <section class="sticky top-16 z-40 bg-white border-b border-gray-200 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center gap-4 py-4 overflow-x-auto scrollbar-hide">
-          {newsTags.map(tag => (
-            <button
-              class={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                tag.active
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              data-tag={tag.value}
-            >
-              {tag.label}
-            </button>
-          ))}
         </div>
       </div>
     </section>
@@ -120,7 +90,7 @@ const newsTags = [
                   </div>
 
                   <h2 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
-                    <a href={`/news/${headlineNews.slug}`}>
+                    <a href={`/articles/${headlineNews.slug}`}>
                       {headlineNews.data.title}
                     </a>
                   </h2>
@@ -138,7 +108,7 @@ const newsTags = [
                       ))}
                     </div>
                     <a
-                      href={`/news/${headlineNews.slug}`}
+                      href={`/articles/${headlineNews.slug}`}
                       class="text-indigo-600 font-medium text-sm hover:text-indigo-700 transition-colors"
                     >
                       阅读全文 →
@@ -177,7 +147,7 @@ const newsTags = [
                         </div>
 
                         <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
-                          <a href={`/news/${article.slug}`}>
+                          <a href={`/articles/${article.slug}`}>
                             {article.data.title}
                           </a>
                         </h3>
@@ -193,7 +163,7 @@ const newsTags = [
                             ))}
                           </div>
                           <a
-                            href={`/news/${article.slug}`}
+                            href={`/articles/${article.slug}`}
                             class="text-indigo-600 text-sm hover:underline"
                           >
                             查看详情 →
@@ -213,14 +183,6 @@ const newsTags = [
               )}
             </div>
 
-            <!-- 加载更多按钮 -->
-            {regularNews.length > 0 && (
-              <div class="text-center pt-8">
-                <button class="px-8 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                  加载更多资讯
-                </button>
-              </div>
-            )}
           </div>
 
           <!-- 右侧边栏 -->
@@ -341,41 +303,4 @@ const newsTags = [
     </section>
   </div>
 
-  <!-- 添加自定义样式 -->
-  <style>
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
-    }
-  </style>
-
-  <!-- 添加交互脚本 -->
-  <script>
-    // 标签切换功能
-    document.addEventListener('DOMContentLoaded', () => {
-      const tagButtons = document.querySelectorAll('[data-tag]');
-
-      tagButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-          // 移除所有active状态
-          tagButtons.forEach(btn => {
-            btn.classList.remove('bg-indigo-600', 'text-white');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
-          });
-
-          // 添加当前active状态
-          e.currentTarget.classList.remove('bg-gray-100', 'text-gray-700');
-          e.currentTarget.classList.add('bg-indigo-600', 'text-white');
-
-          // 这里可以添加筛选逻辑
-          const selectedTag = e.currentTarget.dataset.tag;
-          console.log('Selected tag:', selectedTag);
-          // TODO: 实现新闻筛选
-        });
-      });
-    });
-  </script>
 </Layout>

@@ -55,6 +55,7 @@ export interface Card {
     pros: string[];
     cons: string[];
     features?: string[];
+    featureTags?: string[];
     featured?: boolean;
     importantReminders?: string[];
     kycRequired: boolean;
