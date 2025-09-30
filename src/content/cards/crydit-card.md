@@ -1,7 +1,7 @@
 ---
 title: 'Crydit Card - 加密支付生活'
 name: 'Crydit Card'
-logo: 'https://www.crydit.com/images/logo.svg'
+logo: 'https://www.crydit.com/crydit_logo.ico'
 description: 'Crydit提供MasterCard和Visa两种加密货币卡，支持全球支付，并提供不同的费率和功能以满足不同用户的需求。'
 shortDescription: '提供MasterCard和Visa两种加密货币卡，支持全球支付和ATM取款。'
 issuer: 'Crydit'
