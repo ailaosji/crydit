@@ -120,7 +120,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 <td className="px-3 py-4">
                   <div className="flex justify-center">
                     <FeatureTags
-                      features={getDisplayTier(card)?.featureTags || card.data.featureTags}
+                      features={getDisplayTier(card)?.features || card.data.features}
                       maxDisplay={2}
                       compact={true}
                     />

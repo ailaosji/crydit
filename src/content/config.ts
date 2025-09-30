@@ -56,6 +56,7 @@ const cardTierSchema = z.object({
     monthlySpending: z.string().optional(),
     monthlyAtmWithdrawal: z.string().optional(),
   }).optional(),
+  features: z.array(z.string()).optional(),
 });
 
 
@@ -161,7 +162,6 @@ const cardsCollection = defineCollection({
 
     // Taxonomy
     tags: z.array(z.string()).optional(),
-    featureTags: z.array(z.string()).optional(),
   }).merge(relatedContentSchema.pick({ relatedCards: true, relatedArticles: true })),
 });
 
