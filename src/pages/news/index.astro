@@ -1,0 +1,306 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { CARD_CATEGORIES } from '../../constants';
+
+// 获取所有文章，筛选出资讯类文章
+const allArticles = await getCollection('articles');
+const newsArticles = allArticles
+  .filter(article => article.data.category === 'news')
+  .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime());
+
+// 获取其他类别的热门文章用于侧边栏
+const otherArticles = allArticles
+  .filter(article => article.data.category !== 'news')
+  .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime())
+  .slice(0, 5);
+
+// 头条新闻（最新的一条）
+const headlineNews = newsArticles[0];
+const regularNews = newsArticles.slice(1);
+---
+
+<Layout title="最新资讯 - U卡行业新闻与动态">
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-indigo-50/30">
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-700">
+      <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+
+      <div class="relative max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl lg:text-5xl font-bold text-white mb-4">
+            行业资讯中心
+          </h1>
+          <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+            追踪数字货币卡片行业最新动态，掌握市场脉搏，洞察行业趋势
+          </p>
+        </div>
+
+        <!-- 快速统计 -->
+        <div class="grid grid-cols-3 gap-6 mt-12 max-w-3xl mx-auto">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-white">{newsArticles.length}</div>
+            <div class="text-blue-100 text-sm mt-1">篇资讯</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-white">24h</div>
+            <div class="text-blue-100 text-sm mt-1">实时更新</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-white">50+</div>
+            <div class="text-blue-100 text-sm mt-1">信息源</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 主要内容区域 -->
+    <section class="py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+          <!-- 左侧新闻列表 -->
+          <div class="lg:col-span-2 space-y-8">
+            {headlineNews && (
+              <!-- 头条新闻 -->
+              <article class="bg-white rounded-2xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all">
+                <div class="aspect-w-16 aspect-h-9 bg-gradient-to-br from-indigo-100 to-blue-100">
+                  {headlineNews.data.image ? (
+                    <img
+                      src={headlineNews.data.image}
+                      alt={headlineNews.data.title}
+                      class="w-full h-64 object-cover"
+                    />
+                  ) : (
+                    <div class="w-full h-64 flex items-center justify-center">
+                      <svg class="w-20 h-20 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                <div class="p-6">
+                  <div class="flex items-center gap-3 mb-3">
+                    <span class="px-3 py-1 bg-red-100 text-red-600 text-xs font-medium rounded-full">
+                      头条
+                    </span>
+                    <time class="text-gray-500 text-sm">
+                      {new Date(headlineNews.data.publishDate).toLocaleDateString('zh-CN')}
+                    </time>
+                  </div>
+
+                  <h2 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
+                    <a href={`/articles/${headlineNews.slug}`}>
+                      {headlineNews.data.title}
+                    </a>
+                  </h2>
+
+                  <p class="text-gray-600 mb-4 line-clamp-3">
+                    {headlineNews.data.description}
+                  </p>
+
+                  <div class="flex items-center justify-between">
+                    <div class="flex gap-2">
+                      {headlineNews.data.tags?.slice(0, 3).map(tag => (
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                    <a
+                      href={`/articles/${headlineNews.slug}`}
+                      class="text-indigo-600 font-medium text-sm hover:text-indigo-700 transition-colors"
+                    >
+                      阅读全文 →
+                    </a>
+                  </div>
+                </div>
+              </article>
+            )}
+
+            <!-- 新闻列表 -->
+            <div class="space-y-6">
+              {regularNews.length > 0 ? (
+                regularNews.map(article => (
+                  <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all p-6 group">
+                    <div class="flex gap-6">
+                      {article.data.image && (
+                        <div class="flex-shrink-0">
+                          <img
+                            src={article.data.image}
+                            alt={article.data.title}
+                            class="w-32 h-24 object-cover rounded-lg"
+                          />
+                        </div>
+                      )}
+
+                      <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                          <time class="text-gray-500 text-sm">
+                            {new Date(article.data.publishDate).toLocaleDateString('zh-CN')}
+                          </time>
+                          {article.data.featured && (
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded">
+                              热门
+                            </span>
+                          )}
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                          <a href={`/articles/${article.slug}`}>
+                            {article.data.title}
+                          </a>
+                        </h3>
+
+                        <p class="text-gray-600 text-sm line-clamp-2 mb-3">
+                          {article.data.description}
+                        </p>
+
+                        <div class="flex items-center justify-between">
+                          <div class="flex gap-2">
+                            {article.data.tags?.slice(0, 2).map(tag => (
+                              <span class="text-xs text-gray-500">#{tag}</span>
+                            ))}
+                          </div>
+                          <a
+                            href={`/articles/${article.slug}`}
+                            class="text-indigo-600 text-sm hover:underline"
+                          >
+                            查看详情 →
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <div class="text-center py-12 bg-white rounded-xl">
+                  <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                  </svg>
+                  <p class="text-gray-500">暂无更多资讯</p>
+                </div>
+              )}
+            </div>
+
+          </div>
+
+          <!-- 右侧边栏 -->
+          <div class="space-y-8">
+            <!-- 快讯栏 -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                </svg>
+                7×24 快讯
+              </h3>
+
+              <div class="space-y-4">
+                <div class="pb-4 border-b border-gray-100">
+                  <time class="text-xs text-gray-500">10:30</time>
+                  <p class="text-sm text-gray-700 mt-1">Binance Card 宣布支持新增5种加密货币</p>
+                </div>
+                <div class="pb-4 border-b border-gray-100">
+                  <time class="text-xs text-gray-500">09:15</time>
+                  <p class="text-sm text-gray-700 mt-1">Crypto.com 推出春节限定优惠活动</p>
+                </div>
+                <div class="pb-4 border-b border-gray-100">
+                  <time class="text-xs text-gray-500">昨天 23:45</time>
+                  <p class="text-sm text-gray-700 mt-1">欧盟发布最新加密资产监管框架</p>
+                </div>
+              </div>
+
+              <a href="#" class="block mt-4 text-center text-sm text-indigo-600 hover:text-indigo-700">
+                查看全部快讯 →
+              </a>
+            </div>
+
+            <!-- 热门话题 -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-4">热门话题</h3>
+
+              <div class="flex flex-wrap gap-2">
+                <a href="#" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
+                  #MiCA法规
+                </a>
+                <a href="#" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
+                  #虚拟卡
+                </a>
+                <a href="#" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
+                  #手续费调整
+                </a>
+                <a href="#" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
+                  #跨境支付
+                </a>
+                <a href="#" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-indigo-100 hover:text-indigo-600 transition-colors">
+                  #DeFi集成
+                </a>
+              </div>
+            </div>
+
+            <!-- 推荐阅读 -->
+            {otherArticles.length > 0 && (
+              <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">推荐阅读</h3>
+
+                <div class="space-y-4">
+                  {otherArticles.map((article, index) => (
+                    <a
+                      href={`/articles/${article.slug}`}
+                      class="flex items-start gap-3 group"
+                    >
+                      <span class={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+                        index === 0 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-white' :
+                        index === 1 ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white' :
+                        index === 2 ? 'bg-gradient-to-br from-orange-400 to-orange-600 text-white' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>
+                        {index + 1}
+                      </span>
+                      <div class="flex-1">
+                        <h4 class="text-sm font-medium text-gray-700 group-hover:text-indigo-600 transition-colors line-clamp-2">
+                          {article.data.title}
+                        </h4>
+                        <span class="text-xs text-gray-500">
+                          {CARD_CATEGORIES[article.data.category.toUpperCase()]?.label || article.data.category}
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- 订阅栏 -->
+            <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
+              <h3 class="text-lg font-bold mb-2">订阅资讯推送</h3>
+              <p class="text-sm text-indigo-100 mb-4">
+                第一时间获取行业最新动态
+              </p>
+
+              <form class="space-y-3">
+                <input
+                  type="email"
+                  placeholder="输入您的邮箱"
+                  class="w-full px-4 py-2.5 bg-white/20 backdrop-blur-sm rounded-lg placeholder-indigo-200 text-white border border-white/20 focus:outline-none focus:border-white/50"
+                />
+                <button
+                  type="submit"
+                  class="w-full py-2.5 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+                >
+                  立即订阅
+                </button>
+              </form>
+
+              <p class="text-xs text-indigo-200 mt-3">
+                我们承诺不会发送垃圾邮件
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</Layout>
