@@ -1,73 +1,63 @@
 ---
-title: 'Crydit Card - Mastercard and Visa'
-name: 'Crydit Card'
-logo: 'https://www.crydit.com/favicon.ico'
-description: 'Crydit offers a range of Mastercard and Visa cards, allowing you to spend your cryptocurrency worldwide.'
-shortDescription: 'Crydit offers both Mastercard and Visa crypto cards.'
-issuer: 'Crydit'
+title: "Crydit Card - Visa & MasterCard"
+name: "Crydit Card"
+logo: ""
+description: "Crydit 发行的 Visa 和 MasterCard 网络预付/加密卡（详情以官网为准）。"
+shortDescription: "Crydit 提供 Visa 和 MasterCard 两种卡。"
+issuer: "Crydit"
 supportedRegions:
-  - '美国'
-  - '加拿大'
-  - '欧洲'
-  - '亚太地区'
-applicationDocuments: ['身份验证 (KYC)']
+  - "待官网确认"
+applicationDocuments:
+  - "待官网确认"
 supportedCurrencies:
-  - 'BTC'
-  - 'ETH'
-  - 'USDT'
+  - "待官网确认"
 supportedPaymentMethods:
-  - 'Apple Pay'
-  - 'Google Pay'
-affiliateLink: 'https://h5.company.crydit.com/register?invite_code=9F6266VY'
-publishDate: '2024-07-29'
-updateDate: '2024-07-29'
+  - "待官网确认"
+affiliateLink: "https://h5.company.crydit.com/register?invite_code=9F6266VY"
+publishDate: ""
+updateDate: ""
 kycRequired: true
 pros:
-  - 'Supports both Mastercard and Visa networks'
-  - 'Spend cryptocurrency globally'
-  - 'Virtual and physical cards available'
+  - "支持 Visa 和 MasterCard 网络"
+  - "提供多种卡片选择"
 cons:
-  - 'Specific card details and fees are not publicly available on their website'
+  - "官网信息不完整，许多细节需要向官方确认"
 features:
-  - 'Virtual Card'
-  - 'Physical Card'
-  - 'Global Payments'
+  - "虚拟卡和实体卡"
+  - "加密货币充值"
 tags:
-  - 'Crydit'
-  - 'Visa'
-  - 'Mastercard'
-  - 'U卡'
+  - "U卡"
+  - "Visa"
+  - "MasterCard"
+  - "Crydit"
 cardTiers:
-  - name: 'Visa'
+  - name: "MasterCard"
     recommended: true
     isVirtual: true
     isPhysical: true
-    virtualNetwork: 'visa'
-    physicalNetwork: 'visa'
+    virtualNetwork: "mastercard"
+    physicalNetwork: "mastercard"
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 'N/A'
-  - name: 'Mastercard'
+      cashback: "待官网确认"
+  - name: "Visa"
     recommended: true
     isVirtual: true
     isPhysical: true
-    virtualNetwork: 'mastercard'
-    physicalNetwork: 'mastercard'
+    virtualNetwork: "visa"
+    physicalNetwork: "visa"
     fees:
       virtualCardPrice: 0
       physicalCardPrice: 0
       annualFee: 0
     rewards:
-      cashback: 'N/A'
+      cashback: "待官网确认"
 ---
 
-## Crydit Card Review
+## Crydit Card 简短评测
+Crydit 在其官网上列出了 MasterCard 和 Visa 两种卡片。由于官网内容主要通过前端渲染展示，关于费用、支持地区、具体功能（如是否支持 Apple/Google Pay、提现费、ATM 费、年费等）的详细信息未能直接抓取。
 
-Crydit provides cryptocurrency-backed Visa and Mastercard options, allowing users to spend their digital assets at merchants worldwide. They offer both virtual and physical cards to suit different user needs.
-
-While the website does not provide extensive details about fees, rewards, or specific tiers, the availability of both major card networks makes it a flexible option for users in supported regions. To get started, users will need to complete a standard KYC verification process.
-
-This card is a straightforward choice for those looking for a simple way to use their crypto for everyday purchases. Use the referral link to sign up and explore their offerings.
+建议用户直接访问官网或联系客服，以获取最准确的卡片信息，并在申请前确认所有相关条款。
