@@ -14,8 +14,8 @@ supportedCurrencies:
 supportedPaymentMethods:
   - "待官网确认"
 affiliateLink: "https://h5.company.crydit.com/register?invite_code=9F6266VY"
-publishDate: ""
-updateDate: ""
+publishDate: "2025-10-01"
+updateDate: "2025-10-01"
 kycRequired: true
 pros:
   - "支持 Visa 和 MasterCard 网络"
