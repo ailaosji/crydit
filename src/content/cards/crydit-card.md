@@ -2,9 +2,9 @@
 title: "Crydit Card - Visa & MasterCard"
 name: "Crydit Card"
 logo: "https://www.crydit.com/crydit_logo.ico"
-description: "Crydit 发行的 Visa 和 MasterCard 网络预付/加密卡，由 Navigator Pilot 等公司提供服务，支持多种支付方式。"
+description: "Crydit 发行的 Visa 和 MasterCard 网络预付/加密卡。其 Visa 卡由 Navigator Pilot (领航商务) 提供服务，支持多种支付方式。"
 shortDescription: "Crydit 提供与微信、支付宝绑定的 Visa 和 MasterCard。"
-issuer: "Crydit (Visa卡由领航商务提供)"
+issuer: "Crydit"
 supportedRegions:
   - "全球 (需通过KYC)"
 applicationDocuments:

@@ -2,8 +2,8 @@
 title: 'Stables Card - 消费您的稳定币'
 name: 'Stables Card'
 logo: 'https://cdn.prod.website-files.com/647fe94790c03420770215ff/648ffd5cf8719a50eb3647ba_webclip.png'
-description: 'Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
-shortDescription: 'Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
+description: 'Stables卡是一款Visa卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
+shortDescription: 'Stables卡是一款Visa卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
 issuer: 'Stables'
 supportedRegions:
   - '全球'
@@ -38,7 +38,7 @@ features:
   - '零损耗'
 tags:
   - 'Stables'
-  - 'Mastercard'
+  - 'Visa'
   - '稳定币'
   - '全球'
 
@@ -46,8 +46,8 @@ cardTiers:
   - name: 'Standard'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: 'mastercard'
-    physicalNetwork: 'mastercard'
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       monthlyFee: false
       annualFee: false
@@ -63,7 +63,7 @@ cardTiers:
 
 ## Stables Card 评测
 
-Stables Card专为希望像现金一样轻松消费稳定币的用户而设计。它作为万事达卡使用，并提供虚拟和实体两种形式。
+Stables Card专为希望像现金一样轻松消费稳定币的用户而设计。它作为Visa卡使用，并提供虚拟和实体两种形式。
 
 ### 主要特点：
 
