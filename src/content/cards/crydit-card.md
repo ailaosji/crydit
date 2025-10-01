@@ -1,7 +1,7 @@
 ---
 title: "Crydit Card - Visa & MasterCard"
 name: "Crydit Card"
-logo: ""
+logo: "https://www.crydit.com/crydit_logo.ico"
 description: "Crydit 发行的 Visa 和 MasterCard 网络预付/加密卡（详情以官网为准）。"
 shortDescription: "Crydit 提供 Visa 和 MasterCard 两种卡。"
 issuer: "Crydit"
