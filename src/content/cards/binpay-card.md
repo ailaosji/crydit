@@ -40,6 +40,10 @@ cardTiers:
     virtualNetwork: 'mastercard'
     fees:
       virtualCardPrice: 25
+      monthlyFee: 0
+      depositFee: '1.3%'
+      withdrawalFee: '0.5%'
+      transactionFee: '0%'
       annualFee: 0
     rewards:
       cashback: null
@@ -48,8 +52,12 @@ cardTiers:
     isPhysical: false
     virtualNetwork: 'mastercard'
     fees:
-      annualFee: 0
+      virtualCardPrice: 50
+      monthlyFee: 0
       depositFee: '0.7%'
+      withdrawalFee: '0.5%'
+      transactionFee: '0%'
+      annualFee: 0
     rewards:
       cashback: null
   - name: '实体卡'
