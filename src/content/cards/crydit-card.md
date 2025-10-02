@@ -2,7 +2,7 @@
 title: "Crydit Card - Visa & MasterCard"
 name: "Crydit Card"
 logo: "https://www.crydit.com/crydit_logo.ico"
-description: "Crydit 发行的 Visa 和 MasterCard 网络预付/加密卡。其 Visa 卡由 Navigator Pilot (领航商务) 提供服务，支持多种支付方式。"
+description: "Crydit 发行的 Visa 和 MasterCard 网络预付/加密卡。其 Visa 卡由 Navigator Pilot (领航商务) 提供服务，支持多种支付方式。（注：价格或费用为-1表示待确认，但非免费）。"
 shortDescription: "Crydit 提供与微信、支付宝绑定的 Visa 和 MasterCard。"
 issuer: "Crydit"
 supportedRegions:
@@ -18,8 +18,8 @@ supportedPaymentMethods:
   - "支付宝"
   - "Apple Pay"
 affiliateLink: "https://h5.company.crydit.com/register?invite_code=9F6266VY"
-publishDate: "2025-10-01"
-updateDate: "2025-10-01"
+publishDate: "2025-10-02"
+updateDate: "2025-10-02"
 kycRequired: true
 pros:
   - "支持绑定微信和支付宝"
@@ -48,11 +48,11 @@ cardTiers:
     virtualNetwork: "mastercard"
     physicalNetwork: "mastercard"
     fees:
-      virtualCardPrice: "待确认"
-      physicalCardPrice: "待确认"
-      annualFee: 0
-      depositFee: "待官网确认"
-      transactionFee: "待官网确认"
+      virtualCardPrice: -1
+      physicalCardPrice: -1
+      annualFee: -1
+      depositFee: -1
+      transactionFee: -1
     rewards:
       cashback: "消费积分"
   - name: "Visa"
@@ -62,11 +62,11 @@ cardTiers:
     virtualNetwork: "visa"
     physicalNetwork: "visa"
     fees:
-      virtualCardPrice: "待确认"
-      physicalCardPrice: "待确认"
-      annualFee: 0
-      depositFee: "1%"
-      transactionFee: "1%"
+      virtualCardPrice: -1
+      physicalCardPrice: -1
+      annualFee: -1
+      depositFee: -1
+      transactionFee: -1
     rewards:
       cashback: "消费积分"
 ---
