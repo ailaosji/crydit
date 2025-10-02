@@ -18,8 +18,8 @@ supportedPaymentMethods:
   - "支付宝"
   - "Apple Pay"
 affiliateLink: "https://h5.company.crydit.com/register?invite_code=9F6266VY"
-publishDate: "2025-09-30"
-updateDate: "2025-09-30"
+publishDate: "2025-10-01"
+updateDate: "2025-10-01"
 kycRequired: true
 pros:
   - "支持绑定微信和支付宝"
@@ -48,8 +48,8 @@ cardTiers:
     virtualNetwork: "mastercard"
     physicalNetwork: "mastercard"
     fees:
-      virtualCardPrice: 0
-      physicalCardPrice: 0
+      virtualCardPrice: "待确认"
+      physicalCardPrice: "待确认"
       annualFee: 0
       depositFee: "待官网确认"
       transactionFee: "待官网确认"
@@ -62,8 +62,8 @@ cardTiers:
     virtualNetwork: "visa"
     physicalNetwork: "visa"
     fees:
-      virtualCardPrice: 0
-      physicalCardPrice: 0
+      virtualCardPrice: "待确认"
+      physicalCardPrice: "待确认"
       annualFee: 0
       depositFee: "1%"
       transactionFee: "1%"
