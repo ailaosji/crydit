@@ -14,7 +14,7 @@ supportedCurrencies:
 supportedPaymentMethods:
   - 'Visa'
   - 'Mastercard'
-affiliateLink: 'https://app.binpay.cc/pages/passport/register'
+affiliateLink: 'https://app.binpay.cc/pages/passport/invitation?r=1106548'
 publishDate: '2024-10-04'
 updateDate: '2024-10-04'
 kycRequired: true
