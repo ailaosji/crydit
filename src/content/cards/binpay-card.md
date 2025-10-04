@@ -52,7 +52,7 @@ cardTiers:
   - name: 'Premium'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: 'visa'
+    virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 25
@@ -66,7 +66,7 @@ cardTiers:
   - name: 'Diamond'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: 'visa'
+    virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 50
