@@ -2,8 +2,8 @@
 title: 'Stables Card - 消费您的稳定币'
 name: 'Stables Card'
 logo: 'https://cdn.prod.website-files.com/647fe94790c03420770215ff/648ffd5cf8719a50eb3647ba_webclip.png'
-description: 'Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
-shortDescription: 'Stables卡是一款万事达卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
+description: 'Stables卡是一款Visa卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
+shortDescription: 'Stables卡是一款Visa卡，让您可以像现金一样在世界任何地方消费您的稳定币。'
 issuer: 'Stables'
 supportedRegions:
   - '全球'
@@ -18,7 +18,7 @@ supportedPaymentMethods:
   - 'Apple Pay'
   - 'Google Pay'
   - '银行转账'
-affiliateLink: 'https://stables.money/'
+affiliateLink: 'http://stables.app.link'
 publishDate: '2025-08-18'
 kycRequired: true
 pros:
@@ -38,7 +38,7 @@ features:
   - '零损耗'
 tags:
   - 'Stables'
-  - 'Mastercard'
+  - 'Visa'
   - '稳定币'
   - '全球'
 
@@ -46,8 +46,8 @@ cardTiers:
   - name: 'Standard'
     isVirtual: true
     isPhysical: true
-    virtualNetwork: 'mastercard'
-    physicalNetwork: 'mastercard'
+    virtualNetwork: 'visa'
+    physicalNetwork: 'visa'
     fees:
       monthlyFee: false
       annualFee: false
@@ -63,7 +63,7 @@ cardTiers:
 
 ## Stables Card 评测
 
-Stables Card专为希望像现金一样轻松消费稳定币的用户而设计。它作为万事达卡使用，并提供虚拟和实体两种形式。
+Stables Card专为希望像现金一样轻松消费稳定币的用户而设计。它作为Visa卡使用，并提供虚拟和实体两种形式。
 
 ### 主要特点：
 
@@ -77,3 +77,5 @@ Stables Card专为希望像现金一样轻松消费稳定币的用户而设计�
 虽然消费是免费的，但用法定货币充值账户以及向外部钱包或银行账户汇款会产生费用。这些费用因方法和地区而异。稳定币存款是免费的。
 
 Stables Card旨在弥合DeFi和传统金融之间的差距，为您在全球范围内使用数字资产提供一种安全便捷的方式。
+
+注册时请使用推荐码：**Stables-T5UNA6**
