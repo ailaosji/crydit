@@ -41,7 +41,7 @@ cardTiers:
   - name: 'Standard'
     recommended: true
     isVirtual: true
-    isPhysical: true
+    isPhysical: false
     virtualNetwork: 'visa'
     physicalNetwork: 'visa'
     fees:
@@ -51,12 +51,11 @@ cardTiers:
       cashback: null
   - name: 'Premium'
     isVirtual: true
-    isPhysical: true
+    isPhysical: false
     virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 25
-      physicalCardPrice: 25
       monthlyFee: 0
       depositFee: '1.3%'
       transactionFee: '0%'
@@ -65,12 +64,11 @@ cardTiers:
       cashback: null
   - name: 'Diamond'
     isVirtual: true
-    isPhysical: true
+    isPhysical: false
     virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 50
-      physicalCardPrice: 50
       monthlyFee: 0
       depositFee: '0.7%'
       transactionFee: '0%'
