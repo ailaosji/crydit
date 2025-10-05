@@ -42,7 +42,7 @@ tags:
 cardTiers:
   - name: "Visa"
     recommended: true
-    isVirtual: true
+    isVirtual: false
     isPhysical: true
     virtualNetwork: "visa"
     physicalNetwork: "visa"
@@ -56,7 +56,7 @@ cardTiers:
       cashback: "消费积分"
   - name: "Mastercard"
     recommended: true
-    isVirtual: true
+    isVirtual: false
     isPhysical: true
     virtualNetwork: "mastercard"
     physicalNetwork: "mastercard"
