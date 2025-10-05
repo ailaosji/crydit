@@ -22,19 +22,60 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
   const hasMultipleTiers = tiers.length > 1;
 
   // 判断是否支持该类型
-  const isSupported = type === 'virtual' ? displayTier?.isVirtual : displayTier?.isPhysical;
+  const relevantTiers = tiers.filter((tier) =>
+    type === 'virtual' ? tier.isVirtual : tier.isPhysical
+  );
 
-  if (!isSupported) {
+  if (relevantTiers.length === 0) {
     return <div className="text-center text-sm text-gray-400">不支持</div>;
   }
 
-  const network = type === 'virtual' ? displayTier.virtualNetwork : displayTier.physicalNetwork;
+  const getFeeDisplay = (priceField: 'opening' | 'annual') => {
+    const feeDetails = relevantTiers
+      .map((tier) => {
+        const network = type === 'virtual' ? tier.virtualNetwork : tier.physicalNetwork;
+        let price;
+        if (priceField === 'opening') {
+          price =
+            type === 'virtual'
+              ? tier.fees?.virtualCardPrice
+              : tier.fees?.physicalCardPrice;
+          // Fallback to openingFee if specific price is not defined
+          if (price === undefined) {
+            price = tier.fees?.openingFee;
+          }
+        } else {
+          price = tier.fees?.annualFee;
+        }
 
-  const openingFee =
-    (type === 'virtual'
-      ? displayTier.fees?.virtualCardPrice
-      : displayTier.fees?.physicalCardPrice) || 0;
-  const annualFee = displayTier.fees?.annualFee;
+        const networkName = network?.toLowerCase() === 'mastercard' ? 'MC' : network?.charAt(0).toUpperCase() + network?.slice(1) ?? '';
+
+        return { network: networkName, price };
+      })
+      .filter((detail): detail is { network: string; price: number } => typeof detail.price === 'number' && detail.price >= 0 && !!detail.network);
+
+    if (feeDetails.length === 0) {
+      return { text: '免费', isFree: true };
+    }
+
+    const allPricesSame = feeDetails.every((d) => d.price === feeDetails[0].price);
+
+    if (feeDetails.length === 1 || allPricesSame) {
+      const price = feeDetails[0].price;
+      return { text: price === 0 ? '免费' : `$${price}`, isFree: price === 0 };
+    }
+
+    const feeString = feeDetails
+      .map((detail) => `${detail.network}: $${detail.price}`)
+      .join(' / ');
+    return { text: feeString, isFree: false };
+  };
+
+  const openingFee = getFeeDisplay('opening');
+  const annualFee = getFeeDisplay('annual');
+
+  // Keep the old logic for the single network badge
+  const network = type === 'virtual' ? displayTier.virtualNetwork : displayTier.physicalNetwork;
 
   return (
     <div className="flex flex-col items-center space-y-2">
@@ -46,16 +87,22 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
         <div className="text-xs">
           <span className="text-gray-500">开卡:</span>
           <span
-            className={`ml-1 font-medium ${openingFee === 0 ? 'text-green-600' : 'text-gray-900'}`}
+            className={`ml-1 font-medium ${
+              openingFee.isFree ? 'text-green-600' : 'text-gray-900'
+            }`}
           >
-            {openingFee === 0 ? '免费' : `$${openingFee}`}
+            {openingFee.text}
           </span>
         </div>
 
         <div className="text-xs">
           <span className="text-gray-500">年费:</span>
-          <span className={`ml-1 font-medium ${!annualFee ? 'text-green-600' : 'text-gray-900'}`}>
-            {!annualFee ? '免费' : typeof annualFee === 'number' ? `$${annualFee}` : '收费'}
+          <span
+            className={`ml-1 font-medium ${
+              annualFee.isFree ? 'text-green-600' : 'text-gray-900'
+            }`}
+          >
+            {annualFee.text}
           </span>
         </div>
       </div>
