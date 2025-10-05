@@ -27,11 +27,7 @@ const SkeletonRow = () => (
   </div>
 );
 
-interface TableSkeletonProps {
-  rows?: number;
-}
-
-const TableSkeleton: React.FC<TableSkeletonProps> = ({ rows = 5 }) => {
+const TableSkeleton: React.FC = () => {
   return (
     <div className="animate-pulse overflow-hidden rounded-2xl bg-white shadow-xl">
       {/* 表头 */}
@@ -47,7 +43,7 @@ const TableSkeleton: React.FC<TableSkeletonProps> = ({ rows = 5 }) => {
         </div>
       </div>
       <div className="divide-y divide-gray-100">
-        {Array.from({ length: rows }).map((_, index) => (
+        {Array.from({ length: 5 }).map((_, index) => (
           <SkeletonRow key={index} />
         ))}
       </div>

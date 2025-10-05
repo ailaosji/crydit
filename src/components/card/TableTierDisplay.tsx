@@ -30,7 +30,10 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
 
   const network = type === 'virtual' ? displayTier.virtualNetwork : displayTier.physicalNetwork;
 
-  const openingFee = displayTier.fees?.openingFee || 0;
+  const openingFee =
+    (type === 'virtual'
+      ? displayTier.fees?.virtualCardPrice
+      : displayTier.fees?.physicalCardPrice) || 0;
   const annualFee = displayTier.fees?.annualFee;
 
   return (

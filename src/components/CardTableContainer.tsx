@@ -147,7 +147,7 @@ const CardTableContainer: React.FC = () => {
   };
 
   if (isLoading && allCards.length === 0) {
-    return <TableSkeleton rows={ITEMS_PER_PAGE} />;
+    return <TableSkeleton />;
   }
 
   return (
