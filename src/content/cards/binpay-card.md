@@ -47,6 +47,7 @@ cardTiers:
     fees:
       depositFee: '依赖于链上环境'
       monthlyFee: 0
+      openingFee: 0
     rewards:
       cashback: null
   - name: 'Premium'
