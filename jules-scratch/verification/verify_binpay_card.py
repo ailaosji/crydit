@@ -1,16 +1,18 @@
 from playwright.sync_api import Page, expect
 
-def test_binpay_card_update(page: Page):
+def test_homepage_card_table(page: Page):
     """
-    This test verifies that the BinPay card page correctly reflects
-    that physical cards are not available.
+    This test verifies that the BinPay card information is displayed correctly
+    on the homepage card table.
     """
-    # 1. Arrange: Go to the BinPay card page.
-    page.goto("http://localhost:4321/cards/binpay-card")
+    # 1. Arrange: Go to the homepage.
+    page.goto("http://localhost:4321/")
 
-    # Scroll down to the tier comparison section.
-    element = page.locator("text=等级对比")
-    element.scroll_into_view_if_needed()
+    # 2. Act: Locate the card table.
+    card_table_body = page.locator("#card-table-body")
+
+    # 3. Assert: Ensure the table is visible.
+    expect(card_table_body).to_be_visible()
 
     # Take a screenshot for visual verification.
-    page.screenshot(path="jules-scratch/verification/binpay-card-verification.png")
+    card_table_body.screenshot(path="jules-scratch/verification/homepage-card-table.png")
