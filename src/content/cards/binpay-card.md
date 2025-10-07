@@ -38,25 +38,14 @@ tags:
   - '实体卡'
   - 'U卡'
 cardTiers:
-  - name: 'Standard'
+  - name: 'Premium'
     recommended: true
     isVirtual: true
-    isPhysical: true
-    virtualNetwork: 'visa'
-    physicalNetwork: 'visa'
-    fees:
-      depositFee: '依赖于链上环境'
-      monthlyFee: 0
-    rewards:
-      cashback: null
-  - name: 'Premium'
-    isVirtual: true
-    isPhysical: true
+    isPhysical: false
     virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 25
-      physicalCardPrice: 25
       monthlyFee: 0
       depositFee: '1.3%'
       transactionFee: '0%'
@@ -65,12 +54,11 @@ cardTiers:
       cashback: null
   - name: 'Diamond'
     isVirtual: true
-    isPhysical: true
+    isPhysical: false
     virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       virtualCardPrice: 50
-      physicalCardPrice: 50
       monthlyFee: 0
       depositFee: '0.7%'
       transactionFee: '0%'
