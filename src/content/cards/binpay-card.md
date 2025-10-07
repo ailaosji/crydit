@@ -42,11 +42,12 @@ cardTiers:
     recommended: true
     isVirtual: true
     isPhysical: false
-    virtualNetwork: 'visa'
+    virtualNetwork: 'mastercard'
     physicalNetwork: 'visa'
     fees:
       depositFee: '依赖于链上环境'
       monthlyFee: 0
+      openingFee: 0
     rewards:
       cashback: null
   - name: 'Premium'
