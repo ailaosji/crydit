@@ -153,7 +153,7 @@ const CardTableContainer: React.FC = () => {
   return (
     <div>
       <div className="mb-8 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white">
-        <h1 className="mb-4 text-2xl font-bold">🌟 2024年最佳加密货币卡片推荐</h1>
+        <h1 className="mb-4 text-2xl font-bold">最佳加密货币U卡推荐</h1>
         <div className="flex flex-wrap gap-4">
           <button
             onClick={toggleFilterMainland}
