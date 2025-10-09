@@ -38,19 +38,8 @@ tags:
   - '实体卡'
   - 'U卡'
 cardTiers:
-  - name: 'Standard'
-    recommended: true
-    isVirtual: true
-    isPhysical: false
-    virtualNetwork: 'mastercard'
-    physicalNetwork: 'visa'
-    fees:
-      depositFee: '依赖于链上环境'
-      monthlyFee: 0
-      openingFee: 0
-    rewards:
-      cashback: null
   - name: 'Premium'
+    recommended: true
     isVirtual: true
     isPhysical: false
     virtualNetwork: 'mastercard'
