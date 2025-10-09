@@ -22,6 +22,7 @@ supportedPaymentMethods:
   - 'Visa'
   - 'Mastercard'
 affiliateLink: 'https://wirexapp.com/'
+invitationCode: 'WIREX-DEMO'
 publishDate: '2024-02-10'
 updateDate: '2025-09-24'
 kycRequired: true

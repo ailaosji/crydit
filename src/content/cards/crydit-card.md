@@ -17,6 +17,7 @@ supportedPaymentMethods:
   - "NFC Tap to Pay"
   - "3D Secure"
 affiliateLink: "https://h5.company.crydit.com/register?invite_code=9F6266VY"
+invitationCode: "CRYDIT-DEMO"
 publishDate: "2025-10-04"
 updateDate: "2025-10-04"
 kycRequired: true

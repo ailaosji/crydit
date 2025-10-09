@@ -24,6 +24,7 @@ supportedCurrencies:
 supportedPaymentMethods:
   - 'Mastercard'
 affiliateLink: 'https://metamask.io/card/'
+invitationCode: 'METAMASK-DEMO'
 publishDate: '2024-05-01'
 updateDate: '2025-09-24'
 kycRequired: true
