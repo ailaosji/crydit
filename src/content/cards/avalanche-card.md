@@ -17,7 +17,6 @@ supportedCurrencies:
 supportedPaymentMethods:
   - 'Visa'
 affiliateLink: 'https://www.avalanchecard.com/'
-invitationCode: 'AVALANCHE-DEMO'
 publishDate: '2024-04-20'
 updateDate: '2025-09-24'
 kycRequired: true

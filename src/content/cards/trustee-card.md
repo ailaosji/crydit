@@ -16,7 +16,6 @@ supportedPaymentMethods:
   - 'Apple Pay'
   - 'Google Pay'
 affiliateLink: 'https://trusteeglobal.eu/cryptocard/'
-invitationCode: 'TRUSTEE-DEMO'
 publishDate: '2025-08-18'
 kycRequired: true
 pros:

@@ -14,7 +14,6 @@ supportedCurrencies:
 supportedPaymentMethods:
   - 'Mastercard'
 affiliateLink: 'https://www.ready.co/card'
-invitationCode: 'READY-DEMO'
 publishDate: '2024-03-15'
 updateDate: '2025-09-29'
 kycRequired: true

@@ -14,7 +14,6 @@ supportedPaymentMethods:
   - 'Visa'
   - 'Mastercard'
 affiliateLink: 'https://payy.link/invite/8UFBN7'
-invitationCode: 'PAYY-DEMO'
 publishDate: '2024-06-01'
 updateDate: '2025-09-24'
 kycRequired: true

@@ -22,7 +22,6 @@ supportedPaymentMethods:
   - 'Apple Pay'
   - 'Google Pay'
 affiliateLink: 'https://crypto.com/app/'
-invitationCode: 'CRYPTO-DEMO'
 publishDate: '2024-01-05'
 updateDate: '2025-08-11'
 kycRequired: true
