@@ -61,7 +61,11 @@ export const TableTierDisplay: React.FC<TableTierDisplayProps> = ({ card, type }
     const allPricesSame = feeDetails.every((d) => d.price === feeDetails[0].price);
     if (feeDetails.length === 1 || allPricesSame) {
       const price = feeDetails[0].price;
-      return { text: price === 0 ? '免费' : `$${price}`, isFree: price === 0 };
+      const networkName = feeDetails[0].network;
+      const priceText = price === 0 ? '免费' : `$${price}`;
+      // Always show network if available, e.g., "MC: $25" or "MC: 免费"
+      const text = networkName ? `${networkName}: ${priceText}` : priceText;
+      return { text: text, isFree: price === 0 };
     }
 
     const allNetworksSame = feeDetails.every((d) => d.network === feeDetails[0].network);
