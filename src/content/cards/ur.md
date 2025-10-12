@@ -58,6 +58,7 @@ pros:
   - "Virtual Mastercard available instantly"
   - "Instant crypto-to-fiat conversion with low fees"
   - "Earn yield on USDe holdings directly in the app"
+
   - "Secure self-custody wallets powered by Turnkey"
   - "On-chain transparency via Mantle Network"
 
