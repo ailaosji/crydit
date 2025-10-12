@@ -26,6 +26,8 @@ pros:
 cons:
   - '网站信息较少，费率不透明'
   - '需要KYC验证'
+importantReminders:
+  - '限时优惠：立即注册Binpay ，可得8美元优惠，其中3美元现金券和5美金开卡代金券'
 features:
   - '即时交易'
   - '多币种支付'
