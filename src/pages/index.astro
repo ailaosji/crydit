@@ -1,12 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import CardTableContainer from '../components/CardTableContainer.tsx';
+import BankRecommendationModule from '../components/BankRecommendationModule.tsx';
 import { getCollection } from 'astro:content';
 
 // 获取文章数据
 const allArticles = await getCollection('articles');
 const sortedArticles = allArticles
   .sort((a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime());
+
+// 获取银行数据
+const banks = await getCollection('banks');
 
 // 获取最新文章（用于大图展示）
 const featuredArticle = sortedArticles[0];
@@ -408,6 +412,7 @@ const categoryConfig = {
           </p>
         </div>
         <CardTableContainer client:load />
+        <BankRecommendationModule banks={banks} client:load />
       </div>
     </section>
 
