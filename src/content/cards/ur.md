@@ -1,8 +1,8 @@
 ---
 name: "UR"
-title: "UR: Unified Crypto and Fiat Account"
-description: "UR is a unified account for managing digital assets and fiat currencies on-chain, offering zero off-ramp fees and access to multiple fiat currencies via a Mastercard debit card."
-shortDescription: "Manage crypto and fiat in one on-chain account with a Mastercard debit card."
+title: "UR: 统一加密与法币账户"
+description: "UR 是一个统一的链上账户，用于管理数字资产和法定货币，通过万事达借记卡提供零出金费用并支持多种法定货币。"
+shortDescription: "通过一个万事达借记卡，在统一的链上账户中管理加密货币和法定货币。"
 issuer: "SR Saphirstein AG"
 status: "active"
 publishDate: "2025-10-07"
@@ -58,7 +58,6 @@ pros:
   - "Virtual Mastercard available instantly"
   - "Instant crypto-to-fiat conversion with low fees"
   - "Earn yield on USDe holdings directly in the app"
-
   - "Secure self-custody wallets powered by Turnkey"
   - "On-chain transparency via Mantle Network"
 
