@@ -4,6 +4,16 @@ import { CARD_NETWORKS, CARD_CATEGORIES } from '../constants';
 
 // --- Reusable Schemas ---
 
+const bankSchema = z.object({
+    name: z.string(),
+    logo: z.string(),
+    description: z.string(),
+    features: z.array(z.string()),
+    highlight: z.string().optional(),
+    highlightColor: z.string().optional(),
+    referralLink: z.string().url(),
+});
+
 const seoSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -61,6 +71,10 @@ const cardTierSchema = z.object({
 
 // --- Collection Definitions ---
 
+const banksCollection = defineCollection({
+  type: 'content',
+  schema: bankSchema,
+});
 
 // 文章集合配置
 const articlesCollection = defineCollection({
@@ -461,6 +475,7 @@ const configCollection = defineCollection({
 export const collections = {
   articles: articlesCollection,
   cards: cardsCollection,
+  banks: banksCollection,
   // exchanges: exchangesCollection,
   // guides: guidesCollection,
   // authors: authorsCollection,
