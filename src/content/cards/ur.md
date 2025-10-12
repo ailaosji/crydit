@@ -16,17 +16,24 @@ featured: true
 cardTiers:
   - name: "Pro"
     recommended: true
+    isVirtual: true
+    isPhysical: false
+    virtualNetwork: "mastercard"
     fees:
       monthlyFee: "Free for 3 months (limited time offer)"
       withdrawalFee: "0"
-      transactionFee: "Low" # The article says "near-zero fees"
+      transactionFee: "0"
     rewards:
       cashback: "Earn up to 5% APY on USDe"
     limits:
       monthlySpending: "100,000 CHF"
   - name: "Basic"
+    isVirtual: true
+    isPhysical: false
+    virtualNetwork: "mastercard"
     fees:
       monthlyFee: "0"
+      transactionFee: "Low"
 
 supportedRegions:
   - "Global (45+ countries)"
@@ -47,10 +54,11 @@ supportedPaymentMethods:
 
 pros:
   - "Unified on-chain account for both crypto and fiat"
-  - "Zero off-ramp and bank transfer fees for Pro users"
+  - "Zero transfer fees for Pro users"
+  - "Virtual Mastercard available instantly"
   - "Instant crypto-to-fiat conversion with low fees"
   - "Earn yield on USDe holdings directly in the app"
-  - "Mastercard debit card with wide payment app support"
+
   - "Secure self-custody wallets powered by Turnkey"
   - "On-chain transparency via Mantle Network"
 
