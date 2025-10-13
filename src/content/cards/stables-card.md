@@ -46,14 +46,12 @@ tags:
 cardTiers:
   - name: 'Standard'
     isVirtual: true
-    isPhysical: true
+    isPhysical: false
     virtualNetwork: 'visa'
-    physicalNetwork: 'visa'
     fees:
       monthlyFee: false
       annualFee: false
       virtualCardPrice: 0
-      physicalCardPrice: 0
       depositFee: '0% (stablecoins)'
       transactionFee: '0%'
       foreignExchangeFee: '0美元'
