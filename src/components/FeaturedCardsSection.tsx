@@ -1,4 +1,5 @@
 import React from 'react';
+import CardImage from './card/CardImage';
 
 interface FeaturedCard {
   id: string;
@@ -51,6 +52,17 @@ const badgeStyles = {
 };
 
 const FeaturedCardsSection: React.FC = () => {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    target.onerror = null; // Prevent infinite loop
+    target.style.display = 'none';
+    const fallback = target.nextElementSibling;
+    if (fallback) {
+      fallback.classList.remove('hidden');
+      fallback.classList.add('flex');
+    }
+  };
+
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,8 +95,19 @@ const FeaturedCardsSection: React.FC = () => {
 
               {/* 卡片图片 */}
               <div className="p-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-                <div className="w-full max-w-sm aspect-[1.586/1] rounded-2xl shadow-2xl overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                  <span className="text-white text-2xl font-bold">{card.name}</span>
+                <div className="w-full max-w-sm aspect-[1.586/1] rounded-2xl shadow-2xl overflow-hidden">
+                  <img
+                    src={card.image}
+                    alt={`${card.name} Card`}
+                    className="card-real-image h-full w-full rounded-2xl object-cover"
+                    loading="lazy"
+                    width="600"
+                    height="378"
+                    onError={handleImageError}
+                  />
+                  <div className="card-fallback-placeholder hidden absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 flex items-center justify-center">
+                    <span className="text-white text-2xl font-bold">{card.name}</span>
+                  </div>
                 </div>
               </div>
 
