@@ -66,18 +66,33 @@ const FeaturedCardsSection: React.FC = () => {
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
-              年度最佳U卡
-            </h2>
-            <span className="px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-bold rounded-full shadow-lg">
-              2025
-            </span>
+        <div className="mb-12">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-center md:text-left">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-2">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+                  年度最佳U卡
+                </h2>
+                <span className="px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-bold rounded-full shadow-lg">
+                  2025
+                </span>
+              </div>
+              <p className="text-lg text-gray-600">
+                根据用户评价和专业测评，为您推荐2025年度最优质的数字货币卡片
+              </p>
+            </div>
+            <div className="mt-4 md:mt-0 flex-shrink-0">
+              <a
+                href="/cards"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-indigo-600 hover:text-indigo-600 transition-colors"
+              >
+                <span>查看所有U卡</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </a>
+            </div>
           </div>
-          <p className="text-lg text-gray-600">
-            根据用户评价和专业测评，为您推荐2025年度最优质的数字货币卡片
-          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -154,18 +169,6 @@ const FeaturedCardsSection: React.FC = () => {
           ))}
         </div>
 
-        {/* 查看更多按钮 */}
-        <div className="text-center mt-12">
-          <a
-            href="/cards"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-indigo-600 hover:text-indigo-600 transition-colors"
-          >
-            <span>查看所有U卡</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
-        </div>
       </div>
     </section>
   );
