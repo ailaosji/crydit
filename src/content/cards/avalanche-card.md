@@ -2,6 +2,7 @@
 title: 'Avalanche Card - 加密支持的Visa卡'
 name: 'Avalanche Card'
 logo: 'https://cdn.prod.website-files.com/66ef09f59fcc1c594868e2d5/66fbe9677444a823c40c0a92_Logo.svg'
+cardImage: '/images/cards/avalanche-card.png'
 description: 'Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。'
 shortDescription: 'Avalanche Card是一款加密支持的Visa卡，允许您无缝地在全球任何接受Visa的地方消费您的USDC和AVAX。'
 issuer: 'Rain Liquidity'

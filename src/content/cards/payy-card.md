@@ -2,6 +2,7 @@
 title: 'Payy Card - 全球货币应用'
 name: 'Payy Card'
 logo: 'https://framerusercontent.com/images/15g7GuvPmk8VOelfFTjyMEpurg.svg'
+cardImage: '/images/cards/payy-card.png'
 description: 'Payy是一款全球货币应用，旨在使数字货币变得简单和私密。Payy卡（可用性有限）支持在线或在商店中消费稳定币，并具有无与伦'
 shortDescription: 'Payy是一款全球货币应用，旨在使数字货币变得简单和私密。Payy卡（可用性有限）支持在线或在商店中消费稳定币，并具有无与伦'
 issuer: 'Polybase Labs'

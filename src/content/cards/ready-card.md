@@ -2,6 +2,7 @@
 title: 'Ready Card - 自我托管加密借记卡'
 name: 'Ready Card'
 logo: 'https://cdn.prod.website-files.com/680f9220d4668b0e40862420/680f9220d4668b0e408624f8_favicon.png'
+cardImage: '/images/cards/ready-card.png'
 description: 'Ready Card是一款自我托管的加密借记卡，让您像使用现金一样消费USDC，同时享受高达10%的返现，并完全掌控您的资产。提供高级金属卡和轻量塑料卡两种选择。'
 shortDescription: '自我托管的加密借记卡，支持USDC消费，提供金属卡和塑料卡两种等级选择。'
 issuer: 'Ready (formerly Argent)'
