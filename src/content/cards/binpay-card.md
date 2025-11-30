@@ -16,13 +16,15 @@ supportedPaymentMethods:
   - 'Mastercard'
 affiliateLink: 'https://app.binpay.cc/pages/passport/invitation?r=1106548'
 publishDate: '2024-10-04'
-updateDate: '2024-10-04'
+updateDate: '2024-11-30'
 kycRequired: true
+promotion: '$3现金券+$5开卡券'
 pros:
   - '支持虚拟卡和实体卡'
   - '可通过加密货币充值'
   - '全球范围内接受'
   - '支持PayPal、Google Play等多种场景'
+  - '新用户专享$3现金券+$5开卡优惠券'
 cons:
   - '网站信息较少，费率不透明'
   - '需要KYC验证'
@@ -70,6 +72,12 @@ cardTiers:
 ## BinPay Card 评测
 
 BinPay卡是一种预付卡解决方案，旨在连接加密世界与传统金融。用户可以通过手机号或邮箱轻松注册，完成KYC认证后即可申请虚拟卡或实体卡。
+
+### 🎁 新用户专属优惠
+
+通过本站链接注册，可获得：
+- **$3 美金现金券** - 可直接用于消费
+- **$5 开卡优惠券** - 减免开卡费用
 
 该卡片的主要优势在于其灵活性，支持使用USDT等加密资产兑换成美元进行充值。这为加密货币持有者提供了一个便捷的消费渠道。BinPay卡可在全球数百万接受Visa或Mastercard的商户处使用，同时也支持绑定PayPal、Google Play等在线服务。
 
