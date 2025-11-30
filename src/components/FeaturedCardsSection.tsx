@@ -9,6 +9,7 @@ interface FeaturedCard {
   applyUrl: string;
   slug: string;
   highlights?: string[];
+  promotion?: string;  // 优惠信息
 }
 
 const featuredCards: FeaturedCard[] = [
@@ -17,30 +18,33 @@ const featuredCards: FeaturedCard[] = [
     name: 'Ready Card',
     badge: '综合最佳',
     badgeColor: 'blue',
-    image: '/images/cards/ready-card.png',
+    image: 'https://raw.githubusercontent.com/laosji/img/main/img/20251130112020.png',
     applyUrl: '/cards/ready-card',
     slug: 'ready-card',
-    highlights: ['完全自我托管', '高达10%返现', '全球通用']
+    highlights: ['完全自我托管', '高达10%返现', '全球通用'],
+    promotion: '首月10%返现'
   },
   {
     id: '2',
     name: 'BinPay Card',
     badge: '最佳奖励',
     badgeColor: 'orange',
-    image: '/images/cards/binpay-card.png',
+    image: 'https://raw.githubusercontent.com/laosji/img/main/img/20251130112128.png',
     applyUrl: '/cards/binpay-card',
     slug: 'binpay-card',
-    highlights: ['支持虚拟和实体卡', '加密货币充值', '全球通用']
+    highlights: ['支持虚拟和实体卡', '加密货币充值', '全球通用'],
+    promotion: '$3现金券+$5开卡券'
   },
   {
     id: '3',
     name: 'UR',
     badge: '最佳自托管',
     badgeColor: 'green',
-    image: '/images/cards/ur.png',
+    image: 'https://raw.githubusercontent.com/laosji/img/main/img/20251130112544.png',
     applyUrl: '/cards/ur',
     slug: 'ur',
-    highlights: ['统一链上账户', '零手续费出金', '即时虚拟卡']
+    highlights: ['统一链上账户', '零手续费出金', '即时虚拟卡'],
+    promotion: '免费开卡'
   }
 ];
 
@@ -126,8 +130,20 @@ const FeaturedCardsSection: React.FC = () => {
           {featuredCards.map((card) => (
             <div
               key={card.id}
-              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative"
             >
+              {/* 优惠角标 */}
+              {card.promotion && (
+                <div className="absolute top-0 right-0 z-20">
+                  <div className="relative">
+                    <div className="bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-bl-xl rounded-tr-xl shadow-lg">
+                      🎁 {card.promotion}
+                    </div>
+                    <div className="absolute -bottom-1 right-0 w-0 h-0 border-t-4 border-t-red-700 border-l-4 border-l-transparent"></div>
+                  </div>
+                </div>
+              )}
+
               {/* 标签 */}
               <div className="p-4 pb-0">
                 <span className={`inline-block px-4 py-1.5 rounded-lg text-sm font-semibold ${badgeStyles[card.badgeColor]}`}>
@@ -162,11 +178,24 @@ const FeaturedCardsSection: React.FC = () => {
                   </div>
                 )}
 
+                {/* 优惠信息横幅 */}
+                {card.promotion && (
+                  <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🎁</span>
+                      <div>
+                        <p className="text-xs text-orange-600 font-medium">限时优惠</p>
+                        <p className="text-sm font-bold text-orange-700">{card.promotion}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* 按钮 */}
                 <div className="flex gap-3">
                   <a
                     href={card.applyUrl}
-                    className="flex-1 bg-gray-900 text-white text-center py-3 px-6 rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+                    className="flex-1 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-center py-3 px-6 rounded-xl font-semibold hover:from-gray-800 hover:to-gray-700 transition-all transform hover:scale-[1.02] shadow-md"
                   >
                     立即申请
                   </a>
