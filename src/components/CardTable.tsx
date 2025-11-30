@@ -3,12 +3,34 @@ import type { Card } from '../types';
 import TableTierDisplay from './card/TableTierDisplay';
 import FeatureTags from './card/FeatureTags';
 import { getDisplayTier } from '../utils/cardHelpers';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Gift } from 'lucide-react';
 
 interface CardTableProps {
   cards: Card[];
   handleSort: (sortKey: string) => void;
 }
+
+// 获取卡片的优惠金额显示
+const getPromotionDisplay = (card: Card): { amount: string; hasPromotion: boolean } => {
+  // 优先使用 promotion 字段
+  if (card.data.promotion) {
+    return { amount: card.data.promotion, hasPromotion: true };
+  }
+  
+  // 其次检查 invitationCode 是否存在（有邀请码通常意味着有优惠）
+  if (card.data.invitationCode) {
+    return { amount: '专属优惠', hasPromotion: true };
+  }
+  
+  // 检查 rewards.cashback
+  const tier = getDisplayTier(card);
+  if (tier?.rewards?.cashback) {
+    return { amount: `返现${tier.rewards.cashback}`, hasPromotion: true };
+  }
+  
+  // 没有优惠
+  return { amount: '-', hasPromotion: false };
+};
 
 const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
   return (
@@ -52,7 +74,12 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                 <span>讨论</span>
               </button>
             </th>
-            <th className="w-24 px-3 py-4 text-center text-sm font-semibold text-gray-700">操作</th>
+            <th className="w-28 px-3 py-4 text-center text-sm font-semibold text-gray-700">
+              <span className="inline-flex items-center gap-1">
+                <Gift className="h-4 w-4 text-orange-500" />
+                优惠
+              </span>
+            </th>
           </tr>
         </thead>
 
@@ -61,6 +88,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
           {cards.map((card, index) => {
             // 获取评论数，优先从顶层获取，然后从data中获取，最后使用0
             const commentCount = card.commentCount ?? card.data?.commentCount ?? 0;
+            const promotion = getPromotionDisplay(card);
 
             return (
               <tr
@@ -156,17 +184,36 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
                   </a>
                 </td>
 
-                {/* 操作 */}
+                {/* 优惠 */}
                 <td className="px-3 py-4 text-center">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      window.location.href = `/cards/${card.slug}`;
-                    }}
-                    className="inline-block rounded-lg bg-indigo-600 px-3 py-1.5 text-xs text-white transition-colors hover:bg-indigo-700"
-                  >
-                    查看详情
-                  </button>
+                  <div className="flex flex-col items-center gap-1">
+                    {promotion.hasPromotion ? (
+                      <>
+                        <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">
+                          {promotion.amount}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.location.href = `/cards/${card.slug}`;
+                          }}
+                          className="inline-block rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-3 py-1.5 text-xs font-medium text-white transition-all hover:from-orange-600 hover:to-red-600 hover:shadow-md"
+                        >
+                          立即领取
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.location.href = `/cards/${card.slug}`;
+                        }}
+                        className="inline-block rounded-lg bg-indigo-600 px-3 py-1.5 text-xs text-white transition-colors hover:bg-indigo-700"
+                      >
+                        查看详情
+                      </button>
+                    )}
+                  </div>
                 </td>
               </tr>
             );

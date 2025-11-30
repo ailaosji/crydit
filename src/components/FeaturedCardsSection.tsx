@@ -1,5 +1,4 @@
-import React from 'react';
-import CardImage from './card/CardImage';
+import React, { useState } from 'react';
 
 interface FeaturedCard {
   id: string;
@@ -51,18 +50,46 @@ const badgeStyles = {
   green: 'bg-emerald-600 text-white'
 };
 
-const FeaturedCardsSection: React.FC = () => {
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = e.target as HTMLImageElement;
-    target.onerror = null; // Prevent infinite loop
-    target.style.display = 'none';
-    const fallback = target.nextElementSibling;
-    if (fallback) {
-      fallback.classList.remove('hidden');
-      fallback.classList.add('flex');
-    }
-  };
+// 单独的卡片图片组件，带有状态管理
+const FeaturedCardImage: React.FC<{ name: string; image: string }> = ({ name, image }) => {
+  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
 
+  return (
+    <div className="relative w-full h-full">
+      {/* 加载中骨架屏 */}
+      {status === 'loading' && (
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 animate-pulse flex items-center justify-center">
+          <svg className="animate-spin h-10 w-10 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+      )}
+
+      {/* 实际图片 */}
+      <img
+        src={image}
+        alt={`${name} Card`}
+        className={`absolute inset-0 h-full w-full rounded-2xl object-cover transition-opacity duration-300 ${status === 'loaded' ? 'opacity-100' : 'opacity-0'}`}
+        loading="lazy"
+        width="600"
+        height="378"
+        onLoad={() => setStatus('loaded')}
+        onError={() => setStatus('error')}
+        style={{ display: status === 'error' ? 'none' : 'block' }}
+      />
+
+      {/* 错误时的fallback */}
+      {status === 'error' && (
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 flex items-center justify-center">
+          <span className="text-white text-2xl font-bold">{name}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FeaturedCardsSection: React.FC = () => {
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -108,21 +135,10 @@ const FeaturedCardsSection: React.FC = () => {
                 </span>
               </div>
 
-              {/* 卡片图片 */}
+              {/* 卡片图片 - 修复后的结构 */}
               <div className="p-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
-                <div className="w-full max-w-sm aspect-[1.586/1] rounded-2xl shadow-2xl overflow-hidden">
-                  <img
-                    src={card.image}
-                    alt={`${card.name} Card`}
-                    className="card-real-image h-full w-full rounded-2xl object-cover"
-                    loading="lazy"
-                    width="600"
-                    height="378"
-                    onError={handleImageError}
-                  />
-                  <div className="card-fallback-placeholder hidden absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 flex items-center justify-center">
-                    <span className="text-white text-2xl font-bold">{card.name}</span>
-                  </div>
+                <div className="relative w-full max-w-sm aspect-[1.586/1] rounded-2xl shadow-2xl overflow-hidden">
+                  <FeaturedCardImage name={card.name} image={card.image} />
                 </div>
               </div>
 
