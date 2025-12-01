@@ -6,13 +6,15 @@ const bankRewards: Record<string, string> = {
   'iFast Global Bank': '存500英镑3个月，送5英镑',
   'Revolut': '新用户注册送10欧元',
   'Wise (TransferWise)': '首笔转账免手续费',
-  'WeLab Bank': '开户送50港币'
+  'WeLab Bank（汇立银行）': '存$10,000港币30天，送$200港币',
+  'Remitly': '首笔$50+汇款立减$25'
 };
 
 const BankRecommendationModule = ({ banks }) => {
 
   const BankCard = ({ bank }) => {
     const reward = bankRewards[bank.data.name];
+    const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
     
     return (
       <a
@@ -30,8 +32,16 @@ const BankRecommendationModule = ({ banks }) => {
 
         {/* Logo和标题 */}
         <div className="mb-3 flex items-center space-x-3">
-          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 text-2xl">
-            {bank.data.logo}
+          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+            {isImageLogo ? (
+              <img 
+                src={bank.data.logo} 
+                alt={bank.data.name}
+                className="h-10 w-10 object-contain rounded-lg"
+              />
+            ) : (
+              <span className="text-2xl">{bank.data.logo}</span>
+            )}
           </div>
           <div className="min-w-0 flex-1">
             <h3 className="truncate text-base font-bold text-gray-900 transition-colors group-hover:text-indigo-600">
