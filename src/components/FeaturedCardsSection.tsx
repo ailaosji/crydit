@@ -19,7 +19,7 @@ const featuredCards: FeaturedCard[] = [
     name: 'Ready Card',
     badge: '综合最佳',
     badgeColor: 'blue',
-    image: '/images/cards/ready-card.png',
+    image: 'https://cdn.jsdelivr.net/gh/laosji/img@main/img/20251130112020.png',
     applyUrl: '/cards/ready-card',
     slug: 'ready-card',
     highlights: ['完全自我托管', '高达10%返现', '全球通用'],
@@ -31,7 +31,7 @@ const featuredCards: FeaturedCard[] = [
     name: 'BinPay Card',
     badge: '最佳奖励',
     badgeColor: 'orange',
-    image: '/images/cards/binpay-card.png',
+    image: 'https://cdn.jsdelivr.net/gh/laosji/img@main/img/20251130112128.png',
     applyUrl: '/cards/binpay-card',
     slug: 'binpay-card',
     highlights: ['支持虚拟和实体卡', '加密货币充值', '全球通用'],
@@ -43,7 +43,7 @@ const featuredCards: FeaturedCard[] = [
     name: 'UR',
     badge: '最佳自托管',
     badgeColor: 'green',
-    image: '/images/cards/ur.png',
+    image: 'https://cdn.jsdelivr.net/gh/laosji/img@main/img/20251130112544.png',
     applyUrl: '/cards/ur',
     slug: 'ur',
     highlights: ['统一链上账户', '零手续费出金', '即时虚拟卡'],
@@ -63,7 +63,7 @@ const FeaturedCardImage: React.FC<{ name: string; image: string }> = ({ name, im
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
 
   return (
-    <>
+    <div className="absolute inset-0">
       {/* 加载中骨架屏 */}
       {status === 'loading' && (
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
@@ -75,7 +75,7 @@ const FeaturedCardImage: React.FC<{ name: string; image: string }> = ({ name, im
       <img
         src={image}
         alt={`${name} Card`}
-        className={`h-full w-full rounded-2xl object-cover transition-opacity duration-300 ${
+        className={`absolute inset-0 h-full w-full rounded-2xl object-cover transition-opacity duration-300 ${
           status === 'loaded' ? 'opacity-100' : 'opacity-0'
         }`}
         loading="lazy"
@@ -91,7 +91,7 @@ const FeaturedCardImage: React.FC<{ name: string; image: string }> = ({ name, im
           <span className="text-white text-2xl font-bold">{name}</span>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
