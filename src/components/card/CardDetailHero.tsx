@@ -12,6 +12,7 @@ interface CardDetailHeroProps {
   featured?: boolean;
   recommended?: boolean;
   commentCount?: number;
+  viewCount?: number; // 新增：从外部传入浏览量
   openingFee?: number | string;
   annualFee?: number | string | boolean;
   cashback?: string | null;
@@ -19,60 +20,6 @@ interface CardDetailHeroProps {
   supportedRegions?: string[];
   kycRequired?: boolean;
 }
-
-// 数字增长动画 Hook
-const useCountUp = (end: number, duration: number = 1500, startOnView: boolean = true) => {
-  const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!startOnView) {
-      setHasStarted(true);
-    }
-  }, [startOnView]);
-
-  useEffect(() => {
-    if (!hasStarted) return;
-    
-    let startTime: number;
-    let animationFrame: number;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      setCount(Math.floor(easeOutQuart * end));
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [end, duration, hasStarted]);
-
-  useEffect(() => {
-    if (!startOnView || !ref.current) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
-          setHasStarted(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [startOnView, hasStarted]);
-
-  return { count, ref };
-};
 
 const CardDetailHero: React.FC<CardDetailHeroProps> = ({
   name,
@@ -85,6 +32,7 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
   featured,
   recommended,
   commentCount = 0,
+  viewCount, // 不再使用随机数
   openingFee,
   annualFee,
   cashback,
@@ -103,16 +51,13 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
     const handleScroll = () => {
       if (dataBarRef.current) {
         const rect = dataBarRef.current.getBoundingClientRect();
-        setIsSticky(rect.top <= 64); // Header 高度
+        setIsSticky(rect.top <= 64);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // 模拟浏览量的数字动画
-  const viewCount = useCountUp(Math.floor(Math.random() * 5000) + 1000, 2000);
 
   // 根据卡片网络选择品牌色
   const getBrandColors = () => {
@@ -162,13 +107,10 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
       {/* 动态背景 */}
       <div className={`absolute inset-0 bg-gradient-to-br ${brandColors.primary}`} />
       
-      {/* 动画背景粒子 */}
+      {/* 动画背景 */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="particle particle-1" />
-        <div className="particle particle-2" />
-        <div className="particle particle-3" />
-        <div className="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-white/10 blur-3xl animate-pulse-slow" />
-        <div className="absolute -bottom-32 -right-32 h-[500px] w-[500px] rounded-full bg-black/20 blur-3xl animate-pulse-slow animation-delay-2000" />
+        <div className="absolute -left-20 -top-20 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[500px] w-[500px] rounded-full bg-black/20 blur-3xl" />
       </div>
 
       {/* 网格纹理 */}
@@ -182,11 +124,11 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
       <div className="relative z-10 mx-auto max-w-7xl px-4 pb-8 pt-24 sm:px-6 lg:px-8 lg:pb-16 lg:pt-28">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
           {/* 左侧：卡片信息 */}
-          <div className="order-2 lg:order-1 animate-fade-in-up">
+          <div className="order-2 lg:order-1">
             {/* 标签 */}
             <div className="mb-4 flex flex-wrap items-center gap-2">
               {featured && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-3 py-1 text-xs font-bold text-white shadow-lg animate-shimmer">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 px-3 py-1 text-xs font-bold text-white shadow-lg">
                   <Star className="h-3 w-3" fill="currentColor" />
                   精选推荐
                 </span>
@@ -219,17 +161,18 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
               {description}
             </p>
 
-            {/* 社交指标 - 带数字动画 */}
+            {/* 社交指标 - 移除浏览量或使用固定值 */}
             <div className="mb-6 flex items-center gap-6 text-sm text-white/60">
               <div className="flex items-center gap-1.5">
                 <MessageCircle className="h-4 w-4" />
                 <span>{commentCount} 条评论</span>
               </div>
-              <div className="flex items-center gap-1.5" ref={viewCount.ref}>
-                <Eye className="h-4 w-4" />
-                <span className="tabular-nums">{viewCount.count.toLocaleString()}</span>
-                <span> 次浏览</span>
-              </div>
+              {viewCount !== undefined && viewCount > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <Eye className="h-4 w-4" />
+                  <span>{viewCount.toLocaleString()} 次浏览</span>
+                </div>
+              )}
             </div>
 
             {/* CTA 按钮 */}
@@ -249,7 +192,7 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
                 onClick={() => setIsLiked(!isLiked)}
                 className={`inline-flex items-center gap-2 rounded-xl border-2 border-white/30 px-4 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/10 ${isLiked ? 'bg-white/20 border-red-300' : ''}`}
               >
-                <Heart className={`h-4 w-4 transition-all duration-300 ${isLiked ? 'fill-red-400 text-red-400 scale-110' : ''}`} />
+                <Heart className={`h-4 w-4 transition-all duration-300 ${isLiked ? 'fill-red-400 text-red-400' : ''}`} />
                 收藏
               </button>
               <button className="inline-flex items-center gap-2 rounded-xl border-2 border-white/30 px-4 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all duration-300 hover:border-white/50 hover:bg-white/10">
@@ -259,7 +202,7 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
             </div>
           </div>
 
-          {/* 右侧：卡片图片 - 3D翻转效果 */}
+          {/* 右侧：卡片图片 */}
           <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
             <div 
               className="card-3d-container"
@@ -280,7 +223,6 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
                       onError={() => setImgError(true)}
                     />
                     <div className={`shine-effect absolute inset-0 transition-opacity duration-300 ${isCardHovered ? 'opacity-100' : 'opacity-0'}`} />
-                    <div className={`glow-overlay absolute inset-0 rounded-2xl transition-opacity duration-500 ${isCardHovered ? 'opacity-100' : 'opacity-0'}`} />
                   </div>
                 ) : (
                   <div className="relative aspect-[1.586/1] w-80 overflow-hidden rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-black p-6 shadow-2xl sm:w-96">
@@ -292,7 +234,7 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
                         {logo && !imgError ? (
                           <img src={logo} alt={issuer} className="h-10 w-10 rounded-lg bg-white/10 object-contain p-1" />
                         ) : (
-                          <div className="chip-animation h-10 w-14 rounded-md bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-inner" />
+                          <div className="h-10 w-14 rounded-md bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-inner" />
                         )}
                         <span className="text-xl font-bold tracking-wider text-white/90">
                           {network?.toUpperCase()}
@@ -319,7 +261,6 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
                     </div>
 
                     <div className={`shine-effect absolute inset-0 rounded-2xl transition-opacity duration-300 ${isCardHovered ? 'shine-active' : ''}`} />
-                    <div className={`glow-overlay absolute inset-0 rounded-2xl transition-opacity duration-500 ${isCardHovered ? 'opacity-100' : 'opacity-0'}`} />
                   </div>
                 )}
               </div>
@@ -328,7 +269,7 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
         </div>
       </div>
 
-      {/* 核心数据条 - 吸顶动画 */}
+      {/* 核心数据条 - 吸顶 */}
       <div 
         ref={dataBarRef}
         className={`sticky top-16 z-20 border-t border-white/10 backdrop-blur-xl transition-all duration-300 ${
@@ -344,28 +285,24 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
               label="开卡费" 
               value={formatFee(openingFee)}
               highlight={openingFee === 0 || openingFee === undefined}
-              animate
             />
             <DataItem 
               icon={<span className="text-lg">📅</span>} 
               label="年费" 
               value={formatFee(annualFee)}
               highlight={annualFee === 0 || annualFee === false || annualFee === undefined}
-              animate
             />
             <DataItem 
               icon={<span className="text-lg">🎁</span>} 
               label="返现" 
               value={cashback || '无'}
               highlight={!!cashback}
-              animate
             />
             <DataItem 
               icon={<span className="text-lg">💳</span>} 
               label="交易费" 
               value={transactionFee || '0%'}
               highlight={transactionFee === '0%' || transactionFee === '0' || !transactionFee}
-              animate
             />
             <DataItem 
               icon={<Globe className="h-4 w-4" />} 
@@ -384,36 +321,6 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
 
       {/* 动画样式 */}
       <style>{`
-        /* 淡入上移动画 */
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-fade-in-up {
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        /* 缓慢脉冲 */
-        @keyframes pulseSlow {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.05); }
-        }
-        
-        .animate-pulse-slow {
-          animation: pulseSlow 4s ease-in-out infinite;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-
         /* 3D 卡片容器 */
         .card-3d-container {
           perspective: 1000px;
@@ -467,40 +374,6 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
           100% { background-position: -200% 0; }
         }
 
-        /* 发光覆盖层 */
-        .glow-overlay {
-          background: radial-gradient(
-            ellipse at 30% 20%,
-            rgba(255, 255, 255, 0.15) 0%,
-            transparent 50%
-          );
-          pointer-events: none;
-        }
-
-        /* 芯片动画 */
-        .chip-animation {
-          position: relative;
-          overflow: hidden;
-        }
-        
-        .chip-animation::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.3),
-            transparent
-          );
-          animation: chipShine 3s ease-in-out infinite;
-        }
-        
-        @keyframes chipShine {
-          0% { transform: translateX(-100%); }
-          50%, 100% { transform: translateX(100%); }
-        }
-
         /* 按钮脉冲效果 */
         .btn-pulse {
           position: relative;
@@ -527,141 +400,29 @@ const CardDetailHero: React.FC<CardDetailHeroProps> = ({
           0% { transform: scale(0); opacity: 0.5; }
           100% { transform: scale(2); opacity: 0; }
         }
-
-        /* 闪光标签 */
-        @keyframes shimmer {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        
-        .animate-shimmer {
-          background: linear-gradient(
-            90deg,
-            #f59e0b 0%,
-            #fbbf24 25%,
-            #f59e0b 50%,
-            #fbbf24 75%,
-            #f59e0b 100%
-          );
-          background-size: 200% auto;
-          animation: shimmer 3s linear infinite;
-        }
-
-        /* 背景粒子 */
-        .particle {
-          position: absolute;
-          width: 6px;
-          height: 6px;
-          background: rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          animation: particleFloat 15s linear infinite;
-        }
-        
-        .particle-1 {
-          left: 10%;
-          animation-delay: 0s;
-        }
-        
-        .particle-2 {
-          left: 50%;
-          animation-delay: 5s;
-        }
-        
-        .particle-3 {
-          left: 80%;
-          animation-delay: 10s;
-        }
-        
-        @keyframes particleFloat {
-          0% {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-100vh) rotate(720deg);
-            opacity: 0;
-          }
-        }
-
-        /* 数据项动画 */
-        @keyframes dataItemPop {
-          0% { transform: scale(0.8); opacity: 0; }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .data-item-animate {
-          animation: dataItemPop 0.5s ease-out forwards;
-        }
-        
-        .data-item-animate:nth-child(1) { animation-delay: 0.1s; }
-        .data-item-animate:nth-child(2) { animation-delay: 0.2s; }
-        .data-item-animate:nth-child(3) { animation-delay: 0.3s; }
-        .data-item-animate:nth-child(4) { animation-delay: 0.4s; }
-        .data-item-animate:nth-child(5) { animation-delay: 0.5s; }
-        .data-item-animate:nth-child(6) { animation-delay: 0.6s; }
       `}</style>
     </section>
   );
 };
 
-// 数据项组件 - 带动画
+// 数据项组件
 const DataItem: React.FC<{
   icon: React.ReactNode;
   label: string;
   value: string;
   highlight?: boolean;
-  animate?: boolean;
-}> = ({ icon, label, value, highlight, animate }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!animate) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [animate]);
-
-  return (
-    <div 
-      ref={ref}
-      className={`flex items-center gap-3 transition-all duration-300 hover:scale-105 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-      }`}
-    >
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-white/20">
-        {icon}
-      </div>
-      <div className="min-w-0">
-        <div className="truncate text-xs text-white/60">{label}</div>
-        <div className={`truncate text-sm font-semibold transition-colors ${highlight ? 'text-green-400' : 'text-white'}`}>
-          {value}
-        </div>
+}> = ({ icon, label, value, highlight }) => (
+  <div className="flex items-center gap-3 transition-all duration-300 hover:scale-105">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-white/20">
+      {icon}
+    </div>
+    <div className="min-w-0">
+      <div className="truncate text-xs text-white/60">{label}</div>
+      <div className={`truncate text-sm font-semibold transition-colors ${highlight ? 'text-green-400' : 'text-white'}`}>
+        {value}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default CardDetailHero;

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Star, MessageCircle, ThumbsUp, Quote, User, ChevronRight } from 'lucide-react';
+import { Star, MessageCircle, ThumbsUp, ChevronRight } from 'lucide-react';
 
 interface ReviewHighlightsProps {
   cardName: string;
   commentCount?: number;
 }
 
-// 模拟的精选评价数据（实际项目中应从 Giscus/GitHub Discussions API 获取）
+// 模拟的精选评价数据
 const mockReviews = [
   {
     id: 1,
@@ -54,12 +54,22 @@ const ReviewHighlights: React.FC<ReviewHighlightsProps> = ({ cardName, commentCo
     );
   };
 
+  // 头像背景色 - 使用更柔和的渐变
+  const getAvatarGradient = (index: number) => {
+    const gradients = [
+      'from-blue-400 to-blue-500',
+      'from-emerald-400 to-emerald-500', 
+      'from-violet-400 to-violet-500',
+    ];
+    return gradients[index % gradients.length];
+  };
+
   return (
     <div className="rounded-3xl bg-white p-6 shadow-xl lg:p-8">
       {/* 标题区域 */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-200">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-200">
             <MessageCircle className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -82,49 +92,40 @@ const ReviewHighlights: React.FC<ReviewHighlightsProps> = ({ cardName, commentCo
         </div>
       </div>
 
-      {/* 评价列表 */}
+      {/* 评价列表 - 简洁设计 */}
       <div className="space-y-4">
         {mockReviews.map((review, index) => (
           <div
             key={review.id}
-            className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-gradient-to-br from-gray-50 to-white p-4 transition-all duration-300 hover:border-indigo-100 hover:shadow-md"
+            className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 transition-all duration-200 hover:border-gray-200 hover:bg-gray-50"
           >
-            {/* 引用装饰 */}
-            <Quote className="absolute -right-2 -top-2 h-16 w-16 text-gray-100 transition-colors duration-300 group-hover:text-indigo-100" />
-            
-            <div className="relative">
-              {/* 用户信息 */}
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  {/* 头像 */}
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 text-sm font-medium text-white">
-                    {review.avatar ? (
-                      <img src={review.avatar} alt={review.author} className="h-full w-full rounded-full object-cover" />
-                    ) : (
-                      review.author.charAt(0)
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-900">{review.author}</div>
-                    <div className="flex items-center gap-2">
-                      {renderStars(review.rating)}
-                      <span className="text-xs text-gray-400">{review.date}</span>
-                    </div>
-                  </div>
+            {/* 用户信息 */}
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                {/* 头像 */}
+                <div className={`flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br ${getAvatarGradient(index)} text-sm font-medium text-white`}>
+                  {review.author.charAt(0)}
                 </div>
-                
-                {/* 点赞数 */}
-                <div className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-500 transition-colors duration-200 hover:bg-indigo-100 hover:text-indigo-600">
-                  <ThumbsUp className="h-3 w-3" />
-                  {review.likes}
+                <div>
+                  <div className="font-medium text-gray-900">{review.author}</div>
+                  <div className="flex items-center gap-2">
+                    {renderStars(review.rating)}
+                    <span className="text-xs text-gray-400">{review.date}</span>
+                  </div>
                 </div>
               </div>
-
-              {/* 评价内容 */}
-              <p className="text-sm leading-relaxed text-gray-600">
-                {review.content}
-              </p>
+              
+              {/* 点赞数 */}
+              <div className="flex items-center gap-1 rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-500">
+                <ThumbsUp className="h-3 w-3" />
+                <span>{review.likes}</span>
+              </div>
             </div>
+
+            {/* 评价内容 */}
+            <p className="text-sm leading-relaxed text-gray-600">
+              {review.content}
+            </p>
           </div>
         ))}
       </div>
@@ -133,7 +134,7 @@ const ReviewHighlights: React.FC<ReviewHighlightsProps> = ({ cardName, commentCo
       <div className="mt-6 text-center">
         <a
           href="#comments"
-          className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 px-6 py-3 text-sm font-medium text-indigo-600 transition-all duration-300 hover:from-indigo-100 hover:to-purple-100 hover:shadow-md"
+          className="inline-flex items-center gap-2 rounded-full bg-gray-100 px-6 py-3 text-sm font-medium text-gray-700 transition-all duration-200 hover:bg-gray-200"
         >
           查看全部 {commentCount || mockReviews.length} 条评论
           <ChevronRight className="h-4 w-4" />
