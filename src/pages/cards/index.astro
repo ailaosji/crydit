@@ -2,27 +2,28 @@
 // src/pages/cards/index.astro
 import Layout from '../../layouts/Layout.astro';
 import CardTableContainer from '../../components/CardTableContainer.tsx';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { CARD_NETWORKS } from '../../constants';
 
-let allCardsRaw = [];
+// 添加正确的类型注解
+let allCardsRaw: CollectionEntry<'cards'>[] = [];
 try {
   allCardsRaw = await getCollection('cards');
 } catch (error) {
   console.error('Error loading cards:', error);
-  allCardsRaw = []; // Fallback to empty array on error
+  allCardsRaw = [];
 }
 
 // Process cards to handle tiers and promote representative data
 const allCards = allCardsRaw.map((card) => {
   if (!card.data.cardTiers || card.data.cardTiers.length === 0) {
-    return card; // Return unmigrated card as is
+    return card;
   }
 
   const representativeTier =
-    card.data.cardTiers.find((t) => t.recommended) || card.data.cardTiers[0];
+    card.data.cardTiers.find((t: any) => t.recommended) || card.data.cardTiers[0];
   if (!representativeTier) {
-    return card; // Should not happen if cardTiers is not empty
+    return card;
   }
 
   const promotedData = {
@@ -34,7 +35,7 @@ const allCards = allCardsRaw.map((card) => {
           ? 'virtual'
           : 'physical',
     transactionFee: representativeTier.fees?.transactionFee,
-    annualFee: representativeTier.fees?.annualFee ? true : false, // Simplified for now
+    annualFee: representativeTier.fees?.annualFee ? true : false,
     ...representativeTier,
     ...representativeTier.fees,
     ...representativeTier.rewards,
