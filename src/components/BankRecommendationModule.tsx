@@ -121,17 +121,6 @@ const BankRecommendationModule = ({ banks }) => {
           ))}
         </div>
 
-        {/* 访问链接按钮 */}
-        <a
-          href={bank.data.referralLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 flex items-center justify-center space-x-1 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:from-indigo-700 hover:to-purple-700"
-        >
-          <span>立即开户</span>
-          <ExternalLink className="h-4 w-4" />
-        </a>
-
         {/* 悬停背景效果 */}
         <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
       </div>
