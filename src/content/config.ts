@@ -12,6 +12,7 @@ const bankSchema = z.object({
     highlight: z.string().optional(),
     highlightColor: z.string().optional(),
     referralLink: z.string().url(),
+    invitationCode: z.string().optional(),
 });
 
 const seoSchema = z.object({

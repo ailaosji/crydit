@@ -6,4 +6,5 @@ features: ['免费领澳门通', '送2股阿里巴巴', '港美股交易']
 highlight: '澳门持牌银行'
 highlightColor: 'bg-purple-500'
 referralLink: 'https://render.alipay.com/p/c/180020570000149153/index.html?invite-code=LPA8T25Q'
+invitationCode: 'LPA8T25Q'
 ---

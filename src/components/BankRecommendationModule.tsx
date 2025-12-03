@@ -1,5 +1,5 @@
-import React from 'react';
-import { ExternalLink, CheckCircle, Globe, Shield, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { ExternalLink, CheckCircle, Globe, Shield, Zap, Copy, Check } from 'lucide-react';
 
 // 银行奖励配置
 const bankRewards: Record<string, string> = {
@@ -14,16 +14,24 @@ const bankRewards: Record<string, string> = {
 const BankRecommendationModule = ({ banks }) => {
 
   const BankCard = ({ bank }) => {
+    const [copied, setCopied] = useState(false);
     const reward = bankRewards[bank.data.name];
     const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
-    
+
+    const handleCopyLink = async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      try {
+        await navigator.clipboard.writeText(bank.data.referralLink);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('复制失败:', err);
+      }
+    };
+
     return (
-      <a
-        href={bank.data.referralLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative block overflow-hidden rounded-2xl bg-white p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-      >
+      <div className="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
         {/* 标签 */}
         {bank.data.highlight && (
           <div className={`absolute right-3 top-3 rounded-full ${bank.data.highlightColor} px-2.5 py-1 text-xs font-semibold text-white`}>
@@ -32,11 +40,16 @@ const BankRecommendationModule = ({ banks }) => {
         )}
 
         {/* Logo和标题 */}
-        <div className="mb-3 flex items-center space-x-3">
+        <a
+          href={bank.data.referralLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-3 flex items-center space-x-3"
+        >
           <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
             {isImageLogo ? (
-              <img 
-                src={bank.data.logo} 
+              <img
+                src={bank.data.logo}
                 alt={bank.data.name}
                 className="h-10 w-10 object-contain rounded-lg"
               />
@@ -52,7 +65,33 @@ const BankRecommendationModule = ({ banks }) => {
               {bank.data.description}
             </p>
           </div>
-        </div>
+        </a>
+
+        {/* 邀请码显示 */}
+        {bank.data.invitationCode && (
+          <div className="mb-3 flex items-center justify-between rounded-lg bg-indigo-50 px-3 py-2">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-600">邀请码:</span>
+              <span className="text-sm font-bold text-indigo-700">{bank.data.invitationCode}</span>
+            </div>
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center space-x-1 rounded-md bg-indigo-600 px-2.5 py-1 text-xs text-white transition-colors hover:bg-indigo-700"
+            >
+              {copied ? (
+                <>
+                  <Check className="h-3 w-3" />
+                  <span>已复制</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3 w-3" />
+                  <span>复制链接</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* 奖励金额 - 优惠券样式 */}
         {reward && (
@@ -82,14 +121,20 @@ const BankRecommendationModule = ({ banks }) => {
           ))}
         </div>
 
-        {/* 悬停图标 */}
-        <div className="absolute bottom-3 right-3 rounded-full bg-indigo-600 p-1.5 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <ExternalLink className="h-3.5 w-3.5 text-white" />
-        </div>
+        {/* 访问链接按钮 */}
+        <a
+          href={bank.data.referralLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 flex items-center justify-center space-x-1 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:from-indigo-700 hover:to-purple-700"
+        >
+          <span>立即开户</span>
+          <ExternalLink className="h-4 w-4" />
+        </a>
 
         {/* 悬停背景效果 */}
         <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
-      </a>
+      </div>
     );
   };
 

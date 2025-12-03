@@ -6,4 +6,5 @@ features: ['FSCS存款保障', '免费开户无年费', '多币种免费转账']
 highlight: '英国持牌银行'
 highlightColor: 'bg-blue-500'
 referralLink: 'https://www.ifastgb.com/tellafriend/chaod1702'
+invitationCode: 'chaod1702'
 ---

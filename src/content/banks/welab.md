@@ -6,4 +6,5 @@ features: ['香港持牌数字银行', 'AI智能服务', '免费实体卡']
 highlight: '香港虚拟银行'
 highlightColor: 'bg-green-500'
 referralLink: 'https://www.welab.bank/en/'
+invitationCode: 'LAOSJI'
 ---
