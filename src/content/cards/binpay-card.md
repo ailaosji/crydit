@@ -4,6 +4,9 @@ name: 'BinPay Card'
 logo: 'https://binpay.cc/images/logo_03.png'
 description: 'BinPay提供虚拟和实体预付卡，支持全球消费，并可通过加密资产进行充值，致力于提供快速、安全、全球化的支付体验。'
 shortDescription: 'BinPay提供虚拟和实体预付卡，支持全球消费和加密资产充值。'
+promotion:
+  text: "$8 USD"
+  type: "discount" 
 issuer: 'BinPay'
 supportedRegions:
   - '全球'
