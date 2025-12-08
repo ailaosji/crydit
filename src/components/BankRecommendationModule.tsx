@@ -16,12 +16,10 @@ const BankRecommendationModule = ({ banks }) => {
   const BankCard = ({ bank }) => {
     const reward = bankRewards[bank.data.name];
     const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
-    
+
     return (
       <a
-        href={bank.data.referralLink}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={`/banks/${bank.slug}`}
         className="group relative block overflow-hidden rounded-2xl bg-white p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
       >
         {/* 标签 */}
