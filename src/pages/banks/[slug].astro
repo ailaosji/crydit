@@ -201,8 +201,11 @@ const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
           </h2>
         </div>
 
-        <div class="grid gap-8 md:grid-cols-3">
-          <div class="relative">
+        <div class="grid gap-8 md:grid-cols-3 relative">
+          <!-- 连接线背景层 (桌面) -->
+          <div class="hidden md:block absolute top-10 left-0 right-0 h-0.5 bg-gray-200" style="z-index: 0;"></div>
+
+          <div class="relative" style="z-index: 1;">
             <div class="flex flex-col items-center text-center">
               <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-2xl">
                 <span class="text-3xl font-bold">1</span>
@@ -210,11 +213,9 @@ const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
               <h3 class="mb-2 text-xl font-bold text-gray-900">点击注册链接</h3>
               <p class="text-gray-600">通过推荐链接访问银行官网，开始注册流程</p>
             </div>
-            <!-- 连接线 (桌面) -->
-            <div class="hidden md:block absolute top-10 left-20 w-full h-0.5 bg-gradient-to-r from-indigo-300 to-purple-300"></div>
           </div>
 
-          <div class="relative">
+          <div class="relative" style="z-index: 1;">
             <div class="flex flex-col items-center text-center">
               <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-2xl">
                 <span class="text-3xl font-bold">2</span>
@@ -222,11 +223,9 @@ const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
               <h3 class="mb-2 text-xl font-bold text-gray-900">填写基本信息</h3>
               <p class="text-gray-600">按照提示填写个人信息，上传身份证明文件</p>
             </div>
-            <!-- 连接线 (桌面) -->
-            <div class="hidden md:block absolute top-10 left-20 w-full h-0.5 bg-gradient-to-r from-indigo-300 to-purple-300"></div>
           </div>
 
-          <div class="relative">
+          <div class="relative" style="z-index: 1;">
             <div class="flex flex-col items-center text-center">
               <div class="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-2xl">
                 <span class="text-3xl font-bold">3</span>
