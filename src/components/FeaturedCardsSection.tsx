@@ -58,39 +58,75 @@ const badgeStyles = {
   green: 'bg-emerald-600 text-white'
 };
 
-// 卡片图片组件 - 带加载状态
-const FeaturedCardImage: React.FC<{ name: string; image: string }> = ({ name, image }) => {
+// 卡片图片组件 - 带加载状态和超时处理
+const FeaturedCardImage: React.FC<{ name: string; image: string; badgeColor: 'blue' | 'orange' | 'green' }> = ({ name, image, badgeColor }) => {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+
+  // 设置超时，如果5秒内未加载完成，则显示错误状态
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (status === 'loading') {
+        setStatus('error');
+      }
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [status]);
+
+  // 根据badgeColor选择渐变色
+  const gradientColors = {
+    blue: 'from-indigo-500 via-blue-600 to-purple-600',
+    orange: 'from-orange-500 via-red-500 to-pink-600',
+    green: 'from-emerald-500 via-teal-600 to-cyan-600'
+  };
 
   return (
     <div className="absolute inset-0">
-      {/* 加载中骨架屏 */}
-      {status === 'loading' && (
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full bg-gray-400/30"></div>
+      {/* 加载中/失败时的美化占位图 */}
+      {(status === 'loading' || status === 'error') && (
+        <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradientColors[badgeColor]} flex flex-col items-center justify-center p-8`}>
+          {/* 卡片图标 */}
+          <div className="mb-4">
+            <svg className="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </div>
+
+          {/* 卡片名称 */}
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-white mb-2">{name}</h3>
+            {status === 'loading' && (
+              <div className="flex items-center gap-2 text-white/70">
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              </div>
+            )}
+          </div>
+
+          {/* 装饰性网格 */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}></div>
+          </div>
         </div>
       )}
-      
+
       {/* 真实图片 */}
       <img
         src={image}
         alt={`${name} Card`}
-        className={`absolute inset-0 h-full w-full rounded-2xl object-cover transition-opacity duration-300 ${
+        className={`absolute inset-0 h-full w-full rounded-2xl object-cover transition-opacity duration-500 ${
           status === 'loaded' ? 'opacity-100' : 'opacity-0'
         }`}
-        loading="lazy"
+        loading="eager"
         width="600"
         height="378"
         onLoad={() => setStatus('loaded')}
         onError={() => setStatus('error')}
       />
-      
-      {/* 加载失败时的占位图 */}
-      {status === 'error' && (
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 flex items-center justify-center">
-          <span className="text-white text-2xl font-bold">{name}</span>
-        </div>
-      )}
     </div>
   );
 };
@@ -163,7 +199,7 @@ const FeaturedCardsSection: React.FC = () => {
               {/* 卡片图片 */}
               <div className="p-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
                 <div className="relative w-full max-w-sm aspect-[1.586/1] rounded-2xl shadow-2xl overflow-hidden">
-                  <FeaturedCardImage name={card.name} image={card.image} />
+                  <FeaturedCardImage name={card.name} image={card.image} badgeColor={card.badgeColor} />
                 </div>
               </div>
 
