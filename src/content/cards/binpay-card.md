@@ -21,7 +21,6 @@ affiliateLink: 'https://app.binpay.cc/pages/passport/invitation?r=1106548'
 publishDate: '2024-10-04'
 updateDate: '2024-11-30'
 kycRequired: true
-promotion: '$3现金券+$5开卡券'
 pros:
   - '支持虚拟卡和实体卡'
   - '可通过加密货币充值'
