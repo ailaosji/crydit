@@ -226,6 +226,9 @@ const finalImage = ogImage || image || '/og-image.jpg';
               'fade-in': 'fadeIn 0.5s ease-in-out',
               'slide-up': 'slideUp 0.5s ease-out',
               'scale-in': 'scaleIn 0.3s ease-out',
+              'gradient': 'gradient 8s linear infinite',
+              'float': 'float 3s ease-in-out infinite',
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             },
             keyframes: {
               fadeIn: {
@@ -239,6 +242,20 @@ const finalImage = ogImage || image || '/og-image.jpg';
               scaleIn: {
                 '0%': { transform: 'scale(0.95)', opacity: '0' },
                 '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              gradient: {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'left center'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'right center'
+                },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-10px)' },
               },
             },
           },
@@ -289,7 +306,7 @@ const finalImage = ogImage || image || '/og-image.jpg';
     <Navigation />
 
     <!-- Main Content -->
-    <main id="main-content" class="min-h-screen pt-16">
+    <main id="main-content" class="min-h-screen">
       <slot />
     </main>
 

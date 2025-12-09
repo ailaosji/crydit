@@ -19,7 +19,7 @@ const featuredCards: FeaturedCard[] = [
     name: 'Ready Card',
     badge: '综合最佳',
     badgeColor: 'blue',
-    image: 'https://cdn.jsdelivr.net/gh/laosji/img@main/img/20251130112020.png',
+    image: 'https://raw.githubusercontent.com/laosji/img/main/img/20251130112020.png',
     applyUrl: '/cards/ready-card',
     slug: 'ready-card',
     highlights: ['完全自我托管', '高达10%返现', '全球通用'],
@@ -31,7 +31,7 @@ const featuredCards: FeaturedCard[] = [
     name: 'BinPay Card',
     badge: '最佳奖励',
     badgeColor: 'orange',
-    image: 'https://cdn.jsdelivr.net/gh/laosji/img@main/img/20251130112128.png',
+    image: 'https://raw.githubusercontent.com/laosji/img/main/img/20251130112128.png',
     applyUrl: '/cards/binpay-card',
     slug: 'binpay-card',
     highlights: ['支持虚拟和实体卡', '加密货币充值', '全球通用'],
@@ -43,7 +43,7 @@ const featuredCards: FeaturedCard[] = [
     name: 'UR',
     badge: '最佳自托管',
     badgeColor: 'green',
-    image: 'https://cdn.jsdelivr.net/gh/laosji/img@main/img/20251130112544.png',
+    image: 'https://raw.githubusercontent.com/laosji/img/main/img/20251130112544.png',
     applyUrl: '/cards/ur',
     slug: 'ur',
     highlights: ['统一链上账户', '零手续费出金', '即时虚拟卡'],
@@ -58,77 +58,82 @@ const badgeStyles = {
   green: 'bg-emerald-600 text-white'
 };
 
-// 卡片图片组件 - 带加载状态
-const FeaturedCardImage: React.FC<{ name: string; image: string }> = ({ name, image }) => {
+// 卡片图片组件 - 带加载状态和超时处理
+const FeaturedCardImage: React.FC<{ name: string; image: string; badgeColor: 'blue' | 'orange' | 'green' }> = ({ name, image, badgeColor }) => {
   const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
+
+  // 设置超时，如果5秒内未加载完成，则显示错误状态
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (status === 'loading') {
+        setStatus('error');
+      }
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [status]);
+
+  // 根据badgeColor选择渐变色
+  const gradientColors = {
+    blue: 'from-indigo-500 via-blue-600 to-purple-600',
+    orange: 'from-orange-500 via-red-500 to-pink-600',
+    green: 'from-emerald-500 via-teal-600 to-cyan-600'
+  };
 
   return (
     <div className="absolute inset-0">
-      {/* 加载中骨架屏 */}
-      {status === 'loading' && (
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full bg-gray-400/30"></div>
+      {/* 加载中/失败时的美化占位图 */}
+      {(status === 'loading' || status === 'error') && (
+        <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradientColors[badgeColor]} flex flex-col items-center justify-center p-8`}>
+          {/* 卡片图标 */}
+          <div className="mb-4">
+            <svg className="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+          </div>
+
+          {/* 卡片名称 */}
+          <div className="text-center">
+            <h3 className="text-3xl font-bold text-white mb-2">{name}</h3>
+            {status === 'loading' && (
+              <div className="flex items-center gap-2 text-white/70">
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+              </div>
+            )}
+          </div>
+
+          {/* 装饰性网格 */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }}></div>
+          </div>
         </div>
       )}
-      
+
       {/* 真实图片 */}
       <img
         src={image}
         alt={`${name} Card`}
-        className={`absolute inset-0 h-full w-full rounded-2xl object-cover transition-opacity duration-300 ${
+        className={`absolute inset-0 h-full w-full rounded-2xl object-cover transition-opacity duration-500 ${
           status === 'loaded' ? 'opacity-100' : 'opacity-0'
         }`}
-        loading="lazy"
+        loading="eager"
         width="600"
         height="378"
         onLoad={() => setStatus('loaded')}
         onError={() => setStatus('error')}
       />
-      
-      {/* 加载失败时的占位图 */}
-      {status === 'error' && (
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gray-800 via-gray-900 to-purple-900 flex items-center justify-center">
-          <span className="text-white text-2xl font-bold">{name}</span>
-        </div>
-      )}
     </div>
   );
 };
 
 const FeaturedCardsSection: React.FC = () => {
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-center md:text-left">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-2">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
-                  年度最佳U卡
-                </h2>
-                <span className="px-4 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-bold rounded-full shadow-lg">
-                  2025
-                </span>
-              </div>
-              <p className="text-lg text-gray-600">
-                根据用户评价和专业测评，为您推荐2025年度最优质的数字货币卡片
-              </p>
-            </div>
-            <div className="mt-4 md:mt-0 flex-shrink-0">
-              <a
-                href="/cards"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-indigo-600 hover:text-indigo-600 transition-colors"
-              >
-                <span>查看所有U卡</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-8">
+    <div className="grid md:grid-cols-3 gap-8">
           {featuredCards.map((card) => (
             <a
               key={card.id}
@@ -145,7 +150,7 @@ const FeaturedCardsSection: React.FC = () => {
               {/* 卡片图片 */}
               <div className="p-8 flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
                 <div className="relative w-full max-w-sm aspect-[1.586/1] rounded-2xl shadow-2xl overflow-hidden">
-                  <FeaturedCardImage name={card.name} image={card.image} />
+                  <FeaturedCardImage name={card.name} image={card.image} badgeColor={card.badgeColor} />
                 </div>
               </div>
 
@@ -186,10 +191,7 @@ const FeaturedCardsSection: React.FC = () => {
               </div>
             </a>
           ))}
-        </div>
-
-      </div>
-    </section>
+    </div>
   );
 };
 
