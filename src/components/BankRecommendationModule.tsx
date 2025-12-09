@@ -9,7 +9,8 @@ const bankRewards: Record<string, string> = {
   'Wise (TransferWise)': '首笔转账免手续费',
   'WeLab Bank（汇立银行）': '存$10,000港币30天，送$200港币',
   'Remitly': '首笔$50+汇款立减$25',
-  '澳门蚂蚁银行': '转入1万港币，送2股阿里巴巴+58港币股票卡'
+  '澳门蚂蚁银行': '转入1万港币，送2股阿里巴巴+58港币股票卡',
+  'ZA Bank（众安银行）': '推荐好友最多赚HKD 900，10%定存年利率'
 };
 
 const BankRecommendationModule = ({ banks }) => {
