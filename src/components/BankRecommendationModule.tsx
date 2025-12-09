@@ -4,11 +4,13 @@ import { ExternalLink, CheckCircle, Globe, Shield, Zap } from 'lucide-react';
 // 银行奖励配置
 const bankRewards: Record<string, string> = {
   'iFast Global Bank': '存500英镑3个月，送5英镑',
+  'Lemfi': '首笔汇款$100+返现10%，最高$50',
   'Revolut': '新用户注册送10欧元',
   'Wise (TransferWise)': '首笔转账免手续费',
   'WeLab Bank（汇立银行）': '存$10,000港币30天，送$200港币',
   'Remitly': '首笔$50+汇款立减$25',
-  '澳门蚂蚁银行': '转入1万港币，送2股阿里巴巴+58港币股票卡'
+  '澳门蚂蚁银行': '转入1万港币，送2股阿里巴巴+58港币股票卡',
+  'ZA Bank（众安银行）': '推荐好友最多赚HKD 900，10%定存年利率'
 };
 
 const BankRecommendationModule = ({ banks }) => {
@@ -16,6 +18,17 @@ const BankRecommendationModule = ({ banks }) => {
   const BankCard = ({ bank }) => {
     const reward = bankRewards[bank.data.name];
     const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
+    const hasReferralCode = bank.data.referralCode;
+    const [copied, setCopied] = React.useState(false);
+
+    const handleCopyCode = (e: React.MouseEvent) => {
+      if (hasReferralCode) {
+        e.preventDefault();
+        navigator.clipboard.writeText(bank.data.referralCode);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    };
 
     return (
       <a
@@ -63,6 +76,33 @@ const BankRecommendationModule = ({ banks }) => {
               </svg>
             </div>
             {/* 优惠券锯齿装饰 */}
+            <div className="absolute left-0 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"></div>
+          </div>
+        )}
+
+        {/* 邀请码显示区域 */}
+        {hasReferralCode && (
+          <div
+            onClick={handleCopyCode}
+            className="mb-3 relative cursor-pointer rounded-lg border-2 border-dashed border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-2.5 hover:from-blue-100 hover:to-indigo-100 transition-all"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="text-[10px] text-blue-600 font-medium mb-0.5">注册时使用邀请码</div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-blue-700 tracking-wider">{bank.data.referralCode}</span>
+                  {copied && (
+                    <span className="text-[10px] text-green-600 font-medium">已复制!</span>
+                  )}
+                </div>
+              </div>
+              <div className="flex-shrink-0 ml-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg p-1.5">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </div>
+            </div>
+            {/* 装饰圆点 */}
             <div className="absolute left-0 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"></div>
           </div>
         )}
