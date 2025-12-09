@@ -12,6 +12,19 @@ const bankSchema = z.object({
     highlight: z.string().optional(),
     highlightColor: z.string().optional(),
     referralLink: z.string().url(),
+    referralCode: z.string().optional(),
+});
+
+const walletSchema = z.object({
+    name: z.string(),
+    logo: z.string(),
+    description: z.string(),
+    features: z.array(z.string()),
+    highlight: z.string().optional(),
+    highlightColor: z.string().optional(),
+    referralLink: z.string().url(),
+    referralCode: z.string().optional(),
+    promoText: z.string().optional(),
 });
 
 const seoSchema = z.object({
@@ -74,6 +87,11 @@ const cardTierSchema = z.object({
 const banksCollection = defineCollection({
   type: 'content',
   schema: bankSchema,
+});
+
+const walletsCollection = defineCollection({
+  type: 'content',
+  schema: walletSchema,
 });
 
 // 文章集合配置
@@ -476,6 +494,7 @@ export const collections = {
   articles: articlesCollection,
   cards: cardsCollection,
   banks: banksCollection,
+  wallets: walletsCollection,
   // exchanges: exchangesCollection,
   // guides: guidesCollection,
   // authors: authorsCollection,
