@@ -13,6 +13,9 @@ export const getStaticPaths = (async () => {
 
 const { bank } = Astro.props;
 
+// 渲染银行内容
+const { Content } = await bank.render();
+
 // 银行奖励配置
 const bankRewards: Record<string, string> = {
   'iFast Global Bank': '存500英镑3个月，送5英镑',
@@ -181,6 +184,17 @@ const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 详细介绍 -->
+    <section class="py-16 px-6 lg:px-8 bg-white">
+      <div class="max-w-4xl mx-auto">
+        <div class="prose prose-lg prose-indigo prose-headings:text-gray-900 prose-h2:text-2xl prose-h2:font-bold prose-h2:mb-4 prose-h3:text-xl prose-h3:font-semibold prose-h3:mb-3 prose-p:text-gray-600 prose-li:text-gray-600 max-w-none">
+          <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 md:p-12 shadow-lg">
+            <Content />
+          </div>
         </div>
       </div>
     </section>
