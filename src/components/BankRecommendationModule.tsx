@@ -4,6 +4,7 @@ import { ExternalLink, CheckCircle, Globe, Shield, Zap } from 'lucide-react';
 // 银行奖励配置
 const bankRewards: Record<string, string> = {
   'iFast Global Bank': '存500英镑3个月，送5英镑',
+  'Lemfi': '首笔汇款$100+返现10%，最高$50',
   'Revolut': '新用户注册送10欧元',
   'Wise (TransferWise)': '首笔转账免手续费',
   'WeLab Bank（汇立银行）': '存$10,000港币30天，送$200港币',
