@@ -97,18 +97,6 @@ const exchanges = [
     link: 'https://moonshot.com?ref=Q5ErHESystem',
     fallbackText: 'MS',
     fallbackGradient: 'from-gray-400 to-gray-600'
-  },
-  {
-    id: 'krak',
-    name: 'Krak',
-    domain: 'krak.app',
-    description: '即时支付钱包应用，双方各赚$10',
-    tag: '支付钱包',
-    tagColor: 'bg-green-100 text-green-700',
-    stats: '推荐最高$400',
-    link: 'https://krak.app/@laosjifuli',
-    fallbackText: 'KK',
-    fallbackGradient: 'from-green-500 to-emerald-600'
   }
 ];
 

@@ -1,10 +1,11 @@
 ---
 name: 'Krak'
-logo: '🔒'
-description: 'Krak数字货币钱包，安全可靠的加密资产管理工具。提供多重签名保护、冷热钱包分离、实时行情追踪等专业功能。'
-features: ['多重签名保护', '冷热钱包分离', '实时行情追踪', '多币种支持', '安全可靠']
-highlight: '安全首选'
+logo: '💚'
+description: '即时支付钱包应用，双方各赚$10。Krak是一款创新的加密货币支付钱包，提供即时支付、推荐奖励等功能。'
+features: ['即时支付', '推荐奖励', '安全可靠', '多币种支持', '便捷转账']
+highlight: '推荐最高$400'
 highlightColor: 'bg-green-500'
-referralLink: 'https://krak.io'
-promoText: '新用户注册即享专属福利'
+referralLink: 'https://krak.app/@laosjifuli'
+referralCode: '@laosjifuli'
+promoText: '双方各赚$10，推荐最高$400'
 ---
