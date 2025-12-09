@@ -2,7 +2,7 @@
 title: "Wise 香港星展银行账户详解：不开港卡也能拥有星展账户？"
 description: "最近很多人晒出自己通过 Wise 开出的香港星展银行账户,然而这个账户究竟有什么用,与真正去香港开的星展账户有什么区别?本文为你完整解析。"
 publishDate: "2025-12-09"
-category: "海外账户"
+category: "guide"
 tags: ["Wise", "星展银行", "香港银行", "海外开户", "跨境账户"]
 image: "https://raw.githubusercontent.com/laosji/img/main/img/41583d8c9b9b478669b9e484dbd1e55c.png"
 featured: false
