@@ -54,6 +54,7 @@ Secondary Light: #FB923C (orange-400)
 
 ```css
 推荐U卡模块: bg-white
+  ├─ 推荐银行子模块: bg-gray-50 (与表格区分)
 钱包推荐模块: bg-gray-50
 全球汇款模块: bg-white
 合作交易所模块: bg-gray-50
@@ -61,6 +62,18 @@ Secondary Light: #FB923C (orange-400)
 ```
 
 **设计理念**: 白色和浅灰色交替，形成视觉呼吸感，同时突出核心内容
+
+### 表格配色（纸张绿色主题）
+
+```css
+表格容器: bg-green-50 (#F0FDF4) - 浅绿色纸张背景
+表格表头: bg-green-100 (#DCFCE7) - 稍深的绿色
+表格边框: border-green-200 - 绿色边框
+行分隔线: divide-green-100 - 绿色分隔
+悬停效果: hover:bg-green-100 - 绿色悬停
+```
+
+**设计理念**: 模仿Excel表格和会计纸的绿色调，给用户熟悉的数据表格感受
 
 ---
 
