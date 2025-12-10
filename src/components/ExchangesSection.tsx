@@ -150,7 +150,7 @@ const ExchangeCard: React.FC<{ exchange: typeof exchanges[0] }> = ({ exchange })
 // 主组件
 const ExchangesSection: React.FC = () => {
   return (
-    <section className="bg-gradient-to-br from-gray-50 via-purple-50/30 to-indigo-50/30 px-4 py-16 sm:px-6 lg:px-8">
+    <section className="bg-white px-4 py-16 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* 标题部分 */}
         <div className="mb-12 text-center">
