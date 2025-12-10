@@ -119,7 +119,7 @@ const WalletRecommendationModule = ({ wallets }) => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-white px-6 py-12 lg:px-8">
+    <section className="relative overflow-hidden bg-gray-50 px-6 py-12 lg:px-8">
 
       <div className="relative mx-auto max-w-7xl">
         {/* 标题区域 */}
