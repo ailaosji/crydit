@@ -122,6 +122,8 @@ const FeaturedCardImage: React.FC<{ name: string; image: string; badgeColor: 'bl
           status === 'loaded' ? 'opacity-100' : 'opacity-0'
         }`}
         loading="eager"
+        fetchpriority="high"
+        decoding="async"
         width="600"
         height="378"
         onLoad={() => setStatus('loaded')}
