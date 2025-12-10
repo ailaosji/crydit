@@ -34,10 +34,10 @@ const getPromotionDisplay = (card: Card): { amount: string; hasPromotion: boolea
 
 const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
   return (
-    <div className="overflow-x-auto rounded-2xl bg-white shadow-xl">
+    <div className="overflow-x-auto rounded-2xl bg-green-50 shadow-xl">
       <table className="w-full min-w-[900px]">
         {/* 表头 */}
-        <thead className="border-b border-gray-200 bg-gray-50">
+        <thead className="border-b border-green-200 bg-green-100">
           <tr>
             <th className="w-12 px-3 py-4 text-center text-sm font-semibold text-gray-700">序号</th>
             <th className="w-48 px-4 py-4 text-left text-sm font-semibold text-gray-700">
@@ -84,7 +84,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
         </thead>
 
         {/* 表格内容 */}
-        <tbody className="divide-y divide-gray-100" id="card-table-body">
+        <tbody className="divide-y divide-green-100" id="card-table-body">
           {cards.map((card, index) => {
             // 获取评论数，优先从顶层获取，然后从data中获取，最后使用0
             const commentCount = card.commentCount ?? card.data?.commentCount ?? 0;
@@ -93,7 +93,7 @@ const CardTable: React.FC<CardTableProps> = ({ cards, handleSort }) => {
             return (
               <tr
                 key={card.slug}
-                className="group relative cursor-pointer transition-colors hover:bg-gray-50"
+                className="group relative cursor-pointer transition-colors hover:bg-green-100"
                 onClick={(e) => {
                   // 检查是否点击了链接或按钮
                   const target = e.target as HTMLElement;
