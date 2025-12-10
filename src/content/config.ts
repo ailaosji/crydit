@@ -27,6 +27,18 @@ const walletSchema = z.object({
     promoText: z.string().optional(),
 });
 
+const remittanceSchema = z.object({
+    name: z.string(),
+    logo: z.string(),
+    description: z.string(),
+    features: z.array(z.string()),
+    highlight: z.string().optional(),
+    highlightColor: z.string().optional(),
+    referralLink: z.string().url(),
+    referralCode: z.string().optional(),
+    promoText: z.string().optional(),
+});
+
 const seoSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
@@ -92,6 +104,11 @@ const banksCollection = defineCollection({
 const walletsCollection = defineCollection({
   type: 'content',
   schema: walletSchema,
+});
+
+const remittancesCollection = defineCollection({
+  type: 'content',
+  schema: remittanceSchema,
 });
 
 // 文章集合配置
@@ -495,6 +512,7 @@ export const collections = {
   cards: cardsCollection,
   banks: banksCollection,
   wallets: walletsCollection,
+  remittances: remittancesCollection,
   // exchanges: exchangesCollection,
   // guides: guidesCollection,
   // authors: authorsCollection,
