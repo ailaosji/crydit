@@ -39,6 +39,19 @@ const finalImage = ogImage || image || '/og-image.jpg';
     <link rel="canonical" href={canonical} />
     {noIndex && <meta name="robots" content="noindex,nofollow" />}
 
+    <!-- 性能优化：DNS 预连接和预加载 -->
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin />
+
+    <!-- 预加载首页关键图片 -->
+    {Astro.url.pathname === '/' && (
+      <>
+        <link rel="preload" as="image" href="https://raw.githubusercontent.com/laosji/img/main/img/20251130112020.png" fetchpriority="high" />
+        <link rel="preload" as="image" href="https://raw.githubusercontent.com/laosji/img/main/img/20251130112128.png" fetchpriority="high" />
+        <link rel="preload" as="image" href="https://raw.githubusercontent.com/laosji/img/main/img/20251130112544.png" fetchpriority="high" />
+      </>
+    )}
+
     <!-- Favicon和应用图标 -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
