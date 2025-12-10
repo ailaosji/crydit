@@ -137,10 +137,7 @@ const BankRecommendationModule = ({ banks }) => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-white px-6 py-12 lg:px-8">
-      {/* 装饰背景 - 更柔和的设计 */}
-      <div className="absolute left-0 top-0 h-64 w-64 -translate-x-32 -translate-y-32 rounded-full bg-indigo-100/30 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-64 w-64 translate-x-32 translate-y-32 rounded-full bg-blue-100/30 blur-3xl" />
+    <section className="relative overflow-hidden bg-blue-50 px-6 py-12 lg:px-8">
 
       <div className="relative mx-auto max-w-7xl">
         {/* 标题区域 - 精简 */}
