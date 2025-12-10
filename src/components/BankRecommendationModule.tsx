@@ -107,9 +107,9 @@ const BankRecommendationModule = ({ banks }) => {
           </div>
         )}
 
-        {/* 特色功能 - 精简显示 */}
+        {/* 特色功能 - 只显示前3个，其他在详情页查看 */}
         <div className="flex flex-wrap gap-1.5">
-          {bank.data.features.map((feature, index) => (
+          {bank.data.features.slice(0, 3).map((feature, index) => (
             <span
               key={index}
               className="inline-flex items-center rounded-lg bg-gray-50 px-2.5 py-1 text-xs text-gray-700"
@@ -118,6 +118,11 @@ const BankRecommendationModule = ({ banks }) => {
               {feature}
             </span>
           ))}
+          {bank.data.features.length > 3 && (
+            <span className="inline-flex items-center rounded-lg bg-indigo-50 px-2.5 py-1 text-xs text-indigo-600 font-medium">
+              +{bank.data.features.length - 3}更多
+            </span>
+          )}
         </div>
 
         {/* 悬停图标 */}
@@ -132,10 +137,10 @@ const BankRecommendationModule = ({ banks }) => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-6 py-12 lg:px-8">
-      {/* 装饰背景 */}
-      <div className="absolute left-0 top-0 h-64 w-64 -translate-x-32 -translate-y-32 rounded-full bg-blue-300/20 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-64 w-64 translate-x-32 translate-y-32 rounded-full bg-purple-300/20 blur-3xl" />
+    <section className="relative overflow-hidden bg-white px-6 py-12 lg:px-8">
+      {/* 装饰背景 - 更柔和的设计 */}
+      <div className="absolute left-0 top-0 h-64 w-64 -translate-x-32 -translate-y-32 rounded-full bg-indigo-100/30 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-64 w-64 translate-x-32 translate-y-32 rounded-full bg-blue-100/30 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl">
         {/* 标题区域 - 精简 */}
