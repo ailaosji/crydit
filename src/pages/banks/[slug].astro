@@ -13,6 +13,9 @@ export const getStaticPaths = (async () => {
 
 const { bank } = Astro.props;
 
+// 渲染银行内容
+const { Content } = await bank.render();
+
 // 银行奖励配置
 const bankRewards: Record<string, string> = {
   'iFast Global Bank': '存500英镑3个月，送5英镑',
@@ -114,6 +117,77 @@ const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
       </div>
     </section>
 
+    <!-- 邀请码显示 -->
+    {bank.data.referralCode && (
+      <section class="py-8 px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+          <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50 via-purple-50 to-white shadow-xl border-2 border-indigo-200/50">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo-100/30 to-purple-100/30"></div>
+
+            <div class="relative px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div class="flex items-center gap-6">
+                <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl">
+                  <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold text-indigo-600 mb-1">专属邀请码</p>
+                  <p class="text-3xl font-bold text-gray-900 tracking-wider">{bank.data.referralCode}</p>
+                  <p class="text-sm text-gray-600 mt-1">注册时使用此邀请码享受专属优惠</p>
+                </div>
+              </div>
+
+              <button
+                id="copy-referral-code"
+                data-code={bank.data.referralCode}
+                class="flex-shrink-0 inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                <span class="copy-text">复制邀请码</span>
+                <span class="copied-text hidden">已复制!</span>
+              </button>
+            </div>
+
+            <!-- 装饰性元素 -->
+            <div class="absolute left-0 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white border-2 border-indigo-200"></div>
+            <div class="absolute right-0 top-1/2 h-8 w-8 translate-x-1/2 -translate-y-1/2 rounded-full bg-white border-2 border-purple-200"></div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <script>
+      // 复制邀请码功能
+      const copyButton = document.getElementById('copy-referral-code');
+      if (copyButton) {
+        copyButton.addEventListener('click', async () => {
+          const code = copyButton.getAttribute('data-code');
+          if (code) {
+            try {
+              await navigator.clipboard.writeText(code);
+              const copyText = copyButton.querySelector('.copy-text');
+              const copiedText = copyButton.querySelector('.copied-text');
+
+              if (copyText && copiedText) {
+                copyText.classList.add('hidden');
+                copiedText.classList.remove('hidden');
+
+                setTimeout(() => {
+                  copyText.classList.remove('hidden');
+                  copiedText.classList.add('hidden');
+                }, 2000);
+              }
+            } catch (err) {
+              console.error('Failed to copy:', err);
+            }
+          }
+        });
+      }
+    </script>
+
     <!-- 奖励优惠 -->
     {reward && (
       <section class="py-12 px-6 lg:px-8 bg-gradient-to-r from-orange-50 to-red-50">
@@ -181,6 +255,17 @@ const isImageLogo = bank.data.logo && bank.data.logo.startsWith('http');
               </div>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 详细介绍 -->
+    <section class="py-16 px-6 lg:px-8 bg-white">
+      <div class="max-w-4xl mx-auto">
+        <div class="prose prose-lg prose-indigo prose-headings:text-gray-900 prose-h2:text-2xl prose-h2:font-bold prose-h2:mb-4 prose-h3:text-xl prose-h3:font-semibold prose-h3:mb-3 prose-p:text-gray-600 prose-li:text-gray-600 max-w-none">
+          <div class="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 md:p-12 shadow-lg">
+            <Content />
+          </div>
         </div>
       </div>
     </section>

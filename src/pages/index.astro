@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import CardTableContainer from '../components/CardTableContainer.tsx';
 import BankRecommendationModule from '../components/BankRecommendationModule.tsx';
+import WalletRecommendationModule from '../components/WalletRecommendationModule.tsx';
+import RemittanceModule from '../components/RemittanceModule.tsx';
 import FeaturedCardsSection from '../components/FeaturedCardsSection.tsx';
 import ExchangesSection from '../components/ExchangesSection.tsx';
 import { getCollection } from 'astro:content';
@@ -13,6 +15,12 @@ const sortedArticles = allArticles
 
 // 获取银行数据
 const banks = await getCollection('banks');
+
+// 获取钱包数据
+const wallets = await getCollection('wallets');
+
+// 获取汇款数据
+const remittances = await getCollection('remittances');
 
 // 获取最新文章（用于大图展示）
 const featuredArticle = sortedArticles[0];
@@ -235,6 +243,12 @@ const categoryConfig = {
         <BankRecommendationModule banks={banks} client:load />
       </div>
     </section>
+
+    <!-- 钱包推荐模块 -->
+    <WalletRecommendationModule wallets={wallets} client:load />
+
+    <!-- 全球汇款模块 -->
+    <RemittanceModule remittances={remittances} client:load />
 
     <!-- 合作交易所模块 - 使用组件 -->
     <ExchangesSection client:load />
