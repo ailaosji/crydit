@@ -44,39 +44,36 @@ const BankRecommendationModule = ({ banks }) => {
           href={bank.data.referralLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="mb-3 flex items-center space-x-3"
+          className="mb-4 flex items-center justify-center"
         >
-          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
+          <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
             {isImageLogo ? (
               <img
                 src={bank.data.logo}
                 alt={bank.data.name}
-                className="h-10 w-10 object-contain rounded-lg"
+                className="h-14 w-14 object-contain"
               />
             ) : (
-              <span className="text-2xl">{bank.data.logo}</span>
+              <span className="text-3xl">{bank.data.logo}</span>
             )}
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="truncate text-base font-bold text-gray-900 transition-colors group-hover:text-indigo-600">
-              {bank.data.name}
-            </h3>
-            <p className="truncate text-xs text-gray-500">
-              {bank.data.description}
-            </p>
           </div>
         </a>
 
+        {/* 银行名称 */}
+        <h3 className="mb-3 text-center text-base font-bold text-gray-900">
+          {bank.data.name}
+        </h3>
+
         {/* 邀请码显示 */}
         {bank.data.invitationCode && (
-          <div className="mb-3 flex items-center justify-between rounded-lg bg-indigo-50 px-3 py-2">
+          <div className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
             <div className="flex items-center space-x-2">
               <span className="text-xs text-gray-600">邀请码:</span>
-              <span className="text-sm font-bold text-indigo-700">{bank.data.invitationCode}</span>
+              <span className="text-sm font-mono font-bold text-gray-900">{bank.data.invitationCode}</span>
             </div>
             <button
               onClick={handleCopyLink}
-              className="flex items-center space-x-1 rounded-md bg-indigo-600 px-2.5 py-1 text-xs text-white transition-colors hover:bg-indigo-700"
+              className="flex items-center space-x-1 rounded-md bg-gray-900 px-2.5 py-1 text-xs text-white transition-colors hover:bg-gray-800"
             >
               {copied ? (
                 <>
@@ -86,7 +83,7 @@ const BankRecommendationModule = ({ banks }) => {
               ) : (
                 <>
                   <Copy className="h-3 w-3" />
-                  <span>复制链接</span>
+                  <span>复制</span>
                 </>
               )}
             </button>
@@ -95,31 +92,13 @@ const BankRecommendationModule = ({ banks }) => {
 
         {/* 奖励金额 - 优惠券样式 */}
         {reward && (
-          <div className="mb-3 relative overflow-hidden rounded-lg border-2 border-dashed border-orange-300 bg-gradient-to-r from-orange-50 to-red-50 px-3 py-2 flex items-center justify-between">
-            <span className="text-xs font-bold text-orange-700">{reward}</span>
-            {/* 右侧箭头 */}
-            <div className="flex-shrink-0 ml-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full p-1">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
+          <div className="relative overflow-hidden rounded-lg border-2 border-dashed border-orange-300 bg-gradient-to-r from-orange-50 to-red-50 px-3 py-2">
+            <span className="block text-center text-xs font-bold text-orange-700">{reward}</span>
             {/* 优惠券锯齿装饰 */}
-            <div className="absolute left-0 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"></div>
+            <div className="absolute left-0 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"></div>
+            <div className="absolute right-0 top-1/2 h-3 w-3 translate-x-1/2 -translate-y-1/2 rounded-full bg-white"></div>
           </div>
         )}
-
-        {/* 特色功能 - 精简显示 */}
-        <div className="flex flex-wrap gap-1.5">
-          {bank.data.features.map((feature, index) => (
-            <span
-              key={index}
-              className="inline-flex items-center rounded-lg bg-gray-50 px-2.5 py-1 text-xs text-gray-700"
-            >
-              <CheckCircle className="mr-1 h-3 w-3 text-green-500" />
-              {feature}
-            </span>
-          ))}
-        </div>
 
         {/* 悬停背景效果 */}
         <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
