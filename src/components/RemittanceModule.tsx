@@ -119,10 +119,7 @@ const RemittanceModule = ({ remittances }) => {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50 to-white px-6 py-12 lg:px-8">
-      {/* 装饰背景 */}
-      <div className="absolute left-0 top-0 h-64 w-64 -translate-x-32 -translate-y-32 rounded-full bg-orange-300/20 blur-3xl" />
-      <div className="absolute bottom-0 right-0 h-64 w-64 translate-x-32 translate-y-32 rounded-full bg-amber-300/20 blur-3xl" />
+    <section className="relative overflow-hidden bg-white px-6 py-12 lg:px-8">
 
       <div className="relative mx-auto max-w-7xl">
         {/* 标题区域 */}
