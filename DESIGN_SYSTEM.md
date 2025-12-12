@@ -35,9 +35,10 @@ Secondary Light: #FB923C (orange-400)
 
 ```css
 背景色:
-- bg-white: #FFFFFF
-- bg-gray-50: #F9FAFB
-- bg-gray-100: #F3F4F6
+- bg-[#F5F9ED]: #F5F9ED (页面主背景 - Kindle护眼色)
+- bg-white: #FFFFFF (模块背景)
+- bg-gray-50: #F9FAFB (备选背景)
+- bg-gray-100: #F3F4F6 (边框、分隔)
 
 文字色:
 - text-gray-900: #111827 (主要文字)
@@ -50,30 +51,30 @@ Secondary Light: #FB923C (orange-400)
 - border-gray-300: #D1D5DB
 ```
 
-### 模块背景色方案
+### 页面背景色方案（Kindle护眼主题）
 
 ```css
-推荐U卡模块: bg-white
-  ├─ 推荐银行子模块: bg-gray-50 (与表格区分)
-钱包推荐模块: bg-gray-50
-全球汇款模块: bg-white
-合作交易所模块: bg-gray-50
-最新资讯模块: bg-white
+页面主背景: bg-[#F5F9ED] (极浅护眼色，温暖黄绿调)
+所有模块背景: bg-white (统一白色模块)
+表格背景: bg-[#E3EDCD] (Kindle标准护眼色)
 ```
 
-**设计理念**: 白色和浅灰色交替，形成视觉呼吸感，同时突出核心内容
+**设计理念**:
+- 采用Kindle阅读器护眼色作为页面底色，减少视觉疲劳
+- 白色模块在护眼色背景上对比清晰
+- 统一简洁的配色方案，专业感强
 
-### 表格配色（纸张绿色主题）
+### 表格配色（Kindle护眼色主题）
 
 ```css
-表格容器: bg-green-50 (#F0FDF4) - 浅绿色纸张背景
-表格表头: bg-green-100 (#DCFCE7) - 稍深的绿色
-表格边框: border-green-200 - 绿色边框
-行分隔线: divide-green-100 - 绿色分隔
-悬停效果: hover:bg-green-100 - 绿色悬停
+表格容器: bg-[#E3EDCD] - Kindle浅黄绿护眼色
+表格表头: bg-[#D4E4BC] - 稍深的黄绿色
+表格边框: border-[#C5D5A8] - 黄绿色边框
+行分隔线: divide-[#D4E4BC] - 黄绿色分隔
+悬停效果: hover:bg-[#D4E4BC] - 黄绿色悬停
 ```
 
-**设计理念**: 模仿Excel表格和会计纸的绿色调，给用户熟悉的数据表格感受
+**设计理念**: 采用Kindle阅读器护眼色，温暖的黄绿色调减少眼睛疲劳，长时间查看数据更舒适
 
 ---
 
